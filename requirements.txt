@@ -1,0 +1,10 @@
+Django
+djangorestframework
+django-htmlmin
+django-account
+django-appconf
+django-user-accounts
+python-social-auth
+social-auth-core
+social-auth-app-django
+django-extensions
