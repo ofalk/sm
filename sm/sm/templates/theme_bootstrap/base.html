@@ -1,0 +1,96 @@
+{% load bootstrap4 %}
+{% load staticfiles %}
+{% load account_tags %}
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}">
+    <head>
+        <meta charset="utf-8" />
+        <title>{% block head_title_base %}{% if SITE_NAME %}{{ SITE_NAME }} | {% endif %}{% block head_title %}{% endblock %}{% endblock %}</title>
+        {% block viewport %}
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        {% endblock %}
+
+        {% block styles %}{% endblock %}
+
+        {% block html5shim %}
+            <!-- HTML5 shim, for IE6-8 support of HTML elements -->
+            <!--[if lt IE 9]>
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.2/html5shiv.min.js"></script>
+            <![endif]-->
+        {% endblock %}
+
+        {% block extra_head_base %}
+            {% block extra_head %}{% endblock %}
+        {% endblock %}
+
+        {% if 'javascript_in_head'|bootstrap_setting %}
+            <!-- Bootstrap JavaScript if it is in head -->
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+            {% bootstrap_javascript %}
+        {% endif %}
+
+        {% block bootstrap4_extra_head %}{% endblock %}
+
+    </head>
+    {% block bootstrap4_before_content %}{% endblock %}
+    <body class="{% block body_class %}{% endblock %}" id="{% block body_id %}{% endblock %}" {% block body_extra_attributes %}{% endblock %}>
+        <div class="{% block wrapper_class %}{% endblock %}">
+            {% block topbar_base %}
+                <nav class="navbar navbar-toggleable-md {% block navbar_class %}navbar-inverse bg-inverse fixed-top{% endblock %}">
+                    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                      <span class="navbar-toggler-icon"></span>
+                    </button>
+                    {% block topbar %}
+                        {% block site_brand %}<a class="navbar-brand" href="#">{{ request.site.name }}</a>{% endblock %}
+                        {% block nav %}
+                            <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                              <ul class="navbar-nav mr-auto">
+                                <li class="nav-item active">
+                                  <a class="nav-link" href="#">Home<span class="sr-only">/</span></a>
+                                </li>
+                              </ul>
+                              {% block account_bar %}{% include "_account_bar.html" %}{% endblock %}
+                              {% block search_bar %}{% include "_search_bar.html" %}{% endblock %}
+                            </div>
+                        {% endblock %}
+                    {% endblock %}
+                </nav>
+            {% endblock %}
+
+            {% block body_base %}
+                <section id="content_body">
+                    <div class="container">
+                        {% include "_messages.html" %}
+                        {% block body %}
+                        {% endblock %}
+                    </div>
+                </section>
+            {% endblock %}
+
+            {% block footer_base %}
+                <hr />
+                <footer>
+                    <div class="container">
+                        {% block footer %}{% endblock %}
+                    </div>
+                </footer>
+            {% endblock %}
+        </div>
+
+        {% if not 'javascript_in_head'|bootstrap_setting %}
+            <!-- Bootstrap JavaScript if it is in body -->
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+            {% bootstrap_javascript %}
+        {% endif %}
+        {% block bootstrap4_extra_script %}{% endblock %}
+
+        {% block scripts %}{% endblock %}
+        {% block theme_script %}
+            <script src="{% static "/js/theme.js" %}"></script>
+        {% endblock %}
+
+        {% block extra_body_base %}
+            {% block extra_body %}{% endblock %}
+        {% endblock %}
+    </body>
+</html>

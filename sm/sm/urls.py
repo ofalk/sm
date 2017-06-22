@@ -18,7 +18,16 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 
+from django.views.generic import TemplateView
+from django.views.generic.base import RedirectView
+
+import debug_toolbar
+
 urlpatterns = [
+    url(r'^__debug__/', include(debug_toolbar.urls)),
     url(r'^admin/', admin.site.urls),
+    url(r'^account/social/accounts/$', TemplateView.as_view(template_name='account/social.html'), name='account_social_accounts'),
     url(r'', include('social_django.urls')),
+    url(r'^account/', include('account.urls')),
+    url(r'', RedirectView.as_view(url='/account/settings/')),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

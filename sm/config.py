@@ -2,7 +2,7 @@ DEBUG = True
 ADMIN_USERS = ['oliver@linux-kernel.at']
 HTML_MINIFY = False
 SECRET_KEY = 'c#s9btkc36=@8q^n#!c+%z+ne6*uzy)bc3f+*97^s-c8*f)^+8'
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['sm.dev.linux-kernel.at']
 
 from sm.settings import INSTALLED_APPS
 INSTALLED_APPS.extend([
@@ -13,14 +13,19 @@ INSTALLED_APPS.extend([
 
     'account',
     'social_django',
-    'bootstrap4'
+    'social.apps.django_app.default',
+    'bootstrap4',
+    'debug_toolbar',
+    'sm',
 ])
 
 from sm.settings import MIDDLEWARE
 MIDDLEWARE.extend([
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'htmlmin.middleware.HtmlMinifyMiddleware',
     'htmlmin.middleware.MarkRequestMiddleware',
     'social_django.middleware.SocialAuthExceptionMiddleware',
+    'django.contrib.sites.middleware.CurrentSiteMiddleware',
 ])
 
 from sm.settings import TEMPLATES
@@ -28,6 +33,9 @@ TEMPLATES[0]['OPTIONS']['context_processors'].extend([
     'account.context_processors.account',
     'social_django.context_processors.backends',
     'social_django.context_processors.login_redirect',
+])
+TEMPLATES[0]['DIRS'].extend([
+  'templates/',
 ])
 
 # Settings for django-bootstrap4
@@ -55,3 +63,16 @@ ACCOUNT_EMAIL_UNIQUE = True
 ACCOUNT_EMAIL_CONFIRMATION_REQUIRED = True
 ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 2
 ACCOUNT_USE_AUTH_AUTHENTICATE = True
+ACCOUNT_LOGIN_REDIRECT_URL = LOGIN_REDIRECT_URL = '/'
+ACCOUNT_LOGOUT_REDIRECT_URL = '/'
+
+# For debug toolbar
+INTERNAL_IPS = ('127.0.0.1','86.59.13.244','213.129.242.83','213.129.242.84')
+
+# Static files configuration (esp. req. during dev.)
+import os
+PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
+PACKAGE_ROOT = os.path.abspath(os.path.dirname(__file__))
+BASE_DIR = PACKAGE_ROOT
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
