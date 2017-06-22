@@ -2,7 +2,7 @@ DEBUG = True
 ADMIN_USERS = ['oliver@linux-kernel.at']
 HTML_MINIFY = False
 SECRET_KEY = 'c#s9btkc36=@8q^n#!c+%z+ne6*uzy)bc3f+*97^s-c8*f)^+8'
-ALLOWED_HOSTS = []   
+ALLOWED_HOSTS = []
 
 from sm.settings import INSTALLED_APPS
 INSTALLED_APPS.extend([
@@ -16,6 +16,20 @@ INSTALLED_APPS.extend([
     'bootstrap4'
 ])
 
+from sm.settings import MIDDLEWARE
+MIDDLEWARE.extend([
+    'htmlmin.middleware.HtmlMinifyMiddleware',
+    'htmlmin.middleware.MarkRequestMiddleware',
+    'social_django.middleware.SocialAuthExceptionMiddleware',
+])
+
+from sm.settings import TEMPLATES
+TEMPLATES[0]['OPTIONS']['context_processors'].extend([
+    'account.context_processors.account',
+    'social_django.context_processors.backends',
+    'social_django.context_processors.login_redirect',
+])
+
 # Settings for django-bootstrap4
 BOOTSTRAP4 = {
     'error_css_class': 'bootstrap4-error',
@@ -25,3 +39,19 @@ BOOTSTRAP4 = {
 }
 
 SITE_ID = 1
+
+AUTHENTICATION_BACKENDS = [
+  #'social.backends.twitter.TwitterOAuth',
+  #'social.backends.google.GoogleOAuth2',
+  'social_core.backends.facebook.FacebookOAuth2',
+  'account.auth_backends.UsernameAuthenticationBackend',
+]
+
+SOCIAL_AUTH_FACEBOOK_KEY = '562669153771397'
+SOCIAL_AUTH_FACEBOOK_SECRET = '464b2253199a60acd65ccb254cf84ff1'
+
+ACCOUNT_OPEN_SIGNUP = True
+ACCOUNT_EMAIL_UNIQUE = True
+ACCOUNT_EMAIL_CONFIRMATION_REQUIRED = True
+ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 2
+ACCOUNT_USE_AUTH_AUTHENTICATE = True
