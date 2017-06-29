@@ -1,0 +1,44 @@
+[
+{
+  "model": "sm.vendor",
+  "fields": {
+    "name": "CentOS"
+  }
+},
+{
+  "model": "sm.vendor",
+  "fields": {
+    "name": "Fujitsu"
+  }
+},
+{
+  "model": "sm.vendor",
+  "fields": {
+    "name": "Hewlett Packard"
+  }
+},
+{
+  "model": "sm.vendor",
+  "fields": {
+    "name": "Hewlett Packard Enterprise"
+  }
+},
+{
+  "model": "sm.vendor",
+  "fields": {
+    "name": "IBM"
+  }
+},
+{
+  "model": "sm.vendor",
+  "fields": {
+    "name": "Novell"
+  }
+},
+{
+  "model": "sm.vendor",
+  "fields": {
+    "name": "Red Hat"
+  }
+}
+]

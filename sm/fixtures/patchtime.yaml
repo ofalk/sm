@@ -1,0 +1,23 @@
+- model: sm.patchtime
+  fields:
+    name: Patch in maintenance window
+
+- model: sm.patchtime
+  fields:
+    name: Patch outside maintenance window
+
+- model: sm.patchtime
+  fields:
+    name: Patch 1 week before maintenance window
+
+- model: sm.patchtime
+  fields:
+    name: Patch 1 week after maintenance window
+
+- model: sm.patchtime
+  fields:
+    name: No patching
+
+- model: sm.patchtime
+  fields:
+    name: Special alignment

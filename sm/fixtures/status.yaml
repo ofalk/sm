@@ -1,0 +1,23 @@
+- model: sm.status
+  fields:
+    name: In use
+
+- model: sm.status
+  fields:
+    name: Disposed
+
+- model: sm.status
+  fields:
+    name: Ordered
+
+- model: sm.status
+  fields:
+    name: Name reserved
+
+- model: sm.status
+  fields:
+    name: Stored
+
+- model: sm.status
+  fields:
+    name: To be disposed

@@ -1,0 +1,79 @@
+from django.db import models
+from natural_keys import NaturalKeyModel
+
+from vendor.models import *
+
+from django.core.exceptions import ObjectDoesNotExist
+
+class OperatingsystemManager(models.Manager):
+  """
+  Special manager to ease the access to Operating system objects
+  eg. RHEL6.1, RHEL 6.1, SLES10, SLES 10.1 should all work well
+  """
+  def get_by_natural_key(self, vendor=None, version=None):
+    """
+    Ease acces to OS objects, by providing a lot of different options
+    to query for 'em. See also OperatingSystemManager.__doc__
+    :model:`sm.models.OperatingsystemManager`
+    """
+    if vendor is None and version is None:
+      raise ObjectDoesNotExist("Nothing to query")
+
+    vendorobj = None
+    try:
+      vendorobj = Vendor.objects.get(name=vendor)
+    except:
+      pass
+    object = None
+    try:
+      object = self.get(vendor=vendorobj, version=version)
+      return object
+    except:
+      pass
+
+    if version == None and vendor is not None:
+      version = vendor
+      vendor = None
+
+    if object == None and version.__class__ != tuple:
+      if version[0:7] == 'Red Hat':
+        vendorobj = Vendor.objects.get(name='Red Hat')
+        vers = version[7:].lstrip()
+        if len(vers) == 1: vers += '.0'
+        object = self.get(vendor=vendorobj, version=vers)
+      elif version[0:4] == 'RHEL':
+        vendorobj = Vendor.objects.get(name='Red Hat')
+        vers = version[4:].lstrip()
+        if len(vers) == 1: vers += '.0'
+        object = self.get(vendor=vendorobj, version=vers)
+      elif version[0:4] == 'SUSE' or version[0:4] == 'SLES':
+        vendorobj = Vendor.objects.get(name='Novell')
+        object = self.get(vendor=vendorobj, version=version[4:].lstrip())
+    else:
+      try:
+        vendorobj = Vendor.objects.get(name=version[0])
+        object = self.get(vendor=vendorobj, version=version[1])
+        return object
+      except:
+        pass
+
+    if object == None:
+      raise ObjectDoesNotExist("Cannot find matching object")
+
+    return object
+
+class Operatingsystem(NaturalKeyModel):
+  objects = OperatingsystemManager()
+  version = models.CharField(max_length = 45)
+  vendor = models.ForeignKey(Vendor, null=False, default=None)
+
+  def __str__(self):
+    return "%s %s" % (self.vendor.name, self.version)
+
+  def natural_key(self):
+    return (self.vendor.name, self.version)
+
+  class Meta:
+    managed = True
+    app_label = 'sm'
+    unique_together = (('vendor','version'),)

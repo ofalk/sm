@@ -9,6 +9,12 @@ social-auth-core
 social-auth-app-django
 django-extensions
 django-bootstrap4
+pyyaml
+natural-keys
+django-countries
+docutils
+nodeenv
+django-bower
 #django-code-linter
 #glamkit-adminboost
 #django-fancy-autocomplete
