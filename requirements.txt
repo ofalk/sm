@@ -13,6 +13,9 @@ pyyaml
 natural-keys
 django-countries
 docutils
+flake8
+pyflakes
+pep8
 #nodeenv
 #django-webpack-loader
 #django-code-linter
