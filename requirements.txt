@@ -13,8 +13,8 @@ pyyaml
 natural-keys
 django-countries
 docutils
-nodeenv
-django-bower
+#nodeenv
+#django-webpack-loader
 #django-code-linter
 #glamkit-adminboost
 #django-fancy-autocomplete

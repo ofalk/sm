@@ -20,17 +20,7 @@ INSTALLED_APPS.extend([
 
   'django.contrib.admindocs',
 
-  'djangobower',
-
   'sm',
-])
-
-try:
-  from sm.settings import STATICFILES_FINDERS
-except:
-  STATICFILES_FINDERS = []
-STATICFILES_FINDERS.extend([
-  'djangobower.finders.BowerFinder',
 ])
 
 from sm.settings import MIDDLEWARE
@@ -90,12 +80,3 @@ PACKAGE_ROOT = os.path.abspath(os.path.dirname(__file__))
 BASE_DIR = PACKAGE_ROOT
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-
-try:
-  from sm.settings import BOWER_INSTALLED_APPS
-except:
-  BOWER_INSTALLED_APPS = []
-BOWER_INSTALLED_APPS = (
-  'jquery#3.2.1',
-  'bootstrap#4.0.0-alpha.6',
-)
