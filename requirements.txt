@@ -16,22 +16,7 @@ docutils
 flake8
 pyflakes
 pep8
-#nodeenv
-#django-webpack-loader
-#django-code-linter
-#glamkit-adminboost
-#django-fancy-autocomplete
-#devrecargar
-#django-kidotest
-#django-monitoring
-#django-bootstrap-static
-#bootstrap_admin_legacy
-#django-code-deploy
-#django-bootstrap-span
-#django-bootstrap-pagination
-#django-messages-to-bootstrap-notify
-#https://pypi.python.org/pypi/django-modern-rpc
-#django-bootstrap-components
-#django-bootstrap-themes
-#django-bootstrap-tags
-#django-bootstrap-admin
+whitenoise
+gunicorn
+# https://pypi.python.org/pypi/django-modern-rpc
+# django-bootstrap-themes
