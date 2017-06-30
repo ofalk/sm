@@ -1,10 +1,12 @@
+import os
+
 DEBUG = True
 ADMIN_USERS = ['oliver@linux-kernel.at']
 HTML_MINIFY = False
 SECRET_KEY = 'c#s9btkc36=@8q^n#!c+%z+ne6*uzy)bc3f+*97^s-c8*f)^+8'
 ALLOWED_HOSTS = ['sm.dev.linux-kernel.at']
 
-from sm.settings import INSTALLED_APPS
+from sm.settings import INSTALLED_APPS  # noqa
 INSTALLED_APPS.extend([
   'django_extensions',
   'rest_framework',
@@ -20,11 +22,14 @@ INSTALLED_APPS.extend([
 
   'django.contrib.admindocs',
 
+  'whitenoise',
+
   'sm',
 ])
 
-from sm.settings import MIDDLEWARE
+from sm.settings import MIDDLEWARE  # noqa
 MIDDLEWARE.extend([
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
     'htmlmin.middleware.HtmlMinifyMiddleware',
     'htmlmin.middleware.MarkRequestMiddleware',
@@ -32,7 +37,7 @@ MIDDLEWARE.extend([
     'django.contrib.sites.middleware.CurrentSiteMiddleware',
 ])
 
-from sm.settings import TEMPLATES
+from sm.settings import TEMPLATES  # noqa
 TEMPLATES[0]['OPTIONS']['context_processors'].extend([
     'account.context_processors.account',
     'social_django.context_processors.backends',
@@ -53,8 +58,8 @@ BOOTSTRAP4 = {
 SITE_ID = 1
 
 AUTHENTICATION_BACKENDS = [
-  #'social.backends.twitter.TwitterOAuth',
-  #'social.backends.google.GoogleOAuth2',
+  # 'social.backends.twitter.TwitterOAuth',
+  # 'social.backends.google.GoogleOAuth2',
   'social_core.backends.facebook.FacebookOAuth2',
   'account.auth_backends.UsernameAuthenticationBackend',
 ]
@@ -71,12 +76,26 @@ ACCOUNT_LOGIN_REDIRECT_URL = LOGIN_REDIRECT_URL = '/'
 ACCOUNT_LOGOUT_REDIRECT_URL = '/'
 
 # For debug toolbar
-INTERNAL_IPS = ('127.0.0.1','86.59.13.244','213.129.242.83','213.129.242.84')
+INTERNAL_IPS = (
+    '127.0.0.1',
+    '86.59.13.244',
+    '213.129.242.83',
+    '213.129.242.84'
+)
 
 # Static files configuration (esp. req. during dev.)
-import os
-PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
+PROJECT_ROOT = os.path.abspath(
+    os.path.join(
+        os.path.dirname(__file__),
+        os.pardir
+    )
+)
 PACKAGE_ROOT = os.path.abspath(os.path.dirname(__file__))
 BASE_DIR = PACKAGE_ROOT
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+# Required for Bootstrap 3
+MESSAGE_TAGS = {
+    messages.ERROR: 'danger'
+}
