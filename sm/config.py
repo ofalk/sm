@@ -1,4 +1,5 @@
 import os
+import django.contrib.messages as messages
 
 DEBUG = True
 ADMIN_USERS = ['oliver@linux-kernel.at']
