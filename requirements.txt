@@ -20,3 +20,4 @@ whitenoise
 gunicorn
 # https://pypi.python.org/pypi/django-modern-rpc
 # django-bootstrap-themes
+django-debug-toolbar
