@@ -1,12 +1,14 @@
 prepare:
-  - source .virtualenv/bin/activate
-  - pushd sm
-  - python manage.py migrate
-  - python manage.py collectstatic --noinput
-  - popd
+  script:
+    - source .virtualenv/bin/activate
+    - pushd sm
+    - python manage.py migrate
+    - python manage.py collectstatic --noinput
+    - popd
 
 coverage:
-  - source .virtualenv/bin/activate
-  - pushd sm
-  - coverage run manage.py test -v3
-  - popd
+  script:
+    - source .virtualenv/bin/activate
+    - pushd sm
+    - coverage run manage.py test -v3
+    - popd
