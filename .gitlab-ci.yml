@@ -1,6 +1,7 @@
 prepare:
   script:
-    - yum -y install python34 python34-pip
+    - yum install -y -t https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+    - yum -y -t install python34 python34-pip
     - pip install virtualenv --upgrade
     - virtualenv -p python3 .virtualenv
     - source .virtualenv/bin/activate
