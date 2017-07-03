@@ -1,7 +1,6 @@
 image: centos:centos7
 
-build:
-  stage: build
+before_script:
   script:
     - yum install -y -t https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
     - yum -y -t install python34 python34-pip
