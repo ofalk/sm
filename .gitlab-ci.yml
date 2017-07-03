@@ -16,7 +16,7 @@ coverage:
     - pushd sm
     - python manage.py migrate
     - python manage.py collectstatic --noinput
-    - coverage run manage.py test -v3
+    - coverage run --source . manage.py test -v3
     - coverage html
     - popd
   artifacts:
