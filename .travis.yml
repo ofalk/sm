@@ -9,15 +9,19 @@ branches:
         - master
 # command to install dependencies
 install:
+  - virtualenv -p python3 .virtualenv:
+  - source .virtualenv/bin/activate
   - pip install -r requirements.txt
   - pip install "$DJANGO"
   - pip install python-coveralls
   - pip install coverage
 before_script:
+  - source .virtualenv/bin/activate
   - pushd sm
   - python manage.py migrate
   - python manage.py collectstatic --noinput
   - popd
 # command to run tests
 script:
-    - coverage run manage.py test -v3
+  - source .virtualenv/bin/activate
+  - coverage run manage.py test -v3
