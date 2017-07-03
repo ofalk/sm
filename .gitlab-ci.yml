@@ -1,3 +1,17 @@
+image: centos:centos7
+
+build:
+  stage: build
+  script:
+    - yum install -y -t https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+    - yum -y -t install python34 python34-pip
+    - pip3 install virtualenv --upgrade
+    - virtualenv -p python3 /tmp/.virtualenv
+    - source /tmp/.virtualenv/bin/activate
+    - pip install -r requirements.txt
+    - pip install python-coveralls
+    - pip install coverage
+
 coverage:
   stage: test
   script:
@@ -24,7 +38,7 @@ pages:
   dependencies:
     - coverage
   script:
-    - mv htmlcov/ public/
+    - mv sm/htmlcov/ public/
   artifacts:
     paths:
       - public
