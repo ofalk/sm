@@ -1,0 +1,21 @@
+before_script:
+  - yum install -y python3 python34-devel python34-pip
+  - pip install virtualenv --upgrade
+  - virtualenv -p python3 .virtualenv
+  - source .virtualenv/bin/activate
+  - pip install -r requirements.txt
+  - pip install python-coveralls
+  - pip install coverage
+
+prepare:
+  - source .virtualenv/bin/activate
+  - pushd sm
+  - python manage.py migrate
+  - python manage.py collectstatic --noinput
+  - popd
+
+coverage:
+  - source .virtualenv/bin/activate
+  - pushd sm
+  - coverage run manage.py test -v3
+  - popd
