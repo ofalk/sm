@@ -1,4 +1,4 @@
-prepare:
+coverage:
   script:
     - yum install -y -t https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
     - yum -y -t install python34 python34-pip
@@ -11,11 +11,5 @@ prepare:
     - pushd sm
     - python manage.py migrate
     - python manage.py collectstatic --noinput
-    - popd
-
-coverage:
-  script:
-    - source /tmp/.virtualenv/bin/activate
-    - pushd sm
     - coverage run manage.py test -v3
     - popd
