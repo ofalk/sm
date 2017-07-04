@@ -25,13 +25,32 @@ class LocationTestCase(unittest.TestCase):
         loc = LocationModel.objects.get(name='Virtual123XXX')
         self.assertEqual(loc.name, 'Virtual123XXX', 'name not correct')
 
-    def test_3_nonexisting_country(self):
+    def test_3_location_name__str___wo_country(self):
+        from location.models import Location as LocationModel
+        loc = LocationModel.objects.get(name='Virtual123XXX')
+        self.assertEqual("%s" % loc.name, 'Virtual123XXX', 'name not correct')
+
+    def test_4_location__str___w_country(self):
+        from location.models import Location as LocationModel
+        loc = LocationModel.objects.get(name='Virtual123XXX')
+        loc.country = 'Austria'
+        self.assertEqual("%s" % loc, 'Virtual123XXX / Austria',
+                         'name not correct')
+
+    def test_4_location__str___w_nonexistant_country(self):
+        from location.models import Location as LocationModel
+        loc = LocationModel.objects.get(name='Virtual123XXX')
+        loc.country = 'Mars'
+        self.assertEqual("%s" % loc, 'Virtual123XXX / Mars',
+                         'name not correct')
+
+    def test_5_nonexisting_country(self):
         from location.models import Location as LocationModel
         loc = LocationModel.objects.get(name='Virtual123XXX')
         loc.country = 'Mars'
         self.assertEqual(loc.country.flag_url, None)
 
-    def test_4_location_delete(self):
+    def test_6_location_delete(self):
         from location.models import Location as LocationModel
         loc = LocationModel.objects.get(name='Virtual123XXX')
         res = loc.delete()
