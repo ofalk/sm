@@ -49,7 +49,9 @@ class OperatingsystemTestCase(unittest.TestCase):
         from operatingsystem.models import Operatingsystem as OSModel
         from vendor.models import Vendor as VendorModel
         vendor, created = VendorModel.objects.get_or_create(name='Red Hat')
-        os = OSModel.objects.get_or_create(vendor=vendor, version='7.0')
+        os, created = OSModel.objects.get_or_create(
+            vendor=vendor,
+            version='7.0')
         self.assertIsInstance(os, OSModel,
                               'object not a Operatingsystem model!?')
 
@@ -85,27 +87,6 @@ class OperatingsystemTestCase(unittest.TestCase):
         self.assertTrue('Cannot find matching object' in
                         str(context.exception))
 
-#    def test_4_location__str___w_nonexistant_country(self):
-#        from location.models import Location as LocationModel
-#        loc = LocationModel.objects.get(name='Virtual123XXX')
-#        loc.country = 'Mars'
-#        self.assertEqual("%s" % loc, 'Virtual123XXX / Mars',
-#                         'name not correct')
-#
-#    def test_5_nonexisting_country(self):
-#        from location.models import Location as LocationModel
-#        loc = LocationModel.objects.get(name='Virtual123XXX')
-#        loc.country = 'Mars'
-#        self.assertEqual(loc.country.flag_url, None)
-#
-#    def test_6_location_delete(self):
-#        from location.models import Location as LocationModel
-#        loc = LocationModel.objects.get(name='Virtual123XXX')
-#        res = loc.delete()
-#        self.assertEqual(res[0], 1)
-#        self.assertTrue('sm.Location' in res[1])
-#        self.assertEqual(res[1]['sm.Location'], 1)
-#
     def tearDownClass():
         """
         Make sure we delete our test object at the end
