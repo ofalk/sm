@@ -87,6 +87,27 @@ class OperatingsystemTestCase(unittest.TestCase):
         self.assertTrue('Cannot find matching object' in
                         str(context.exception))
 
+    def test_12_nat_key_vendor_version_exists(self):
+        from operatingsystem.models import Operatingsystem as OSModel
+        os = OSModel.objects.get_by_natural_key(
+            vendor='Red Hat',
+            version='7.0')
+        self.assertIsInstance(os, OSModel,
+                              'object not a Operatingsystem model!?')
+
+    def test_13_natkey_get_with_tuple(self):
+        from operatingsystem.models import Operatingsystem as OSModel
+        os = OSModel.objects.get_by_natural_key(('Red Hat', '7.0'))
+        self.assertIsInstance(os, OSModel,
+                              'object not a Operatingsystem model!?')
+
+    def test_14_query_with_dict_exception(self):
+        from operatingsystem.models import Operatingsystem as OSModel
+        with self.assertRaises(Exception) as context:
+            OSModel.objects.get_by_natural_key({})
+        self.assertTrue("No idea how to handle query with <class 'dict'>" in
+                        str(context.exception))
+
     def tearDownClass():
         """
         Make sure we delete our test object at the end
