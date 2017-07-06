@@ -1,7 +1,7 @@
 from django.db import models
 from natural_keys import NaturalKeyModel
 
-from vendor.models import *
+from vendor.models import Vendor
 
 from django.core.exceptions import ObjectDoesNotExist
 
@@ -23,42 +23,53 @@ class OperatingsystemManager(models.Manager):
         vendorobj = None
         try:
             vendorobj = Vendor.objects.get(name=vendor)
-        except:
+        except Exception as e:
             pass
         object = None
         try:
             object = self.get(vendor=vendorobj, version=version)
             return object
-        except:
+        except Exception as e:
             pass
 
-        if version == None and vendor is not None:
+        if version is None and vendor is not None:
             version = vendor
             vendor = None
 
-        if object == None and version.__class__ != tuple:
+        if object is None and \
+           version.__class__ != tuple and \
+           version.__class__ != list and \
+           version.__class__ != dict:
             if version[0:7] == 'Red Hat':
                 vendorobj = Vendor.objects.get(name='Red Hat')
                 vers = version[7:].lstrip()
-                if len(vers) == 1: vers += '.0'
+                if len(vers) == 1:
+                    vers += '.0'
                 object = self.get(vendor=vendorobj, version=vers)
             elif version[0:4] == 'RHEL':
                 vendorobj = Vendor.objects.get(name='Red Hat')
                 vers = version[4:].lstrip()
-                if len(vers) == 1: vers += '.0'
+                if len(vers) == 1:
+                    vers += '.0'
                 object = self.get(vendor=vendorobj, version=vers)
             elif version[0:4] == 'SUSE' or version[0:4] == 'SLES':
                 vendorobj = Vendor.objects.get(name='Novell')
-                object = self.get(vendor=vendorobj, version=version[4:].lstrip())
-        else:
+                object = self.get(
+                    vendor=vendorobj,
+                    version=version[4:].lstrip())
+        elif version.__class__ == tuple or version.__class__ == list:
             try:
                 vendorobj = Vendor.objects.get(name=version[0])
                 object = self.get(vendor=vendorobj, version=version[1])
                 return object
-            except:
+            except Exception as e:
+                print("Exception: %s" % e)
                 pass
+        else:
+            raise Exception('No idea how to handle query with %s' %
+                            version.__class__)
 
-        if object == None:
+        if object is None:
             raise ObjectDoesNotExist("Cannot find matching object")
 
         return object
