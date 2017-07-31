@@ -50,7 +50,13 @@ class LocationTestCase(unittest.TestCase):
         loc.country = 'Mars'
         self.assertEqual(loc.country.flag_url, None)
 
-    def test_6_location_delete(self):
+    def test_6___str__wo_country(self):
+        from location.models import Location as LocationModel
+        loc = LocationModel.objects.get(name='Virtual123XXX')
+        loc.country = None
+        self.assertEqual(loc.__str__(), 'Virtual123XXX')
+
+    def test_7_location_delete(self):
         from location.models import Location as LocationModel
         loc = LocationModel.objects.get(name='Virtual123XXX')
         res = loc.delete()
@@ -65,10 +71,10 @@ class LocationTestCase(unittest.TestCase):
         from location.models import Location as LocationModel
         try:
             loc = LocationModel.objects.get(name='Virtual123XXX')
-            loc.delete()
+            loc.delete()  # noqa
         except Exception as e:
             pass
 
 
 if __name__ == '__main__':
-    unittest.main()
+    unittest.main()  # noqa
