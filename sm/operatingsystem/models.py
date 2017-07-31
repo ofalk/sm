@@ -62,9 +62,9 @@ class OperatingsystemManager(models.Manager):
                 vendorobj = Vendor.objects.get(name=version[0])
                 object = self.get(vendor=vendorobj, version=version[1])
                 return object
-            except Exception as e:
-                print("Exception: %s" % e)
-                pass
+            except Exception as e:  # pragma: no cover
+                print("Exception: %s" % e)  # pragma: no cover
+                pass  # pragma: no cover
         else:
             raise Exception('No idea how to handle query with %s' %
                             version.__class__)

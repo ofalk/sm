@@ -67,19 +67,25 @@ class OperatingsystemTestCase(unittest.TestCase):
         self.assertIsInstance(os, OSModel,
                               'object not a Operatingsystem model!?')
 
-    def test_09_get_or_create_sles_10(self):
+    def test_09_get_rhel_7_by_nat_key3(self):
+        from operatingsystem.models import Operatingsystem as OSModel
+        os = OSModel.objects.get_by_natural_key('Red Hat7')
+        self.assertIsInstance(os, OSModel,
+                              'object not a Operatingsystem model!?')
+
+    def test_10_get_or_create_sles_10(self):
         from operatingsystem.models import Operatingsystem as OSModel
         from vendor.models import Vendor as VendorModel
         vendor, created = VendorModel.objects.get_or_create(name='Novell')
         OSModel.objects.get_or_create(vendor=vendor, version='10.0')
 
-    def test_10_get_sles_10_by_nat_key(self):
+    def test_11_get_sles_10_by_nat_key(self):
         from operatingsystem.models import Operatingsystem as OSModel
         os = OSModel.objects.get_by_natural_key('SLES 10.0')
         self.assertIsInstance(os, OSModel,
                               'object not a Operatingsystem model!?')
 
-    def test_11_nat_key_funny_doesnt_exist(self):
+    def test_12_nat_key_funny_doesnt_exist(self):
         from operatingsystem.models import Operatingsystem as OSModel
         from django.core.exceptions import ObjectDoesNotExist
         with self.assertRaises(ObjectDoesNotExist) as context:
@@ -87,7 +93,7 @@ class OperatingsystemTestCase(unittest.TestCase):
         self.assertTrue('Cannot find matching object' in
                         str(context.exception))
 
-    def test_12_nat_key_vendor_version_exists(self):
+    def test_13_nat_key_vendor_version_exists(self):
         from operatingsystem.models import Operatingsystem as OSModel
         os = OSModel.objects.get_by_natural_key(
             vendor='Red Hat',
@@ -95,13 +101,13 @@ class OperatingsystemTestCase(unittest.TestCase):
         self.assertIsInstance(os, OSModel,
                               'object not a Operatingsystem model!?')
 
-    def test_13_natkey_get_with_tuple(self):
+    def test_14_natkey_get_with_tuple(self):
         from operatingsystem.models import Operatingsystem as OSModel
         os = OSModel.objects.get_by_natural_key(('Red Hat', '7.0'))
         self.assertIsInstance(os, OSModel,
                               'object not a Operatingsystem model!?')
 
-    def test_14_query_with_dict_exception(self):
+    def test_15_query_with_dict_exception(self):
         from operatingsystem.models import Operatingsystem as OSModel
         with self.assertRaises(Exception) as context:
             OSModel.objects.get_by_natural_key({})
@@ -116,9 +122,9 @@ class OperatingsystemTestCase(unittest.TestCase):
         try:
             osmod = OSModel.objects.get(version="123XXX")
             osmod.delete()
-        except Exception as e:  # noqa
-            pass  # noqa
+        except Exception as e:  # pragma: no cover
+            pass  # pragma: no cover
 
 
 if __name__ == '__main__':
-    unittest.main()  # noqa
+    unittest.main()  # pragma: no cover
