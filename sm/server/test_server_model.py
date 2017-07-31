@@ -40,9 +40,9 @@ class ServerTestCase(unittest.TestCase):
         try:
             server = ServerModel.objects.get(hostname='virtualXXX123')
             server.delete()
-        except Exception as e:  # noqa
-            pass  # noqa
+        except Exception as e:  # pragma: no cover
+            pass  # pragma: no cover
 
 
 if __name__ == '__main__':
-    unittest.main()  # noqa
+    unittest.main()  # pragma: no cover
