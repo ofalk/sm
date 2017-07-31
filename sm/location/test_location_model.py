@@ -71,10 +71,10 @@ class LocationTestCase(unittest.TestCase):
         from location.models import Location as LocationModel
         try:
             loc = LocationModel.objects.get(name='Virtual123XXX')
-            loc.delete()  # noqa
+            loc.delete()  # pragma: no cover
         except Exception as e:
             pass
 
 
 if __name__ == '__main__':
-    unittest.main()  # noqa
+    unittest.main()  # pragma: no cover

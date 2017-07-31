@@ -45,10 +45,10 @@ class ModelTestCase(unittest.TestCase):
         from patchtime.models import Patchtime as PatchtimeModel
         try:
             pat = PatchtimeModel.objects.get(name='DailyXXXXX')
-            pat.delete()  # noqa
+            pat.delete()  # pragma: no cover
         except Exception as e:
             pass
 
 
 if __name__ == '__main__':
-    unittest.main()  # noqa
+    unittest.main()  # pragma: no cover
