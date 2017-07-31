@@ -1,6 +1,6 @@
 from django.db import models
-from patchtime.models import *
-from status.models import *
+from patchtime.models import Patchtime
+from status.models import Status
 
 
 class Server(models.Model):
