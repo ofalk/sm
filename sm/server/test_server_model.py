@@ -23,12 +23,14 @@ class ServerTestCase(unittest.TestCase):
     def test_2_server_hostname(self):
         from server.models import Server as ServerModel
         server = ServerModel.objects.get(hostname='virtualXXX123')
-        self.assertEqual(server.hostname, 'virtualXXX123', 'hostname not correct')
+        self.assertEqual(server.hostname, 'virtualXXX123',
+                         'hostname not correct')
 
     def test_3_server_hostname__str__(self):
         from server.models import Server as ServerModel
         server = ServerModel.objects.get(hostname='virtualXXX123')
-        self.assertEqual("%s" % server, 'virtualXXX123', 'hostname not correct')
+        self.assertEqual("%s" % server, 'virtualXXX123',
+                         'hostname not correct')
 
     def tearDownClass():
         """
@@ -38,9 +40,9 @@ class ServerTestCase(unittest.TestCase):
         try:
             server = ServerModel.objects.get(hostname='virtualXXX123')
             server.delete()
-        except Exception as e:
-            pass
+        except Exception as e:  # noqa
+            pass  # noqa
 
 
 if __name__ == '__main__':
-    unittest.main()
+    unittest.main()  # noqa
