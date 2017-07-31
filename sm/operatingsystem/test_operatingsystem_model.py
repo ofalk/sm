@@ -116,9 +116,9 @@ class OperatingsystemTestCase(unittest.TestCase):
         try:
             osmod = OSModel.objects.get(version="123XXX")
             osmod.delete()
-        except Exception as e:
-            pass
+        except Exception as e:  # noqa
+            pass  # noqa
 
 
 if __name__ == '__main__':
-    unittest.main()
+    unittest.main()  # noqa
