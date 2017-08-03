@@ -21,7 +21,7 @@ def get_message_tags(message):
     if level_tag == "error":
         # Alias the error tag as danger, since .alert-error no longer exists
         # in Bootstrap 3
-        level_tag = "danger"
+        level_tag = "danger" # pragma: no cover
 
     if level_tag:
         alert_level_tag = "alert-{tag}".format(tag=level_tag)

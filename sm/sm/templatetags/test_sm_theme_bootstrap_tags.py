@@ -46,8 +46,7 @@ class TestCase(TestCase):
             'message': TestCase.FakeMessage(DEFAULT_MESSAGE_LEVELS.ERROR,
                                             'error message')
         }))
-        # This test is very special, since it tests if error is correctly
-        # translated into danger alert tag (Bootstrap 3)
+        # error is danger in Bootstrap 3
         self.assertEqual(rendered, 'alert-danger')
 
     def test_02_warning_with_extra_tag(self):
@@ -63,7 +62,14 @@ class TestCase(TestCase):
         string = '{% load sm_theme_bootstrap_tags %}'
         string += '{% get_message_tags message %}'
         rendered = Template(string).render(Context({
-            'message': TestCase.FakeMessage(None,
-                                            'message', 'testtag')
+            'message': TestCase.FakeMessage(None, 'message', 'testtag')
         }))
         self.assertEqual(rendered, 'testtag')
+
+    def test_04_empty(self):
+        string = '{% load sm_theme_bootstrap_tags %}'
+        string += '{% get_message_tags message %}'
+        rendered = Template(string).render(Context({
+            'message': TestCase.FakeMessage(None, '')
+        }))
+        self.assertEqual(rendered, '')
