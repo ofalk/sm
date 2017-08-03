@@ -22,9 +22,6 @@ class TestCase(TestCase):
             self.extra_tags = extra_tags
             self.message = message
 
-        def __str__(self):
-            return self.message
-
     def test_00_load(self):
         string = '{% load sm_theme_bootstrap_tags %}'
         rendered = Template(string).render(Context({}))
