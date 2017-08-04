@@ -2,10 +2,10 @@ from django.test import TestCase
 from django.contrib.messages import constants as DEFAULT_MESSAGE_LEVELS
 from django.template import Context, Template
 
-import os
-import django
-os.environ['DJANGO_SETTINGS_MODULE'] = 'sm.settings'
-django.setup()
+# The following two lines are required to test rewrite of error to danger
+# in sm_theme_bootstrap_tags
+from django.conf import settings
+del settings.MESSAGE_TAGS
 
 
 class TestCase(TestCase):
