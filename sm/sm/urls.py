@@ -23,6 +23,9 @@ from django.views.generic.base import RedirectView
 
 import debug_toolbar
 
+from sm.utils import modules_with_urls
+from importlib import import_module
+
 urlpatterns = [
     url(r'^__debug__/', include(debug_toolbar.urls)),
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
@@ -32,5 +35,12 @@ urlpatterns = [
         name='account_social_accounts'),
     url(r'', include('social_django.urls')),
     url(r'^account/', include('account.urls')),
-    url(r'', RedirectView.as_view(url='/account/settings/')),
-] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+]
+
+for module in modules_with_urls():
+    import_module(module + '.' + 'urls')
+    urlpatterns.append(url(r'^' + module + '/',
+                       include(module + '.' + 'urls')))
+
+urlpatterns.append(url(r'', RedirectView.as_view(url='/account/settings/')))
+urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
