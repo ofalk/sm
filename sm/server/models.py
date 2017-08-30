@@ -15,7 +15,7 @@ class Server(models.Model):
     last_update = models.DateTimeField(auto_now=True)
     documentation_url = models.URLField(max_length=2083, blank=True, null=True)
     memory_in_mb = models.IntegerField(blank=True, null=True)
-    location = models.ForeignKey(Location, on_delete=models.PROTECT)
+    location = models.ForeignKey(Location, on_delete=models.PROTECT, null=True)
 
     status = models.ForeignKey(Status, on_delete=models.PROTECT, default=1)
 
