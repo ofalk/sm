@@ -16,6 +16,7 @@ INSTALLED_APPS.extend([
   'account',
   'social_django',
   'social.apps.django_app.default',
+  'bootstrap3',
   'bootstrap4',
   'debug_toolbar',
 

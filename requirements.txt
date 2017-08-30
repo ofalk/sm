@@ -9,6 +9,7 @@ social-auth-core
 social-auth-app-django
 django-extensions
 django-bootstrap4
+django-bootstrap3
 pyyaml
 natural-keys
 django-countries
