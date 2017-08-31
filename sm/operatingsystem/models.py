@@ -1,6 +1,6 @@
 from django.db import models
 from natural_keys import NaturalKeyModel
-
+from django.urls import reverse
 from vendor.models import Vendor
 
 from django.core.exceptions import ObjectDoesNotExist
@@ -82,6 +82,9 @@ class Operatingsystem(NaturalKeyModel):
 
     def __str__(self):
         return "%s %s" % (self.vendor.name, self.version)
+
+    def get_absolute_url(self):
+        return reverse('operatingsystem:detail', kwargs={'pk': self.pk})
 
     def natural_key(self):
         return (self.vendor.name, self.version)

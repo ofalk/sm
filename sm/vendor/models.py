@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 from natural_keys import NaturalKeyModel
 
 
@@ -7,6 +8,9 @@ class Vendor(NaturalKeyModel):
 
     def __str__(self):
         return "%s" % self.name
+
+    def get_absolute_url(self):
+        return reverse('vendor:detail', kwargs={'pk': self.pk})
 
     class Meta:
         managed = True

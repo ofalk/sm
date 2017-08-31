@@ -1,5 +1,6 @@
 from django.db import models
 from natural_keys import NaturalKeyModel
+from django.urls import reverse
 
 
 class Domain(NaturalKeyModel):
@@ -7,6 +8,9 @@ class Domain(NaturalKeyModel):
 
     def __str__(self):
         return "%s" % self.name
+
+    def get_absolute_url(self):
+        return reverse('domain:detail', kwargs={'pk': self.pk})
 
     class Meta:
         managed = True

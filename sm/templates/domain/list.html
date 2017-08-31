@@ -1,0 +1,59 @@
+{% extends "site_base.html" %}
+
+{% load account_tags %}
+{% load i18n %}
+{% load bootstrap4 %}
+
+{% block head_title %}{% trans "Domain" %}{% endblock %}
+
+{% block body %}
+<div class="container" style="padding-top: 20px;">
+  <div class="panel panel-default">
+    {% if not object_list %}
+      <div class="panel-heading"><b>{% trans 'No results' %}</b></div>
+    {% else %}
+    <table class="table table-hover table-striped" id="domain_list" style="font-size:80%;">
+      <thead>
+        <tr>
+          <th>Name</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for object in object_list.all %}
+          <tr>
+            <td>
+              <a href="{% url 'domain:detail' object.pk %}" title="{{ object.name }}">
+                <div>{{ object.name }}</div>
+              </a>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% endif %}
+    {% if is_paginated %}
+      <div align="center" style="width: inherit;">
+        <nav aria-label="Pagination">
+          <ul class="pagination pagination-sm">
+            <li class="page-item {% if not page_obj.has_previous %}disabled{% endif %}">
+            <a class="page-link" href="?page={% if page_obj.has_previous %}{{ page_obj.previous_page_number }}{% else %}#{% endif %}" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+                <span class="sr-only">Previous</span>
+              </a>
+            </li>
+            {% for i in paginator.page_range %}
+                <li class="page-item {% if page_obj.number == i %}active{% endif %}"><a class="page-link" href="?page={{i}}">{{i}}</a></li>
+            {% endfor %}
+            <li class="page-item {% if not page_obj.has_next %}disabled{% endif %}">
+            <a class="page-link" href="?page={% if page_obj.has_next %}{{ page_obj.next_page_number }}{% else %}#{% endif %}" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+                <span class="sr-only">Next</span>
+              </a>
+            </li>
+        </ul>
+      </div>
+    {% endif %}
+  </div> <!-- panel -->
+</div> <!-- container -->
+
+{% endblock %}
