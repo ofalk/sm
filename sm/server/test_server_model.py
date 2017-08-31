@@ -35,7 +35,8 @@ class ServerTestCase(unittest.TestCase):
     def test_4_server_get_absolute_url(self):
         from server.models import Server as ServerModel
         server = ServerModel.objects.get(hostname='virtualXXX123')
-        self.assertEqual('/server/%i/' % server.id, server.get_absolute_url(),
+        self.assertEqual('/server/detail/%i/' % server.id,
+                         server.get_absolute_url(),
                          'reverse url not correct')
 
     def tearDownClass():
