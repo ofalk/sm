@@ -10,6 +10,9 @@ app_name = 'server'
 
 urlpatterns = [
     url(r'^$'.format(extra), views.ServerListView.as_view(), name='index'),
-    url(r'^(?P<pk>[-\w]+)/$'.format(extra),
+    url(r'^create$'.format(extra),
+        views.ServerCreateView.as_view(), name='create'),
+    url(r'^detail/(?P<pk>[-\w]+)/$'.format(extra),
         views.ServerDetailView.as_view(), name='detail'),
+
 ]
