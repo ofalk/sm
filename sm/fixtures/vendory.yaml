@@ -41,4 +41,11 @@
     "name": "Red Hat"
   }
 }
+{
+  "model": "sm.vendor",
+  "fields": {
+    "name": "Debian"
+  }
+}
+
 ]

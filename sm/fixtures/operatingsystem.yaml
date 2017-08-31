@@ -259,4 +259,15 @@
     ]
   }
 }
+{
+  "pk": null,
+  "model": "sm.operatingsystem",
+  "fields": {
+    "version": "8",
+    "vendor": [
+      "Debian",
+    ]
+  }
+}
+
 ]
