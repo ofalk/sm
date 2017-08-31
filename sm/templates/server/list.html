@@ -15,27 +15,32 @@
     <table class="table table-hover table-striped" id="server_list" style="font-size:80%;">
       <thead>
         <tr>
-          <th style="padding-left: 10px; border-bottom: 1px solid #ddd;" id="hostname"
-            onmouseover='this.style.textDecoration="underline"; this.style.cursor="s-resize";'
-            onmouseout='this.style.textDecoration="none"'>
-            Hostname</th>
-          <th style"padding-left: 10px; border-bottom: 1px solid #ddd;" id="location"
-            onmouseover='this.style.textDecoration="underline"; this.style.cursor="s-resize";'
-            onmouseout='this.style.textDecoration="none"'>
-            Location</th>
+          <th>Hostname</th>
+          <th class="hidden-sm-down">Status</th>
+          <th class="hidden-sm-down">Location</th>
+          <th>Description</th>
+          <th class="hidden-sm-down">OS</th>
+          <th class="hidden-xs-down">Primary IP</th>
+          <th class="hidden-sm-down">Patchtime</th>
         </tr>
       </thead>
       <tbody>
         {% for object in object_list.all %}
           <tr>
-            <td style="padding-left: 10px; border-bottom: 1px solid #ddd;"> <!-- TODO: style? -->
+            <td>
               <a href="{% url 'server:detail' object.pk %}" title="{{ object.hostname }}.{{ object.domain }}">
-                {{ object.hostname }}
+                <div class="hidden-md-up">{{ object.hostname }}{% include "status-icon.html" %}</div>
+                <div class="hidden-sm-down">{{ object.hostname }}</div>
               </a>
             </td>
-            <td style="padding-left: 10px; border-bottom: 1px solid #ddd;"> <!-- TODO: style? -->
-              {{ object.location }}
+            <td class="hidden-sm-down">
+              {% include "status-icon.html" %}
             </td>
+            <td class="hidden-sm-down">{{ object.location }}</td>
+            <td>{{ object.description }}</td>
+            <td class="hidden-sm-down">{{ object.operatingsystem }}</td>
+            <td class="hidden-xs-down">{{ object.primary_ip }}</td>
+            <td class="hidden-sm-down">{{ object.patchtime }}</td>
           </tr>
         {% endfor %}
       </tbody>
