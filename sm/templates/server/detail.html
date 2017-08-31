@@ -8,7 +8,13 @@
 {% block head_title %}{% trans "Server" %} :: {{ object.hostname }}.{{ object.domain }}{% endblock %}
 
 {% block body %}
-<form action="{% url 'server:detail' object.pk %}" method="post" class="form">
+
+{% if object %}
+  <form action="{% url 'server:detail' object.pk %}" method="post" class="form">
+{% else %}
+  <form action="{% url 'server:create' %}" method="post" class="form">
+{% endif %}
+
 {% csrf_token %}
 {% bootstrap_form form %}
 {% buttons %}
