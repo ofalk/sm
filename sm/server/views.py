@@ -7,7 +7,7 @@ from . models import Server
 
 from django import forms
 
-from django.views.generic.edit import UpdateView
+from django.views.generic.edit import UpdateView, CreateView
 
 
 class ServerListView(LoginRequiredMixin, ListView):
@@ -30,6 +30,12 @@ class ServerForm(forms.ModelForm):
 
 
 class ServerDetailView(UpdateView):
+    template_name = 'server/detail.html'
+    form_class = ServerForm
+    model = Server
+
+
+class ServerCreateView(CreateView):
     template_name = 'server/detail.html'
     form_class = ServerForm
     model = Server
