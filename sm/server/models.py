@@ -3,6 +3,7 @@ from patchtime.models import Patchtime
 from status.models import Status
 from domain.models import Domain
 from location.models import Location
+from operatingsystem.models import Operatingsystem
 from django.urls import reverse
 from django.utils.timezone import now
 
@@ -16,6 +17,9 @@ class Server(models.Model):
     documentation_url = models.URLField(max_length=2083, blank=True, null=True)
     memory_in_mb = models.IntegerField(blank=True, null=True)
     location = models.ForeignKey(Location, on_delete=models.PROTECT, null=True)
+    operatingsystem = models.ForeignKey(Operatingsystem,
+                                        on_delete=models.PROTECT,
+                                        null=True, blank=True)
 
     status = models.ForeignKey(Status, on_delete=models.PROTECT, default=1)
 
