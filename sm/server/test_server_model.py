@@ -32,6 +32,12 @@ class ServerTestCase(unittest.TestCase):
         self.assertEqual("%s" % server, 'virtualXXX123',
                          'hostname not correct')
 
+    def test_4_server_get_absolute_url(self):
+        from server.models import Server as ServerModel
+        server = ServerModel.objects.get(hostname='virtualXXX123')
+        self.assertEqual('/server/%i/' % server.id, server.get_absolute_url(),
+                         'reverse url not correct')
+
     def tearDownClass():
         """
         Make sure we delete our test object at the end
