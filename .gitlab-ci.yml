@@ -10,7 +10,7 @@ before_script:
   - pip install python-coveralls
   - pip install coverage
 
-coverage:
+test_and_coverage:
   stage: test
   script:
     - pushd sm
@@ -27,7 +27,7 @@ coverage:
 pages:
   stage: deploy
   dependencies:
-    - coverage
+    - test_and_coverage
   script:
     - mv sm/htmlcov/ public/
   artifacts:
