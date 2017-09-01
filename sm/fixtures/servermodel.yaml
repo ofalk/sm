@@ -1,0 +1,12 @@
+[
+{
+  "pk": null,
+  "model": "sm.servermodel",
+  "fields": {
+    "name": "DL380G9",
+    "vendor": [
+      "Hewlett Packard Enterprise",
+    ]
+  }
+},
+]
