@@ -18,7 +18,7 @@ class ServermodelListView(LoginRequiredMixin, ListView):
         if 'srvmanager-show_empty' in self.request.COOKIES:
             if self.request.COOKIES['srvmanager-show_empty'] == 'false':
                 return Vendor.objects.exclude(
-                    Servermodel=None).order_by('name')
+                    servermodel=None).order_by('name')
         return Vendor.objects.all().order_by('name')
 
 
