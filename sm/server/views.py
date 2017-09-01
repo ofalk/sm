@@ -39,3 +39,12 @@ class ServerCreateView(CreateView):
     template_name = 'server/detail.html'
     form_class = ServerForm
     model = Server
+
+
+class ServerSearchView(ListView):
+    template_name = 'server/list.html'
+    model = Server
+    paginate_by = 20
+    queryset = model.objects.all()
+    orphans = 3
+    ordering = 'hostname'
