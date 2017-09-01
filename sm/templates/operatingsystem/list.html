@@ -16,18 +16,29 @@
       <thead>
         <tr>
           <th>Vendor</th>
-          <th>Version</th>
+          <th>Versions</th>
+          <th>Actions</th>
         </tr>
       </thead>
       <tbody>
-        {% for object in object_list.all %}
+        {% for vendor in object_list.all %}
           <tr>
             <td>
-              <a href="{% url 'operatingsystem:detail' object.pk %}" title="{{ object.name }}">
-                <div>{{ object.vendor }}</div>
+              <a href="{% url 'vendor:detail' vendor.pk %}" title="{{ vendor.name }}">
+                <div>{{ vendor.name }}</div>
               </a>
             </td>
-            <td>{{ object.version }}</td>
+            <td>
+              {% for operatingsystem in vendor.operatingsystem_set.all %}
+                <a href="{% url 'operatingsystem:detail' operatingsystem.pk %}" title="{{ operatingsystem }}">
+                  {{ operatingsystem.version }}</a>{% if not forloop.last %}, {% endif %}
+              {% empty %}
+                None
+              {% endfor %}
+            </td>
+            <td>
+              <a href="{% url 'operatingsystem:create' vendor.name %}" title="Add new operatingsystem"><i class="fa fa-plus" aria-hidden="true"></i></a>
+            </td>
           </tr>
         {% endfor %}
       </tbody>

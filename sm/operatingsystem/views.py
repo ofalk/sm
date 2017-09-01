@@ -9,12 +9,13 @@ from django.views.generic.edit import UpdateView, CreateView
 
 
 class OperatingsystemListView(LoginRequiredMixin, ListView):
+    from vendor.models import Vendor
     template_name = 'operatingsystem/list.html'
-    model = Operatingsystem
+    model = Vendor
     paginate_by = 20
-    queryset = model.objects.all()
+    queryset = Vendor.objects.all()
     orphans = 3
-    ordering = ['vendor', 'version']
+    ordering = 'name'
 
 
 class OperatingsystemDetailView(UpdateView):
@@ -27,3 +28,11 @@ class OperatingsystemCreateView(CreateView):
     template_name = 'operatingsystem/detail.html'
     fields = '__all__'
     model = Operatingsystem
+
+    def get_initial(self):
+        from vendor.models import Vendor
+        initial = super(OperatingsystemCreateView, self).get_initial()
+        if 'vendor' in self.kwargs:
+            initial['vendor'] = Vendor.objects.filter(
+                name=self.kwargs['vendor']).first()
+        return initial

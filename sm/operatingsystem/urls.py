@@ -13,6 +13,8 @@ urlpatterns = [
         name='index'),
     url(r'^create$'.format(extra),
         views.OperatingsystemCreateView.as_view(), name='create'),
+    url(r'^create/(?P<vendor>[\w\s]+)$'.format(extra),
+        views.OperatingsystemCreateView.as_view(), name='create'),
     url(r'^detail/(?P<pk>[-\w]+)/$'.format(extra),
         views.OperatingsystemDetailView.as_view(), name='detail'),
 ]

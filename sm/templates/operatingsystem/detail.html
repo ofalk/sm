@@ -8,7 +8,6 @@
 {% block head_title %}{% trans "Operatingsystem" %} :: {{ object }}{% endblock %}
 
 {% block body %}
-
 {% if object %}
   <form action="{% url 'operatingsystem:detail' object.pk %}" method="post" class="form">
 {% else %}
