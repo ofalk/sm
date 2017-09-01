@@ -121,6 +121,15 @@ class OperatingsystemTestCase(unittest.TestCase):
                          item.get_absolute_url(),
                          'reverse url not correct')
 
+    def test_17_get_initial(self):
+        from operatingsystem.views import OperatingsystemCreateView as View
+        from vendor.models import Vendor as VendorModel
+        v = View()
+        v.kwargs = {'vendor': 'Red Hat'}
+        initial = v.get_initial()
+        self.assertIsInstance(initial['vendor'], VendorModel)
+        self.assertEqual(initial['vendor'].name, 'Red Hat')
+
     def tearDownClass():
         """
         Make sure we delete our test object at the end
