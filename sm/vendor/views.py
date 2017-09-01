@@ -17,13 +17,13 @@ class VendorListView(LoginRequiredMixin, ListView):
     ordering = 'name'
 
 
-class VendorDetailView(UpdateView):
+class VendorDetailView(LoginRequiredMixin, UpdateView):
     template_name = 'vendor/detail.html'
     fields = '__all__'
     model = Vendor
 
 
-class VendorCreateView(CreateView):
+class VendorCreateView(LoginRequiredMixin, CreateView):
     template_name = 'vendor/detail.html'
     fields = '__all__'
     model = Vendor

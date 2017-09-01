@@ -17,13 +17,13 @@ class DomainListView(LoginRequiredMixin, ListView):
     ordering = 'name'
 
 
-class DomainDetailView(UpdateView):
+class DomainDetailView(LoginRequiredMixin, UpdateView):
     template_name = 'domain/detail.html'
     fields = '__all__'
     model = Domain
 
 
-class DomainCreateView(CreateView):
+class DomainCreateView(LoginRequiredMixin, CreateView):
     template_name = 'domain/detail.html'
     fields = '__all__'
     model = Domain

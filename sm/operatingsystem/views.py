@@ -22,13 +22,13 @@ class OperatingsystemListView(LoginRequiredMixin, ListView):
         return Vendor.objects.all().order_by('name')
 
 
-class OperatingsystemDetailView(UpdateView):
+class OperatingsystemDetailView(LoginRequiredMixin, UpdateView):
     template_name = 'operatingsystem/detail.html'
     fields = '__all__'
     model = Operatingsystem
 
 
-class OperatingsystemCreateView(CreateView):
+class OperatingsystemCreateView(LoginRequiredMixin, CreateView):
     template_name = 'operatingsystem/detail.html'
     fields = '__all__'
     model = Operatingsystem

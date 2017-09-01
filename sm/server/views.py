@@ -29,19 +29,19 @@ class ServerForm(forms.ModelForm):
         }
 
 
-class ServerDetailView(UpdateView):
+class ServerDetailView(LoginRequiredMixin, UpdateView):
     template_name = 'server/detail.html'
     form_class = ServerForm
     model = Server
 
 
-class ServerCreateView(CreateView):
+class ServerCreateView(LoginRequiredMixin, CreateView):
     template_name = 'server/detail.html'
     form_class = ServerForm
     model = Server
 
 
-class ServerSearchView(ListView):
+class ServerSearchView(LoginRequiredMixin, ListView):
     template_name = 'server/list.html'
     model = Server
     paginate_by = 20
