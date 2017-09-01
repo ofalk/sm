@@ -9,13 +9,17 @@ from django.views.generic.edit import UpdateView, CreateView
 
 
 class OperatingsystemListView(LoginRequiredMixin, ListView):
-    from vendor.models import Vendor
     template_name = 'operatingsystem/list.html'
-    model = Vendor
     paginate_by = 20
-    queryset = Vendor.objects.all()
     orphans = 3
-    ordering = 'name'
+
+    def get_queryset(self):
+        from vendor.models import Vendor
+        if 'srvmanager-show_empty' in self.request.COOKIES:
+            if self.request.COOKIES['srvmanager-show_empty'] == 'false':
+                return Vendor.objects.exclude(
+                    operatingsystem=None).order_by('name')
+        return Vendor.objects.all().order_by('name')
 
 
 class OperatingsystemDetailView(UpdateView):
