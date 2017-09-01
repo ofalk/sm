@@ -4,7 +4,17 @@ $(function() {
 
     var class_list = $("body").attr("class").split(/\s+/);
     $.each(class_list, function(index, item) {
-        var selector = "ul.nav li#tab_" + item;
+        var selector;
+        // Main menu entry
+        selector = "ul.nav li#tab_" + item;
+        $(selector).addClass("active");
+
+        // Submenu / Dropdown items
+        selector = "ul.nav a#" + item;
+        $(selector).addClass("active");
+
+        // Subnav - as seen in account pages
+        selector = "a." + item;
         $(selector).addClass("active");
     });
 
