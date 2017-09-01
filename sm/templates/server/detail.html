@@ -7,6 +7,8 @@
 
 {% block head_title %}{% trans "Server" %} :: {{ object.hostname }}.{{ object.domain }}{% endblock %}
 
+{% block body_class %}server server-{% if object %}detail{% else %}create{% endif %}{% endblock %}
+
 {% block body %}
 
 {% if object %}

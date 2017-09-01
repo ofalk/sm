@@ -7,6 +7,8 @@
 
 {% block head_title %}{% trans "Vendor" %} :: {{ object.name }}{% endblock %}
 
+{% block body_class %}vendor vendor-{% if object %}detail{% else %}create{% endif %}{% endblock %}
+
 {% block body %}
 
 {% if object %}
