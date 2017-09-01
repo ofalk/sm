@@ -30,7 +30,14 @@ class ModelTestCase(unittest.TestCase):
         obj = VendorModel.objects.get(name='VendorXXXX')
         self.assertEqual("%s" % obj, 'VendorXXXX', 'name not correct')
 
-    def test_4_delete(self):
+    def test_4_get_absolute_url(self):
+        from vendor.models import Vendor as Model
+        item = Model.objects.get(name='VendorXXXX')
+        self.assertEqual('/vendor/detail/%i/' % item.id,
+                         item.get_absolute_url(),
+                         'reverse url not correct')
+
+    def test_5_delete(self):
         from vendor.models import Vendor as VendorModel
         obj = VendorModel.objects.get(name='VendorXXXX')
         res = obj.delete()
