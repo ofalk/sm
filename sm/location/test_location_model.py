@@ -1,80 +1,55 @@
 import unittest
 
+from location.models import Location as Model
+
 import os
 import django
 os.environ['DJANGO_SETTINGS_MODULE'] = 'sm.settings'
 django.setup()
 
 
-class LocationTestCase(unittest.TestCase):
-    def test_0_location_import(self):
-        from location.models import Location as LocationModel
-        self.assertEqual(LocationModel, LocationModel, 'import went wrong')
+class Tester(unittest.TestCase):
+    model = Model
+    name = 'Virtual123XXX'
 
-    def test_1_location_creation(self):
-        from location.models import Location as LocationModel
-        loc, created = LocationModel.objects.get_or_create(
-            name='Virtual123XXX'
-        )
+    def test_1_creation(self):
+        item, created = self.model.objects.get_or_create(name=self.name)
         self.assertEqual(created, True, 'the object was already there?')
-        self.assertIsInstance(loc, LocationModel,
-                              'object not a Location model!?')
+        self.assertIsInstance(item, self.model, 'object not a Location model!')
 
-    def test_2_location_name(self):
-        from location.models import Location as LocationModel
-        loc = LocationModel.objects.get(name='Virtual123XXX')
-        self.assertEqual(loc.name, 'Virtual123XXX', 'name not correct')
+    def test_2_name(self):
+        item = self.model.objects.get(name=self.name)
+        self.assertEqual(item.name, self.name, 'name not correct')
 
-    def test_3_location_name__str___wo_country(self):
-        from location.models import Location as LocationModel
-        loc = LocationModel.objects.get(name='Virtual123XXX')
-        self.assertEqual("%s" % loc.name, 'Virtual123XXX', 'name not correct')
+    def test_3_name___str___wo_country(self):
+        item = self.model.objects.get(name=self.name)
+        self.assertEqual("%s" % item.name, self.name, 'name not correct')
 
-    def test_4_location__str___w_country(self):
-        from location.models import Location as LocationModel
-        loc = LocationModel.objects.get(name='Virtual123XXX')
-        loc.country = 'Austria'
-        self.assertEqual("%s" % loc, 'Virtual123XXX / Austria',
+    def test_4___str___w_country(self):
+        item = self.model.objects.get(name=self.name)
+        item.country = 'Austria'
+        self.assertEqual("%s" % item, '%s / Austria' % self.name,
                          'name not correct')
 
-    def test_4_location__str___w_nonexistant_country(self):
-        from location.models import Location as LocationModel
-        loc = LocationModel.objects.get(name='Virtual123XXX')
-        loc.country = 'Mars'
-        self.assertEqual("%s" % loc, 'Virtual123XXX / Mars',
+    def test_4___str___w_nonexistant_country(self):
+        item = self.model.objects.get(name=self.name)
+        item.country = 'Mars'
+        self.assertEqual("%s" % item, '%s / Mars' % self.name,
                          'name not correct')
 
     def test_5_nonexisting_country(self):
-        from location.models import Location as LocationModel
-        loc = LocationModel.objects.get(name='Virtual123XXX')
-        loc.country = 'Mars'
-        self.assertEqual(loc.country.flag_url, None)
+        item = self.model.objects.get(name=self.name)
+        item.country = 'Mars'
+        self.assertEqual(item.country.flag_url, None)
 
     def test_6___str__wo_country(self):
-        from location.models import Location as LocationModel
-        loc = LocationModel.objects.get(name='Virtual123XXX')
-        loc.country = None
-        self.assertEqual(loc.__str__(), 'Virtual123XXX')
+        item = self.model.objects.get(name=self.name)
+        item.country = None
+        self.assertEqual(item.__str__(), self.name)
 
-    def test_7_location_delete(self):
-        from location.models import Location as LocationModel
-        loc = LocationModel.objects.get(name='Virtual123XXX')
-        res = loc.delete()
+    def test_7_delete(self):
+        item = self.model.objects.get(name=self.name)
+        res = item.delete()
         self.assertEqual(res[0], 1)
         self.assertTrue('sm.Location' in res[1])
         self.assertEqual(res[1]['sm.Location'], 1)
-
-    def tearDownClass():
-        """
-        Make sure we delete our test object at the end
-        """
-        from location.models import Location as LocationModel
-        try:
-            loc = LocationModel.objects.get(name='Virtual123XXX')
-            loc.delete()  # pragma: no cover
-        except Exception as e:
-            pass
-
-
-if __name__ == '__main__':
-    unittest.main()  # pragma: no cover
