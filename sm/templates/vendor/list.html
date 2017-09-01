@@ -12,7 +12,7 @@
     {% if not object_list %}
       <div class="panel-heading"><b>{% trans 'No results' %}</b></div>
     {% else %}
-    <table class="table table-hover table-striped" id="domain_list" style="font-size:80%;">
+    <table class="table table-hover table-striped" id="vendor_list" style="font-size:80%;">
       <thead>
         <tr>
           <th>Name</th>
@@ -22,7 +22,7 @@
         {% for object in object_list.all %}
           <tr>
             <td>
-              <a href="{% url 'domain:detail' object.pk %}" title="{{ object.name }}">
+              <a href="{% url 'vendor:detail' object.pk %}" title="{{ object.name }}">
                 <div>{{ object.name }}</div>
               </a>
             </td>
