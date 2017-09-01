@@ -4,6 +4,7 @@ from status.models import Status
 from domain.models import Domain
 from location.models import Location
 from operatingsystem.models import Operatingsystem
+from servermodel.models import Servermodel
 from django.urls import reverse
 from django.utils.timezone import now
 
@@ -22,6 +23,9 @@ class Server(models.Model):
                                         null=True, blank=True)
 
     status = models.ForeignKey(Status, on_delete=models.PROTECT, default=1)
+
+    servermodel = models.ForeignKey(Servermodel, on_delete=models.PROTECT,
+                                    null=True)
 
     # => application model
     # application = models.CharField(max_length=100, blank=True, null=True)
