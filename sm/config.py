@@ -45,8 +45,12 @@ TEMPLATES[0]['OPTIONS']['context_processors'].extend([
     'social_django.context_processors.backends',
     'social_django.context_processors.login_redirect',
 ])
-TEMPLATES[0]['DIRS'].extend([
-  'templates/',
+if 'loaders' not in TEMPLATES[0]['OPTIONS']:
+    TEMPLATES[0]['OPTIONS']['loaders'] = []
+
+TEMPLATES[0]['OPTIONS']['loaders'].extend([
+    ('sm.template.loaders.app_directories_enhanced.Loader'),
+    ('django.template.loaders.app_directories.Loader', ),
 ])
 
 # Settings for django-bootstrap4
