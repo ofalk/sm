@@ -49,3 +49,7 @@ class Tester(unittest.TestCase):
         initial = v.get_initial()
         self.assertIsInstance(initial['vendor'], VendorModel)
         self.assertEqual(initial['vendor'].name, self.vendor.name)
+
+    def test_06_natural_key(self):
+        item = self.model.objects.get(name=self.name)
+        self.assertEqual(item.natural_key(), (self.vendor.name, self.name))
