@@ -1,5 +1,6 @@
 .virtualenv
 **.pyc
+**.ropeproject
 sm/db.sqlite3
 sm/static
 sm/.coverage
