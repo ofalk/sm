@@ -31,7 +31,10 @@
           <tr>
             <td>
               <a href="{% url 'server:detail' object.pk %}" title="{{ object.hostname }}.{{ object.domain }}">
-                <div class="hidden-md-up">{{ object.hostname }}{% include "status-icon.html" %}</div>
+                <div class="hidden-md-up">
+                  {% include "status-icon.html" %}
+                  {{ object.hostname }}
+                </div>
                 <div class="hidden-sm-down">{{ object.hostname }}</div>
               </a>
             </td>
