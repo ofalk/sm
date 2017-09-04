@@ -18,7 +18,9 @@
         $('#show_empty').ready(function(e) {
             var checked = getCookie('srvmanager-show_empty');
             if(checked == 'true') {
-                document.getElementById('show_empty').checked = checked;
+                document.getElementById('show_empty').checked = true;
+            } else {
+                document.getElementById('show_empty').checked = false;
             }
         });
         $('#show_empty').click(function() {
