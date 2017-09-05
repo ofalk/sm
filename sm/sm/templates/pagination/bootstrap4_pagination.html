@@ -1,0 +1,35 @@
+{# Pagination for django-pagination #}
+{% load i18n %}
+
+{% if is_paginated %}
+    <div align="center" style="width: inherit;">
+      <nav aria-label="Pagination">
+        <ul class="pagination pagination-sm">
+          <li class="page-item prev {% if not page_obj.has_previous %}disabled{% endif %}">
+          <a class="page-link" href="?page={% if page_obj.has_previous %}{{ page_obj.previous_page_number|stringformat:"d" }}{{ getvars }}{{ hashtag }}{% else %}#{% endif %}" aria-label="{% trans 'Previous' %}" title=""{% trans 'Previous' %}">
+              <span aria-hidden="true">&laquo;</span>
+              <span class="sr-only">Previous</span>
+            </a>
+          </li>
+          {% for page in paginator.page_range %}
+            {% if page %}
+                <li class="{% ifequal page page_obj.number %}active{% endifequal %} page-item">
+                  <a class="page-link" href="?page={{ page|stringformat:"d" }}{{ getvars }}{{ hashtag }}">{{ page|stringformat:"d" }}</a>
+                </li>
+            {% else %}
+                <li class="disabled page-item">
+                  <a class="page-link" href="#">…</a>
+                </li>
+            {% endif %}
+          {% endfor %}
+          <li class="next page-item {% if not page_obj.has_next %}disabled{% endif %}">
+            <a class="page-link" href="?page={{ page_obj.next_page_number|stringformat:"d" }}{{ getvars }}{{ hashtag }}" aria-label="{% trans "Next" %}">
+              <span aria-hidden="true">&raquo;</span>
+              <span class="sr-only">Next</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+  </div>
+{% endif %}
+

@@ -14,6 +14,10 @@ urlpatterns = [
         views.ServerCreateView.as_view(), name='create'),
     url(r'^detail/(?P<pk>[-\w]+)/$'.format(extra),
         views.ServerDetailView.as_view(), name='detail'),
+    url(r'^update/(?P<pk>[-\w]+)/$'.format(extra),
+        views.ServerUpdateView.as_view(), name='update'),
+    url(r'^delete/(?P<pk>[-\w]+)/$'.format(extra),
+        views.ServerDeleteView.as_view(), name='delete'),
     url(r'^search$'.format(extra),
         views.ServerSearchView.as_view(), name='search'),
 
