@@ -1,5 +1,9 @@
 import os
+from sys import platform, argv
 import django.contrib.messages as messages
+
+PACKAGE_ROOT = os.path.abspath(os.path.dirname(__file__))
+BASE_DIR = PACKAGE_ROOT
 
 DEBUG = True
 ADMIN_USERS = ['oliver@linux-kernel.at']
@@ -49,8 +53,15 @@ if 'loaders' not in TEMPLATES[0]['OPTIONS']:
     TEMPLATES[0]['OPTIONS']['loaders'] = []
 
 TEMPLATES[0]['OPTIONS']['loaders'].extend([
-    ('sm.template.loaders.app_directories_enhanced.Loader'),
+    ('django.template.loaders.filesystem.Loader', ),
+    ('sm.template.loaders.app_directories_enhanced.Loader', ),
+    # This is equivalent to APP_DIRS = True
     ('django.template.loaders.app_directories.Loader', ),
+])
+
+# Required for eg. account/login.html
+TEMPLATES[0]['DIRS'].extend([
+    os.path.join(BASE_DIR, 'sm', 'templates'),
 ])
 
 # Settings for django-bootstrap4
@@ -96,8 +107,6 @@ PROJECT_ROOT = os.path.abspath(
         os.pardir
     )
 )
-PACKAGE_ROOT = os.path.abspath(os.path.dirname(__file__))
-BASE_DIR = PACKAGE_ROOT
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
@@ -105,3 +114,32 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 MESSAGE_TAGS = {
     messages.ERROR: 'danger'
 }
+
+if 'test' in argv:
+    try:
+        from sm.settings import DATABASES
+    except Exception:
+        DATABASES = []
+    DATABASES['default'] = {'ENGINE': 'django.db.backends.sqlite3'}
+else:
+    if platform == 'darwin':
+        DATABASES = {
+            'default': {
+                'ENGINE': 'django.db.backends.sqlite3',
+                'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+            }
+        }
+    else:
+        DATABASES = {
+            'default': {
+                'ENGINE': 'django.db.backends.mysql',
+                'NAME': 'sm',
+                'USER': 'srvmanager',
+                'PASSWORD': 'srvmanager',
+                'HOST': 'mysql01',
+                'CONN_MAX_AGE': None,
+                'OPTIONS': {
+                    'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+                },
+            }
+        }
