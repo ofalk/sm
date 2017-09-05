@@ -46,6 +46,12 @@
   "fields": {
     "name": "Debian"
   }
+},
+{
+  "model": "sm.vendor",
+  "fields": {
+    "name": "VMware"
+  }
 }
 
 ]

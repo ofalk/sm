@@ -9,4 +9,15 @@
     ]
   }
 },
+{
+  "pk": null,
+  "model": "sm.servermodel",
+  "fields": {
+    "name": "Virtual",
+    "vendor": [
+      "VMware",
+    ]
+  }
+},
+
 ]
