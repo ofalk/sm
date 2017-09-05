@@ -1,14 +1,13 @@
 - model: sm.location
   fields:
     name: Headoffice
-    country: Austria
+    country: AT
 
 - model: sm.location
   fields:
     name: Virtual
-    country: None
 
 - model: sm.location
   fields:
     name: Graz
-    country: Austria
+    country: AT

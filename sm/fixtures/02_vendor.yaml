@@ -40,7 +40,7 @@
   "fields": {
     "name": "Red Hat"
   }
-}
+},
 {
   "model": "sm.vendor",
   "fields": {
