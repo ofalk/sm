@@ -13,7 +13,7 @@ class OperatingsystemManager(models.Manager):
     """
     def get_by_natural_key(self, vendor=None, version=None):
         """
-        Ease acces to OS objects, by providing a lot of different options
+        Ease access to OS objects, by providing a lot of different options
         to query for 'em. See also OperatingSystemManager.__doc__
         :model:`sm.models.OperatingsystemManager`
         """
@@ -70,7 +70,8 @@ class OperatingsystemManager(models.Manager):
                             version.__class__)
 
         if object is None:
-            raise ObjectDoesNotExist("Cannot find matching object")
+            vendorobj = Vendor.objects.get(name=vendor)
+            self.get(vendor=vendorobj, version=version)
 
         return object
 
