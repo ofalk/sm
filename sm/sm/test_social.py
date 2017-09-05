@@ -34,7 +34,7 @@ class TestCase(TestCase):
             '<i class="fa fa-facebook"></i> Facebook</a>\n'
         )
 
-    def test01_cannot_disconnect_password_missing(self):
+    def test_02_cannot_disconnect_password_missing(self):
         from social_django.models import UserSocialAuth as SocialModel
         socuser = SocialModel(user=self.user)
         socuser.provider = 'facebook'
@@ -51,7 +51,7 @@ class TestCase(TestCase):
             'You must set a valid password before you can disconnect.'
         )
 
-    def test01_can_disconnect(self):
+    def test_03_can_disconnect(self):
         from social_django.models import UserSocialAuth as SocialModel
         socuser = SocialModel(user=self.user)
         socuser.provider = 'facebook'

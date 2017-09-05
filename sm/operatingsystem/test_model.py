@@ -38,13 +38,13 @@ class Tester(TestCase):
         (item, created) = self.createTestItem()
         self.assertEqual(item.version, self.teststring, 'name not correct')
 
-    def test_03__str__(self):
+    def test_03___str__(self):
         (item, created) = self.createTestItem()
         self.assertEqual("%s" % item, '%s %s' %
                          (self.vendor.name, self.teststring),
                          'name not correct')
 
-    def test_04__natural_key__(self):
+    def test_04_natural_key__(self):
         (item, created) = self.createTestItem()
         self.assertEqual(item.natural_key(),
                          (self.vendor.name, self.teststring))
