@@ -88,7 +88,7 @@ class Tester(unittest.TestCase):
         from django.core.exceptions import ObjectDoesNotExist
         with self.assertRaises(ObjectDoesNotExist) as context:
             self.model.objects.get_by_natural_key('Hugo Boss 7.0')
-        self.assertTrue('Cannot find matching object' in
+        self.assertTrue('matching query does not exist' in
                         str(context.exception))
 
     def test_13_nat_key_vendor_version_exists(self):
