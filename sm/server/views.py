@@ -7,16 +7,17 @@ from . models import Server
 
 from django import forms
 
-from django.views.generic.edit import UpdateView, CreateView
+from django.views.generic.edit import UpdateView, CreateView, DeleteView
 from django.contrib.messages.views import SuccessMessageMixin
-from django.contrib import messages
 
 from django.utils.translation import ugettext as _
 
 from django.core.urlresolvers import reverse_lazy
 
+from django.contrib import messages
 
-class ServerListView(LoginRequiredMixin, ListView, SuccessMessageMixin):
+
+class ServerListView(LoginRequiredMixin, ListView):
     template_name = 'server/list.html'
     model = Server
     paginate_by = 20
@@ -44,7 +45,7 @@ class ServerFormDisabled(ServerForm):
                 self.fields[field].widget.attrs['readonly'] = True
 
 
-class ServerDetailView(LoginRequiredMixin, UpdateView, SuccessMessageMixin):
+class ServerDetailView(LoginRequiredMixin, UpdateView):
     template_name = 'server/detail.html'
     model = Server
     form_class = ServerFormDisabled
@@ -53,6 +54,8 @@ class ServerDetailView(LoginRequiredMixin, UpdateView, SuccessMessageMixin):
 class ServerUpdateView(ServerDetailView, SuccessMessageMixin):
     template_name = 'server/edit.html'
     form_class = ServerForm
+    success_url = reverse_lazy('server:index')
+    success_message = "%(hostname)s " + _('was updated successfully')
 
 
 class ServerCreateView(SuccessMessageMixin, LoginRequiredMixin, CreateView):
@@ -60,13 +63,19 @@ class ServerCreateView(SuccessMessageMixin, LoginRequiredMixin, CreateView):
     form_class = ServerForm
     model = Server
     success_url = reverse_lazy('server:index')
+    success_message = "%(hostname)s " + _('was created successfully')
 
-    def get_success_url(self):
-        messages.add_message(self.request, messages.INFO, 'Hello world.')
-        return self.success_url
 
-    def get_succes_message(self, cleaned_data):
-        return _('Server successfully created')
+class ServerDeleteView(SuccessMessageMixin, LoginRequiredMixin, DeleteView):
+    template_name = 'server/delete.html'
+    model = Server
+    success_url = reverse_lazy('server:index')
+    success_message = "%(hostname)s " + _('was deleted successfully')
+
+    def delete(self, request, *args, **kwargs):
+        obj = self.get_object()
+        messages.success(self.request, self.success_message % obj.__dict__)
+        return super(ServerDeleteView, self).delete(request, *args, **kwargs)
 
 
 class ServerSearchView(LoginRequiredMixin, ListView):

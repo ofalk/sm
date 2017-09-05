@@ -12,7 +12,7 @@
 {% block body %}
 
 {% if object %}
-  <form action="{% url 'server:edit' object.pk %}" method="post" class="form">
+  <form action="{% url 'server:update' object.pk %}" method="post" class="form">
 {% else %}
   <form action="{% url 'server:create' %}" method="post" class="form">
 {% endif %}

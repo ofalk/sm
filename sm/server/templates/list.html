@@ -17,20 +17,22 @@
     <table class="table table-hover table-striped" id="server_list" style="font-size:80%;">
       <thead>
         <tr>
-          <th>Hostname</th>
-          <th class="hidden-sm-down">Status</th>
-          <th class="hidden-sm-down">Location</th>
-          <th>Description</th>
-          <th class="hidden-sm-down">OS</th>
-          <th class="hidden-xs-down">Primary IP</th>
-          <th class="hidden-sm-down">Patchtime</th>
+          <th                       >{% trans 'Hostname' %}</th>
+          <th class="hidden-sm-down">{% trans 'Status' %}</th>
+          <th class="hidden-sm-down">{% trans 'Location' %}</th>
+          <th                       >{% trans 'Description' %}</th>
+          <th class="hidden-sm-down">{% trans 'Operatingsystem' %}</th>
+          <th class="hidden-xs-down">{% trans 'Primary IP' %}</th>
+          <th class="hidden-sm-down">{% trans 'Patchtime' %}</th>
+          <th                        >{% trans 'Actions' %}</th>
         </tr>
       </thead>
       <tbody>
         {% for object in object_list.all %}
           <tr>
             <td>
-              <a href="{% url 'server:detail' object.pk %}" title="{{ object.hostname }}.{{ object.domain }}">
+              <a href="{% url 'server:detail' object.pk %}"
+                 title="{% trans 'View' %} {{ object.hostname }}.{{ object.domain }}">
                 <div class="hidden-md-up">
                   {% include "status-icon.html" %}
                   {{ object.hostname }}
@@ -46,33 +48,20 @@
             <td class="hidden-sm-down">{{ object.operatingsystem }}</td>
             <td class="hidden-xs-down">{{ object.primary_ip }}</td>
             <td class="hidden-sm-down">{{ object.patchtime }}</td>
+            <td>
+              <a href="{% url 'server:update' object.pk %}" title="{% trans 'Edit server' %}">
+                <i class="fa fa-pencil fa-fw fa-lg" aria-hidden="true"></i>
+              </a>
+              <a href="{% url 'server:delete' object.pk %}" title="{% trans 'Delete server' %}">
+                <i class="fa fa-trash fa-fw fa-lg" aria-hidden="true"></i>
+              </a>
+            </td>
           </tr>
         {% endfor %}
       </tbody>
     </table>
     {% endif %}
-    {% if is_paginated %}
-      <div align="center" style="width: inherit;">
-        <nav aria-label="Pagination">
-          <ul class="pagination pagination-sm">
-            <li class="page-item {% if not page_obj.has_previous %}disabled{% endif %}">
-            <a class="page-link" href="?page={% if page_obj.has_previous %}{{ page_obj.previous_page_number }}{% else %}#{% endif %}" aria-label="Previous">
-                <span aria-hidden="true">&laquo;</span>
-                <span class="sr-only">Previous</span>
-              </a>
-            </li>
-            {% for i in paginator.page_range %}
-                <li class="page-item {% if page_obj.number == i %}active{% endif %}"><a class="page-link" href="?page={{i}}">{{i}}</a></li>
-            {% endfor %}
-            <li class="page-item {% if not page_obj.has_next %}disabled{% endif %}">
-            <a class="page-link" href="?page={% if page_obj.has_next %}{{ page_obj.next_page_number }}{% else %}#{% endif %}" aria-label="Next">
-                <span aria-hidden="true">&raquo;</span>
-                <span class="sr-only">Next</span>
-              </a>
-            </li>
-        </ul>
-      </div>
-    {% endif %}
+    {% include "pagination/pagination.html" %}
   </div> <!-- panel -->
 </div> <!-- container -->
 
