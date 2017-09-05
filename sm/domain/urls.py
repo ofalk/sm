@@ -14,4 +14,8 @@ urlpatterns = [
         views.DomainCreateView.as_view(), name='create'),
     url(r'^detail/(?P<pk>[-\w]+)/$'.format(extra),
         views.DomainDetailView.as_view(), name='detail'),
+    url(r'^update/(?P<pk>[-\w]+)/$'.format(extra),
+        views.DomainUpdateView.as_view(), name='update'),
+    url(r'^delete/(?P<pk>[-\w]+)/$'.format(extra),
+        views.DomainDeleteView.as_view(), name='delete'),
 ]
