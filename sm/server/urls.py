@@ -20,5 +20,4 @@ urlpatterns = [
         views.ServerDeleteView.as_view(), name='delete'),
     url(r'^search$'.format(extra),
         views.ServerSearchView.as_view(), name='search'),
-
 ]
