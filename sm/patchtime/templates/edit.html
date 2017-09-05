@@ -1,0 +1,26 @@
+{% extends "site_base.html" %}
+
+{% load account_tags %}
+{% load i18n %}
+{% load bootstrap3 %}
+{% load bootstrap4 %}
+
+{% block head_title %}{% trans "Patchtime" %} :: {% if object %}{{ object.name }}{% endif %}{% endblock %}
+
+{% block body_class %}patchtime patchtime-{% if object %}detail{% else %}create{% endif %}{% endblock %}
+
+{% block body %}
+
+{% if object %}
+  <form action="{% url 'patchtime:update' object.pk %}" method="post" class="form">
+{% else %}
+  <form action="{% url 'patchtime:create' %}" method="post" class="form">
+{% endif %}
+
+{% csrf_token %}
+{% bootstrap_form form %}
+{% buttons %}
+{% bootstrap_button "Save" button_type="submit" button_class="btn-primary" %}
+{% endbuttons %}
+
+{% endblock %}
