@@ -8,9 +8,43 @@
 {% block head_title %}{% trans "Domain" %} :: {{ object.name }}{% endblock %}
  
 {% block body_class %}domain domain-detail{% endblock %}
- 
+
 {% block body %}
  
 {% bootstrap_form form %}
+
+  <div class="panel panel-default">
+    {% if not object.server_set.all %}
+      <div class="panel-heading"><b>{% trans 'No servers in this domain' %}</b></div>
+    {% else %}
+    <div class="panel-heading"><b>{% trans 'List of servers in this domain' %}</b></div>
+    <table class="table table-hover table-striped" id="server_list" style="font-size:80%;">
+      <thead>
+        <tr>
+          <th>{% trans 'Hostname' %}</th>
+          <th>{% trans 'Status' %}</th>
+          <th>{% trans 'Location' %}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for server in object.server_set.all %}
+          <tr>
+            <td>
+              <a href="{% url 'server:detail' server.pk %}" title="{{ server.hostname }}">
+                <div>{{ server.hostname }}</div>
+              </a>
+            </td>
+            <td>
+              {% include "status-icon.html" with object=server %}
+            </td>
+            <td>
+              {{ server.location }}
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% endif %}
+  </div>
  
 {% endblock %}
