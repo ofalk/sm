@@ -2,6 +2,15 @@ import os
 from stat import S_ISDIR, ST_MODE
 from sm.settings import DEBUG, INSTALLED_APPS
 
+import random
+import string
+
+
+def random_string(len=10):
+    return ''.join(random.SystemRandom().choice(
+        string.ascii_lowercase +
+        string.digits) for _ in range(10))
+
 
 def modules_with_urls():
     """
