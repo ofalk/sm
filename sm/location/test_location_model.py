@@ -1,6 +1,7 @@
 from django.test import TransactionTestCase as TestCase
 
-from location.models import Location as Model
+from . models import Model
+from . import app_name
 
 import os
 import django
@@ -22,7 +23,7 @@ class Tester(TestCase):
     def test_01_creation(self):
         item, created = self.createTestItem()
         self.assertEqual(created, True, 'the object was already there?')
-        self.assertIsInstance(item, self.model, 'object not a Location model!')
+        self.assertIsInstance(item, self.model, 'object not the correct model!')
 
     def test_02_name(self):
         item, created = self.createTestItem()
@@ -58,5 +59,5 @@ class Tester(TestCase):
         item, created = self.createTestItem()
         res = item.delete()
         self.assertEqual(res[0], 1)
-        self.assertTrue('sm.Location' in res[1])
-        self.assertEqual(res[1]['sm.Location'], 1)
+        self.assertTrue('sm.%s' % app_name.title() in res[1])
+        self.assertEqual(res[1]['sm.%s' % app_name.title()], 1)

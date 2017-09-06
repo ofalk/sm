@@ -2,18 +2,18 @@ from __future__ import unicode_literals
 
 from django import forms
 
-from . models import Location
+from . models import Model
 
 
-class LocationForm(forms.ModelForm):
+class Form(forms.ModelForm):
     class Meta:
-        model = Location
+        model = Model
         fields = '__all__'
 
 
-class LocationFormDisabled(LocationForm):
+class FormDisabled(Form):
     def __init__(self, *args, **kwargs):
-        super(LocationFormDisabled, self).__init__(*args, **kwargs)
+        super(FormDisabled, self).__init__(*args, **kwargs)
         instance = getattr(self, 'instance', None)
         if instance and instance.pk:
             for field in self.fields:
