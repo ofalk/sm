@@ -1,8 +1,8 @@
 from django.db import models
 from patchtime.models import Patchtime
 from status.models import Status
-from domain.models import Domain
-from location.models import Model as LocationModel
+import domain.models
+import location.models
 from operatingsystem.models import Operatingsystem
 from servermodel.models import Servermodel
 from django.urls import reverse
@@ -11,13 +11,13 @@ from django.utils.timezone import now
 
 class Server(models.Model):
     hostname = models.CharField(max_length=45)
-    domain = models.ForeignKey(Domain, on_delete=models.PROTECT, default=1)
+    domain = models.ForeignKey(domain.models.Model, on_delete=models.PROTECT, default=1)
     delivery_date = models.DateField(default=now)
     install_date = models.DateField(default=now)
     last_update = models.DateTimeField(auto_now=True)
     documentation_url = models.URLField(max_length=2083, blank=True, null=True)
     memory_in_mb = models.IntegerField(blank=True, null=True)
-    location = models.ForeignKey(LocationModel, on_delete=models.PROTECT,
+    location = models.ForeignKey(location.models.Model, on_delete=models.PROTECT,
                                  null=True)
     operatingsystem = models.ForeignKey(Operatingsystem,
                                         on_delete=models.PROTECT,

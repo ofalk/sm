@@ -1,6 +1,7 @@
 from django.test import TransactionTestCase as TestCase
 
-from domain.models import Domain as Model
+from . models import Model
+from . import app_name
 
 import os
 import django
@@ -35,6 +36,6 @@ class TestCase(TestCase):
 
     def test_04_get_absolute_url(self):
         (item, created) = self.createTestItem()
-        self.assertEqual('/domain/detail/%i/' % item.id,
+        self.assertEqual('/%s/detail/%i/' % (app_name, item.id),
                          item.get_absolute_url(),
                          'reverse url not correct')

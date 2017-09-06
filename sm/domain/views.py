@@ -1,12 +1,15 @@
 from __future__ import unicode_literals
 
-from django.views.generic import ListView
 from account.mixins import LoginRequiredMixin
 
-from . models import Domain
-from . forms import DomainForm, DomainFormDisabled
+from . models import Model
+from . forms import Form, FormDisabled
+from . import app_name
 
-from django.views.generic.edit import UpdateView, CreateView, DeleteView
+from django.views.generic import ListView as GenericListView
+from django.views.generic.edit import UpdateView as GenericUpdateView
+from django.views.generic.edit import CreateView as GenericCreateView
+from django.views.generic.edit import DeleteView as GenericDeleteView
 from django.contrib.messages.views import SuccessMessageMixin
 
 from django.utils.translation import ugettext as _
@@ -16,43 +19,43 @@ from django.core.urlresolvers import reverse_lazy
 from django.contrib import messages
 
 
-class DomainListView(LoginRequiredMixin, ListView):
-    template_name = 'domain/list.html'
-    model = Domain
+class ListView(LoginRequiredMixin, GenericListView):
+    template_name = '%s/list.html' % app_name
+    model = Model
     paginate_by = 20
     queryset = model.objects.all()
     orphans = 3
     ordering = 'name'
 
 
-class DomainDetailView(LoginRequiredMixin, UpdateView):
-    template_name = 'domain/detail.html'
-    model = Domain
-    form_class = DomainFormDisabled
+class DetailView(LoginRequiredMixin, GenericUpdateView):
+    template_name = '%s/detail.html' % app_name
+    model = Model
+    form_class = FormDisabled
 
 
-class DomainUpdateView(DomainDetailView, SuccessMessageMixin):
-    template_name = 'domain/edit.html'
-    form_class = DomainForm
-    success_url = reverse_lazy('domain:index')
+class UpdateView(DetailView, SuccessMessageMixin):
+    template_name = '%s/edit.html' % app_name
+    form_class = Form
+    success_url = reverse_lazy('%s:index' % app_name)
     success_message = "%(name)s" + _('was updated successfully')
 
 
-class DomainCreateView(SuccessMessageMixin, LoginRequiredMixin, CreateView):
-    template_name = 'domain/edit.html'
+class CreateView(SuccessMessageMixin, LoginRequiredMixin, GenericCreateView):
+    template_name = '%s/edit.html' % app_name
     fields = '__all__'
-    model = Domain
-    success_url = reverse_lazy('domain:index')
+    model = Model
+    success_url = reverse_lazy('%s:index' % app_name)
     success_message = "%(name)s " + _('was created successfully')
 
 
-class DomainDeleteView(SuccessMessageMixin, LoginRequiredMixin, DeleteView):
-    template_name = 'domain/delete.html'
-    model = Domain
-    success_url = reverse_lazy('domain:index')
+class DeleteView(SuccessMessageMixin, LoginRequiredMixin, GenericDeleteView):
+    template_name = '%s/delete.html' % app_name
+    model = Model
+    success_url = reverse_lazy('%s:index' % app_name)
     success_message = "%(name)s " + _('was deleted successfully')
 
     def delete(self, request, *args, **kwargs):
         obj = self.get_object()
         messages.success(self.request, self.success_message % obj.__dict__)
-        return super(DomainDeleteView, self).delete(request, *args, **kwargs)
+        return super(DeleteView, self).delete(request, *args, **kwargs)
