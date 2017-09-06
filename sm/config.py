@@ -118,19 +118,19 @@ MESSAGE_TAGS = {
 if 'test' in argv:
     try:
         from sm.settings import DATABASES
-    except Exception:
-        DATABASES = []
+    except Exception:  # noqa
+        DATABASES = []  # noqa
     DATABASES['default'] = {'ENGINE': 'django.db.backends.sqlite3'}
 else:
-    if platform == 'darwin':
-        DATABASES = {
+    if platform == 'darwin':  # noqa
+        DATABASES = {  # noqa
             'default': {
                 'ENGINE': 'django.db.backends.sqlite3',
                 'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
             }
         }
     else:
-        DATABASES = {
+        DATABASES = {  # noqa
             'default': {
                 'ENGINE': 'django.db.backends.mysql',
                 'NAME': 'sm',
