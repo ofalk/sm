@@ -1,13 +1,17 @@
 from django.test import TestCase
 from django.test import Client
 
-from domain.models import Domain as DomainModel
-from domain.forms import DomainFormDisabled, DomainForm
+from . models import Domain as Model
+from . forms import DomainFormDisabled as FormDisabled
+from . forms import DomainForm as Form
+from . urls import app_name
+
 from django.contrib.auth.models import User
 
 from django.core.exceptions import ObjectDoesNotExist
-
 from django.core.urlresolvers import reverse
+
+from sm.utils import random_string
 
 import os
 import django
@@ -17,7 +21,7 @@ django.setup()
 
 class Tester(TestCase):
     client = Client()
-    teststring = 'domain.tld'
+    teststring = random_string()
 
     def login(self):
         """
@@ -33,62 +37,64 @@ class Tester(TestCase):
         self.user = User.objects.create_user('john',
                                              'lennon@thebeatles.com',
                                              'johnpassword')
-        item, created = DomainModel.objects.get_or_create(name=self.teststring)
+        item, created = Model.objects.get_or_create(
+            name=self.teststring,
+        )
 
     def test_01_login_redir(self):
-        response = self.client.get(reverse('domain:index'))
+        response = self.client.get(reverse('%s:index' % app_name))
         self.assertEqual(response.status_code, 302, 'no redirect?')
 
     def test_02_listview(self):
         self.login()
-        response = self.client.get(reverse('domain:index'))
+        response = self.client.get(reverse('%s:index' % app_name))
         self.assertEqual(response.status_code, 200, 'no status 200?')
         item = response.context[-1]['object_list'].first()
-        self.assertIsInstance(item, DomainModel,
+        self.assertIsInstance(item, Model,
                               'object not the correct model!?')
         self.assertEqual(item.name, self.teststring)
 
     def test_03_detailview(self):
         self.login()
-        testobj = DomainModel.objects.all().first()
-        url = reverse('domain:detail', args=[testobj.pk])
-        self.assertEqual('/domain/detail/%i/' % testobj.pk, url)
+        testobj = Model.objects.all().first()
+        url = reverse('%s:detail' % app_name, args=[testobj.pk])
+        self.assertEqual('/%s/detail/%i/' % (app_name, testobj.pk), url)
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200, 'no status 200?')
         item = response.context[-1]['object']
-        self.assertIsInstance(item, DomainModel,
+        self.assertIsInstance(item, Model,
                               'object not the correct model!?')
         self.assertEqual(item.name, self.teststring)
         form = response.context[-1]['form']
-        self.assertIsInstance(form, DomainFormDisabled)
+        self.assertIsInstance(form, FormDisabled)
         self.assertTrue(form.fields['name'].widget.attrs['readonly'])
 
     def test_03_updateview(self):
         self.login()
-        testobj = DomainModel.objects.all().first()
-        url = reverse('domain:update', args=[testobj.pk])
-        self.assertEqual('/domain/update/%i/' % testobj.pk, url)
+        testobj = Model.objects.all().first()
+        url = reverse('%s:update' % app_name, args=[testobj.pk])
+        self.assertEqual('/%s/update/%i/' % (app_name, testobj.pk), url)
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200, 'no status 200?')
         item = response.context[-1]['object']
-        self.assertIsInstance(item, DomainModel,
+        self.assertIsInstance(item, Model,
                               'object not the correct model!?')
         self.assertEqual(item.name, self.teststring)
         form = response.context[-1]['form']
-        self.assertIsInstance(form, DomainForm)
+        self.assertIsInstance(form, Form)
         self.assertRaises(KeyError,
                           form.fields['name'].widget.attrs.__getitem__,
                           'readonly')
 
     def test_04_deleteview(self):
         self.login()
-        testobj = DomainModel.objects.all().first()
-        url = reverse('domain:delete', args=[testobj.pk])
-        self.assertEqual('/domain/delete/%i/' % testobj.pk, url)
+        testobj = Model.objects.all().first()
+        url = reverse('%s:delete' % app_name, args=[testobj.pk])
+        self.assertEqual('/%s/delete/%i/' % (app_name, testobj.pk), url)
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200, 'no status 200?')
         item = response.context[-1]['object']
-        self.assertIsInstance(item, DomainModel,
+        self.assertIsInstance(item, Model,
                               'object not the correct model!?')
         self.assertEqual(item.name, self.teststring)
         self.assertContains(response, 'Are you sure you want to')
@@ -96,25 +102,25 @@ class Tester(TestCase):
 
     def test_05_deleteview_post(self):
         self.login()
-        testobj = DomainModel.objects.all().first()
+        testobj = Model.objects.all().first()
         response = self.client.post(
-            reverse('domain:delete', args=[testobj.pk]),
+            reverse('%s:delete' % app_name, args=[testobj.pk]),
             follow=True
         )
         self.assertEqual(response.status_code, 200, 'no status 200?')
         self.assertRedirects(response,
-                             reverse('domain:index'),
+                             reverse('%s:index' % app_name),
                              status_code=302)
         self.assertIn('messages', response.context[-1])
         self.assertContains(response,
                             '%s was deleted successfully' % testobj.name)
         with self.assertRaises(ObjectDoesNotExist):
-            DomainModel.objects.get(name=testobj.name)
+            Model.objects.get(name=testobj.name)
 
     def test_06_createview(self):
         self.login()
-        url = reverse('domain:create')
-        self.assertEqual('/domain/create', url)
+        url = reverse('%s:create' % app_name)
+        self.assertEqual('/%s/create' % app_name, url)
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200, 'no status 200?')
         self.assertRaises(KeyError,
@@ -128,22 +134,22 @@ class Tester(TestCase):
 
     def test_07_createview_post(self):
         # Make sure we have no objects in there
-        DomainModel.objects.all().delete()
+        Model.objects.all().delete()
         self.login()
         data = {
-            'name': 'newdomain.tld',
+            'name': self.teststring,
         }
         response = self.client.post(
-            reverse('domain:create'),
+            reverse('%s:create' % app_name),
             data,
             follow=True,
         )
         self.assertEqual(response.status_code, 200, 'no status 200?')
         self.assertRedirects(response,
-                             reverse('domain:index'),
+                             reverse('%s:index' % app_name),
                              status_code=302)
         item = response.context[-1]['object_list'].first()
         self.assertEqual(item.name, data['name'])
-        self.assertIsInstance(item, DomainModel)
+        self.assertIsInstance(item, Model)
         self.assertContains(response,
                             '%s was created successfully' % data['name'])
