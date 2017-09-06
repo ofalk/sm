@@ -2,7 +2,7 @@ from django.db import models
 from patchtime.models import Patchtime
 from status.models import Status
 from domain.models import Domain
-from location.models import Location
+from location.models import Model as LocationModel
 from operatingsystem.models import Operatingsystem
 from servermodel.models import Servermodel
 from django.urls import reverse
@@ -17,7 +17,8 @@ class Server(models.Model):
     last_update = models.DateTimeField(auto_now=True)
     documentation_url = models.URLField(max_length=2083, blank=True, null=True)
     memory_in_mb = models.IntegerField(blank=True, null=True)
-    location = models.ForeignKey(Location, on_delete=models.PROTECT, null=True)
+    location = models.ForeignKey(LocationModel, on_delete=models.PROTECT,
+                                 null=True)
     operatingsystem = models.ForeignKey(Operatingsystem,
                                         on_delete=models.PROTECT,
                                         null=True, blank=True)
