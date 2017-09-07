@@ -42,11 +42,11 @@ class Tester(TestCase):
             name=self.teststring,
         )
 
-    def login_redir(self):
+    def test_login_redir(self):
         response = self.client.get(reverse('%s:index' % app_label))
         self.assertEqual(response.status_code, 302, 'no redirect?')
 
-    def listview(self):
+    def test_listview(self):
         self.login()
         response = self.client.get(reverse('%s:index' % app_label))
         self.assertEqual(response.status_code, 200, 'no status 200?')
@@ -55,7 +55,7 @@ class Tester(TestCase):
                               'object not the correct model!?')
         self.assertEqual(item.name, self.teststring)
 
-    def detailview(self):
+    def test_detailview(self):
         self.login()
         url = reverse('%s:detail' % app_label, args=[self.testitem.pk])
         self.assertEqual('/%s/detail/%i/' % (app_label, self.testitem.pk), url)
@@ -69,7 +69,7 @@ class Tester(TestCase):
         self.assertIsInstance(form, FormDisabled)
         self.assertTrue(form.fields['name'].widget.attrs['readonly'])
 
-    def updateview(self):
+    def test_updateview(self):
         self.login()
         url = reverse('%s:update' % app_label, args=[self.testitem.pk])
         self.assertEqual('/%s/update/%i/' % (app_label, self.testitem.pk), url)
@@ -85,7 +85,7 @@ class Tester(TestCase):
                           form.fields['name'].widget.attrs.__getitem__,
                           'readonly')
 
-    def deleteview(self):
+    def test_deleteview(self):
         self.login()
         url = reverse('%s:delete' % app_label, args=[self.testitem.pk])
         self.assertEqual('/%s/delete/%i/' % (app_label, self.testitem.pk), url)
@@ -98,7 +98,7 @@ class Tester(TestCase):
         self.assertContains(response, 'Are you sure you want to')
         self.assertContains(response, '<strong>delete</strong>')
 
-    def deleteview_post(self):
+    def test_deleteview_post(self):
         self.login()
         response = self.client.post(
             reverse('%s:delete' % app_label, args=[self.testitem.pk]),
@@ -114,7 +114,7 @@ class Tester(TestCase):
         with self.assertRaises(ObjectDoesNotExist):
             Model.objects.get(name=self.testitem.name)
 
-    def createview(self):
+    def test_createview(self):
         self.login()
         url = reverse('%s:create' % app_label)
         self.assertEqual('/%s/create' % app_label, url)
@@ -129,7 +129,7 @@ class Tester(TestCase):
                           form.fields['name'].widget.attrs.__getitem__,
                           'readonly')
 
-    def createview_post(self):
+    def test_createview_post(self):
         # Make sure we have no objects in there
         Model.objects.all().delete()
         self.login()
