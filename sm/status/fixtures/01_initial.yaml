@@ -1,12 +1,12 @@
-- model: status.status
+- model: status.model
   fields: {name: In use}
-- model: status.status
+- model: status.model
   fields: {name: Disposed}
-- model: status.status
+- model: status.model
   fields: {name: Ordered}
-- model: status.status
+- model: status.model
   fields: {name: Name reserved}
-- model: status.status
+- model: status.model
   fields: {name: Stored}
-- model: status.status
+- model: status.model
   fields: {name: To be disposed}
