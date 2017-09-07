@@ -1,1 +1,1 @@
-app_name = 'server'
+app_label = __name__

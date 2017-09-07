@@ -1,29 +1,33 @@
 from django.db import models
-from patchtime.models import Patchtime
-from status.models import Status
-import domain.models
-import location.models
+from patchtime.models import Model as PatchtimeModel
+from status.models import Model as StatusModel
+from domain.models import Model as DomainModel
+from location.models import Model as LocationModel
 from operatingsystem.models import Operatingsystem
-from servermodel.models import Servermodel
+from servermodel.models import Model as Servermodel
 from django.urls import reverse
 from django.utils.timezone import now
+
+from . import app_label
 
 
 class Server(models.Model):
     hostname = models.CharField(max_length=45)
-    domain = models.ForeignKey(domain.models.Model, on_delete=models.PROTECT, default=1)
+    domain = models.ForeignKey(DomainModel, on_delete=models.PROTECT,
+                               default=1)
     delivery_date = models.DateField(default=now)
     install_date = models.DateField(default=now)
     last_update = models.DateTimeField(auto_now=True)
     documentation_url = models.URLField(max_length=2083, blank=True, null=True)
     memory_in_mb = models.IntegerField(blank=True, null=True)
-    location = models.ForeignKey(location.models.Model, on_delete=models.PROTECT,
+    location = models.ForeignKey(LocationModel,
+                                 on_delete=models.PROTECT,
                                  null=True)
     operatingsystem = models.ForeignKey(Operatingsystem,
                                         on_delete=models.PROTECT,
                                         null=True, blank=True)
 
-    status = models.ForeignKey(Status, on_delete=models.PROTECT, default=1)
+    status = models.ForeignKey(StatusModel, on_delete=models.PROTECT, default=1)
 
     servermodel = models.ForeignKey(Servermodel, on_delete=models.PROTECT,
                                     null=True)
@@ -43,7 +47,7 @@ class Server(models.Model):
     serial_nr = models.CharField(max_length=60, blank=True, null=True)
     description = models.CharField(max_length=100, blank=True, null=True)
 
-    patchtime = models.ForeignKey(Patchtime, null=True, default=None)
+    patchtime = models.ForeignKey(PatchtimeModel, null=True, default=None)
 
     # patch time
     # tags
@@ -57,4 +61,5 @@ class Server(models.Model):
     class Meta:
         managed = True
         unique_together = (('hostname', 'status'),)
-        app_label = 'sm'
+        app_label = app_label
+        db_table = '%s_%s' % ('sm', app_label)
