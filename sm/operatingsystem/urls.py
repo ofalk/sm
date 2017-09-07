@@ -4,9 +4,10 @@ from django.conf.urls import url
 from social_core.utils import setting_name
 from . import views
 
+from . import app_label as app_name
+
 extra = getattr(settings, setting_name('TRAILING_SLASH'), True) and '/' or ''
 
-app_name = 'operatingsystem'
 
 urlpatterns = [
     url(r'^$'.format(extra), views.OperatingsystemListView.as_view(),

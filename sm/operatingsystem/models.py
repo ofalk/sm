@@ -5,6 +5,8 @@ from vendor.models import Vendor
 
 from django.core.exceptions import ObjectDoesNotExist
 
+from . import app_label
+
 
 class OperatingsystemManager(models.Manager):
     """
@@ -92,5 +94,6 @@ class Operatingsystem(NaturalKeyModel):
 
     class Meta:
         managed = True
-        app_label = 'sm'
+        app_label = app_label
+        db_table = '%s_%s' % ('sm', app_label)
         unique_together = (('vendor', 'version'),)

@@ -3,6 +3,8 @@ from django.test import TransactionTestCase as TestCase
 from operatingsystem.models import Operatingsystem as Model
 from vendor.models import Vendor as VendorModel
 
+from . import app_label
+
 import os
 import django
 os.environ['DJANGO_SETTINGS_MODULE'] = 'sm.settings'
@@ -13,7 +15,9 @@ class Tester(TestCase):
     model = Model
     vendor = None
     teststring = '123XXX'
-    fixtures = ['fixtures/02_vendor.yaml', 'fixtures/05_operatingsystem.yaml']
+    fixtures = ['%s/fixtures/01_initial.yaml' % 'vendor',
+                '%s/fixtures/01_initial.yaml' % app_label
+                ]
 
     @classmethod
     def setUp(self):
