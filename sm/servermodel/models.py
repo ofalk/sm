@@ -9,8 +9,8 @@ from . import app_label
 class Model(NaturalKeyModel):
     name = models.CharField(max_length=45)
     vendor = models.ForeignKey(VendorModel, null=False, default=None,
-                               related_name='servermodel_set',
-                               related_query_name='servermodel')
+                               related_name='%s_set' % app_label,
+                               related_query_name='%s' % app_label)
 
     def __str__(self):
         return "%s %s" % (self.vendor.name, self.name)
