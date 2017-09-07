@@ -1,10 +1,10 @@
 from django.test import TestCase
 from django.test import Client
 
-from . models import Domain as Model
-from . forms import DomainFormDisabled as FormDisabled
-from . forms import DomainForm as Form
-from . urls import app_name
+from . models import Model
+from . forms import FormDisabled
+from . forms import Form
+from . import app_label
 
 from django.contrib.auth.models import User
 
@@ -42,12 +42,12 @@ class Tester(TestCase):
         )
 
     def test_01_login_redir(self):
-        response = self.client.get(reverse('%s:index' % app_name))
+        response = self.client.get(reverse('%s:index' % app_label))
         self.assertEqual(response.status_code, 302, 'no redirect?')
 
     def test_02_listview(self):
         self.login()
-        response = self.client.get(reverse('%s:index' % app_name))
+        response = self.client.get(reverse('%s:index' % app_label))
         self.assertEqual(response.status_code, 200, 'no status 200?')
         item = response.context[-1]['object_list'].first()
         self.assertIsInstance(item, Model,
@@ -57,8 +57,8 @@ class Tester(TestCase):
     def test_03_detailview(self):
         self.login()
         testobj = Model.objects.all().first()
-        url = reverse('%s:detail' % app_name, args=[testobj.pk])
-        self.assertEqual('/%s/detail/%i/' % (app_name, testobj.pk), url)
+        url = reverse('%s:detail' % app_label, args=[testobj.pk])
+        self.assertEqual('/%s/detail/%i/' % (app_label, testobj.pk), url)
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200, 'no status 200?')
         item = response.context[-1]['object']
@@ -72,8 +72,8 @@ class Tester(TestCase):
     def test_03_updateview(self):
         self.login()
         testobj = Model.objects.all().first()
-        url = reverse('%s:update' % app_name, args=[testobj.pk])
-        self.assertEqual('/%s/update/%i/' % (app_name, testobj.pk), url)
+        url = reverse('%s:update' % app_label, args=[testobj.pk])
+        self.assertEqual('/%s/update/%i/' % (app_label, testobj.pk), url)
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200, 'no status 200?')
         item = response.context[-1]['object']
@@ -89,8 +89,8 @@ class Tester(TestCase):
     def test_04_deleteview(self):
         self.login()
         testobj = Model.objects.all().first()
-        url = reverse('%s:delete' % app_name, args=[testobj.pk])
-        self.assertEqual('/%s/delete/%i/' % (app_name, testobj.pk), url)
+        url = reverse('%s:delete' % app_label, args=[testobj.pk])
+        self.assertEqual('/%s/delete/%i/' % (app_label, testobj.pk), url)
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200, 'no status 200?')
         item = response.context[-1]['object']
@@ -104,12 +104,12 @@ class Tester(TestCase):
         self.login()
         testobj = Model.objects.all().first()
         response = self.client.post(
-            reverse('%s:delete' % app_name, args=[testobj.pk]),
+            reverse('%s:delete' % app_label, args=[testobj.pk]),
             follow=True
         )
         self.assertEqual(response.status_code, 200, 'no status 200?')
         self.assertRedirects(response,
-                             reverse('%s:index' % app_name),
+                             reverse('%s:index' % app_label),
                              status_code=302)
         self.assertIn('messages', response.context[-1])
         self.assertContains(response,
@@ -119,8 +119,8 @@ class Tester(TestCase):
 
     def test_06_createview(self):
         self.login()
-        url = reverse('%s:create' % app_name)
-        self.assertEqual('/%s/create' % app_name, url)
+        url = reverse('%s:create' % app_label)
+        self.assertEqual('/%s/create' % app_label, url)
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200, 'no status 200?')
         self.assertRaises(KeyError,
@@ -140,13 +140,13 @@ class Tester(TestCase):
             'name': self.teststring,
         }
         response = self.client.post(
-            reverse('%s:create' % app_name),
+            reverse('%s:create' % app_label),
             data,
             follow=True,
         )
         self.assertEqual(response.status_code, 200, 'no status 200?')
         self.assertRedirects(response,
-                             reverse('%s:index' % app_name),
+                             reverse('%s:index' % app_label),
                              status_code=302)
         item = response.context[-1]['object_list'].first()
         self.assertEqual(item.name, data['name'])

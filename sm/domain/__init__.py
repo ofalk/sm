@@ -1,1 +1,1 @@
-app_name = 'domain'
+app_label = __name__
