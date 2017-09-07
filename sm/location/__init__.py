@@ -1,1 +1,1 @@
-app_name = 'location'
+app_label = __name__

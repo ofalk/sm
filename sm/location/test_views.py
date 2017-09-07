@@ -4,7 +4,7 @@ from django.test import Client
 from . models import Model
 from . forms import FormDisabled
 from . forms import Form
-from . urls import app_name
+from . import app_label
 
 from django.contrib.auth.models import User
 
@@ -12,8 +12,6 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.core.urlresolvers import reverse
 
 from sm.utils import random_string
-
-from django_countries import countries
 
 import os
 import django
@@ -24,7 +22,7 @@ django.setup()
 class Tester(TestCase):
     client = Client()
     teststring = random_string()
-    country = countries[0]
+    testitem = None
 
     def login(self):
         """
@@ -40,30 +38,27 @@ class Tester(TestCase):
         self.user = User.objects.create_user('john',
                                              'lennon@thebeatles.com',
                                              'johnpassword')
-        item, created = Model.objects.get_or_create(
+        self.testitem, created = Model.objects.get_or_create(
             name=self.teststring,
-            country=self.country,
         )
 
-    def test_01_login_redir(self):
-        response = self.client.get(reverse('%s:index' % app_name))
+    def login_redir(self):
+        response = self.client.get(reverse('%s:index' % app_label))
         self.assertEqual(response.status_code, 302, 'no redirect?')
 
-    def test_02_listview(self):
+    def listview(self):
         self.login()
-        response = self.client.get(reverse('%s:index' % app_name))
+        response = self.client.get(reverse('%s:index' % app_label))
         self.assertEqual(response.status_code, 200, 'no status 200?')
         item = response.context[-1]['object_list'].first()
         self.assertIsInstance(item, Model,
                               'object not the correct model!?')
         self.assertEqual(item.name, self.teststring)
-        self.assertEqual(item.country, self.country)
 
-    def test_03_detailview(self):
+    def detailview(self):
         self.login()
-        testobj = Model.objects.all().first()
-        url = reverse('%s:detail' % app_name, args=[testobj.pk])
-        self.assertEqual('/%s/detail/%i/' % (app_name, testobj.pk), url)
+        url = reverse('%s:detail' % app_label, args=[self.testitem.pk])
+        self.assertEqual('/%s/detail/%i/' % (app_label, self.testitem.pk), url)
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200, 'no status 200?')
         item = response.context[-1]['object']
@@ -74,11 +69,10 @@ class Tester(TestCase):
         self.assertIsInstance(form, FormDisabled)
         self.assertTrue(form.fields['name'].widget.attrs['readonly'])
 
-    def test_03_updateview(self):
+    def updateview(self):
         self.login()
-        testobj = Model.objects.all().first()
-        url = reverse('%s:update' % app_name, args=[testobj.pk])
-        self.assertEqual('/%s/update/%i/' % (app_name, testobj.pk), url)
+        url = reverse('%s:update' % app_label, args=[self.testitem.pk])
+        self.assertEqual('/%s/update/%i/' % (app_label, self.testitem.pk), url)
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200, 'no status 200?')
         item = response.context[-1]['object']
@@ -91,11 +85,10 @@ class Tester(TestCase):
                           form.fields['name'].widget.attrs.__getitem__,
                           'readonly')
 
-    def test_04_deleteview(self):
+    def deleteview(self):
         self.login()
-        testobj = Model.objects.all().first()
-        url = reverse('%s:delete' % app_name, args=[testobj.pk])
-        self.assertEqual('/%s/delete/%i/' % (app_name, testobj.pk), url)
+        url = reverse('%s:delete' % app_label, args=[self.testitem.pk])
+        self.assertEqual('/%s/delete/%i/' % (app_label, self.testitem.pk), url)
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200, 'no status 200?')
         item = response.context[-1]['object']
@@ -105,27 +98,26 @@ class Tester(TestCase):
         self.assertContains(response, 'Are you sure you want to')
         self.assertContains(response, '<strong>delete</strong>')
 
-    def test_05_deleteview_post(self):
+    def deleteview_post(self):
         self.login()
-        testobj = Model.objects.all().first()
         response = self.client.post(
-            reverse('%s:delete' % app_name, args=[testobj.pk]),
+            reverse('%s:delete' % app_label, args=[self.testitem.pk]),
             follow=True
         )
         self.assertEqual(response.status_code, 200, 'no status 200?')
         self.assertRedirects(response,
-                             reverse('%s:index' % app_name),
+                             reverse('%s:index' % app_label),
                              status_code=302)
         self.assertIn('messages', response.context[-1])
         self.assertContains(response,
-                            '%s was deleted successfully' % testobj.name)
+                            '%s was deleted successfully' % self.testitem.name)
         with self.assertRaises(ObjectDoesNotExist):
-            Model.objects.get(name=testobj.name)
+            Model.objects.get(name=self.testitem.name)
 
-    def test_06_createview(self):
+    def createview(self):
         self.login()
-        url = reverse('%s:create' % app_name)
-        self.assertEqual('/%s/create' % app_name, url)
+        url = reverse('%s:create' % app_label)
+        self.assertEqual('/%s/create' % app_label, url)
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200, 'no status 200?')
         self.assertRaises(KeyError,
@@ -137,22 +129,21 @@ class Tester(TestCase):
                           form.fields['name'].widget.attrs.__getitem__,
                           'readonly')
 
-    def test_07_createview_post(self):
+    def createview_post(self):
         # Make sure we have no objects in there
         Model.objects.all().delete()
         self.login()
         data = {
             'name': self.teststring,
-            'country': self.country,
         }
         response = self.client.post(
-            reverse('%s:create' % app_name),
+            reverse('%s:create' % app_label),
             data,
             follow=True,
         )
         self.assertEqual(response.status_code, 200, 'no status 200?')
         self.assertRedirects(response,
-                             reverse('%s:index' % app_name),
+                             reverse('%s:index' % app_label),
                              status_code=302)
         item = response.context[-1]['object_list'].first()
         self.assertEqual(item.name, data['name'])

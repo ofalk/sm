@@ -4,7 +4,7 @@ from account.mixins import LoginRequiredMixin
 
 from . models import Model
 from . forms import Form, FormDisabled
-from . import app_name
+from . import app_label
 
 from django.views.generic import ListView as GenericListView
 from django.views.generic.edit import UpdateView as GenericUpdateView
@@ -20,7 +20,7 @@ from django.contrib import messages
 
 
 class ListView(LoginRequiredMixin, GenericListView):
-    template_name = '%s/list.html' % app_name
+    template_name = '%s/list.html' % app_label
     model = Model
     paginate_by = 20
     queryset = model.objects.all()
@@ -29,30 +29,30 @@ class ListView(LoginRequiredMixin, GenericListView):
 
 
 class DetailView(LoginRequiredMixin, GenericUpdateView):
-    template_name = '%s/detail.html' % app_name
+    template_name = '%s/detail.html' % app_label
     model = Model
     form_class = FormDisabled
 
 
 class UpdateView(DetailView, SuccessMessageMixin):
-    template_name = '%s/edit.html' % app_name
+    template_name = '%s/edit.html' % app_label
     form_class = Form
-    success_url = reverse_lazy('%s:index' % app_name)
+    success_url = reverse_lazy('%s:index' % app_label)
     success_message = "%(name)s" + _('was updated successfully')
 
 
 class CreateView(SuccessMessageMixin, LoginRequiredMixin, GenericCreateView):
-    template_name = '%s/edit.html' % app_name
+    template_name = '%s/edit.html' % app_label
     fields = '__all__'
     model = Model
-    success_url = reverse_lazy('%s:index' % app_name)
+    success_url = reverse_lazy('%s:index' % app_label)
     success_message = "%(name)s " + _('was created successfully')
 
 
 class DeleteView(SuccessMessageMixin, LoginRequiredMixin, GenericDeleteView):
-    template_name = '%s/delete.html' % app_name
+    template_name = '%s/delete.html' % app_label
     model = Model
-    success_url = reverse_lazy('%s:index' % app_name)
+    success_url = reverse_lazy('%s:index' % app_label)
     success_message = "%(name)s " + _('was deleted successfully')
 
     def delete(self, request, *args, **kwargs):

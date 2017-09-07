@@ -3,9 +3,8 @@ from django.conf.urls import url
 
 from social_core.utils import setting_name
 from . import views
-from . import app_name
+from . import app_label as app_name
 
-app_name = app_name
 
 extra = getattr(settings, setting_name('TRAILING_SLASH'), True) and '/' or ''
 

@@ -2,7 +2,7 @@ from django.db import models
 from natural_keys import NaturalKeyModel
 from django_countries.fields import CountryField
 
-from . import app_name
+from . import app_label
 
 
 class Model(NaturalKeyModel):
@@ -17,6 +17,6 @@ class Model(NaturalKeyModel):
 
     class Meta:
         managed = True
-        app_label = 'sm'
-        db_table = '%s_%s' % (app_label, app_name)
+        app_label = app_label
+        db_table = '%s_%s' % ('sm', app_label)
         unique_together = (('name', 'country'),)
