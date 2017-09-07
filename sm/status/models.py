@@ -1,8 +1,10 @@
 from django.db import models
 from natural_keys import NaturalKeyModel
 
+from . import app_label
 
-class Status(NaturalKeyModel):
+
+class Model(NaturalKeyModel):
     name = models.CharField(max_length=45, unique=True)
 
     def __str__(self):
@@ -10,4 +12,5 @@ class Status(NaturalKeyModel):
 
     class Meta:
         managed = True
-        app_label = 'sm'
+        app_label = app_label
+        db_table = '%s_%s' % ('sm', app_label)

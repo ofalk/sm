@@ -2,18 +2,18 @@ from __future__ import unicode_literals
 
 from django import forms
 
-from . models import Status
+from . models import Model
 
 
-class StatusForm(forms.ModelForm):
+class Form(forms.ModelForm):
     class Meta:
-        model = Status
+        model = Model
         fields = '__all__'
 
 
-class StatusFormDisabled(StatusForm):
+class FormDisabled(Form):
     def __init__(self, *args, **kwargs):
-        super(StatusFormDisabled, self).__init__(*args, **kwargs)
+        super(FormDisabled, self).__init__(*args, **kwargs)
         instance = getattr(self, 'instance', None)
         if instance and instance.pk:
             for field in self.fields:
