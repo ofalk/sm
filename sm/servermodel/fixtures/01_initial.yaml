@@ -1,8 +1,8 @@
-- model: servermodel.servermodel
+- model: servermodel.model
   fields:
     name: DL380G9
     vendor: [Hewlett Packard Enterprise]
-- model: servermodel.servermodel
+- model: servermodel.model
   fields:
     name: Virtual
     vendor: [VMware]
