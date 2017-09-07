@@ -23,21 +23,23 @@ class Tester(TestCase):
     client = Client()
     teststring = random_string()
     testitem = None
+    password = random_string()
 
     def login(self):
         """
-        Login as user 'john'
+        Login as user
         """
-        self.client.login(username='john', password='johnpassword')
+        self.client.login(username=self.user.username, password=self.password)
 
     def setUp(self):
         """
         Create user
         Create some item in models for testing
         """
-        self.user = User.objects.create_user('john',
-                                             'lennon@thebeatles.com',
-                                             'johnpassword')
+        self.user = User.objects.create_user(
+            username=random_string(),
+            password=self.password)
+
         self.testitem, created = Model.objects.get_or_create(
             name=self.teststring,
         )
