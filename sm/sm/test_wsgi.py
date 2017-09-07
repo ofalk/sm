@@ -7,7 +7,7 @@ django.setup()
 
 
 class TestCase(unittest.TestCase):
-    def test_01_run_wsgi(self):
+    def test_run_wsgi(self):
         import sm.wsgi
         self.assertEqual(sm.wsgi.application.__class__,
                          django.core.handlers.wsgi.WSGIHandler)

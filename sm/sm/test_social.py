@@ -15,12 +15,12 @@ class TestCase(TestCase):
     def setUp(self):
         self.user = get_user_model().objects.create_user(username='testuser')
 
-    def test_00_load(self):
+    def test_load(self):
         string = '{% load social_tags %}'
         rendered = Template(string).render(Context({}))
         self.assertEqual(rendered, '')
 
-    def test_01_can_connect(self):
+    def test_can_connect(self):
         c = Client()
         c.force_login(self.user)
         r = c.get('/account/social/accounts/', follow=True)
@@ -34,7 +34,7 @@ class TestCase(TestCase):
             '<i class="fa fa-facebook"></i> Facebook</a>\n'
         )
 
-    def test_02_cannot_disconnect_password_missing(self):
+    def test_cannot_disconnect_password_missing(self):
         from social_django.models import UserSocialAuth as SocialModel
         socuser = SocialModel(user=self.user)
         socuser.provider = 'facebook'
@@ -51,7 +51,7 @@ class TestCase(TestCase):
             'You must set a valid password before you can disconnect.'
         )
 
-    def test_03_can_disconnect(self):
+    def test_can_disconnect(self):
         from social_django.models import UserSocialAuth as SocialModel
         socuser = SocialModel(user=self.user)
         socuser.provider = 'facebook'
