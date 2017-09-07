@@ -21,12 +21,12 @@ class Tester(TestCase):
         self.testitem, created = self.get_or_create_testitem()
 
     def get_or_create_testitem(self):
-        self.item, created = self.model.objects.get_or_create(
+        self.testitem, created = self.model.objects.get_or_create(
             name=self.teststring
         )
-        return(self.item, created)
+        return (self.testitem, created)
 
-    def test_01_create(self):
+    def create(self):
         # Since we want to test if creation works, we
         # need to manually prune the DB and create a testitem
         self.model.objects.all().delete()
@@ -35,20 +35,20 @@ class Tester(TestCase):
         self.assertIsInstance(obj, self.model,
                               'object not correct model!?')
 
-    def test_02_name(self):
+    def name(self):
         self.assertEqual(self.testitem.name, self.teststring,
                          'name not correct')
 
-    def test_03_name__str__(self):
+    def name___str__(self):
         self.assertEqual("%s" % self.testitem, self.teststring,
                          'name not correct')
 
-    def test_04_get_absolute_url(self):
+    def get_absolute_url(self):
         self.assertEqual('/%s/detail/%i/' % (app_label, self.testitem.id),
                          self.testitem.get_absolute_url(),
                          'reverse url not correct')
 
-    def test_05_delete(self):
+    def delete(self):
         res = self.testitem.delete()
         self.assertEqual(res[0], 1)
         self.assertTrue('%s.Model' % app_label in res[1])
