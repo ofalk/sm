@@ -1,6 +1,7 @@
 from django.db import models
 from natural_keys import NaturalKeyModel
 from django_countries.fields import CountryField
+from django.urls import reverse
 
 from . import app_label
 
@@ -14,6 +15,9 @@ class Model(NaturalKeyModel):
             return "%s / %s" % (self.name, self.country)
         else:
             return "%s" % (self.name)
+
+    def get_absolute_url(self):
+        return reverse('%s:detail' % app_label, kwargs={'pk': self.pk})
 
     class Meta:
         managed = True
