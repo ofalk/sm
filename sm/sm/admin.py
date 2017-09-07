@@ -7,7 +7,7 @@ from status.models import Model as StatusModel
 from domain.models import Model as DomainModel
 from location.models import Model as LocationModel
 from vendor.models import Model as VendorModel
-from operatingsystem.models import Operatingsystem as OperatingsystemModel
+from operatingsystem.models import Model as OperatingsystemModel
 
 admin.site.register(PatchtimeModel)
 admin.site.register(ServerModel)

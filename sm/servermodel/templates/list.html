@@ -50,7 +50,9 @@
             <td>
               {% for servermodel in vendor.servermodel_set.all %}
                 <a href="{% url 'servermodel:detail' servermodel.pk %}" title="{{ servermodel }}">
-                  {{ servermodel.name }}</a>{% if not forloop.last %}, {% endif %}
+                  {{ servermodel.name }}</a>
+                <a href="{% url 'servermodel:update' servermodel.pk %}" title="Edit servermodel"><i class="fa fa-edit" aria-hidden="true"></i></a>
+                {% if not forloop.last %}, {% endif %}
               {% empty %}
                 None
               {% endfor %}

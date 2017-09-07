@@ -2,11 +2,17 @@ from django.test import TestCase
 from django.test import Client
 from http.cookies import SimpleCookie
 
-from operatingsystem.models import Operatingsystem as OperatingsystemModel
+from . models import Model
 from vendor.models import Vendor as VendorModel
+from . forms import Form, FormDisabled
+from . import app_label
+
 from django.contrib.auth.models import User
 
+from django.core.exceptions import ObjectDoesNotExist
 from django.core.urlresolvers import reverse
+
+from sm.utils import random_string
 
 import os
 import django
@@ -16,28 +22,35 @@ django.setup()
 
 class Tester(TestCase):
     client = Client()
+    teststring = random_string()
+    testitem = None
+    password = random_string()
+    vendor = VendorModel.objects.all().first()
 
     def login(self):
         """
-        Login as user 'john'
+        Login as user
         """
-        self.client.login(username='john', password='johnpassword')
+        self.client.login(username=self.user.username, password=self.password)
 
     def setUp(self):
         """
         Create user
         Create some item in models for testing
         """
-        self.user = User.objects.create_user('john',
-                                             'lennon@thebeatles.com',
-                                             'johnpassword')
-        vendor, created = VendorModel.objects.get_or_create(name='testvendor')
+        self.user = User.objects.create_user(
+            username=random_string(),
+            password=self.password)
 
-    def test_01_login_redir(self):
-        response = self.client.get(reverse('operatingsystem:index'))
+        self.testitem, created = Model.objects.get_or_create(
+            name=self.teststring,
+            vendor=self.vendor)
+
+    def test_login_redir(self):
+        response = self.client.get(reverse('%s:index' % app_label))
         self.assertEqual(response.status_code, 302, 'no redirect?')
 
-    def test_02_listview_empty_true_wo_obj(self):
+    def test_listview_empty_true_wo_obj(self):
         self.client.cookies = SimpleCookie(
             {'srvmanager-show_empty': 'true'})
         self.login()

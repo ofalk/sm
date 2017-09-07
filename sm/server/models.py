@@ -3,7 +3,7 @@ from patchtime.models import Model as PatchtimeModel
 from status.models import Model as StatusModel
 from domain.models import Model as DomainModel
 from location.models import Model as LocationModel
-from operatingsystem.models import Operatingsystem
+from operatingsystem.models import Model as OperatingsystemModel
 from servermodel.models import Model as Servermodel
 from django.urls import reverse
 from django.utils.timezone import now
@@ -23,11 +23,12 @@ class Server(models.Model):
     location = models.ForeignKey(LocationModel,
                                  on_delete=models.PROTECT,
                                  null=True)
-    operatingsystem = models.ForeignKey(Operatingsystem,
+    operatingsystem = models.ForeignKey(OperatingsystemModel,
                                         on_delete=models.PROTECT,
                                         null=True, blank=True)
 
-    status = models.ForeignKey(StatusModel, on_delete=models.PROTECT, default=1)
+    status = models.ForeignKey(StatusModel, on_delete=models.PROTECT,
+                               default=1)
 
     servermodel = models.ForeignKey(Servermodel, on_delete=models.PROTECT,
                                     null=True)
