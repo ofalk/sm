@@ -16,19 +16,19 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Operatingsystem',
+            name='Servermodel',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('version', models.CharField(max_length=45)),
+                ('name', models.CharField(max_length=45)),
                 ('vendor', models.ForeignKey(default=None, on_delete=django.db.models.deletion.CASCADE, to='vendor.Model')),
             ],
             options={
                 'managed': True,
-                'db_table': 'sm_operatingsystem',
+                'db_table': 'sm_servermodel',
             },
         ),
         migrations.AlterUniqueTogether(
-            name='operatingsystem',
-            unique_together=set([('vendor', 'version')]),
+            name='servermodel',
+            unique_together=set([('vendor', 'name')]),
         ),
     ]

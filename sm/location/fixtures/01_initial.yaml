@@ -1,0 +1,6 @@
+- model: location.model
+  fields: {name: Vienna (Headoffice), country: AT}
+- model: location.model
+  fields: {name: Virtual, country: AT}
+- model: location.model
+  fields: {name: Graz, country: AT}
