@@ -32,6 +32,8 @@ INSTALLED_APPS.extend([
 
   'sm',
 ])
+from sm.utils import add_to_installed  # noqa
+add_to_installed(INSTALLED_APPS)
 
 from sm.settings import MIDDLEWARE  # noqa
 MIDDLEWARE.extend([
