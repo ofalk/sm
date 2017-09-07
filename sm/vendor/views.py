@@ -1,29 +1,61 @@
 from __future__ import unicode_literals
 
-from django.views.generic import ListView
 from account.mixins import LoginRequiredMixin
 
-from . models import Vendor
+from . models import Model
+from . forms import Form, FormDisabled
+from . import app_label
 
-from django.views.generic.edit import UpdateView, CreateView
+from django.views.generic import ListView as GenericListView
+from django.views.generic.edit import UpdateView as GenericUpdateView
+from django.views.generic.edit import CreateView as GenericCreateView
+from django.views.generic.edit import DeleteView as GenericDeleteView
+from django.contrib.messages.views import SuccessMessageMixin
+
+from django.utils.translation import ugettext as _
+
+from django.core.urlresolvers import reverse_lazy
+
+from django.contrib import messages
 
 
-class VendorListView(LoginRequiredMixin, ListView):
-    template_name = 'vendor/list.html'
-    model = Vendor
+class ListView(LoginRequiredMixin, GenericListView):
+    template_name = '%s/list.html' % app_label
+    model = Model
     paginate_by = 20
     queryset = model.objects.all()
     orphans = 3
     ordering = 'name'
 
 
-class VendorDetailView(LoginRequiredMixin, UpdateView):
-    template_name = 'vendor/detail.html'
-    fields = '__all__'
-    model = Vendor
+class DetailView(LoginRequiredMixin, GenericUpdateView):
+    template_name = '%s/detail.html' % app_label
+    model = Model
+    form_class = FormDisabled
 
 
-class VendorCreateView(LoginRequiredMixin, CreateView):
-    template_name = 'vendor/detail.html'
+class UpdateView(DetailView, SuccessMessageMixin):
+    template_name = '%s/edit.html' % app_label
+    form_class = Form
+    success_url = reverse_lazy('%s:index' % app_label)
+    success_message = "%(name)s" + _('was updated successfully')
+
+
+class CreateView(SuccessMessageMixin, LoginRequiredMixin, GenericCreateView):
+    template_name = '%s/edit.html' % app_label
     fields = '__all__'
-    model = Vendor
+    model = Model
+    success_url = reverse_lazy('%s:index' % app_label)
+    success_message = "%(name)s " + _('was created successfully')
+
+
+class DeleteView(SuccessMessageMixin, LoginRequiredMixin, GenericDeleteView):
+    template_name = '%s/delete.html' % app_label
+    model = Model
+    success_url = reverse_lazy('%s:index' % app_label)
+    success_message = "%(name)s " + _('was deleted successfully')
+
+    def delete(self, request, *args, **kwargs):
+        obj = self.get_object()
+        messages.success(self.request, self.success_message % obj.__dict__)
+        return super(DeleteView, self).delete(request, *args, **kwargs)

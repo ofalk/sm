@@ -1,0 +1,18 @@
+- model: vendor.model
+  fields: {name: CentOS}
+- model: vendor.model
+  fields: {name: Fujitsu}
+- model: vendor.model
+  fields: {name: Hewlett Packard}
+- model: vendor.model
+  fields: {name: Hewlett Packard Enterprise}
+- model: vendor.model
+  fields: {name: IBM}
+- model: vendor.model
+  fields: {name: Novell}
+- model: vendor.model
+  fields: {name: Red Hat}
+- model: vendor.model
+  fields: {name: Debian}
+- model: vendor.model
+  fields: {name: VMware}
