@@ -1,6 +1,9 @@
 import os
 from stat import S_ISDIR, ST_MODE
-from sm.settings import DEBUG, INSTALLED_APPS
+try:
+    from . settings import DEBUG
+except Exception:
+    DEBUG = False
 
 import random
 import string
@@ -37,11 +40,13 @@ def modules_with_urls():
                 if DEBUG:
                     print("Found '%s' module with urls" % module)
                 installed.append(module)
-                # Add to INSTALLED_APPS, since we're already here and have this
-                # information at hand
-                if module not in INSTALLED_APPS:
-                    INSTALLED_APPS.append(module)
             else:
                 if DEBUG:
                     print("%s doesn't have urls defined (yet)" % module)
     return installed
+
+
+def add_to_installed(INSTALLED_APPS):
+    for mod in modules_with_urls():
+        if mod not in INSTALLED_APPS:
+            INSTALLED_APPS.append(mod)
