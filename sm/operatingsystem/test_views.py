@@ -47,7 +47,7 @@ class Tester(TestCase):
             password=self.password,
         )
 
-        self.vendor = VendorModel.objects.all().first()
+        self.vendor = VendorModel.objects.all().order_by('name').first()
         self.testitem, created = Model.objects.get_or_create(
             version=self.teststring,
             vendor=self.vendor,
@@ -170,6 +170,7 @@ class Tester(TestCase):
     # Class specific tests
     def test_listview_empty_true_wo_obj(self):
         Model.objects.all().delete()
+        self.setUp()
         self.client.cookies = SimpleCookie(
             {'srvmanager-show_empty': 'true'})
         self.login()

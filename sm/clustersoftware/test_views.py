@@ -58,17 +58,19 @@ class Tester(TestCase):
         self.assertEqual(response.status_code, 302, 'no redirect?')
 
     def test_listview(self):
+        Model.objects.all().delete()
+        self.setUp()
         self.login()
         response = self.client.get(reverse('%s:index' % app_label))
         self.assertEqual(response.status_code, 200, 'no status 200?')
         item = response.context[-1]['object_list'].first()
-        self.assertIsInstance(item, VendorModel,
+        self.assertIsInstance(item, Model,
                               'object not the correct model!?')
-        self.assertEqual(item.clustersoftware_set.all().first().version,
+        self.assertEqual(item.version,
                          self.testversion)
-        self.assertEqual(item.clustersoftware_set.all().first().name,
+        self.assertEqual(item.name,
                          self.teststring)
-        self.assertEqual(item.clustersoftware_set.all().first().vendor.name,
+        self.assertEqual(item.vendor.name,
                          self.vendor.name)
 
     def test_detailview(self):
@@ -177,17 +179,16 @@ class Tester(TestCase):
                              reverse('%s:index' % app_label),
                              status_code=302)
         item = response.context[-1]['object_list'].first()
-        self.assertEqual(item.clustersoftware_set.all().first().version,
+        self.assertEqual(item.version,
                          data['version'])
-        self.assertEqual(item.clustersoftware_set.all().first().name,
+        self.assertEqual(item.name,
                          data['name'])
-        self.assertEqual(item.clustersoftware_set.all().first().vendor.pk,
+        self.assertEqual(item.vendor.pk,
                          data['vendor'])
-        self.assertEqual(item.clustersoftware_set.all().first().vendor.name,
+        self.assertEqual(item.vendor.name,
                          self.vendor.name)
 
-        self.assertIsInstance(item, VendorModel)
-        self.assertIsInstance(item.clustersoftware_set.all().first(), Model)
+        self.assertIsInstance(item, Model)
         self.assertContains(response,
                             '%s was created successfully' % data['version'])
 
