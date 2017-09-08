@@ -18,3 +18,7 @@
   fields: {name: VMware}
 - model: vendor.model
   fields: {name: ClusterLabs}
+- model: vendor.model
+  fields: {name: Veritas}
+- model: vendor.model
+  fields: {name: Symantec}
