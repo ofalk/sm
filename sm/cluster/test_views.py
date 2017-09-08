@@ -2,19 +2,17 @@ from django.test import TestCase
 from django.test import Client
 
 from . models import Model
-from vendor.models import Model as VendorModel
+from clustersoftware.models import Model as ClustersoftwareModel
 from . forms import FormDisabled
 from . forms import Form
 from . import app_label
-
-from http.cookies import SimpleCookie
 
 from django.contrib.auth.models import User
 
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.urlresolvers import reverse
 
-from sm.utils import random_string, random_number
+from sm.utils import random_string
 
 import os
 import django
@@ -24,11 +22,11 @@ django.setup()
 
 class Tester(TestCase):
     client = Client()
-    testversion = '%s.%s' % (random_number(), random_number())
     teststring = random_string()
     testitem = None
     password = random_string()
     fixtures = ['%s/fixtures/01_initial.yaml' % 'vendor',
+                '%s/fixtures/01_initial.yaml' % 'clustersoftware',
                 '%s/fixtures/01_initial.yaml' % app_label
                 ]
 
@@ -48,11 +46,11 @@ class Tester(TestCase):
             password=self.password,
         )
 
-        self.vendor = VendorModel.objects.all().first()
+        self.clustersoftware = ClustersoftwareModel.objects.all().order_by(
+            'name').first()
         self.testitem, created = Model.objects.get_or_create(
             name=self.teststring,
-            version=self.testversion,
-            vendor=self.vendor,
+            clustersoftware=self.clustersoftware,
         )
 
     def test_login_redir(self):
@@ -60,18 +58,18 @@ class Tester(TestCase):
         self.assertEqual(response.status_code, 302, 'no redirect?')
 
     def test_listview(self):
+        Model.objects.all().delete()
+        self.setUp()
         self.login()
         response = self.client.get(reverse('%s:index' % app_label))
         self.assertEqual(response.status_code, 200, 'no status 200?')
         item = response.context[-1]['object_list'].first()
-        self.assertIsInstance(item, VendorModel,
+        self.assertIsInstance(item, Model,
                               'object not the correct model!?')
-        self.assertEqual(item.clustersoftware_set.all().first().version,
-                         self.testversion)
-        self.assertEqual(item.clustersoftware_set.all().first().name,
+        self.assertEqual(item.name,
                          self.teststring)
-        self.assertEqual(item.clustersoftware_set.all().first().vendor.name,
-                         self.vendor.name)
+        self.assertEqual(item.clustersoftware.pk,
+                         self.clustersoftware.pk)
 
     def test_detailview(self):
         self.login()
@@ -82,12 +80,10 @@ class Tester(TestCase):
         item = response.context[-1]['object']
         self.assertIsInstance(item, Model,
                               'object not the correct model!?')
-        self.assertEqual(item.version, self.testversion)
         self.assertEqual(item.name, self.teststring)
-        self.assertEqual(item.vendor.name, self.vendor.name)
         form = response.context[-1]['form']
         self.assertIsInstance(form, FormDisabled)
-        for field in ['version', 'name', 'vendor']:
+        for field in ['name', 'clustersoftware']:
             self.assertTrue(form.fields[field].widget.attrs['readonly'])
 
     def test_updateview(self):
@@ -99,12 +95,11 @@ class Tester(TestCase):
         item = response.context[-1]['object']
         self.assertIsInstance(item, Model,
                               'object not the correct model!?')
-        self.assertEqual(item.version, self.testversion)
         self.assertEqual(item.name, self.teststring)
-        self.assertEqual(item.vendor.name, self.vendor.name)
+        self.assertEqual(item.clustersoftware.name, self.clustersoftware.name)
         form = response.context[-1]['form']
         self.assertIsInstance(form, Form)
-        for field in ['version', 'name', 'vendor']:
+        for field in ['name', 'clustersoftware']:
             self.assertRaises(KeyError,
                               form.fields[field].widget.attrs.__getitem__,
                               'readonly')
@@ -118,9 +113,7 @@ class Tester(TestCase):
         item = response.context[-1]['object']
         self.assertIsInstance(item, Model,
                               'object not the correct model!?')
-        self.assertEqual(item.version, self.testversion)
         self.assertEqual(item.name, self.teststring)
-        self.assertEqual(item.vendor.name, self.vendor.name)
         self.assertContains(response, 'Are you sure you want to')
         self.assertContains(response, '<strong>delete</strong>')
 
@@ -137,12 +130,11 @@ class Tester(TestCase):
         self.assertIn('messages', response.context[-1])
         self.assertContains(response,
                             '%s was deleted successfully' %
-                            self.testitem.version)
+                            self.testitem.name)
         with self.assertRaises(ObjectDoesNotExist):
             Model.objects.get(
                 name=self.testitem.name,
-                version=self.testitem.version,
-                vendor=self.vendor,
+                clustersoftware=self.clustersoftware
             )
 
     def test_createview(self):
@@ -157,7 +149,7 @@ class Tester(TestCase):
         self.assertIn('form', response.context[-1])
         form = response.context[-1]['form']
         self.assertRaises(KeyError,
-                          form.fields['version'].widget.attrs.__getitem__,
+                          form.fields['name'].widget.attrs.__getitem__,
                           'readonly')
 
     def test_createview_post(self):
@@ -166,8 +158,7 @@ class Tester(TestCase):
         self.login()
         data = {
             'name': self.teststring,
-            'version': self.testversion,
-            'vendor': self.vendor.pk,
+            'clustersoftware': self.clustersoftware.pk,
         }
         response = self.client.post(
             reverse('%s:create' % app_label),
@@ -179,58 +170,11 @@ class Tester(TestCase):
                              reverse('%s:index' % app_label),
                              status_code=302)
         item = response.context[-1]['object_list'].first()
-        self.assertEqual(item.clustersoftware_set.all().first().version,
-                         data['version'])
-        self.assertEqual(item.clustersoftware_set.all().first().name,
+        self.assertEqual(item.name,
                          data['name'])
-        self.assertEqual(item.clustersoftware_set.all().first().vendor.pk,
-                         data['vendor'])
-        self.assertEqual(item.clustersoftware_set.all().first().vendor.name,
-                         self.vendor.name)
+        self.assertEqual(item.clustersoftware.pk,
+                         data['clustersoftware'])
 
-        self.assertIsInstance(item, VendorModel)
-        self.assertIsInstance(item.clustersoftware_set.all().first(), Model)
+        self.assertIsInstance(item, Model)
         self.assertContains(response,
-                            '%s was created successfully' % data['version'])
-
-    # Class specific tests
-    def test_listview_empty_true_wo_obj(self):
-        Model.objects.all().delete()
-        self.client.cookies = SimpleCookie(
-            {'srvmanager-show_empty': 'true'})
-        self.login()
-        response = self.client.get(reverse('%s:index' % app_label))
-        self.assertEqual(response.status_code, 200, 'no status 200?')
-        item = response.context[-1]['object_list'].first()
-        self.assertIsInstance(item, VendorModel,
-                              'object not the correct model!?')
-        self.assertEqual(item.name, self.vendor.name)
-
-    def test_listview_empty_false_wo_obj(self):
-        Model.objects.all().delete()
-        self.client.cookies = SimpleCookie(
-            {'srvmanager-show_empty': 'false'})
-        self.login()
-        response = self.client.get(reverse('%s:index' % app_label))
-        self.assertEqual(response.status_code, 200, 'no status 200?')
-        item = response.context[-1]['object_list'].first()
-        self.assertIsNone(item)
-
-    def test_listview_empty_false_w_obj(self):
-        self.client.cookies = SimpleCookie(
-            {'srvmanager-show_empty': 'false'})
-        self.login()
-        response = self.client.get(reverse('%s:index' % app_label))
-        item = response.context[-1]['object_list'].first()
-        self.assertEqual(response.status_code, 200, 'no status 200?')
-        self.assertIsInstance(item, VendorModel,
-                              'object not the correct model!?')
-        self.assertEqual(item.name, self.vendor.name)
-
-    def test_get_initial(self):
-        from clustersoftware.views import CreateView as View
-        v = View()
-        v.kwargs = {'vendor': self.vendor.name}
-        initial = v.get_initial()
-        self.assertIsInstance(initial['vendor'], VendorModel)
-        self.assertEqual(initial['vendor'].name, self.vendor.name)
+                            '%s was created successfully' % data['name'])
