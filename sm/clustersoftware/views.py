@@ -28,12 +28,7 @@ class ListView(LoginRequiredMixin, GenericListView):
     ordering = 'name'
 
     def get_queryset(self):
-        from vendor.models import Model as VendorModel
-        if 'srvmanager-show_empty' in self.request.COOKIES:
-            if self.request.COOKIES['srvmanager-show_empty'] == 'false':
-                return VendorModel.objects.exclude(
-                    clustersoftware=None).order_by('name')
-        return VendorModel.objects.all().order_by('name')
+        return Model.objects.all().order_by('name')
 
 
 class DetailView(LoginRequiredMixin, GenericUpdateView):
@@ -43,7 +38,7 @@ class DetailView(LoginRequiredMixin, GenericUpdateView):
 
 
 class UpdateView(DetailView, SuccessMessageMixin):
-    template_name = '%s/detail.html' % app_label
+    template_name = '%s/edit.html' % app_label
     model = Model
     form_class = Form
     success_url = reverse_lazy('%s:index' % app_label)
@@ -62,7 +57,7 @@ class CreateView(SuccessMessageMixin, LoginRequiredMixin, GenericCreateView):
         initial = super(GenericCreateView, self).get_initial()
         if 'vendor' in self.kwargs:
             initial['vendor'] = VendorModel.objects.filter(
-                name=self.kwargs['vendor']).first()
+                pk=self.kwargs['vendor']).first()
         return initial
 
 
