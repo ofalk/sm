@@ -16,3 +16,5 @@
   fields: {name: Debian}
 - model: vendor.model
   fields: {name: VMware}
+- model: vendor.model
+  fields: {name: ClusterLabs}
