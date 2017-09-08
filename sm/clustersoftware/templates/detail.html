@@ -27,33 +27,28 @@
 {% endif %}
 {% endbuttons %}
 
-  <!-- TODO - that's wrong; Relation must be via cluster [doesn't exist yet].... -->
   <div class="panel panel-default">
-    {% if not object.server_set.all %}
-      <div class="panel-heading"><b>{% trans 'No servers with this clustersoftware' %}</b></div>
+    {% if not object.cluster_set.all %}
+      <div class="panel-heading"><b>{% trans 'No cluster with this clustersoftware' %}</b></div>
     {% else %}
-    <div class="panel-heading"><b>{% trans 'List of servers with this clustersoftware' %}</b></div>
+    <div class="panel-heading"><b>{% trans 'List of clusters with this clustersoftware' %}</b></div>
     <table class="table table-hover table-striped" id="server_list" style="font-size:80%;">
       <thead>
         <tr>
-          <th>{% trans 'Hostname' %}</th>
-          <th>{% trans 'Status' %}</th>
-          <th>{% trans 'Location' %}</th>
+          <th>{% trans 'Name' %}</th>
+          <th>{% trans 'Vendor' %}</th>
         </tr>
       </thead>
       <tbody>
-        {% for server in object.server_set.all %}
+        {% for cluster in object.cluster_set.all %}
           <tr>
             <td>
-              <a href="{% url 'server:detail' server.pk %}" title="{{ server.hostname }}">
-                <div>{{ server.hostname }}</div>
+              <a href="{% url 'cluster:detail' cluster.pk %}" title="{{ cluster }}">
+                <div>{{ cluster }}</div>
               </a>
             </td>
             <td>
-              {% include "status-icon.html" with object=server %}
-            </td>
-            <td>
-              {{ server.location }}
+              {{ cluster.vendor.name }}
             </td>
           </tr>
         {% endfor %}

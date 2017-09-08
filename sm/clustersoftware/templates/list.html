@@ -11,55 +11,37 @@
 {% block body %}
 <div class="container" style="padding-top: 20px;">
   <div class="panel panel-default">
-    <div class="checkbox" align="right">
-      <label><input type="checkbox" id="show_empty" checked> {% trans 'Show empty' %}</label>
-    </div>
-    <script>
-        $('#show_empty').ready(function(e) {
-            var checked = getCookie('srvmanager-show_empty');
-            console.log(checked);
-            if(checked == 'true' || checked == '') {
-                document.getElementById('show_empty').checked = true;
-            } else {
-                document.getElementById('show_empty').checked = false;
-            }
-        });
-        $('#show_empty').click(function() {
-            setCookie('srvmanager-show_empty',this.checked, 30);
-            location.reload();
-        });
-    </script>
     {% if not object_list %}
       <div class="panel-heading"><b>{% trans 'No results' %}</b></div>
     {% else %}
     <table class="table table-hover table-striped" id="clustersoftware_list" style="font-size:80%;">
       <thead>
         <tr>
+          <th>Name/Version</th>
           <th>Vendor</th>
-          <th>Software</th>
           <th>Actions</th>
         </tr>
       </thead>
       <tbody>
-        {% for vendor in object_list.all %}
+        {% for clustersoftware in object_list.all %}
           <tr>
             <td>
-              <a href="{% url 'vendor:detail' vendor.pk %}" title="{{ vendor.name }}">
-                <div>{{ vendor.name }}</div>
+              <a href="{% url 'clustersoftware:detail' clustersoftware.pk %}" title="{{ clustersoftware.name }}">
+                {{ clustersoftware.name }}{% if clustersoftware.version %} {{ clustersoftware.version }}{% endif %}
               </a>
             </td>
             <td>
-              {% for clustersoftware in vendor.clustersoftware_set.all %}
-                <a href="{% url 'clustersoftware:detail' clustersoftware.pk %}" title="{{ clustersoftware }}">
-                  {{ clustersoftware.name }}{% if clustersoftware.version %} {{ clustersoftware.version }}{% endif %}</a>
-                <a href="{% url 'clustersoftware:update' clustersoftware.pk %}" title="Edit clustersoftware"><i class="fa fa-edit" aria-hidden="true"></i></a>
-                {% if not forloop.last %}, {% endif %}
-              {% empty %}
-                None
-              {% endfor %}
+              <a href="{% url 'vendor:detail' clustersoftware.vendor.pk %}" title="{{ clustersoftware.vendor }}">
+                {{ clustersoftware.vendor }}
+              </a>
             </td>
             <td>
-              <a href="{% url 'clustersoftware:create' vendor.name %}" title="Add new clustersoftware"><i class="fa fa-plus" aria-hidden="true"></i></a>
+              <a href="{% url 'clustersoftware:update' clustersoftware.pk %}" title="{% trans 'Edit clustersoftware' %}">
+                <i class="fa fa-pencil fa-fw fa-lg" aria-hidden="true"></i>
+              </a>
+              <a href="{% url 'clustersoftware:delete' clustersoftware.pk %}" title="{% trans 'Delete clustersoftware' %}">
+                <i class="fa fa-trash fa-fw fa-lg" aria-hidden="true"></i>
+              </a>
             </td>
           </tr>
         {% endfor %}
