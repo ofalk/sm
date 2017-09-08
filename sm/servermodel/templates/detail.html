@@ -10,8 +10,22 @@
 {% block body_class %}servermodel servermodel-detail{% endblock %}
 
 {% block body %}
- 
+{% if object %}
+<form action="{% url 'servermodel:detail' object.pk %}" method="post" class="form">
+{% else %}
+<form action="{% url 'servermodel:create' %}" method="post" class="form">
+{% endif %}
+
+{% csrf_token %}
 {% bootstrap_form form %}
+{% buttons %}
+{% if request.path == object.get_update_url %}
+{% bootstrap_button "Save" button_type="submit" button_class="btn-primary" %}
+{% else %}
+<a class="btn btn-primary" role="button" href="{% url 'servermodel:update' object.pk %}">{% trans 'Edit' %}</a>
+<a class="btn btn-danger" role="button" href="{% url 'servermodel:delete' object.pk %}">{% trans 'Delete' %}</a>
+{% endif %}
+{% endbuttons %}
 
   <div class="panel panel-default">
     {% if not object.server_set.all %}
