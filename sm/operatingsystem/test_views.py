@@ -204,7 +204,7 @@ class Tester(TestCase):
     def test_get_initial(self):
         from operatingsystem.views import CreateView as View
         v = View()
-        v.kwargs = {'vendor': self.vendor.name}
+        v.kwargs = {'vendor': self.vendor.pk}
         initial = v.get_initial()
         self.assertIsInstance(initial['vendor'], VendorModel)
         self.assertEqual(initial['vendor'].name, self.vendor.name)
