@@ -1,25 +1,10 @@
 - model: clustersoftware.model
   fields:
-    name: 'Cluster Server'
-    version: '6.1.2'
-    vendor: [Symantec]
-- model: clustersoftware.model
-  fields:
-    name: 'Cluster Server'
+    name: Cluster Server
     version: '7.0'
     vendor: [Veritas]
 - model: clustersoftware.model
   fields:
-    name: 'ServiceGuard'
-    version: '11.18'
-    vendor: [Hewlett Packard Enterprise]
-- model: clustersoftware.model
-  fields:
-    name: 'csync2 only'
+    name: Pacemaker / CRM
     version: ''
-    vendor: []
-- model: clustersoftware.model
-  fields:
-    name: 'Pacemaker / CRM'
-    version: '1.1'
     vendor: [ClusterLabs]
