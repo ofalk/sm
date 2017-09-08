@@ -42,7 +42,7 @@ class DetailView(LoginRequiredMixin, GenericUpdateView):
 
 
 class UpdateView(DetailView, SuccessMessageMixin):
-    template_name = '%s/detail.html' % app_label
+    template_name = '%s/edit.html' % app_label
     model = Model
     form_class = Form
     success_url = reverse_lazy('%s:index' % app_label)

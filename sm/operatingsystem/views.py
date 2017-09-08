@@ -43,7 +43,7 @@ class DetailView(LoginRequiredMixin, GenericUpdateView):
 
 
 class UpdateView(DetailView, SuccessMessageMixin):
-    template_name = '%s/detail.html' % app_label
+    template_name = '%s/edit.html' % app_label
     model = Model
     form_class = Form
     success_url = reverse_lazy('%s:index' % app_label)
@@ -62,7 +62,7 @@ class CreateView(SuccessMessageMixin, LoginRequiredMixin, GenericCreateView):
         initial = super(GenericCreateView, self).get_initial()
         if 'vendor' in self.kwargs:
             initial['vendor'] = VendorModel.objects.filter(
-                name=self.kwargs['vendor']).first()
+                pk=self.kwargs['vendor']).first()
         return initial
 
 
