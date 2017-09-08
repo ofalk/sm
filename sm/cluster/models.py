@@ -13,13 +13,13 @@ class Model(NaturalKeyModel):
                                         related_query_name='%s' % app_label)
 
     def __str__(self):
-        return "%s" % (self.name)
+        return '%s' % (self.name)
 
     def get_absolute_url(self):
         return reverse('%s:detail' % app_label, kwargs={'pk': self.pk})
 
     def natural_key(self):
-        return (self.name)
+        return (self.name,)
 
     class Meta:
         managed = True
