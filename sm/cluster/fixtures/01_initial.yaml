@@ -1,0 +1,4 @@
+- model: cluster.model
+  fields:
+    name: Firewall
+    clustersoftware: [ClusterLabs, Pacemaker / CRM, '']

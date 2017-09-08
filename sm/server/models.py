@@ -4,7 +4,8 @@ from status.models import Model as StatusModel
 from domain.models import Model as DomainModel
 from location.models import Model as LocationModel
 from operatingsystem.models import Model as OperatingsystemModel
-from servermodel.models import Model as Servermodel
+from servermodel.models import Model as ServermodelModel
+from cluster.models import Model as ClusterModel
 from django.urls import reverse
 from django.utils.timezone import now
 
@@ -30,8 +31,11 @@ class Server(models.Model):
     status = models.ForeignKey(StatusModel, on_delete=models.PROTECT,
                                default=1)
 
-    servermodel = models.ForeignKey(Servermodel, on_delete=models.PROTECT,
+    servermodel = models.ForeignKey(ServermodelModel, on_delete=models.PROTECT,
                                     null=True)
+
+    cluster = models.ForeignKey(ClusterModel, on_delete=models.PROTECT,
+                                null=True, blank=True)
 
     # => application model
     # application = models.CharField(max_length=100, blank=True, null=True)
