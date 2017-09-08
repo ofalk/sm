@@ -28,7 +28,7 @@ def modules_with_urls():
     path = os.path.realpath(os.path.join(os.path.dirname(__file__), '..'))
     selfmod = os.path.basename(os.path.realpath(os.path.dirname(__file__)))
     if DEBUG:
-        print("Searching in %s" % path)
+        print("Searching in %s" % path)  # pragma: no cover
     installed = []
     for module in os.listdir(path):
         mode = os.stat(module)[ST_MODE]
@@ -42,11 +42,13 @@ def modules_with_urls():
         if os.path.isfile(os.path.join(module, '__init__.py')):
             if os.path.isfile(os.path.join(module, 'urls.py')):
                 if DEBUG:
-                    print("Found '%s' module with urls" % module)
+                    print("Found '%s' module with urls" %
+                          module)  # pragma: no cover
                 installed.append(module)
             else:
                 if DEBUG:
-                    print("%s doesn't have urls defined (yet)" % module)
+                    print("%s doesn't have urls defined (yet)" %
+                          module)  # pragma: no cover
     return installed
 
 
