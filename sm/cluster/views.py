@@ -48,6 +48,10 @@ class UpdateView(DetailView, SuccessMessageMixin):
     success_url = reverse_lazy('%s:index' % app_label)
     success_message = '%(name)s ' + _('was updated successfully')
 
+    def form_valid(self, form):
+        self.object.server_set = form.cleaned_data['server_set']
+        return super(UpdateView, self).form_valid(form)
+
 
 class CreateView(SuccessMessageMixin, LoginRequiredMixin, GenericCreateView):
     template_name = '%s/edit.html' % app_label

@@ -8,7 +8,9 @@ from . import app_label
 
 class Model(NaturalKeyModel):
     name = models.CharField(max_length=45, unique=True)
-    clustersoftware = models.ForeignKey(ClustersoftwareModel)
+    clustersoftware = models.ForeignKey(ClustersoftwareModel,
+                                        related_name='%s_set' % app_label,
+                                        related_query_name='%s' % app_label)
 
     def __str__(self):
         return "%s" % (self.name)

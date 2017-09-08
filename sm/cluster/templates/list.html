@@ -31,9 +31,13 @@
               </a>
             </td>
             <td>
+              {% if object.clustersoftware %}
               <a href="{% url 'clustersoftware:detail' object.clustersoftware.pk %}" title="{{ object.clustersoftware }}">
                 <div>{{ object.clustersoftware }}</div>
               </a>
+              {% else %}
+                None
+              {% endif %}
             </td>
 
             <td>
