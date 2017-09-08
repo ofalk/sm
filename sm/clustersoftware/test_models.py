@@ -44,7 +44,7 @@ class Tester(TestCase):
                               'object not correct model!?')
 
     def test_version(self):
-        self.assertEqual(self.testitem.version, self.teststring,
+        self.assertEqual(self.testitem.version, self.testversion,
                          'version not correct')
 
     def test_name(self):
