@@ -35,7 +35,9 @@ class Server(models.Model):
                                     null=True)
 
     cluster = models.ForeignKey(ClusterModel, on_delete=models.PROTECT,
-                                null=True, blank=True)
+                                null=True, blank=True,
+                                related_name='%s_set' % app_label,
+                                related_query_name='%s' % app_label)
 
     # => application model
     # application = models.CharField(max_length=100, blank=True, null=True)
@@ -53,9 +55,6 @@ class Server(models.Model):
     description = models.CharField(max_length=100, blank=True, null=True)
 
     patchtime = models.ForeignKey(PatchtimeModel, null=True, default=None)
-
-    # patch time
-    # tags
 
     def __str__(self):
         return "%s" % self.hostname
