@@ -15,6 +15,10 @@ def random_string(len=10):
         string.digits) for _ in range(10))
 
 
+def random_number(start=0, end=10):
+    return(random.randint(start, end))
+
+
 def modules_with_urls():
     """
     Simple function that automatically adds/loads urls from app directories
