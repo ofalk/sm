@@ -7,6 +7,8 @@ from . forms import FormDisabled
 from . forms import Form
 from . import app_label
 
+from http.cookies import SimpleCookie
+
 from django.contrib.auth.models import User
 
 from django.core.exceptions import ObjectDoesNotExist
@@ -31,7 +33,7 @@ class Tester(TestCase):
 
     def login(self):
         """
-        Login as user 'john'
+        Login as user
         """
         self.client.login(username=self.user.username, password=self.password)
 
@@ -162,3 +164,37 @@ class Tester(TestCase):
         self.assertIsInstance(item.servermodel_set.all().first(), Model)
         self.assertContains(response,
                             '%s was created successfully' % data['name'])
+
+    # Class specific tests
+    def test_listview_empty_true_wo_obj(self):
+        Model.objects.all().delete()
+        self.client.cookies = SimpleCookie(
+            {'srvmanager-show_empty': 'true'})
+        self.login()
+        response = self.client.get(reverse('%s:index' % app_label))
+        self.assertEqual(response.status_code, 200, 'no status 200?')
+        item = response.context[-1]['object_list'].first()
+        self.assertIsInstance(item, VendorModel,
+                              'object not the correct model!?')
+        self.assertEqual(item.name, self.vendor.name)
+
+    def test_listview_empty_false_wo_obj(self):
+        Model.objects.all().delete()
+        self.client.cookies = SimpleCookie(
+            {'srvmanager-show_empty': 'false'})
+        self.login()
+        response = self.client.get(reverse('%s:index' % app_label))
+        self.assertEqual(response.status_code, 200, 'no status 200?')
+        item = response.context[-1]['object_list'].first()
+        self.assertIsNone(item)
+
+    def test_listview_empty_false_w_obj(self):
+        self.client.cookies = SimpleCookie(
+            {'srvmanager-show_empty': 'false'})
+        self.login()
+        response = self.client.get(reverse('%s:index' % app_label))
+        item = response.context[-1]['object_list'].first()
+        self.assertEqual(response.status_code, 200, 'no status 200?')
+        self.assertIsInstance(item, VendorModel,
+                              'object not the correct model!?')
+        self.assertEqual(item.name, self.vendor.name)
