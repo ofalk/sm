@@ -1,4 +1,6 @@
 - model: vendor.model
+  fields: {name: None - Placeholder}
+- model: vendor.model
   fields: {name: CentOS}
 - model: vendor.model
   fields: {name: Fujitsu}

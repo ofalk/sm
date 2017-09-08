@@ -1,10 +1,10 @@
 - model: clustersoftware.model
   fields:
-    name: Cluster Server
-    version: '7.0'
-    vendor: [Veritas]
-- model: clustersoftware.model
-  fields:
     name: Pacemaker / CRM
     version: ''
     vendor: [ClusterLabs]
+- model: clustersoftware.model
+  fields:
+    name: None - logical unit only
+    version: ''
+    vendor: [None - Placeholder]

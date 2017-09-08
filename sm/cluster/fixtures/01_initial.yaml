@@ -2,3 +2,7 @@
   fields:
     name: Firewall
     clustersoftware: [ClusterLabs, Pacemaker / CRM, '']
+- model: cluster.model
+  fields:
+    name: Owncloud
+    clustersoftware: [None - Placeholder, None - logical unit only, '']
