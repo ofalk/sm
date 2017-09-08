@@ -5,14 +5,14 @@
 {% load bootstrap3 %}
 {% load bootstrap4 %}
 
-{% block head_title %}{% trans "Patchtime" %} :: {% if object %}{{ object.name }}{% endif %}{% endblock %}
+{% block head_title %}{% trans 'Clustersoftware' %} :: {% if object %}{{ object.name }}{% endif %}{% endblock %}
 
-{% block body_class %}patchtime{% endblock %}
+{% block body_class %}clustersoftware{% endblock %}
 
 {% block body %}
 
 {% csrf_token %}
-<form action="{% url 'patchtime:delete' object.pk %}" method="post" class="form">{% csrf_token %}
+<form action="{% url 'clustersoftware:delete' object.pk %}" method="post" class="form">{% csrf_token %}
     <div class="alert alert-danger fade show" role="alert">
       {% trans 'Are you sure you want to <strong>delete</strong>' %} <em>{{ object }}</em>?
     </div>
