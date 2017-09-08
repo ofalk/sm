@@ -1,6 +1,6 @@
 from django.test import TransactionTestCase as TestCase
 
-from operatingsystem.models import Model
+from . models import Model
 from vendor.models import Model as VendorModel
 
 from . import app_label
