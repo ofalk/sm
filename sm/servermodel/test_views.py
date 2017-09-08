@@ -47,7 +47,7 @@ class Tester(TestCase):
             password=self.password,
         )
 
-        self.vendor = VendorModel.objects.all().first()
+        self.vendor = VendorModel.objects.all().order_by('name').first()
         self.testitem, created = Model.objects.get_or_create(
             name=self.teststring,
             vendor=self.vendor,
