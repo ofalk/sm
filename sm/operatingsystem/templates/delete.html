@@ -1,0 +1,24 @@
+{% extends "site_base.html" %}
+
+{% load account_tags %}
+{% load i18n %}
+{% load bootstrap3 %}
+{% load bootstrap4 %}
+
+{% block head_title %}{% trans 'Operatingsystem' %} :: {% if object %}{{ object.name }}{% endif %}{% endblock %}
+
+{% block body_class %}operatingsystem{% endblock %}
+
+{% block body %}
+
+{% csrf_token %}
+<form action="{% url 'operatingsystem:delete' object.pk %}" method="post" class="form">{% csrf_token %}
+    <div class="alert alert-danger fade show" role="alert">
+      {% trans 'Are you sure you want to <strong>delete</strong>' %} <em>{{ object }}</em>?
+    </div>
+    {% buttons %}
+    {% bootstrap_button "Confirm" button_type="submit" button_class="btn-primary" %}
+    {% endbuttons %}
+</form>
+
+{% endblock %}

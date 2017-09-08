@@ -47,7 +47,7 @@ class UpdateView(DetailView, SuccessMessageMixin):
     model = Model
     form_class = Form
     success_url = reverse_lazy('%s:index' % app_label)
-    success_message = "%(name)s" + _('was updated successfully')
+    success_message = "%(version)s" + _('was updated successfully')
 
 
 class CreateView(SuccessMessageMixin, LoginRequiredMixin, GenericCreateView):
@@ -55,7 +55,7 @@ class CreateView(SuccessMessageMixin, LoginRequiredMixin, GenericCreateView):
     fields = '__all__'
     model = Model
     success_url = reverse_lazy('%s:index' % app_label)
-    success_message = "%(name)s " + _('was created successfully')
+    success_message = "%(version)s " + _('was created successfully')
 
     def get_initial(self):
         from vendor.models import Model as VendorModel
@@ -70,7 +70,7 @@ class DeleteView(SuccessMessageMixin, LoginRequiredMixin, GenericDeleteView):
     template_name = '%s/delete.html' % app_label
     model = Model
     success_url = reverse_lazy('%s:index' % app_label)
-    success_message = "%(name)s " + _('was deleted successfully')
+    success_message = "%(version)s " + _('was deleted successfully')
 
     def delete(self, request, *args, **kwargs):
         obj = self.get_object()

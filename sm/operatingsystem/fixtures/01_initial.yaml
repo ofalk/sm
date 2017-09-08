@@ -106,3 +106,7 @@
   fields:
     version: '8'
     vendor: [Debian]
+- model: operatingsystem.model
+  fields:
+    version: 'SLES 10.0'
+    vendor: [Novell]
