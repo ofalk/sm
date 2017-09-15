@@ -18,7 +18,7 @@ class Model(NaturalKeyModel):
             return '%s %s' % (self.name, self.version)
         if self.name and not self.version:
             return '%s' % (self.name)
-        return self
+        return self  # noqa
 
     def get_absolute_url(self):
         return reverse('%s:detail' % app_label, kwargs={'pk': self.pk})
