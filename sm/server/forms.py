@@ -1,13 +1,13 @@
 from __future__ import unicode_literals
 
-from . models import Server
+from . models import Model as ServerModel
 
 from django import forms
 
 
 class Form(forms.ModelForm):
     class Meta:
-        model = Server
+        model = ServerModel
         fields = '__all__'
         widgets = {
             'delivery_date': forms.DateInput(attrs={'class': 'date-input'}),

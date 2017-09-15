@@ -12,7 +12,7 @@ from django.utils.timezone import now
 from . import app_label
 
 
-class Server(models.Model):
+class Model(models.Model):
     hostname = models.CharField(max_length=45)
     domain = models.ForeignKey(DomainModel, on_delete=models.PROTECT,
                                default=1)

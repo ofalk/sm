@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 from django import forms
 
 from . models import Model
-from server.models import Server as ServerModel
+from server.models import Model as ServerModel
 
 
 class Form(forms.ModelForm):

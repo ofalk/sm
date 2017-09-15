@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 from patchtime.models import Model as PatchtimeModel
-from server.models import Server as ServerModel
+from server.models import Model as ServerModel
 from servermodel.models import Model as ServermodelModel
 from status.models import Model as StatusModel
 from domain.models import Model as DomainModel

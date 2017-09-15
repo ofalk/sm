@@ -1,7 +1,7 @@
 from django.test import TestCase
 from django.test import Client
 
-from . models import Server as Model
+from . models import Model
 from cluster.models import Model as ClusterModel
 from patchtime.models import Model as PatchtimeModel
 from location.models import Model as LocationModel

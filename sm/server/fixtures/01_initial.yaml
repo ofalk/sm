@@ -1,4 +1,4 @@
-- model: server.server
+- model: server.model
   pk: 37
   fields:
     hostname: apigw
@@ -19,7 +19,7 @@
     serial_nr: null
     description: API Gateway
     patchtime: [Patch in maintenance window]
-- model: server.server
+- model: server.model
   pk: 41
   fields:
     hostname: col
@@ -41,7 +41,7 @@
     serial_nr: null
     description: Data colider
     patchtime: [Patch in maintenance window]
-- model: server.server
+- model: server.model
   pk: 45
   fields:
     hostname: oc02p
@@ -63,7 +63,7 @@
     serial_nr: null
     description: Owncloud
     patchtime: [Patch in maintenance window]
-- model: server.server
+- model: server.model
   pk: 49
   fields:
     hostname: pils
@@ -85,7 +85,7 @@
     serial_nr: null
     description: null
     patchtime: [No patching]
-- model: server.server
+- model: server.model
   pk: 53
   fields:
     hostname: pils-new
@@ -107,7 +107,7 @@
     serial_nr: null
     description: null
     patchtime: [Patch in maintenance window]
-- model: server.server
+- model: server.model
   pk: 57
   fields:
     hostname: oc01p
@@ -129,7 +129,7 @@
     serial_nr: null
     description: Owncloud
     patchtime: [No patching]
-- model: server.server
+- model: server.model
   pk: 61
   fields:
     hostname: vailima
@@ -151,7 +151,7 @@
     serial_nr: null
     description: Virtual IP for firewall cluster
     patchtime: [No patching]
-- model: server.server
+- model: server.model
   pk: 65
   fields:
     hostname: xxx1
