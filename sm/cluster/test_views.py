@@ -4,7 +4,6 @@ from django.test import Client
 from . models import Model
 from clustersoftware.models import Model as ClustersoftwareModel
 from . forms import FormDisabled
-from . forms import Form
 from . import app_label
 
 from django.contrib.auth.models import User
@@ -92,21 +91,21 @@ class Tester(TestCase):
         self.assertEqual('/%s/update/%i/' % (app_label, self.testitem.pk), url)
         response = self.client.post(url, {
             'name': self.testitem.name,
-            'clustersoftware': self.clustersoftware.pk,
+            'clustersoftware': self.testitem.clustersoftware.pk,
         })
         self.assertRedirects(response,
                              reverse('%s:index' % app_label),
                              status_code=302)
+
         url = reverse('%s:detail' % app_label, args=[self.testitem.pk])
         response = self.client.get(url)
-
         item = response.context[-1]['object']
         self.assertIsInstance(item, Model,
                               'object not the correct model!?')
         self.assertEqual(item.name, self.teststring)
         self.assertEqual(item.clustersoftware.name, self.clustersoftware.name)
         form = response.context[-1]['form']
-        self.assertIsInstance(form, Form)
+        self.assertIsInstance(form, FormDisabled)
         for field in ['name', 'clustersoftware']:
             self.assertTrue(form.fields[field].widget.attrs['readonly'])
 
