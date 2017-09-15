@@ -5,12 +5,27 @@
 {% load bootstrap3 %}
 {% load bootstrap4 %}
 
-{% block head_title %}{% trans "Server" %} :: {{ object.hostname }}.{{ object.domain }}{% endblock %}
+{% block head_title %}{% trans 'Server' %} :: {{ object.hostname }}.{{ object.domain }}{% endblock %}
 
-{% block body_class %}server server-detail{% endblock %}
+{% block body_class %}server server-{% if object %}detail{% else %}create{% endif %}{% endblock %}
 
 {% block body %}
+{% if object %}
+  <form action="{% url 'server:detail' object.pk %}" method="post" class="form">
+{% else %}
+  <form action="{% url 'server:create' %}" method="post" class="form">
+{% endif %}
+
+{% csrf_token %}
 
 {% bootstrap_form form %}
+{% buttons %}
+{% if request.path == object.get_update_url %}
+{% bootstrap_button "Save" button_type="submit" button_class="btn-primary" %}
+{% else %}
+<a class="btn btn-primary" role="button" href="{% url 'server:update' object.pk %}">{% trans 'Edit' %}</a>
+<a class="btn btn-danger" role="button" href="{% url 'server:delete' object.pk %}">{% trans 'Delete' %}</a>
+{% endif %}
+{% endbuttons %}
 
 {% endblock %}

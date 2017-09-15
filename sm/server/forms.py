@@ -5,7 +5,7 @@ from . models import Server
 from django import forms
 
 
-class ServerForm(forms.ModelForm):
+class Form(forms.ModelForm):
     class Meta:
         model = Server
         fields = '__all__'
@@ -15,9 +15,9 @@ class ServerForm(forms.ModelForm):
         }
 
 
-class ServerFormDisabled(ServerForm):
+class FormDisabled(Form):
     def __init__(self, *args, **kwargs):
-        super(ServerFormDisabled, self).__init__(*args, **kwargs)
+        super(FormDisabled, self).__init__(*args, **kwargs)
         instance = getattr(self, 'instance', None)
         if instance and instance.pk:
             for field in self.fields:
