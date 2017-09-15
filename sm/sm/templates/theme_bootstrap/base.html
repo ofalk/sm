@@ -3,10 +3,14 @@
 {% load staticfiles %}
 {% load account_tags %}
 <!DOCTYPE html>
-<html lang="{{ LANGUAGE_CODE }}">
+<html lang="{{ LANGUAGE_CODE }}" prefix="og: http://ogp.me/ns#">
     <head>
         <meta charset="utf-8" />
         <title>{% block head_title_base %}{% if SITE_NAME %}{{ SITE_NAME }} | {% endif %}{% block head_title %}{% endblock %}{% endblock %}</title>
+        <meta property="og:title" content="ServerManager" />
+        <meta property="og:url" content="{{ request.build_absolute_uri }}" />
+        <meta property="og:description" content="Manage your servers with ease." />
+        <meta name="twitter:creator" content="@ofalk" />
         {% block viewport %}
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
         {% endblock %}
