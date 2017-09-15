@@ -90,8 +90,16 @@ class Tester(TestCase):
         self.login()
         url = reverse('%s:update' % app_label, args=[self.testitem.pk])
         self.assertEqual('/%s/update/%i/' % (app_label, self.testitem.pk), url)
+        response = self.client.post(url, {
+            'name': self.testitem.name,
+            'clustersoftware': self.clustersoftware.pk,
+        })
+        self.assertRedirects(response,
+                             reverse('%s:index' % app_label),
+                             status_code=302)
+        url = reverse('%s:detail' % app_label, args=[self.testitem.pk])
         response = self.client.get(url)
-        self.assertEqual(response.status_code, 200, 'no status 200?')
+
         item = response.context[-1]['object']
         self.assertIsInstance(item, Model,
                               'object not the correct model!?')
@@ -100,9 +108,7 @@ class Tester(TestCase):
         form = response.context[-1]['form']
         self.assertIsInstance(form, Form)
         for field in ['name', 'clustersoftware']:
-            self.assertRaises(KeyError,
-                              form.fields[field].widget.attrs.__getitem__,
-                              'readonly')
+            self.assertTrue(form.fields[field].widget.attrs['readonly'])
 
     def test_deleteview(self):
         self.login()
