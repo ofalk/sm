@@ -27,13 +27,6 @@ class ListView(LoginRequiredMixin, GenericListView):
     orphans = 3
     ordering = 'name'
 
-    def get_queryset(self):
-        if 'srvmanager-show_empty' in self.request.COOKIES:
-            if self.request.COOKIES['srvmanager-show_empty'] == 'false':
-                return Model.objects.exclude(
-                    server_set=None).order_by('name')
-        return Model.objects.all().order_by('name')
-
 
 class DetailView(LoginRequiredMixin, GenericUpdateView):
     template_name = '%s/detail.html' % app_label
