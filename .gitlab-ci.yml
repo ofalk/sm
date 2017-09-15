@@ -25,7 +25,8 @@ test_and_coverage:
 
 pages:
   before_script:
-    - true
+    - /bin/true
+    - /bin/true
   stage: deploy
   dependencies:
     - test_and_coverage
