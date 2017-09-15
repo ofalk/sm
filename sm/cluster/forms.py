@@ -15,6 +15,7 @@ class Form(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(forms.ModelForm, self).__init__(*args, **kwargs)
 
+        self.fields['server_set'].required = False
         self.fields['server_set'].initial = (
             self.instance.server_set.all().values_list('id', flat=True)
         )
