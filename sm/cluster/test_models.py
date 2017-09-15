@@ -1,4 +1,5 @@
 from django.test import TransactionTestCase as TestCase
+from django.urls import reverse
 
 from . models import Model
 from clustersoftware.models import Model as ClustersoftwareModel
@@ -51,3 +52,9 @@ class Tester(TestCase):
         self.assertEqual('%s' % (self.teststring),
                          '%s' % (self.testitem.name),
                          'string representation not correct')
+
+    def test_absolute_url(self):
+        self.assertEqual('%s' % (self.testitem.get_absolute_url()),
+                         '%s' % (reverse('%s:detail' % app_label,
+                                         kwargs={'pk': self.testitem.pk})),
+                         'absolute url not built correctly')
