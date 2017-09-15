@@ -24,6 +24,8 @@ test_and_coverage:
       - sm/htmlcov/
 
 pages:
+  before_script:
+    - true
   stage: deploy
   dependencies:
     - test_and_coverage
