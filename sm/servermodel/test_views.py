@@ -198,3 +198,12 @@ class Tester(TestCase):
         self.assertIsInstance(item, VendorModel,
                               'object not the correct model!?')
         self.assertEqual(item.name, self.vendor.name)
+
+    # Class specific tests
+    def test_get_initial(self):
+        from servermodel.views import CreateView as View
+        v = View()
+        v.kwargs = {'vendor': self.vendor.pk}
+        initial = v.get_initial()
+        self.assertIsInstance(initial['vendor'], VendorModel)
+        self.assertEqual(initial['vendor'].name, self.vendor.name)

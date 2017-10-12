@@ -41,7 +41,7 @@ def modules_with_urls():
 
         if os.path.isfile(os.path.join(module, '__init__.py')):
             if os.path.isfile(os.path.join(module, 'urls.py')):
-                if DEBUG:
+                if DEBUG:  # pragma: no cover
                     print("Found '%s' module with urls" %
                           module)  # pragma: no cover
                 installed.append(module)
