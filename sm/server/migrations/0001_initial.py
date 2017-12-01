@@ -45,6 +45,7 @@ class Migration(migrations.Migration):
                 ('patchtime', models.ForeignKey(default=None, null=True, on_delete=django.db.models.deletion.CASCADE, to='patchtime.Model')),
                 ('servermodel', models.ForeignKey(null=True, on_delete=django.db.models.deletion.PROTECT, to='servermodel.Model')),
                 ('status', models.ForeignKey(default=1, on_delete=django.db.models.deletion.PROTECT, to='status.Model')),
+                ('monitoring_from_puppet', models.BooleanField(default=False)),
             ],
             options={
                 'managed': True,
