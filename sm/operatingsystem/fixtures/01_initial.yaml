@@ -104,6 +104,121 @@
     vendor: [Red Hat]
 - model: operatingsystem.model
   fields:
+    version: '7.4'
+    vendor: [Red Hat]
+
+- model: operatingsystem.model
+  fields:
+    version: '5.0'
+    vendor: [CentOS]
+- model: operatingsystem.model
+  fields:
+    version: '5.1'
+    vendor: [CentOS]
+- model: operatingsystem.model
+  fields:
+    version: '5.2'
+    vendor: [CentOS]
+- model: operatingsystem.model
+  fields:
+    version: '5.3'
+    vendor: [CentOS]
+- model: operatingsystem.model
+  fields:
+    version: '5.4'
+    vendor: [CentOS]
+- model: operatingsystem.model
+  fields:
+    version: '5.5'
+    vendor: [CentOS]
+- model: operatingsystem.model
+  fields:
+    version: '5.6'
+    vendor: [CentOS]
+- model: operatingsystem.model
+  fields:
+    version: '5.7'
+    vendor: [CentOS]
+- model: operatingsystem.model
+  fields:
+    version: '5.8'
+    vendor: [CentOS]
+- model: operatingsystem.model
+  fields:
+    version: '5.9'
+    vendor: [CentOS]
+- model: operatingsystem.model
+  fields:
+    version: '5.10'
+    vendor: [CentOS]
+- model: operatingsystem.model
+  fields:
+    version: '5.11'
+    vendor: [CentOS]
+- model: operatingsystem.model
+  fields:
+    version: '6.0'
+    vendor: [CentOS]
+- model: operatingsystem.model
+  fields:
+    version: '6.1'
+    vendor: [CentOS]
+- model: operatingsystem.model
+  fields:
+    version: '6.2'
+    vendor: [CentOS]
+- model: operatingsystem.model
+  fields:
+    version: '6.3'
+    vendor: [CentOS]
+- model: operatingsystem.model
+  fields:
+    version: '6.4'
+    vendor: [CentOS]
+- model: operatingsystem.model
+  fields:
+    version: '6.5'
+    vendor: [CentOS]
+- model: operatingsystem.model
+  fields:
+    version: '6.6'
+    vendor: [CentOS]
+- model: operatingsystem.model
+  fields:
+    version: '6.7'
+    vendor: [CentOS]
+- model: operatingsystem.model
+  fields:
+    version: '6.8'
+    vendor: [CentOS]
+- model: operatingsystem.model
+  fields:
+    version: '6.9'
+    vendor: [CentOS]
+- model: operatingsystem.model
+  fields:
+    version: '7.0'
+    vendor: [CentOS]
+- model: operatingsystem.model
+  fields:
+    version: '7.1'
+    vendor: [CentOS]
+- model: operatingsystem.model
+  fields:
+    version: '7.2'
+    vendor: [CentOS]
+- model: operatingsystem.model
+  fields:
+    version: '7.3'
+    vendor: [CentOS]
+- model: operatingsystem.model
+  fields:
+    version: '7.4'
+    vendor: [CentOS]
+
+
+- model: operatingsystem.model
+  fields:
     version: '8'
     vendor: [Debian]
 - model: operatingsystem.model
