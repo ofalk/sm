@@ -8,6 +8,8 @@ from . import app_label
 
 from sm.utils import random_string, random_number
 
+from django.contrib.auth.models import User, Group
+
 import os
 import django
 os.environ['DJANGO_SETTINGS_MODULE'] = 'sm.settings'
@@ -18,13 +20,22 @@ class Tester(TestCase):
     model = Model
     testversion = "%s.%s" % (random_number(), random_number())
     teststring = random_string()
-    fixtures = ['%s/fixtures/01_initial.yaml' % 'vendor',
-                '%s/fixtures/01_initial.yaml' % 'clustersoftware',
-                '%s/fixtures/01_initial.yaml' % app_label
-                ]
+    fixtures = [
+        'sm/fixtures/02_groups.yaml',
+        '%s/fixtures/01_initial.yaml' % 'vendor',
+        '%s/fixtures/01_initial.yaml' % 'clustersoftware',
+        '%s/fixtures/01_initial.yaml' % app_label
+    ]
     testitem = None
+    password = random_string()
 
     def setUp(self):
+        self.user = User.objects.create_user(
+            username=random_string(),
+            password=self.password,
+        )
+        self.user.groups=[Group.objects.all().first()]
+
         self.clustersoftware = ClustersoftwareModel.objects.all().first()
         self.testitem, created = self.get_or_create_testitem()
 
@@ -32,6 +43,7 @@ class Tester(TestCase):
         self.testitem, created = self.model.objects.get_or_create(
             name=self.teststring,
             clustersoftware=self.clustersoftware,
+            group=self.user.groups.all().first(),
         )
         return (self.testitem, created)
 

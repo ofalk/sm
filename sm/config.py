@@ -9,7 +9,7 @@ DEBUG = True
 ADMIN_USERS = ['oliver@linux-kernel.at']
 HTML_MINIFY = False
 SECRET_KEY = 'c#s9btkc36=@8q^n#!c+%z+ne6*uzy)bc3f+*97^s-c8*f)^+8'
-ALLOWED_HOSTS = ['sm.dev.linux-kernel.at']
+ALLOWED_HOSTS = ['sm.dev.linux-kernel.at', 'zipfer.linux-kernel.at']
 
 from sm.settings import INSTALLED_APPS  # noqa
 INSTALLED_APPS.extend([

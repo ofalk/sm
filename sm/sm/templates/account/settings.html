@@ -14,6 +14,14 @@
                 <legend>{% trans "Account" %}</legend>
                 {% csrf_token %}
                 {% bootstrap_form form %}
+            {% if user.groups.all %}
+              <p>Groups:</p>
+              <ul>
+                {% for group in user.groups.all %}
+                  <li>{{ group }}</li>
+                {% endfor %}
+              </ul>
+            {% endif %}
                 <button class="btn btn-primary" type="submit">{% trans "Save" %}</button>
             </form>
         </div>

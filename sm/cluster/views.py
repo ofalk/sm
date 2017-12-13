@@ -23,15 +23,22 @@ class ListView(LoginRequiredMixin, GenericListView):
     template_name = '%s/list.html' % app_label
     model = Model
     paginate_by = 20
-    queryset = model.objects.all()
     orphans = 3
     ordering = 'name'
+
+    def get_queryset(self):
+        return self.model.objects.filter(
+            group__in=self.request.user.groups.all()).order_by(self.ordering)
 
 
 class DetailView(LoginRequiredMixin, GenericUpdateView):
     template_name = '%s/detail.html' % app_label
     model = Model
     form_class = FormDisabled
+
+    def get_queryset(self):
+        queryset = super(DetailView, self).get_queryset()
+        return queryset.filter(group__in=self.request.user.groups.all())
 
 
 class UpdateView(DetailView, SuccessMessageMixin):
@@ -40,6 +47,10 @@ class UpdateView(DetailView, SuccessMessageMixin):
     form_class = Form
     success_url = reverse_lazy('%s:index' % app_label)
     success_message = '%(name)s ' + _('was updated successfully')
+
+    def get_queryset(self):
+        queryset = super(DetailView, self).get_queryset()
+        return queryset.filter(group__in=self.request.user.groups.all())
 
     def form_valid(self, form):
         self.object.server_set = form.cleaned_data['server_set']
@@ -53,12 +64,22 @@ class CreateView(SuccessMessageMixin, LoginRequiredMixin, GenericCreateView):
     success_url = reverse_lazy('%s:index' % app_label)
     success_message = '%(name)s ' + _('was created successfully')
 
+    def form_valid(self, form):
+        object = form.save(commit=False)
+        object.group = self.request.user.groups.all().first()
+        object.save()
+        return super(CreateView, self).form_valid(form)
+
 
 class DeleteView(SuccessMessageMixin, LoginRequiredMixin, GenericDeleteView):
     template_name = '%s/delete.html' % app_label
     model = Model
     success_url = reverse_lazy('%s:index' % app_label)
     success_message = '%(name)s ' + _('was deleted successfully')
+
+    def get_queryset(self):
+        queryset = super(DetailView, self).get_queryset()
+        return queryset.filter(group__in=self.request.user.groups.all())
 
     def delete(self, request, *args, **kwargs):
         obj = self.get_object()

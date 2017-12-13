@@ -24,10 +24,12 @@ class Tester(TestCase):
     teststring = random_string()
     testitem = None
     password = random_string()
-    fixtures = ['%s/fixtures/01_initial.yaml' % 'vendor',
-                '%s/fixtures/01_initial.yaml' % 'clustersoftware',
-                '%s/fixtures/01_initial.yaml' % app_label
-                ]
+    fixtures = [
+        'sm/fixtures/02_groups.yaml',
+        '%s/fixtures/01_initial.yaml' % 'vendor',
+        '%s/fixtures/01_initial.yaml' % 'clustersoftware',
+        '%s/fixtures/01_initial.yaml' % app_label
+    ]
 
     def login(self):
         """
