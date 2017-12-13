@@ -9,7 +9,10 @@ from . import app_label
 from django.contrib.auth.models import User
 
 from django.core.exceptions import ObjectDoesNotExist
-from django.core.urlresolvers import reverse
+try:
+    from django.core.urlresolvers import reverse
+except Exception as e:
+    from django.urls import reverse
 
 from sm.utils import random_string
 from django_countries import countries
