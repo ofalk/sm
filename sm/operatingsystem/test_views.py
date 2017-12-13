@@ -184,11 +184,10 @@ class Tester(TestCase):
     def test_listview_empty_false_wo_obj(self):
         Model.objects.all().delete()
         self.login()
-        self.client.session['srvmanager-show_empty'] = 'false'
+        self.client.cookies['srvmanager-show_empty'] = 'false'
         response = self.client.get(reverse('%s:index' % app_label))
         self.assertEqual(response.status_code, 200, 'no status 200?')
         item = response.context[-1]['object_list'].first()
-        print(item.operatingsystem_set)
         self.assertIsNone(item)
 
     def test_listview_empty_false_w_obj(self):
