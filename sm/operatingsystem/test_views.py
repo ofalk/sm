@@ -59,6 +59,9 @@ class Tester(TestCase):
         self.assertEqual(response.status_code, 302, 'no redirect?')
 
     def test_listview(self):
+        # Make sure we have no objects in there
+        Model.objects.all().delete()
+        self.setUp()
         self.login()
         response = self.client.get(reverse('%s:index' % app_label))
         self.assertEqual(response.status_code, 200, 'no status 200?')
