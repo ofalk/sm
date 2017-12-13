@@ -110,7 +110,9 @@ class Tester(TestCase):
     def test_query_with_dict_exception(self):
         with self.assertRaises(Exception) as context:
             self.model.objects.get_by_natural_key({})
-        self.assertTrue("No idea how to handle query with <class 'dict'>" in
+        self.assertTrue('No idea how to handle query with ' in
+                        str(context.exception))
+        self.assertTrue("'dict'>" in
                         str(context.exception))
 
     def test_get_absolute_url(self):
