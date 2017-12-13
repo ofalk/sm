@@ -11,7 +11,8 @@ class Model(NaturalKeyModel):
     version = models.CharField(max_length=45, default='', blank=True)
     vendor = models.ForeignKey(VendorModel,
                                related_name='%s_set' % app_label,
-                               related_query_name='%s' % app_label)
+                               related_query_name='%s' % app_label,
+                               on_delete=models.PROTECT)
 
     def __str__(self):
         if self.name and self.version:
