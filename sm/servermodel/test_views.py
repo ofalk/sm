@@ -7,7 +7,10 @@ from . forms import FormDisabled
 from . forms import Form
 from . import app_label
 
-from http.cookies import SimpleCookie
+try:
+  from Cookie import SimpleCookie
+except Exception as e:
+  from http.cookies import SimpleCookie
 
 from django.contrib.auth.models import User
 
