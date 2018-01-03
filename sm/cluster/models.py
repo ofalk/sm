@@ -2,6 +2,7 @@ from django.db import models
 from natural_keys import NaturalKeyModel
 from django.urls import reverse
 from clustersoftware.models import Model as ClustersoftwareModel
+from django.contrib.auth.models import Group
 
 from . import app_label
 
@@ -13,6 +14,10 @@ class Model(NaturalKeyModel):
                                         related_query_name='%s' % app_label,
                                         blank=True, null=True,
                                         on_delete=models.PROTECT)
+
+    group = models.ForeignKey(Group, editable=False,
+                              blank=True,
+                              null=True)
 
     def __str__(self):
         return '%s' % (self.name)
