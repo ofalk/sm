@@ -34,7 +34,7 @@ class ListView(LoginRequiredMixin, GenericListView):
     def get_queryset(self):
         return self.model.objects.filter(
             Q(group__in=self.request.user.groups.all()) |
-            Q(group__in=[])
+            Q(group__isnull=True)
         ).order_by(self.ordering)
 
 
