@@ -16,8 +16,8 @@ class Model(NaturalKeyModel):
                                         on_delete=models.PROTECT)
 
     group = models.ForeignKey(Group, editable=False,
-                              blank=False,
-                              null=False)
+                              blank=True,
+                              null=True)
 
     def __str__(self):
         return '%s' % (self.name)
