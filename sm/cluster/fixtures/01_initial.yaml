@@ -2,9 +2,7 @@
   fields:
     name: Firewall
     clustersoftware: [ClusterLabs, Pacemaker / CRM, '']
-    group_id: [lkernAT]
 - model: cluster.model
   fields:
     name: Owncloud
     clustersoftware: [None - Placeholder, None - logical unit only, '']
-    group_id: [lkernAT]
