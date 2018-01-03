@@ -12,7 +12,9 @@ class Model(NaturalKeyModel):
     clustersoftware = models.ForeignKey(ClustersoftwareModel,
                                         related_name='%s_set' % app_label,
                                         related_query_name='%s' % app_label,
-                                        blank=True, null=True)
+                                        blank=True, null=True,
+                                        on_delete=models.PROTECT)
+
     group = models.ForeignKey(Group, editable=False,
                               blank=False,
                               null=False)

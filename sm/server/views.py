@@ -16,7 +16,10 @@ from django.contrib.messages.views import SuccessMessageMixin
 
 from django.utils.translation import ugettext as _
 
-from django.core.urlresolvers import reverse_lazy
+try:
+    from django.core.urlresolvers import reverse_lazy
+except Exception as e:
+    from django.urls import reverse_lazy
 
 from django.contrib import messages
 

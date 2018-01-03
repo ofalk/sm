@@ -21,6 +21,7 @@ class Model(models.Model):
     last_update = models.DateTimeField(auto_now=True)
     documentation_url = models.URLField(max_length=2083, blank=True, null=True)
     memory_in_mb = models.IntegerField(blank=True, null=True)
+    monitoring_from_puppet = models.BooleanField(default=False)
     location = models.ForeignKey(LocationModel,
                                  on_delete=models.PROTECT,
                                  null=True)
@@ -54,7 +55,9 @@ class Model(models.Model):
     serial_nr = models.CharField(max_length=60, blank=True, null=True)
     description = models.CharField(max_length=100, blank=True, null=True)
 
-    patchtime = models.ForeignKey(PatchtimeModel, null=True, default=None)
+    patchtime = models.ForeignKey(PatchtimeModel,
+                                  null=True, default=None,
+                                  on_delete=models.PROTECT)
 
     def __str__(self):
         return "%s" % self.hostname

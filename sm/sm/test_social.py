@@ -31,7 +31,7 @@ class TestCase(TestCase):
         self.assertContains(
             r,
             '<a class="btn btn-primary" href="/login/facebook/">Connect '
-            '<i class="fa fa-facebook"></i> Facebook</a>\n'
+            '<i class="fa fa-facebook"></i> Facebook</a>'
         )
 
     def test_cannot_disconnect_password_missing(self):
