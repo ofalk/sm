@@ -23,4 +23,3 @@ gunicorn
 # django-bootstrap-themes
 django-debug-toolbar
 mysqlclient
-http
