@@ -6,7 +6,7 @@ from clustersoftware.models import Model as ClustersoftwareModel
 from . forms import FormDisabled
 from . import app_label
 
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 
 from django.core.exceptions import ObjectDoesNotExist
 try:
@@ -49,12 +49,14 @@ class Tester(TestCase):
             username=random_string(),
             password=self.password,
         )
+        self.user.groups = Group.objects.all()
 
         self.clustersoftware = ClustersoftwareModel.objects.all().order_by(
             'name').first()
         self.testitem, created = Model.objects.get_or_create(
             name=self.teststring,
             clustersoftware=self.clustersoftware,
+            group=self.user.groups.first(),
         )
 
     def test_login_redir(self):

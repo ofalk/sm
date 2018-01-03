@@ -12,6 +12,8 @@ from django.views.generic.edit import CreateView as GenericCreateView
 from django.views.generic.edit import DeleteView as GenericDeleteView
 from django.contrib.messages.views import SuccessMessageMixin
 
+from django.db.models import Q
+
 from django.utils.translation import ugettext as _
 
 try:
@@ -31,7 +33,9 @@ class ListView(LoginRequiredMixin, GenericListView):
 
     def get_queryset(self):
         return self.model.objects.filter(
-            group__in=self.request.user.groups.all()).order_by(self.ordering)
+            Q(group__in=self.request.user.groups.all()) |
+            Q(group__in=[])
+        ).order_by(self.ordering)
 
 
 class DetailView(LoginRequiredMixin, GenericUpdateView):
@@ -81,7 +85,7 @@ class DeleteView(SuccessMessageMixin, LoginRequiredMixin, GenericDeleteView):
     success_message = '%(name)s ' + _('was deleted successfully')
 
     def get_queryset(self):
-        queryset = super(DetailView, self).get_queryset()
+        queryset = super(DeleteView, self).get_queryset()
         return queryset.filter(group__in=self.request.user.groups.all())
 
     def delete(self, request, *args, **kwargs):
