@@ -45,7 +45,10 @@ class DetailView(LoginRequiredMixin, GenericUpdateView):
 
     def get_queryset(self):
         queryset = super(DetailView, self).get_queryset()
-        return queryset.filter(group__in=self.request.user.groups.all())
+        return queryset.filter(
+            Q(group__in=self.request.user.groups.all()) |
+            Q(group__isnull=True)
+        )
 
 
 class UpdateView(DetailView, SuccessMessageMixin):
