@@ -6,3 +6,4 @@ sm/static
 sm/.coverage
 sm/htmlcov
 sm/.ropeproject
+sm/config_local.py
