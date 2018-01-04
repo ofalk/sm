@@ -18,8 +18,8 @@ from django.utils.translation import ugettext as _
 
 try:
     from django.core.urlresolvers import reverse_lazy
-except Exception as e:
-    from django.urls import reverse_lazy
+except Exception as e:  # pragma: no cover
+    from django.urls import reverse_lazy  # pragma: no cover
 
 from django.contrib import messages
 
