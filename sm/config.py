@@ -10,6 +10,7 @@ ADMIN_USERS = ['oliver@linux-kernel.at']
 HTML_MINIFY = True
 SECRET_KEY = 'c#s9btkc36=@8q^n#!c+%z+ne6*uzy)bc3f+*97^s-c8*f)^+8'
 ALLOWED_HOSTS = [
+    'sm.linux-kernel.at',
     'sm.dev.linux-kernel.at',
     'sm.linux-kernel.at',
     'zipfer.linux-kernel.at',
