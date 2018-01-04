@@ -27,7 +27,9 @@ class Model(models.Model):
                                  null=True)
     operatingsystem = models.ForeignKey(OperatingsystemModel,
                                         on_delete=models.PROTECT,
-                                        null=True, blank=True)
+                                        null=True, blank=True,
+                                        related_name='%s_set' % app_label,
+                                        related_query_name='%s' % app_label)
 
     status = models.ForeignKey(StatusModel, on_delete=models.PROTECT,
                                default=1)
