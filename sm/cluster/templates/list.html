@@ -41,12 +41,16 @@
             </td>
 
             <td>
-              <a href="{% url 'cluster:update' object.pk %}" title="{% trans 'Edit cluster' %}">
-                <i class="fa fa-pencil fa-fw fa-lg" aria-hidden="true"></i>
-              </a>
-              <a href="{% url 'cluster:delete' object.pk %}" title="{% trans 'Delete cluster' %}">
-                <i class="fa fa-trash fa-fw fa-lg" aria-hidden="true"></i>
-              </a>
+              {% if object.group in user.groups.all %}
+                <a href="{% url 'cluster:update' object.pk %}" title="{% trans 'Edit cluster' %}">
+                  <i class="fa fa-pencil fa-fw fa-lg" aria-hidden="true"></i>
+                </a>
+                <a href="{% url 'cluster:delete' object.pk %}" title="{% trans 'Delete cluster' %}">
+                  <i class="fa fa-trash fa-fw fa-lg" aria-hidden="true"></i>
+                </a>
+              {% else %}
+              {% trans 'Shared resource' %}
+              {% endif %}
             </td>
           </tr>
         {% endfor %}
