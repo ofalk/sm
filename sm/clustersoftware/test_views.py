@@ -12,8 +12,8 @@ from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
 try:
     from django.core.urlresolvers import reverse
-except Exception as e:
-    from django.urls import reverse
+except Exception as e:  # pragma: no cover
+    from django.urls import reverse  # pragma: no cover
 
 
 from sm.utils import random_string, random_number
