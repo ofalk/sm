@@ -1,6 +1,4 @@
 - model: vendor.model
-  fields: {name: None - Placeholder}
-- model: vendor.model
   fields: {name: CentOS}
 - model: vendor.model
   fields: {name: Fujitsu}
@@ -24,3 +22,9 @@
   fields: {name: Veritas}
 - model: vendor.model
   fields: {name: Symantec}
+- model: vendor.model
+  fields: {name: None - Placeholder}
+- model: vendor.model
+  fields: {name: Cisco}
+- model: vendor.model
+  fields: {name: Fedora}

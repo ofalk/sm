@@ -63,7 +63,7 @@ class UpdateView(DetailView, SuccessMessageMixin):
         return queryset.filter(group__in=self.request.user.groups.all())
 
     def form_valid(self, form):
-        self.object.server_set = form.cleaned_data['server_set']
+        self.object.server_set.set(form.cleaned_data['server_set'])
         return super(UpdateView, self).form_valid(form)
 
 
