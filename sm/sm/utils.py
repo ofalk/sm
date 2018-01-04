@@ -46,7 +46,7 @@ def modules_with_urls():
                           module)  # pragma: no cover
                 installed.append(module)
             else:
-                if DEBUG:
+                if DEBUG:  # pragma: no cover
                     print("%s doesn't have urls defined (yet)" %
                           module)  # pragma: no cover
     return installed
