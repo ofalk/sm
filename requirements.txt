@@ -1,4 +1,4 @@
-Django<2.0
+Django>=2.0
 djangorestframework
 django-htmlmin
 django-account
@@ -11,7 +11,7 @@ django-extensions
 django-bootstrap4
 django-bootstrap3
 pyyaml
-natural-keys
+git+https://github.com/ofalk/django-natural-keys.git@master
 django-countries
 docutils
 flake8

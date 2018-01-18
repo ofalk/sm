@@ -1,16 +1,16 @@
 {% extends "site_base.html" %}
- 
+
 {% load account_tags %}
 {% load i18n %}
 {% load bootstrap3 %}
 {% load bootstrap4 %}
- 
+
 {% block head_title %}{% trans "Patchtime" %} :: {{ object.name }}{% endblock %}
- 
+
 {% block body_class %}patchtime patchtime-detail{% endblock %}
 
 {% block body %}
- 
+
 {% bootstrap_form form %}
 
   <div class="panel panel-default">
@@ -24,6 +24,8 @@
           <th>{% trans 'Hostname' %}</th>
           <th>{% trans 'Status' %}</th>
           <th>{% trans 'Location' %}</th>
+          <th>{% trans 'Model' %}</th>
+          <th>{% trans 'OS' %}</th>
         </tr>
       </thead>
       <tbody>
@@ -40,11 +42,17 @@
             <td>
               {{ server.location }}
             </td>
+            <td>
+              {{ server.model }}
+            </td>
+            <td>
+              {{ server.operatingsystem }}
+            </td>
           </tr>
         {% endfor %}
       </tbody>
     </table>
     {% endif %}
   </div>
- 
+
 {% endblock %}

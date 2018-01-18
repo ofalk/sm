@@ -34,7 +34,7 @@ class Tester(TestCase):
             username=random_string(),
             password=self.password,
         )
-        self.user.groups = [Group.objects.all().first()]
+        self.user.groups.set([Group.objects.all().first()])
 
         self.clustersoftware = ClustersoftwareModel.objects.all().first()
         self.testitem, created = self.get_or_create_testitem()

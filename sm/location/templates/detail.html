@@ -23,7 +23,8 @@
         <tr>
           <th>{% trans 'Hostname' %}</th>
           <th>{% trans 'Status' %}</th>
-          <th>{% trans 'Location' %}</th>
+          <th>{% trans 'Model' %}</th>
+          <th>{% trans 'OS' %}</th>
         </tr>
       </thead>
       <tbody>
@@ -38,7 +39,10 @@
               {% include "status-icon.html" with object=server %}
             </td>
             <td>
-              {{ server.location }}
+              {{ server.servermodel }}
+            </td>
+            <td>
+              {{ server.operatingsystem }}
             </td>
           </tr>
         {% endfor %}

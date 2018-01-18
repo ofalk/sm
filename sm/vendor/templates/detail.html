@@ -15,9 +15,9 @@
 
   <div class="panel panel-default">
     {% if not object.servermodel_set.all %}
-      <div class="panel-heading"><b>{% trans 'No servermodels from this vendor' %}</b></div>
+      <!-- <div class="panel-heading"><b>{% trans 'No servermodels from this vendor' %}</b></div> -->
     {% else %}
-      <div class="panel-heading"><b>{% trans 'List of servermodels from this vendor' %}</b></div>
+      <div class="panel-heading"><b>{% trans 'List of models from this vendor' %}</b></div>
       <table class="table table-hover table-striped" id="servermodel_list" style="font-size:80%;">
         <tbody>
             <tr>
@@ -38,13 +38,8 @@
     {% if not object.operatingsystem_set.all %}
       <div class="panel-heading"><b>{% trans 'No operatingsystems from this vendor' %}</b></div>
     {% else %}
-      <div class="panel-heading"><b>{% trans 'List of operatingsystems from this vendor' %}</b></div>
+      <div class="panel-heading"><b>{% trans 'List of operatingsystems versions from this vendor' %}</b></div>
       <table class="table table-hover table-striped" id="operatingsystem_list" style="font-size:80%;">
-        <thead>
-          <tr>
-            <th>{% trans 'Version' %}</th>
-          </tr>
-        </thead>
         <tbody>
             <tr>
               <td><b>{% trans 'Versions' %}</b></td>

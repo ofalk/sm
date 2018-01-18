@@ -49,7 +49,7 @@ class Tester(TestCase):
             username=random_string(),
             password=self.password,
         )
-        self.user.groups = Group.objects.all()
+        self.user.groups.set(Group.objects.all())
 
         self.clustersoftware = ClustersoftwareModel.objects.all().order_by(
             'name').first()
