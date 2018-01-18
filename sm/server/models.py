@@ -24,7 +24,9 @@ class Model(models.Model):
     monitoring_from_puppet = models.BooleanField(default=False)
     location = models.ForeignKey(LocationModel,
                                  on_delete=models.PROTECT,
-                                 null=True)
+                                 null=True,
+                                 related_name='%s_set' % app_label,
+                                 related_query_name='%s' % app_label)
     operatingsystem = models.ForeignKey(OperatingsystemModel,
                                         on_delete=models.PROTECT,
                                         null=True, blank=True,
@@ -32,10 +34,14 @@ class Model(models.Model):
                                         related_query_name='%s' % app_label)
 
     status = models.ForeignKey(StatusModel, on_delete=models.PROTECT,
-                               default=1)
+                               default=1,
+                               related_name='%s_set' % app_label,
+                               related_query_name='%s' % app_label)
 
     servermodel = models.ForeignKey(ServermodelModel, on_delete=models.PROTECT,
-                                    null=True)
+                                    null=True,
+                                    related_name='%s_set' % app_label,
+                                    related_query_name='%s' % app_label)
 
     cluster = models.ForeignKey(ClusterModel, on_delete=models.PROTECT,
                                 null=True, blank=True,
@@ -59,7 +65,9 @@ class Model(models.Model):
 
     patchtime = models.ForeignKey(PatchtimeModel,
                                   null=True, default=None,
-                                  on_delete=models.PROTECT)
+                                  on_delete=models.PROTECT,
+                                  related_name='%s_set' % app_label,
+                                  related_query_name='%s' % app_label)
 
     def __str__(self):
         return "%s" % self.hostname
