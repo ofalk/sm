@@ -45,7 +45,15 @@
             </td>
             <td class="hidden-sm-down">{{ object.location }}</td>
             <td>{{ object.description }}</td>
-            <td class="hidden-sm-down">{{ object.operatingsystem }}</td>
+            <td class="hidden-sm-down">
+              {% if object.operatingsystem.vendor.name == 'Microsoft' %}
+                <i class="fa fa-windows" aria-hidden="true"></i> {{ object.operatingsystem }}
+              {% elif object.operatingsystem.vendor.name == 'CentOS' or object.operatingsytem.vendor.name == 'Red Hat' or object.operatingsystem.vendor.name == 'Fedora' %}
+                <i class="fa fa-linux" aria-hidden="true"></i> {{ object.operatingsystem }}
+              {% else %}
+                <i class="fa fa-television" aria-hidden="true"></i> {{ object.operatingsystem }}
+              {% endif %}
+            </td>
             <td class="hidden-xs-down">{{ object.primary_ip }}</td>
             <td class="hidden-sm-down">{{ object.patchtime }}</td>
             <td>
