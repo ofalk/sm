@@ -48,8 +48,14 @@
             <td class="hidden-sm-down">
               {% if object.operatingsystem.vendor.name == 'Microsoft' %}
                 <i class="fa fa-windows" aria-hidden="true"></i> {{ object.operatingsystem }}
-              {% elif object.operatingsystem.vendor.name == 'CentOS' or object.operatingsytem.vendor.name == 'Red Hat' or object.operatingsystem.vendor.name == 'Fedora' %}
+              {% elif object.operatingsystem.vendor.name == 'CentOS' or object.operatingsystem.vendor.name == 'Red Hat' or object.operatingsystem.vendor.name == 'Fedora' %}
                 <i class="fa fa-linux" aria-hidden="true"></i> {{ object.operatingsystem }}
+              {% elif object.operatingsystem.vendor.name == 'Cisco' %}
+                <i class="fa fa-sitemap" aria-hidden="true"></i> {{ object.operatingsystem }}
+              {% elif object.operatingsystem.vendor.name == 'VMware' %}
+                <i class="fa fa-cloud" aria-hidden="true"></i> {{ object.operatingsystem }}
+              {% elif not object.operatingsystem.vendor.name  %}
+                <i class="fa fa-circle-o" aria-hidden="true"></i> {{ object.operatingsystem }}
               {% else %}
                 <i class="fa fa-television" aria-hidden="true"></i> {{ object.operatingsystem }}
               {% endif %}
