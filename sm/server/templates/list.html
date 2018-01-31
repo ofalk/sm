@@ -56,6 +56,8 @@
                 <i class="fa fa-cloud" aria-hidden="true"></i> {{ object.operatingsystem }}
               {% elif object.operatingsystem.vendor.name == 'HW group' and object.operatingsystem.version == 'Firmware' %}
                 <i class="fa fa-thermometer-half" aria-hidden="true"></i> {{ object.operatingsystem }}
+              {% elif object.operatingsystem.vendor.name == 'Infortrend' and object.operatingsystem.version == 'Firmware' %}
+                <i class="fa fa-hdd-o" aria-hidden="true"></i> {{ object.operatingsystem }}
               {% elif not object.operatingsystem.vendor.name  %}
                 <i class="fa fa-circle-o" aria-hidden="true"></i> {{ object.operatingsystem }}
               {% else %}
