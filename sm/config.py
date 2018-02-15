@@ -35,6 +35,8 @@ INSTALLED_APPS.extend([
 
   'whitenoise',
 
+  'taggit',
+
   'sm',
 ])
 from sm.utils import add_to_installed  # noqa
@@ -150,6 +152,8 @@ else:
                 },
             }
         }
+
+TAGGIT_CASE_INSENSITIVE = True
 
 if os.path.isfile(os.path.join(BASE_DIR, 'config_local.py')):
     from config_local import *  # noqa # flake8: noqa # NOQA # pragma: no cover
