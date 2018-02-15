@@ -1,0 +1,30 @@
+{% extends "site_base.html" %}
+
+{% load account_tags %}
+{% load i18n %}
+{% load bootstrap3 %}
+{% load bootstrap4 %}
+
+{% block head_title %}{% trans 'Clusterpackagetype' %} :: {{ object }}{% endblock %}
+
+{% block body_class %}clusterpackagetype clusterpackagetype-{% if object %}detail{% else %}create{% endif %}{% endblock %}
+
+{% block body %}
+{% if object %}
+  <form action="{% url 'clusterpackagetype:detail' object.pk %}" method="post" class="form">
+{% else %}
+  <form action="{% url 'clusterpackagetype:create' %}" method="post" class="form">
+{% endif %}
+
+{% csrf_token %}
+{% bootstrap_form form %}
+{% buttons %}
+{% if request.path == object.get_update_url %}
+{% bootstrap_button "Save" button_type="submit" button_class="btn-primary" %}
+{% else %}
+<a class="btn btn-primary" role="button" href="{% url 'clusterpackagetype:update' object.pk %}">{% trans 'Edit' %}</a>
+<a class="btn btn-danger" role="button" href="{% url 'clusterpackagetype:delete' object.pk %}">{% trans 'Delete' %}</a>
+{% endif %}
+{% endbuttons %}
+
+{% endblock %}

@@ -1,0 +1,60 @@
+{% extends "site_base.html" %}
+
+{% load account_tags %}
+{% load i18n %}
+{% load bootstrap3 %}
+{% load bootstrap4 %}
+
+{% block head_title %}{% trans 'Clusterpackage' %} :: {{ object }}{% endblock %}
+
+{% block body_class %}clusterpackage clusterpackage-{% if object %}detail{% else %}create{% endif %}{% endblock %}
+
+{% block body %}
+{% if object %}
+  <form action="{% url 'clusterpackage:detail' object.pk %}" method="post" class="form">
+{% else %}
+  <form action="{% url 'clusterpackage:create' %}" method="post" class="form">
+{% endif %}
+
+{% csrf_token %}
+{% bootstrap_form form %}
+{% buttons %}
+{% if request.path == object.get_update_url %}
+{% bootstrap_button "Save" button_type="submit" button_class="btn-primary" %}
+{% else %}
+<a class="btn btn-primary" role="button" href="{% url 'clusterpackage:update' object.pk %}">{% trans 'Edit' %}</a>
+<a class="btn btn-danger" role="button" href="{% url 'clusterpackage:delete' object.pk %}">{% trans 'Delete' %}</a>
+{% endif %}
+{% endbuttons %}
+
+  <div class="panel panel-default">
+    {% if not object.cluster_set.all %}
+      <div class="panel-heading"><b>{% trans 'Not assigned to any cluster' %}</b></div>
+    {% else %}
+    <div class="panel-heading"><b>{% trans 'Cluster this package is assigned to' %}</b></div>
+    <table class="table table-hover table-striped" id="server_list" style="font-size:80%;">
+      <thead>
+        <tr>
+          <th>{% trans 'Name' %}</th>
+          <th>{% trans 'Software' %}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for cluster in object.cluster_set.all %}
+          <tr>
+            <td>
+              <a href="{% url 'cluster:detail' cluster.pk %}" title="{{ cluster }}">
+                <div>{{ cluster.name }}</div>
+              </a>
+            </td>
+            <td>
+              {{ cluster.clustersoftware.name }}
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% endif %}
+  </div>
+
+{% endblock %}
