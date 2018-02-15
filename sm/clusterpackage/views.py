@@ -55,14 +55,6 @@ class CreateView(SuccessMessageMixin, LoginRequiredMixin, GenericCreateView):
     success_url = reverse_lazy('%s:index' % app_label)
     success_message = "%(name)s " + _('was created successfully')
 
-    def get_initial(self):
-        from vendor.models import Model as VendorModel
-        initial = super(GenericCreateView, self).get_initial()
-        if 'vendor' in self.kwargs:
-            initial['vendor'] = VendorModel.objects.filter(
-                pk=self.kwargs['vendor']).first()
-        return initial
-
 
 class DeleteView(SuccessMessageMixin, LoginRequiredMixin, GenericDeleteView):
     template_name = '%s/delete.html' % app_label
