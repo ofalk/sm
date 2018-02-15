@@ -1,0 +1,26 @@
+- model: clusterpackagetype.model
+  fields: {name: SAP}
+- model: clusterpackagetype.model
+  fields: {name: Oracle}
+- model: clusterpackagetype.model
+  fields: {name: Oracle Standby}
+- model: clusterpackagetype.model
+  fields: {name: DB2}
+- model: clusterpackagetype.model
+  fields: {name: Other}
+- model: clusterpackagetype.model
+  fields: {name: SAP Application Server}
+- model: clusterpackagetype.model
+  fields: {name: SAP Java Application Server (msprot)}
+- model: clusterpackagetype.model
+  fields: {name: SAP Java Application Server (http)}
+- model: clusterpackagetype.model
+  fields: {name: PostgreSQL}
+- model: clusterpackagetype.model
+  fields: {name: SAP+DB2}
+- model: clusterpackagetype.model
+  fields: {name: DB2 Standby (HADR)}
+- model: clusterpackagetype.model
+  fields: {name: SAP Standby}
+- model: clusterpackagetype.model
+  fields: {name: Virtual IP}
