@@ -72,7 +72,7 @@ class Tester(TestCase):
 
     def test_natural_key(self):
         self.assertEqual((self.cluster, self.teststring),
-                         (self.testitem.cluster, self.testitem.name),
+                         self.testitem.natural_key(),
                          'natural key not correct')
 
     def test___str__(self):
