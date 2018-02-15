@@ -70,6 +70,11 @@ class Tester(TestCase):
         self.assertEqual(self.testitem.name, self.teststring,
                          'name not correct')
 
+    def test_natural_key(self):
+        self.assertEqual((self.cluster, self.teststring),
+                         (self.testitem.cluster, self.testitem.name),
+                         'natural key not correct')
+
     def test___str__(self):
         self.assertEqual('%s' % self.testitem.name,
                          '%s' % self.teststring,
