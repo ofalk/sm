@@ -15,7 +15,7 @@ class Model(NaturalKeyModel):
         return reverse('%s:detail' % app_label, kwargs={'pk': self.pk})
 
     def natural_key(self):
-        return self.name
+        return (self.name,)
 
     class Meta:
         managed = True
