@@ -33,7 +33,7 @@ pycco:
     mv pycco/ public/
   artifacts:
     paths:
-      public
+      - public
     expire_in: 14 days
 
 pages:
