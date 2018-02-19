@@ -29,7 +29,6 @@ pycco:
   script:
     - /bin/true
     - find sm/ -type f -name "*.py"|grep -v __pycache__|grep -v __init__.py|grep -v /migrations/ | xargs pycco -p -d pycco -i -s
-    - ls -ltrah
   artifacts:
     paths:
       - pycco/
@@ -44,8 +43,6 @@ pages:
     - test_and_coverage
     - pycco
   script:
-    - ls -ltrah
-    - ls -ltrah sm/
     - mv sm/htmlcov/ public/
     - mv pycco/ public/
   artifacts:
