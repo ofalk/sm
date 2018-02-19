@@ -35,8 +35,6 @@ pycco:
     paths:
       public
     expire_in: 14 days
-  only:
-    master
 
 pages:
   before_script:
