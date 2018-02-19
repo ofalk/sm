@@ -42,6 +42,7 @@ pages:
   stage: deploy
   dependencies:
     - test_and_coverage
+    - pycco
   script:
     - ls -ltrah
     - ls -ltrah sm/
