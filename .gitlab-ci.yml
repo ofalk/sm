@@ -47,7 +47,7 @@ pages:
     - ls -ltrah
     - ls -ltrah sm/
     - mv sm/htmlcov/ public/
-    - mv sm/pycco/ public/
+    - mv pycco/ public/
   artifacts:
     paths:
       - public
