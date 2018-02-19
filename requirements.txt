@@ -24,3 +24,4 @@ gunicorn
 django-debug-toolbar
 mysqlclient
 django-taggit
+pycco
