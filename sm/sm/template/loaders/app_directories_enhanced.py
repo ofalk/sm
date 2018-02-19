@@ -1,5 +1,5 @@
 """
-Extende wrapper for loading templates from app dirs.
+Extended wrapper for loading templates from app dirs.
 Given server/list.html, will search in BASE_DIR/server/templates/list.html
 """
 
