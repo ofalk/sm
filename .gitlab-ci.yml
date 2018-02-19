@@ -25,7 +25,7 @@ test_and_coverage:
       - sm/htmlcov/
 
 pycco:
-  stage: deploy
+  stage: test
   script:
     - /bin/true
     - find sm/ -type f -name "*.py"|grep -v __pycache__|grep -v __init__.py|grep -v /migrations/ | xargs pycco -p -d pycco -i -s
