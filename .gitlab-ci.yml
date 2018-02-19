@@ -32,7 +32,7 @@ pycco:
     - ls -ltrah
   artifacts:
     paths:
-      - sm/pycco/
+      - pycco/
     expire_in: 14 days
 
 pages:
