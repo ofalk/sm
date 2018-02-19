@@ -23,6 +23,21 @@ test_and_coverage:
     paths:
       - sm/htmlcov/
 
+pycco:
+  before_script:
+    - /bin/true
+    - /bin/true
+  stage: deploy
+  script:
+    find sm/ -type f -name "*.py"|grep -v __pycache__|grep -v __init__.py|grep -v /migrations/ | xargs pycco -p -d pycco -i -s
+    mv pycco/ public/
+  artifiacts:
+    paths:
+      public
+    expire_in: 14 days
+  only:
+    master
+
 pages:
   before_script:
     - /bin/true
@@ -35,6 +50,6 @@ pages:
   artifacts:
     paths:
       - public
-    expire_in: 30 days
+    expire_in: 14 days
   only:
     - master
