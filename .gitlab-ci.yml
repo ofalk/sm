@@ -29,8 +29,8 @@ pycco:
     - /bin/true
   stage: deploy
   script:
-    find sm/ -type f -name "*.py"|grep -v __pycache__|grep -v __init__.py|grep -v /migrations/ | xargs pycco -p -d pycco -i -s
-    mv pycco/ public/
+    - find sm/ -type f -name "*.py"|grep -v __pycache__|grep -v __init__.py|grep -v /migrations/ | xargs pycco -p -d pycco -i -s
+    - mv pycco/ public/
   artifacts:
     paths:
       - public
