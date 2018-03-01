@@ -44,25 +44,12 @@
               {% include "status-icon.html" %}
             </td>
             <td class="hidden-sm-down">{{ object.location }}</td>
-            <td>{{ object.description }}</td>
+            <td>
+              <span class="hidden-md-up">{% include "_vendor_icon.html" %}</span>
+              {{ object.description }}
+            </td>
             <td class="hidden-sm-down">
-              {% if object.operatingsystem.vendor.name == 'Microsoft' %}
-                <i class="fa fa-windows" aria-hidden="true"></i> {{ object.operatingsystem }}
-              {% elif object.operatingsystem.vendor.name == 'CentOS' or object.operatingsystem.vendor.name == 'Red Hat' or object.operatingsystem.vendor.name == 'Fedora' %}
-                <i class="fa fa-linux" aria-hidden="true"></i> {{ object.operatingsystem }}
-              {% elif object.operatingsystem.vendor.name == 'Cisco' %}
-                <i class="fa fa-sitemap" aria-hidden="true"></i> {{ object.operatingsystem }}
-              {% elif object.operatingsystem.vendor.name == 'VMware' %}
-                <i class="fa fa-cloud" aria-hidden="true"></i> {{ object.operatingsystem }}
-              {% elif object.operatingsystem.vendor.name == 'HW group' and object.operatingsystem.version == 'Firmware' %}
-                <i class="fa fa-thermometer-half" aria-hidden="true"></i> {{ object.operatingsystem }}
-              {% elif object.operatingsystem.vendor.name == 'Infortrend' and object.operatingsystem.version == 'Firmware' %}
-                <i class="fa fa-hdd-o" aria-hidden="true"></i> {{ object.operatingsystem }}
-              {% elif not object.operatingsystem.vendor.name  %}
-                <i class="fa fa-circle-o" aria-hidden="true"></i> {{ object.operatingsystem }}
-              {% else %}
-                <i class="fa fa-television" aria-hidden="true"></i> {{ object.operatingsystem }}
-              {% endif %}
+              {% include "_vendor_icon.html" %} {{ object.operatingsystem }}
             </td>
             <td class="hidden-xs-down">{{ object.primary_ip }}</td>
             <td class="hidden-sm-down">{{ object.patchtime }}</td>
