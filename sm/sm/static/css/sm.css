@@ -1,0 +1,6 @@
+.nav {
+  font-size: 0.8rem;
+}
+.nav-link:hover span {
+  display: inline !important;
+}
