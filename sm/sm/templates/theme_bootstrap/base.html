@@ -49,13 +49,12 @@
                         {% block site_brand %}<a class="navbar-brand hidden-md-down" href="#">ServerManager</a>{% endblock %}
                         {% block nav %}
                             <div class="nav" id="navbarNavStatic">
-                              <ul class="navbar-brand nav navbar-nav" style="font-size:1rem;">
+                              <ul class="navbar-nav navbar-brand nav" style="font-size: 0.8rem;">
                                 {% include 'theme_bootstrap/menuitem.html' with itemname='server' icon='fa-server' search='true' %}
                               </ul>
                             </div>
                             <div class="collapse navbar-collapse" id="navbarNavDropdown">
                               <ul class="navbar-nav mr-auto nav">
-                                <li class="nav-item dropdown" id="tab_categories">
                                   {% include 'theme_bootstrap/menuitem.html' with itemname='servermodel' icon='fa-cubes' %}
                                   {% include 'theme_bootstrap/menuitem.html' with itemname='domain' icon='fa-globe' %}
                                   {% include 'theme_bootstrap/menuitem.html' with itemname='operatingsystem' icon='fa-laptop' %}
@@ -67,7 +66,6 @@
                                   {% include 'theme_bootstrap/menuitem.html' with itemname='cluster' icon='fa-th-large' %}
                                   {% include 'theme_bootstrap/menuitem.html' with itemname='clusterpackagetype' icon='fa-asterisk' %}
                                   {% include 'theme_bootstrap/menuitem.html' with itemname='clusterpackage' icon='fa-th' %}
-                                </li>
                               </ul>
 
                               {% block account_bar %}{% include "_account_bar.html" %}{% endblock %}
