@@ -30,7 +30,8 @@
 
         {% if 'javascript_in_head'|bootstrap_setting %}
             <!-- Bootstrap JavaScript if it is in head -->
-            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+            <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
             {% bootstrap_javascript %}
         {% endif %}
 
@@ -41,20 +42,16 @@
     <body class="{% block body_class %}{% endblock %}" id="{% block body_id %}{% endblock %}" {% block body_extra_attributes %}{% endblock %}>
         <div class="{% block wrapper_class %}{% endblock %}">
             {% block topbar_base %}
-                <nav class="navbar navbar-toggleable-md bg-faded {% block navbar_class %}navbar-inverse bg-inverse fixed-top{% endblock %}">
-                    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
                       <span class="navbar-toggler-icon"></span>
                     </button>
                     {% block topbar %}
-                        {% block site_brand %}<a class="navbar-brand hidden-md-down" href="#">ServerManager</a>{% endblock %}
+                        {% block site_brand %}<a class="navbar-brand d-none d-lg-block" href="#">ServerManager</a>{% endblock %}
                         {% block nav %}
-                            <div class="nav" id="navbarNavStatic">
-                              <ul class="navbar-nav navbar-brand nav" style="font-size: 0.8rem;">
-                                {% include 'theme_bootstrap/menuitem.html' with itemname='server' icon='fa-server' search='true' %}
-                              </ul>
-                            </div>
                             <div class="collapse navbar-collapse" id="navbarNavDropdown">
                               <ul class="navbar-nav mr-auto nav">
+                                  {% include 'theme_bootstrap/menuitem.html' with itemname='server' icon='fa-server' %}
                                   {% include 'theme_bootstrap/menuitem.html' with itemname='servermodel' icon='fa-cubes' %}
                                   {% include 'theme_bootstrap/menuitem.html' with itemname='domain' icon='fa-globe' %}
                                   {% include 'theme_bootstrap/menuitem.html' with itemname='operatingsystem' icon='fa-laptop' %}
@@ -67,9 +64,10 @@
                                   {% include 'theme_bootstrap/menuitem.html' with itemname='clusterpackagetype' icon='fa-asterisk' %}
                                   {% include 'theme_bootstrap/menuitem.html' with itemname='clusterpackage' icon='fa-th' %}
                               </ul>
-
-                              {% block account_bar %}{% include "_account_bar.html" %}{% endblock %}
-                              {% block search_bar %}{% include "_search_bar.html" %}{% endblock %}
+                            </div>
+                            <div>
+                                {% block account_bar %}{% include "_account_bar.html" %}{% endblock %}
+                                {% block search_bar %}{% include "_search_bar.html" %}{% endblock %}
                             </div>
                         {% endblock %}
                     {% endblock %}
@@ -98,7 +96,8 @@
 
         {% if not 'javascript_in_head'|bootstrap_setting %}
             <!-- Bootstrap JavaScript if it is in body -->
-            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+            <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
             {% bootstrap_javascript %}
         {% endif %}
         {% block bootstrap4_extra_script %}{% endblock %}
