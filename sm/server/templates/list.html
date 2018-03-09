@@ -17,14 +17,14 @@
     <table class="table table-hover table-striped" id="server_list" style="font-size:80%;">
       <thead>
         <tr>
-          <th                       >{% trans 'Hostname' %}</th>
-          <th class="hidden-sm-down">{% trans 'Status' %}</th>
-          <th class="hidden-sm-down">{% trans 'Location' %}</th>
-          <th                       >{% trans 'Description' %}</th>
-          <th class="hidden-sm-down">{% trans 'Operatingsystem' %}</th>
-          <th class="hidden-xs-down">{% trans 'Primary IP' %}</th>
-          <th class="hidden-sm-down">{% trans 'Patchtime' %}</th>
-          <th                        >{% trans 'Actions' %}</th>
+          <th class="d-table-cell"          >{% trans 'Hostname' %}</th>
+          <th class="d-none d-md-table-cell">{% trans 'Status' %}</th>
+          <th class="d-none d-md-table-cell">{% trans 'Location' %}</th>
+          <th class="d-table-cell"          >{% trans 'Description' %}</th>
+          <th class="d-none d-md-table-cell">{% trans 'Operatingsystem' %}</th>
+          <th class="d-none d-sm-table-cell">{% trans 'Primary IP' %}</th>
+          <th class="d-none d-md-table-cell">{% trans 'Patchtime' %}</th>
+          <th class="d-table-cell"          >{% trans 'Actions' %}</th>
         </tr>
       </thead>
       <tbody>
@@ -33,26 +33,26 @@
             <td>
               <a href="{% url 'server:detail' object.pk %}"
                  title="{% trans 'View' %} {{ object.hostname }}.{{ object.domain }}">
-                <div class="hidden-md-up">
+                <div class="d-none d-md-table-cell">
                   {% include "status-icon.html" %}
                   {{ object.hostname }}
                 </div>
-                <div class="hidden-sm-down">{{ object.hostname }}</div>
+                <div class="d-table-cell d-md-none">{{ object.hostname }}</div>
               </a>
             </td>
-            <td class="hidden-sm-down">
+            <td class="d-none d-md-table-cell">
               {% include "status-icon.html" %}
             </td>
-            <td class="hidden-sm-down">{{ object.location }}</td>
+            <td class="d-none d-md-table-cell">{{ object.location }}</td>
             <td>
-              <span class="hidden-md-up">{% include "_vendor_icon.html" %}</span>
+              <span class="d-table-cell d-md-none">{% include "_vendor_icon.html" %}</span>
               {{ object.description }}
             </td>
-            <td class="hidden-sm-down">
+            <td class="d-none d-md-table-cell">
               {% include "_vendor_icon.html" %} {{ object.operatingsystem }}
             </td>
-            <td class="hidden-xs-down">{{ object.primary_ip }}</td>
-            <td class="hidden-sm-down">{{ object.patchtime }}</td>
+            <td class="d-none d-sm-table-cell">{{ object.primary_ip }}</td>
+            <td class="d-none d-md-table-cell">{{ object.patchtime }}</td>
             <td>
               <a href="{% url 'server:update' object.pk %}" title="{% trans 'Edit server' %}">
                 <i class="fa fa-pencil fa-fw fa-lg" aria-hidden="true"></i>
