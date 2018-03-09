@@ -4,7 +4,7 @@
 {% if is_paginated %}
     <div align="center" style="width: inherit;">
       <nav aria-label="Pagination">
-        <ul class="pagination pagination-sm">
+        <ul class="pagination justify-content-center">
           <li class="page-item prev {% if not page_obj.has_previous %}disabled{% endif %}">
           <a class="page-link" href="?page={% if page_obj.has_previous %}{{ page_obj.previous_page_number|stringformat:"d" }}{{ getvars }}{{ hashtag }}{% else %}#{% endif %}" aria-label="{% trans 'Previous' %}" title=""{% trans 'Previous' %}">
               <span aria-hidden="true">&laquo;</span>
