@@ -26,8 +26,8 @@ class ListView(LoginRequiredMixin, GenericListView):
     template_name = '%s/list.html' % app_label
     model = Model
     paginate_by = 20
+    paginate_orphans = paginate_by / 4
     queryset = model.objects.all()
-    orphans = 3
     ordering = 'name'
 
 

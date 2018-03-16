@@ -28,9 +28,17 @@ class ListView(LoginRequiredMixin, GenericListView):
     template_name = '%s/list.html' % app_label
     model = Model
     paginate_by = 20
-    queryset = model.objects.all()
-    orphans = 3
+    paginate_orphans = paginate_by / 4
+    # queryset = model.objects.all()
     ordering = 'hostname'
+
+    def get_queryset(self):
+        if 'srvmanager-show_disposed' in self.request.COOKIES:
+            if self.request.COOKIES['srvmanager-show_disposed'] == 'true':
+                return self.model.objects.all().order_by(self.ordering)
+        return self.model.objects.exclude(
+            status__name='Disposed'
+            ).order_by(self.ordering)
 
 
 class DetailView(LoginRequiredMixin, GenericUpdateView):
@@ -70,6 +78,6 @@ class SearchView(LoginRequiredMixin, GenericListView):
     template_name = '%s/list.html' % app_label
     model = Model
     paginate_by = 20
+    paginate_orphans = paginate_by / 4
     queryset = model.objects.all()
-    orphans = 3
     ordering = 'hostname'
