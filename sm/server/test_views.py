@@ -73,7 +73,7 @@ class Tester(TestCase):
             'name').first()
         self.domain = DomainModel.objects.all().order_by(
             'name').first()
-        self.status = StatusModel.objects.all().order_by(
+        self.status = StatusModel.objects.exclude(name='Disposed').order_by(
             'name').first()
 
         self.testitem, created = Model.objects.get_or_create(
@@ -230,5 +230,89 @@ class Tester(TestCase):
         self.assertEquals(item.delivery_date, data['delivery_date'])
 
         self.assertIsInstance(item, Model)
+        self.assertContains(response,
+                            '%s was created successfully' % data['hostname'])
+
+    def test_createview_post_disposed_cookie_on(self):
+        '''
+        Test if we can view disposed servers with cookie
+        srvmanager-show_disposed true
+        '''
+        # Make sure we have no objects in there
+        Model.objects.all().delete()
+        # Set cookie!
+        self.client.cookies['srvmanager-show_disposed'] = 'true'
+        self.login()
+        # Create a _disposed_ server
+        data = {
+            'hostname': self.testitem.hostname,
+            'cluster': self.testitem.cluster.pk,
+            'status': StatusModel.objects.get(name='Disposed').id,
+            'location': self.testitem.location.pk,
+            'servermodel': self.testitem.servermodel.pk,
+            'patchtime': self.testitem.patchtime.pk,
+            'domain': self.testitem.domain.pk,
+            'install_date': datetime.date.today(),
+            'delivery_date': datetime.date.today(),
+        }
+        response = self.client.post(
+            reverse('%s:create' % app_label),
+            data,
+            follow=True,
+        )
+        self.assertEquals(response.status_code, 200, 'no status 200?')
+        self.assertRedirects(response,
+                             reverse('%s:index' % app_label),
+                             status_code=302)
+        item = response.context[-1]['object_list'].first()
+        self.assertEqual(item.hostname, data['hostname'])
+        self.assertEquals(item.cluster.pk, data['cluster'])
+        self.assertEquals(item.status.pk, data['status'])
+        self.assertEquals(item.location.pk, data['location'])
+        self.assertEquals(item.servermodel.pk, data['servermodel'])
+        self.assertEquals(item.patchtime.pk, data['patchtime'])
+        self.assertEquals(item.domain.pk, data['domain'])
+        self.assertEquals(item.install_date, data['install_date'])
+        self.assertEquals(item.delivery_date, data['delivery_date'])
+
+        self.assertIsInstance(item, Model)
+        self.assertContains(response,
+                            '%s was created successfully' % data['hostname'])
+
+    def test_createview_post_disposed_cookie_off(self):
+        '''
+        Test if we can CANNOT view disposed servers with cookie
+        srvmanager-show_disposed false
+        '''
+        # Make sure we have no objects in there
+        Model.objects.all().delete()
+        # Set cookie!
+        self.client.cookies['srvmanager-show_disposed'] = 'false'
+        self.login()
+        # Create a _disposed_ server
+        data = {
+            'hostname': self.testitem.hostname,
+            'cluster': self.testitem.cluster.pk,
+            'status': StatusModel.objects.get(name='Disposed').id,
+            'location': self.testitem.location.pk,
+            'servermodel': self.testitem.servermodel.pk,
+            'patchtime': self.testitem.patchtime.pk,
+            'domain': self.testitem.domain.pk,
+            'install_date': datetime.date.today(),
+            'delivery_date': datetime.date.today(),
+        }
+        response = self.client.post(
+            reverse('%s:create' % app_label),
+            data,
+            follow=True,
+        )
+        self.assertEquals(response.status_code, 200, 'no status 200?')
+        self.assertRedirects(response,
+                             reverse('%s:index' % app_label),
+                             status_code=302)
+        item = response.context[-1]['object_list'].first()
+        # We shouldn't see anything, since cookie is set to off
+        self.assertIsNone(item)
+        # But creation must have succeeded
         self.assertContains(response,
                             '%s was created successfully' % data['hostname'])
