@@ -9,8 +9,26 @@
 {% block body_class %}server server-list{% endblock %}
 
 {% block body %}
-<div class="container" style="padding-top: 0px;">
+<div class="container" style="padding-top: 20px;">
   <div class="panel panel-default">
+    <div class="checkbox" align="right">
+      <label><input type="checkbox" id="show_disposed" checked> {% trans 'Show disposed' %}</label>
+    </div>
+    <script>
+      $('#show_disposed').ready(function(e) {
+        var checked = getCookie('srvmanager-show_disposed');
+        if(checked == 'true' || checked == '') {
+          document.getElementById('show_disposed').checked = true;
+        } else {
+          document.getElementById('show_disposed').checked = false;
+        }
+      });
+      $('#show_disposed').click(function() {
+        setCookie('srvmanager-show_disposed',this.checked, 30);
+        location.reload();
+      });
+    </script>
+
     {% if not object_list %}
       <div class="panel-heading"><b>{% trans 'No results' %}</b></div>
     {% else %}
@@ -33,7 +51,7 @@
             <td>
               <a href="{% url 'server:detail' object.pk %}"
                  title="{% trans 'View' %} {{ object.hostname }}.{{ object.domain }}">
-                <div class="d-none d-md-table-cell">
+                <div class="d-none d-md-table-cell" style="white-space: nowrap;">
                   {% include "status-icon.html" %}
                   {{ object.hostname }}
                 </div>
@@ -43,13 +61,13 @@
             <td class="d-none d-md-table-cell">
               {% include "status-icon.html" %}
             </td>
-            <td class="d-none d-md-table-cell">{{ object.location }}</td>
+            <td class="d-none d-md-table-cell" title="{{ object.location }}">{{ object.location|truncatechars:15 }}</td>
             <td>
               <span class="d-table-cell d-md-none">{% include "_vendor_icon.html" %}</span>
               {{ object.description }}
             </td>
-            <td class="d-none d-md-table-cell">
-              {% include "_vendor_icon.html" %} {{ object.operatingsystem }}
+            <td class="d-none d-md-table-cell" style="white-space: nowrap;">
+              {% include "_vendor_icon.html" with vendor_name=object.operatingsystem.vendor.name %} {{ object.operatingsystem }}
             </td>
             <td class="d-none d-sm-table-cell">{{ object.primary_ip }}</td>
             <td class="d-none d-md-table-cell">{{ object.patchtime }}</td>

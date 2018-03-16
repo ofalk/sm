@@ -1,14 +1,14 @@
-{% if object.operatingsystem.vendor.name == 'Microsoft' %}
+{% if vendor_name == 'Microsoft' %}
   <i class="fa fa-windows" aria-hidden="true"></i>
-{% elif object.operatingsystem.vendor.name == 'CentOS' or object.operatingsystem.vendor.name == 'Red Hat' or object.operatingsystem.vendor.name == 'Fedora' %}
+{% elif vendor_name == 'CentOS' or vendor_name == 'Red Hat' or vendor_name == 'Fedora' %}
   <i class="fa fa-linux" aria-hidden="true"></i>
-{% elif object.operatingsystem.vendor.name == 'Cisco' %}
+{% elif vendor_name == 'Cisco' %}
   <i class="fa fa-sitemap" aria-hidden="true"></i>
-{% elif object.operatingsystem.vendor.name == 'VMware' %}
+{% elif vendor_name == 'VMware' %}
   <i class="fa fa-cloud" aria-hidden="true"></i>
-{% elif object.operatingsystem.vendor.name == 'HW group' and object.operatingsystem.version == 'Firmware' %}
+{% elif vendor_name == 'HW group' %}
   <i class="fa fa-thermometer-half" aria-hidden="true"></i>
-{% elif object.operatingsystem.vendor.name == 'Infortrend' and object.operatingsystem.version == 'Firmware' %}
+{% elif object.operatingsystem.vendor.name == 'Infortrend' %}
   <i class="fa fa-hdd-o" aria-hidden="true"></i>
 {% elif not object.operatingsystem.vendor.name  %}
   <i class="fa fa-circle-o" aria-hidden="true"></i>
