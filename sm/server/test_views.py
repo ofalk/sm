@@ -190,6 +190,9 @@ class Tester(TestCase):
                           'object')
         self.assertIn('form', response.context[-1])
         form = response.context[-1]['form']
+        self.assertEqual(form.fields['status'].initial,
+                         StatusModel.objects.get(name='In use').id,
+                         'Status should be "In use" by default!')
         self.assertRaises(KeyError,
                           form.fields['hostname'].widget.attrs.__getitem__,
                           'readonly')

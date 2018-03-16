@@ -1,11 +1,17 @@
 from __future__ import unicode_literals
 
 from . models import Model as ServerModel
+from status.models import Model as StatusModel
 
 from django import forms
 
 
 class Form(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(Form, self).__init__(*args, **kwargs)
+        self.fields['status'].initial = StatusModel.objects.get(
+            name='In use').id
+
     class Meta:
         model = ServerModel
         fields = '__all__'
