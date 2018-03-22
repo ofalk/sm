@@ -11,7 +11,7 @@
 {% block body %}
 <div class="container" style="padding-top: 20px;">
   <div class="panel panel-default">
-    <div class="checkbox" align="right">
+    <div class="checkbox" align="right" style="padding-right: 20px;">
       <label><input type="checkbox" id="show_disposed" checked> {% trans 'Show disposed' %}</label>
     </div>
     <script>
@@ -63,7 +63,7 @@
             </td>
             <td class="d-none d-md-table-cell" title="{{ object.location }}">{{ object.location|truncatechars:15 }}</td>
             <td>
-              <span class="d-table-cell d-md-none">{% include "_vendor_icon.html" %}</span>
+              <span class="d-table-cell d-md-none" style="float:left;">{% include "_vendor_icon.html" %}&nbsp;</span>
               {{ object.description }}
             </td>
             <td class="d-none d-md-table-cell" style="white-space: nowrap;">
