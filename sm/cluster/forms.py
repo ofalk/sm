@@ -1,34 +1,37 @@
 from __future__ import unicode_literals
 
-from django import forms
-
 from . models import Model
+from sm.forms import SMForm, SMFormDisabled
 from server.models import Model as ServerModel
 
+from django.forms import ModelMultipleChoiceField
 
-class Form(forms.ModelForm):
-    server_set = forms.ModelMultipleChoiceField(
+
+class Form(SMForm):
+    """
+    Form providing an extra field; All ServerModels ordered by cluster and
+    hostname, additionally sets the initial list in __init__()
+    """
+    server_set = ModelMultipleChoiceField(
         label='Server',
         queryset=ServerModel.objects.all().order_by('-cluster', 'hostname')
     )
 
     def __init__(self, *args, **kwargs):
-        super(forms.ModelForm, self).__init__(*args, **kwargs)
+        """
+        Set initial list of servers, since this is a reverse model relation,
+        this is done manually here
+        """
+        super(Form, self).__init__(*args, **kwargs)
 
         self.fields['server_set'].required = False
         self.fields['server_set'].initial = (
             self.instance.server_set.all().values_list('id', flat=True)
         )
 
-    class Meta:
+    class Meta(SMForm.Meta):
         model = Model
-        fields = '__all__'
 
 
-class FormDisabled(Form):
-    def __init__(self, *args, **kwargs):
-        super(FormDisabled, self).__init__(*args, **kwargs)
-        instance = getattr(self, 'instance', None)
-        if instance and instance.pk:
-            for field in self.fields:
-                self.fields[field].widget.attrs['readonly'] = True
+class FormDisabled(Form, SMFormDisabled):
+    pass
