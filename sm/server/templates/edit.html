@@ -5,6 +5,9 @@
 {% load bootstrap3 %}
 {% load bootstrap4 %}
 
+{% block additionalstyles %}{% include "_additionalstyles.html" %}{% endblock %}
+{% block additionalscripts %}{% include "_additionalscripts.html" %}{% endblock %}
+
 {% block head_title %}{% trans "Server" %} :: {% if object %}{{ object.hostname }}{% if object.domain %}.{{ object.domain }}{% endif %}{% else %}NEW{% endif %}{% endblock %}
 
 {% block body_class %}server server-{% if object %}detail{% else %}create{% endif %}{% endblock %}
@@ -23,16 +26,4 @@
 {% bootstrap_button "Save" button_type="submit" button_class="btn-primary" %}
 {% endbuttons %}
 
-{% endblock %}
-{% block scripts %}
-<link href="//cdn.bootcss.com/bootstrap-datetimepicker/4.17.44/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
-<script src="//cdn.bootcss.com/moment.js/2.17.1/moment.min.js"></script>
-<script src="//cdn.bootcss.com/bootstrap-datetimepicker/4.17.44/js/bootstrap-datetimepicker.min.js"></script>
-<script>
-$(function () {
-  $('.date-input').datetimepicker({
-    format:'YYYY-MM-DD',
-  });
-});
-</script>
 {% endblock %}

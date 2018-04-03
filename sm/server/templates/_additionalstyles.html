@@ -1,0 +1,20 @@
+<style>
+  .transition_class { 
+    opacity: 0; 
+    visibility: hidden;
+    -webkit-transition: visibility 0.2s linear,
+      opacity 0.2s linear;
+    -moz-transition: visibility 0.2s linear,
+      opacity 0.2s linear;
+    -o-transition: visibility 0.2s linear,
+      opacity 0.2s linear; 
+  }
+
+  /*
+    In order to allow datetimepicker to work
+    See also: https://github.com/Eonasdan/bootstrap-datetimepicker/issues/1142
+  */
+  .form-group {
+    position: relative;
+  }
+</style>

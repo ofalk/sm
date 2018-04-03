@@ -37,8 +37,6 @@
         {% endif %}
 
         {% block bootstrap4_extra_head %}{% endblock %}
-        {% block additionalscripts %}{% endblock %}
-
     </head>
     {% block bootstrap4_before_content %}{% endblock %}
     <body class="{% block body_class %}{% endblock %}" id="{% block body_id %}{% endblock %}" {% block body_extra_attributes %}{% endblock %}>
@@ -108,6 +106,7 @@
         {% block theme_script %}
             <script src="{% static "/js/theme.js" %}"></script>
         {% endblock %}
+        {% block additionalscripts %}{% endblock %}
 
         {% block extra_body_base %}
             {% block extra_body %}{% endblock %}

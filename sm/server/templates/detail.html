@@ -5,6 +5,9 @@
 {% load bootstrap3 %}
 {% load bootstrap4 %}
 
+{% block additionalstyles %}{% include "_additionalstyles.html" %}{% endblock %}
+{% block additionalscripts %}{% include "_additionalscripts.html" %}{% endblock %}
+
 {% block head_title %}{% trans 'Server' %} :: {{ object.hostname }}.{{ object.domain }}{% endblock %}
 
 {% block body_class %}server server-{% if object %}detail{% else %}create{% endif %}{% endblock %}

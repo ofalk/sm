@@ -1,0 +1,44 @@
+<script language="javascript">
+  var switch_fields = new Array;
+  switch_fields.push($("#id_management_ip"));
+  switch_fields.push($("label[for='id_management_ip']"));
+  switch_fields.push($("#id_management_hostname"));
+  switch_fields.push($("label[for='id_management_hostname']"));
+  switch_fields.push($("#id_delivery_note_id"));
+  switch_fields.push($("label[for='id_delivery_note_id']"));
+  switch_fields.push($("#id_serial_nr"));
+  switch_fields.push($("label[for='id_serial_nr']"));
+
+  $("#id_servermodel").change(function(self) {
+    if($("#id_servermodel").find(":selected").text() == 'VMware Virtual') {
+      switch_fields.map(function(item) {
+        item.addClass('transition_class');
+        item.slideDown('fast').hide();
+      });
+    } else {
+      switch_fields.map(function(item) {
+        item.removeClass('transition_class');
+        item.slideDown('fast').show();
+      });
+    }
+  });
+  $("#id_servermodel").ready(function(self) {
+    if($("#id_servermodel").find(":selected").text() == 'VMware Virtual') {
+      switch_fields.map(function(item) {
+        item.hide();
+      });
+    }
+  });
+
+</script>
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.0/moment-with-locales.min.js"></script>
+<link href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
+<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
+<script>
+$(function () {
+  $('.date-input').datetimepicker({
+    format:'YYYY-MM-DD',
+  });
+});
+</script>
