@@ -80,7 +80,7 @@ class Tester(TestCase):
         self.assertEqual(item.name, self.teststring)
         form = response.context[-1]['form']
         self.assertIsInstance(form, FormDisabled)
-        self.assertTrue(form.fields['name'].widget.attrs['readonly'])
+        self.assertTrue(form.fields['name'].widget.attrs['disabled'])
 
     def test_updateview(self):
         self.login()
@@ -96,7 +96,7 @@ class Tester(TestCase):
         self.assertIsInstance(form, Form)
         self.assertRaises(KeyError,
                           form.fields['name'].widget.attrs.__getitem__,
-                          'readonly')
+                          'disabled')
 
     def test_deleteview(self):
         self.login()
@@ -140,7 +140,7 @@ class Tester(TestCase):
         form = response.context[-1]['form']
         self.assertRaises(KeyError,
                           form.fields['name'].widget.attrs.__getitem__,
-                          'readonly')
+                          'disabled')
 
     def test_createview_post(self):
         # Make sure we have no objects in there

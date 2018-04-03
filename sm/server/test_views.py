@@ -146,7 +146,7 @@ class Tester(TestCase):
         self.assertIsInstance(form, FormDisabled)
         for field in ['hostname', 'domain', 'delivery_date', 'install_date',
                       ]:
-            self.assertTrue(form.fields[field].widget.attrs['readonly'])
+            self.assertTrue(form.fields[field].widget.attrs['disabled'])
 
     def test_deleteview(self):
         self.login()
@@ -195,7 +195,7 @@ class Tester(TestCase):
                          'Status should be "In use" by default!')
         self.assertRaises(KeyError,
                           form.fields['hostname'].widget.attrs.__getitem__,
-                          'readonly')
+                          'disabled')
 
     def test_createview_post(self):
         # Make sure we have no objects in there
