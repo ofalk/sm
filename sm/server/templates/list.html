@@ -52,10 +52,12 @@
               <a href="{% url 'server:detail' object.pk %}"
                  title="{% trans 'View' %} {{ object.hostname }}.{{ object.domain }}">
                 <div class="d-none d-md-table-cell" style="white-space: nowrap;">
+                  {{ object.hostname }}
+                </div>
+                <div class="d-table-cell d-md-none">
                   {% include "status-icon.html" %}
                   {{ object.hostname }}
                 </div>
-                <div class="d-table-cell d-md-none">{{ object.hostname }}</div>
               </a>
             </td>
             <td class="d-none d-md-table-cell">
