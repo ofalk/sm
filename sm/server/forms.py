@@ -1,30 +1,32 @@
 from __future__ import unicode_literals
 
 from . models import Model as ServerModel
+from sm.forms import SMForm, SMFormDisabled
 from status.models import Model as StatusModel
 
-from django import forms
+from django.forms import DateInput
 
 
-class Form(forms.ModelForm):
+class Form(SMForm):
+    """
+    Override default form behaviour; Make sure 'In Use' is the default/initial
+    value
+    """
     def __init__(self, *args, **kwargs):
-        super(Form, self).__init__(*args, **kwargs)
-        self.fields['status'].initial = StatusModel.objects.get(
-            name='In use').id
+        super(SMForm, self).__init__(*args, **kwargs)
+        try:
+            self.fields['status'].initial = StatusModel.objects.get(
+                name='In use').id
+        except Exception as e:
+            print('No status "In Use" found: %s' % e)
 
-    class Meta:
+    class Meta(SMForm.Meta):
         model = ServerModel
-        fields = '__all__'
         widgets = {
-            'delivery_date': forms.DateInput(attrs={'class': 'date-input'}),
-            'install_date': forms.DateInput(attrs={'class': 'date-input'})
+            'delivery_date': DateInput(attrs={'class': 'date-input'}),
+            'install_date': DateInput(attrs={'class': 'date-input'})
         }
 
 
-class FormDisabled(Form):
-    def __init__(self, *args, **kwargs):
-        super(FormDisabled, self).__init__(*args, **kwargs)
-        instance = getattr(self, 'instance', None)
-        if instance and instance.pk:
-            for field in self.fields:
-                self.fields[field].widget.attrs['readonly'] = True
+class FormDisabled(Form, SMFormDisabled):
+    pass
