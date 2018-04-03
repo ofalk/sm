@@ -13,7 +13,7 @@ class Form(SMForm):
     value
     """
     def __init__(self, *args, **kwargs):
-        super(SMForm, self).__init__(*args, **kwargs)
+        super(Form, self).__init__(*args, **kwargs)
         try:
             self.fields['status'].initial = StatusModel.objects.get(
                 name='In use').id

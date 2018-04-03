@@ -22,7 +22,7 @@ class Form(SMForm):
         Set initial list of servers, since this is a reverse model relation,
         this is done manually here
         """
-        super(SMForm, self).__init__(*args, **kwargs)
+        super(Form, self).__init__(*args, **kwargs)
 
         self.fields['server_set'].required = False
         self.fields['server_set'].initial = (
