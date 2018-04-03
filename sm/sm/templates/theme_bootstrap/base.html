@@ -16,6 +16,7 @@
         {% endblock %}
 
         {% block styles %}{% endblock %}
+        {% block additionalstyles %}{% endblock %}
 
         {% block html5shim %}
             <!-- HTML5 shim, for IE6-8 support of HTML elements -->
@@ -36,6 +37,7 @@
         {% endif %}
 
         {% block bootstrap4_extra_head %}{% endblock %}
+        {% block additionalscripts %}{% endblock %}
 
     </head>
     {% block bootstrap4_before_content %}{% endblock %}
