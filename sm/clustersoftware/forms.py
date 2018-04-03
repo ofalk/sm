@@ -9,5 +9,5 @@ class Form(SMForm):
         model = Model
 
 
-class FormDisabled(SMFormDisabled, Form):
+class FormDisabled(Form, SMFormDisabled):
     pass
