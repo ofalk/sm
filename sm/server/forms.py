@@ -17,7 +17,7 @@ class Form(SMForm):
         try:
             self.fields['status'].initial = StatusModel.objects.get(
                 name='In use').id
-        except Exception as e:
+        except Exception as e:  # noqa # flake8: noqa # NOQA # pragma: no cover
             print('No status "In Use" found: %s' % e)
 
     class Meta(SMForm.Meta):
