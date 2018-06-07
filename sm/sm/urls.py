@@ -42,5 +42,5 @@ for module in modules_with_urls():
     urlpatterns.append(url(r'^' + module + '/',
                        include(module + '.' + 'urls')))
 
-urlpatterns.append(url(r'', RedirectView.as_view(url='/account/settings/')))
+urlpatterns.append(url(r'', RedirectView.as_view(url='/server/')))
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
