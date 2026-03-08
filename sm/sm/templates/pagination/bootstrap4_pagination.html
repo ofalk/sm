@@ -13,7 +13,7 @@
           </li>
           {% for page in paginator.page_range %}
             {% if page %}
-                <li class="{% ifequal page page_obj.number %}active{% endifequal %} page-item">
+                <li class="{% if page == page_obj.number %}active{% endif %} page-item">
                   <a class="page-link" href="?page={{ page|stringformat:"d" }}{{ getvars }}{{ hashtag }}">{{ page|stringformat:"d" }}</a>
                 </li>
             {% else %}

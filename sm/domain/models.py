@@ -6,6 +6,7 @@ from . import app_label
 
 
 class Model(NaturalKeyModel):
+
     name = models.CharField(max_length=45, unique=True, verbose_name='Domain name')
 
     def __str__(self):

@@ -16,6 +16,7 @@ from . import app_label
 
 
 class Model(NaturalKeyModel):
+
     """
     The Model class in 'cluster', defined the cluster model.
     Clusters have several servers (reverse related via Model in 'server'
@@ -45,8 +46,7 @@ class Model(NaturalKeyModel):
         return reverse('%s:detail' % app_label, kwargs={'pk': self.pk})
 
     # === natural_key ===
-    def natural_key(self):
-        return (self.name,)
+
 
     # === Class meta data ===
     class Meta:

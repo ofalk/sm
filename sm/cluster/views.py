@@ -1,6 +1,6 @@
 from __future__ import unicode_literals
 
-from account.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from . models import Model
 from . forms import Form, FormDisabled
@@ -14,10 +14,10 @@ from django.contrib.messages.views import SuccessMessageMixin
 
 from django.db.models import Q
 
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 
 try:
-    from django.core.urlresolvers import reverse_lazy
+    from django.urls import reverse_lazy
 except Exception as e:  # pragma: no cover
     from django.urls import reverse_lazy  # pragma: no cover
 
@@ -44,54 +44,59 @@ class DetailView(LoginRequiredMixin, GenericUpdateView):
     form_class = FormDisabled
 
     def get_queryset(self):
-        queryset = super(DetailView, self).get_queryset()
+        queryset = super().get_queryset()
         return queryset.filter(
             Q(group__in=self.request.user.groups.all()) |
             Q(group__isnull=True)
         )
 
 
-class UpdateView(DetailView, SuccessMessageMixin):
+class UpdateView(SuccessMessageMixin, LoginRequiredMixin, GenericUpdateView):
+    success_message = "%(name)s " + _("was updated successfully")
     template_name = '%s/edit.html' % app_label
     model = Model
     form_class = Form
     success_url = reverse_lazy('%s:index' % app_label)
-    success_message = '%(name)s ' + _('was updated successfully')
-
-    def get_queryset(self):
-        queryset = super(DetailView, self).get_queryset()
-        return queryset.filter(group__in=self.request.user.groups.all())
 
     def form_valid(self, form):
-        self.object.server_set.set(form.cleaned_data['server_set'])
-        return super(UpdateView, self).form_valid(form)
+        self.object = form.save()
+        messages.success(self.request, self.success_message % self.object.__dict__)
+        from django.http import HttpResponseRedirect
+        return HttpResponseRedirect(self.get_success_url())
 
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        return queryset.filter(group__in=self.request.user.groups.all())
 
 class CreateView(SuccessMessageMixin, LoginRequiredMixin, GenericCreateView):
+    success_message = "%(name)s " + _("was created successfully")
+
     template_name = '%s/edit.html' % app_label
     fields = '__all__'
     model = Model
     success_url = reverse_lazy('%s:index' % app_label)
-    success_message = '%(name)s ' + _('was created successfully')
-
     def form_valid(self, form):
-        object = form.save(commit=False)
-        object.group = self.request.user.groups.all().first()
-        object.save()
-        return super(CreateView, self).form_valid(form)
+        self.object = form.save()
+        messages.success(self.request, self.success_message % self.object.__dict__)
+        from django.http import HttpResponseRedirect
+        return HttpResponseRedirect(self.get_success_url())
 
 
-class DeleteView(SuccessMessageMixin, LoginRequiredMixin, GenericDeleteView):
+class DeleteView(LoginRequiredMixin, GenericDeleteView):
+    success_message = "%(name)s " + _("was deleted successfully")
     template_name = '%s/delete.html' % app_label
     model = Model
     success_url = reverse_lazy('%s:index' % app_label)
-    success_message = '%(name)s ' + _('was deleted successfully')
 
     def get_queryset(self):
-        queryset = super(DeleteView, self).get_queryset()
+        queryset = super().get_queryset()
         return queryset.filter(group__in=self.request.user.groups.all())
+    def form_valid(self, form):
+        success_url = self.get_success_url()
+        msg = self.success_message % {'name': getattr(self.object, 'name')}
+        self.object.delete()
+        messages.success(self.request, msg)
+        from django.http import HttpResponseRedirect
+        return HttpResponseRedirect(success_url)
 
-    def delete(self, request, *args, **kwargs):
-        obj = self.get_object()
-        messages.success(self.request, self.success_message % obj.__dict__)
-        return super(DeleteView, self).delete(request, *args, **kwargs)
+

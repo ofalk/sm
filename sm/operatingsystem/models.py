@@ -1,6 +1,5 @@
 from django.db import models
-from django.db.models import Manager as GenericManager
-from natural_keys import NaturalKeyModel
+from natural_keys import NaturalKeyModel, NaturalKeyModelManager
 from django.urls import reverse
 from vendor.models import Model as VendorModel
 
@@ -9,7 +8,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from . import app_label
 
 
-class Manager(GenericManager):
+class Manager(NaturalKeyModelManager):
     """
     Special manager to ease the access to Operatingsystem objects
     eg. RHEL6.1, RHEL 6.1, SLES10, SLES 10.1 should all work well
@@ -93,8 +92,7 @@ class Model(NaturalKeyModel):
     def get_absolute_url(self):
         return reverse('%s:detail' % app_label, kwargs={'pk': self.pk})
 
-    def natural_key(self):
-        return (self.vendor.name, self.version)
+
 
     class Meta:
         managed = True

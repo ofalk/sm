@@ -1,19 +1,4 @@
-"""sm URL Configuration
-
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/1.11/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  url(r'^$', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  url(r'^$', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.conf.urls import url, include
-    2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
-"""
-from django.conf.urls import url, include
+from django.urls import path, include, re_path
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
@@ -23,24 +8,30 @@ from django.views.generic.base import RedirectView
 
 import debug_toolbar
 
-from sm.utils import modules_with_urls
-from importlib import import_module
-
 urlpatterns = [
-    url(r'^__debug__/', include(debug_toolbar.urls)),
-    url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
-    url(r'^admin/', admin.site.urls),
-    url(r'^account/social/accounts/$',
-        TemplateView.as_view(template_name='account/social.html'),
-        name='account_social_accounts'),
-    url(r'', include('social_django.urls')),
-    url(r'^account/', include('account.urls')),
+    path('__debug__/', include(debug_toolbar.urls)),
+    path('admin/doc/', include('django.contrib.admindocs.urls')),
+    path('admin/', admin.site.urls),
+    
+    # Allauth URLs
+    path('accounts/', include('allauth.urls')),
+
+    # Project Apps
+    path('cluster/', include('cluster.urls')),
+    path('operatingsystem/', include('operatingsystem.urls')),
+    path('clusterpackage/', include('clusterpackage.urls')),
+    path('patchtime/', include('patchtime.urls')),
+    path('location/', include('location.urls')),
+    path('servermodel/', include('servermodel.urls')),
+    path('server/', include('server.urls')),
+    path('status/', include('status.urls')),
+    path('domain/', include('domain.urls')),
+    path('clustersoftware/', include('clustersoftware.urls')),
+    path('clusterpackagetype/', include('clusterpackagetype.urls')),
+    path('vendor/', include('vendor.urls')),
+
+    # Home redirect
+    re_path(r'^$', RedirectView.as_view(url='/server/')),
 ]
 
-for module in modules_with_urls():
-    import_module(module + '.' + 'urls')
-    urlpatterns.append(url(r'^' + module + '/',
-                       include(module + '.' + 'urls')))
-
-urlpatterns.append(url(r'', RedirectView.as_view(url='/server/')))
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

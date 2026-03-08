@@ -1,6 +1,6 @@
 {% extends "site_base.html" %}
 
-{% load account_tags %}
+
 {% load i18n %}
 {% load bootstrap4 %}
 
@@ -21,7 +21,7 @@
         </tr>
       </thead>
       <tbody>
-        {% for object in object_list.all %}
+        {% for object in object_list %}
           <tr>
             <td>
               <a href="{% url 'vendor:detail' object.pk %}" title="{{ object.name }}">

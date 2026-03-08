@@ -13,7 +13,7 @@
         <div class="col-md-5">
             <h3 class="legend">Social Connections</h3>
             {% for provider in backends.not_associated %}
-                <a class="btn btn-primary" href="{% url "social:begin" provider %}">Connect <i class="fa fa-{{ provider }}"></i> {{ provider.title }}</a>
+                <a class="btn btn-primary" href="{% url "socialaccount_login" provider %}">Connect <i class="fa fa-{{ provider }}"></i> {{ provider.title }}</a>
             {% endfor %}
             {% for auth in backends.associated %}
                 {% user_can_disconnect auth as can_disconnect %}

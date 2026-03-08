@@ -36,6 +36,7 @@ INSTALLED_APPS.extend([
   'whitenoise',
 
   'taggit',
+  'urlauth',
 
   'sm',
 ])
@@ -124,46 +125,24 @@ MESSAGE_TAGS = {
     messages.ERROR: 'danger'
 }
 
-if 'test' in argv:
-    try:
-        from sm.settings import DATABASES
-    except Exception:  # pragma: no cover
-        DATABASES = []  # pragma: no cover
-    DATABASES['default'] = {'ENGINE': 'django.db.backends.sqlite3'}
-else:
-    if platform == 'darwin':  # pragma: no cover
-        DATABASES = {  # pragma: no cover
-            'default': {
-                'ENGINE': 'django.db.backends.sqlite3',
-                'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-            }
-        }
-    else:
-        if 'RDS_DB_NAME' in os.environ:
-            DATABASES = {
-                'default': {
-                    'ENGINE': 'django.db.backends.mysql',
-                    'NAME': os.environ['RDS_DB_NAME'],
-                    'USER': os.environ['RDS_USERNAME'],
-                    'PASSWORD': os.environ['RDS_PASSWORD'],
-                    'HOST': os.environ['RDS_HOSTNAME'],
-                    'PORT': os.environ['RDS_PORT'],
-                }
-            }
-        else:
-            DATABASES = {  # pragma: no cover
-                'default': {
-                    'ENGINE': 'django.db.backends.mysql',
-                    'NAME': 'sm',
-                    'USER': 'srvmanager',
-                    'PASSWORD': 'srvmanager',
-                    'HOST': 'mysql01',
-                    'CONN_MAX_AGE': None,
-                    'OPTIONS': {
-                        'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
-                    },
-                }
-            }
+DATABASES = {  # pragma: no cover
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    }
+}
+
+if 'RDS_DB_NAME' in os.environ:
+    DATABASES = {
+        'default': {
+            'ENGINE': os.environ['RDS_ENGINE'],
+            'NAME': os.environ['RDS_DB_NAME'],
+            'USER': os.environ['RDS_USERNAME'],
+            'PASSWORD': os.environ['RDS_PASSWORD'],
+            'HOST': os.environ['RDS_HOSTNAME'],
+            'PORT': os.environ['RDS_PORT'],
+    }
+}
 
 TAGGIT_CASE_INSENSITIVE = True
 

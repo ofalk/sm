@@ -7,6 +7,7 @@ from . import app_label
 
 
 class Model(NaturalKeyModel):
+
     name = models.CharField(max_length=45)
     version = models.CharField(max_length=45, default='', blank=True)
     vendor = models.ForeignKey(VendorModel,
@@ -24,8 +25,7 @@ class Model(NaturalKeyModel):
     def get_absolute_url(self):
         return reverse('%s:detail' % app_label, kwargs={'pk': self.pk})
 
-    def natural_key(self):
-        return (self.vendor.name, self.name, self.version)
+
 
     class Meta:
         managed = True

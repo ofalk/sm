@@ -7,6 +7,7 @@ from . import app_label
 
 
 class Model(NaturalKeyModel):
+
     name = models.CharField(max_length=45)
     country = CountryField()
 

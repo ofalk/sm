@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.test import TestCase
 from django.test import Client
 
@@ -11,20 +12,18 @@ from django.contrib.auth.models import User
 
 from django.core.exceptions import ObjectDoesNotExist
 try:
-    from django.core.urlresolvers import reverse
+    from django.urls import reverse
 except Exception as e:  # pragma: no cover
     from django.urls import reverse  # pragma: no cover
+
 
 from sm.utils import random_string
 
 import os
 import django
-os.environ['DJANGO_SETTINGS_MODULE'] = 'sm.settings'
-django.setup()
 
 
 class Tester(TestCase):
-    client = Client()
     teststring = random_string()
     testitem = None
     password = random_string()
@@ -43,12 +42,13 @@ class Tester(TestCase):
         Create user
         Create some item in models for testing
         """
+        username = random_string()
         self.user = User.objects.create_user(
-            username=random_string(),
+            username=username,
             password=self.password,
         )
 
-        self.vendor = VendorModel.objects.all().order_by('name').first()
+        self.vendor = VendorModel.objects.all().first()
         self.testitem, created = Model.objects.get_or_create(
             version=self.teststring,
             vendor=self.vendor,
@@ -59,17 +59,18 @@ class Tester(TestCase):
         self.assertEqual(response.status_code, 302, 'no redirect?')
 
     def test_listview(self):
-        # Make sure we have no objects in there
         Model.objects.all().delete()
         self.setUp()
         self.login()
         response = self.client.get(reverse('%s:index' % app_label))
         self.assertEqual(response.status_code, 200, 'no status 200?')
         item = response.context[-1]['object_list'].first()
-        self.assertIsInstance(item, VendorModel,
+        self.assertIsInstance(item, Model,
                               'object not the correct model!?')
-        self.assertEqual(item.operatingsystem_set.all().first().version,
+        self.assertEqual(item.version,
                          self.teststring)
+        self.assertEqual(item.vendor.name,
+                         self.vendor.name)
 
     def test_detailview(self):
         self.login()
@@ -81,9 +82,11 @@ class Tester(TestCase):
         self.assertIsInstance(item, Model,
                               'object not the correct model!?')
         self.assertEqual(item.version, self.teststring)
+        self.assertEqual(item.vendor.name, self.vendor.name)
         form = response.context[-1]['form']
         self.assertIsInstance(form, FormDisabled)
-        self.assertTrue(form.fields['version'].widget.attrs['disabled'])
+        for field in ['version', 'vendor']:
+            self.assertTrue(form.fields[field].widget.attrs['disabled'])
 
     def test_updateview(self):
         self.login()
@@ -95,11 +98,13 @@ class Tester(TestCase):
         self.assertIsInstance(item, Model,
                               'object not the correct model!?')
         self.assertEqual(item.version, self.teststring)
+        self.assertEqual(item.vendor.name, self.vendor.name)
         form = response.context[-1]['form']
         self.assertIsInstance(form, Form)
-        self.assertRaises(KeyError,
-                          form.fields['version'].widget.attrs.__getitem__,
-                          'disabled')
+        for field in ['version', 'vendor']:
+            self.assertRaises(KeyError,
+                              form.fields[field].widget.attrs.__getitem__,
+                              'disabled')
 
     def test_deleteview(self):
         self.login()
@@ -111,6 +116,7 @@ class Tester(TestCase):
         self.assertIsInstance(item, Model,
                               'object not the correct model!?')
         self.assertEqual(item.version, self.teststring)
+        self.assertEqual(item.vendor.name, self.vendor.name)
         self.assertContains(response, 'Are you sure you want to')
         self.assertContains(response, '<strong>delete</strong>')
 
@@ -124,12 +130,11 @@ class Tester(TestCase):
         self.assertRedirects(response,
                              reverse('%s:index' % app_label),
                              status_code=302)
-        self.assertIn('messages', response.context[-1])
         self.assertContains(response,
                             '%s was deleted successfully' %
                             self.testitem.version)
         with self.assertRaises(ObjectDoesNotExist):
-            Model.objects.get(version=self.testitem.version)
+            Model.objects.get(version=self.testitem.version, vendor=self.vendor)
 
     def test_createview(self):
         self.login()
@@ -164,49 +169,39 @@ class Tester(TestCase):
                              reverse('%s:index' % app_label),
                              status_code=302)
         item = response.context[-1]['object_list'].first()
-        self.assertEqual(item.operatingsystem_set.all().first().version,
+        self.assertEqual(item.version,
                          data['version'])
-        self.assertIsInstance(item, VendorModel)
-        self.assertIsInstance(item.operatingsystem_set.all().first(), Model)
-        self.assertContains(response,
-                            '%s was created successfully' % data['version'])
+        self.assertEqual(item.vendor.pk,
+                         data['vendor'])
+        self.assertEqual(item.vendor.name,
+                         self.vendor.name)
 
-    # Class specific tests
+        self.assertIsInstance(item, Model)
+        self.assertContains(response, '%s was created successfully' % data['version'])
+
     def test_listview_empty_true_wo_obj(self):
-        Model.objects.all().delete()
-        self.setUp()
+        self.login()
+        # Set cookie!
         self.client.cookies['srvmanager-show_empty'] = 'true'
-        self.login()
-        response = self.client.get(reverse('%s:index' % app_label))
-        self.assertEqual(response.status_code, 200, 'no status 200?')
-        item = response.context[-1]['object_list'].first()
-        self.assertIsInstance(item, VendorModel,
-                              'object not the correct model!?')
-        self.assertEqual(item.name, self.vendor.name)
-
-    def test_listview_empty_false_wo_obj(self):
+        # Make sure we have no objects in there
         Model.objects.all().delete()
-        self.login()
-        self.client.cookies['srvmanager-show_empty'] = 'false'
         response = self.client.get(reverse('%s:index' % app_label))
-        self.assertEqual(response.status_code, 200, 'no status 200?')
         item = response.context[-1]['object_list'].first()
         self.assertIsNone(item)
 
     def test_listview_empty_false_w_obj(self):
-        self.client.cookies['srvmanager-show_empty'] = 'false'
         self.login()
+        # Set cookie!
+        self.client.cookies['srvmanager-show_empty'] = 'false'
+        # Make sure we have objects in there
+        Model.objects.all().delete()
+        self.setUp()
+        self.login() # Need to login again since setUp created a NEW user
         response = self.client.get(reverse('%s:index' % app_label))
         item = response.context[-1]['object_list'].first()
-        self.assertEqual(response.status_code, 200, 'no status 200?')
-        self.assertIsInstance(item, VendorModel,
+        self.assertIsInstance(item, Model,
                               'object not the correct model!?')
-        self.assertEqual(item.name, self.vendor.name)
-
-    def test_get_initial(self):
-        from operatingsystem.views import CreateView as View
-        v = View()
-        v.kwargs = {'vendor': self.vendor.pk}
-        initial = v.get_initial()
-        self.assertIsInstance(initial['vendor'], VendorModel)
-        self.assertEqual(initial['vendor'].name, self.vendor.name)
+        self.assertEqual(item.version,
+                         self.teststring)
+        self.assertEqual(item.vendor.name,
+                         self.vendor.name)

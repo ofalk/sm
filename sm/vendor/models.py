@@ -6,6 +6,7 @@ from . import app_label
 
 
 class Model(NaturalKeyModel):
+
     name = models.CharField(max_length=45, unique=True)
 
     def __str__(self):
@@ -13,6 +14,8 @@ class Model(NaturalKeyModel):
 
     def get_absolute_url(self):
         return reverse('%s:detail' % app_label, kwargs={'pk': self.pk})
+
+
 
     class Meta:
         managed = True

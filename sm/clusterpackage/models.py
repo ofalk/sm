@@ -11,6 +11,7 @@ from . import app_label
 
 
 class Model(NaturalKeyModel):
+
     name = models.CharField(max_length=45)
     status = models.ForeignKey(StatusModel,
                                related_name='%s_set' % app_label,
@@ -38,8 +39,7 @@ class Model(NaturalKeyModel):
     def get_absolute_url(self):
         return reverse('%s:detail' % app_label, kwargs={'pk': self.pk})
 
-    def natural_key(self):
-        return (self.cluster, self.name)
+
 
     class Meta:
         managed = True

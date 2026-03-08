@@ -1,5 +1,5 @@
 {% extends "theme_bootstrap/base.html" %}
-{% load staticfiles %}
+{% load static %}
 {% load i18n %}
 
 {% block styles %}
@@ -8,6 +8,10 @@
 
 {% block extra_head_base %}
     {% block extra_head %}{% endblock %}
+{% endblock %}
+
+{% block body_base %}
+    {% block body %}{% endblock %}
 {% endblock %}
 
 {% block footer %}

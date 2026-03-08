@@ -1,28 +1,40 @@
 {% load i18n %}
-{% load account_tags %}
+{% load socialaccount %}
 
-<ul class="nav navbar-nav" style="flex-direction: row;">
-    <li class="nav-item dropdown" id="tab_account">
-        <a class="nav-link dropdown-toggle" href="/" id="account_dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          {% if request.user.is_authenticated %}
-            <i class="fa fa-fw fa-user" aria-hidden="true"></i> {% user_display request.user %}
-          {% else %}
-            <i class="fa fa-fw fa-sign-out" aria-hidden="true"></i> Login
-          {% endif %}
-        </a>
-        <div class="dropdown-menu dropdown-menu-right" style="position: absolute; right:0; left: auto;" aria-labelledby="navbarDropdownMenuLink">
-          {% if request.user.is_authenticated %}
-            <a class="dropdown-item" href="{% url "account_settings" %}"><i class="fa fa-fw fa-cog" aria-hidden="true"></i> {% trans 'Settings' %}</a>
-            <a class="dropdown-item" href="{% url "account_logout" %}"><i class="fa fa-fw fa-sign-out" aria-hidden="true"></i> {% trans 'Logout' %}</a>
-          {% else %}
-            <a class="dropdown-item" href="{% url "account_login" %}"><i class="fa fa-fw fa-sign-in" aria-hidden="true"></i> {% trans 'Local' %}</a>
-            <a class="dropdown-item" href="{% url "social:begin" "facebook" %}"><i class="fa fa-fw fa-facebook" aria-hidden="true"></i> Facebook</a>
-          {% endif %}
-        </div>
-    </li>
-    {% if user.is_staff %}
-      <li class="nav-item" style="margin-left: 5px;">
-        <a class="nav-link" href="{% url THEME_ADMIN_URL|default:"admin:index" %}" target="_new"><i class="fa fa-user-secret" aria-hidden="true"></i> {% trans 'Admin' %}</a>
-      </li>
+<ul class="nav navbar-nav navbar-right">
+    {% if request.user.is_authenticated %}
+        <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                <i class="fa fa-fw fa-user" aria-hidden="true"></i> {{ request.user.username }}
+                <b class="caret"></b>
+            </a>
+            <ul class="dropdown-menu">
+                <li><a href="{% url 'account_change_password' %}"><i class="fa fa-fw fa-key" aria-hidden="true"></i> {% trans "Change Password" %}</a></li>
+                <li><a href="{% url 'socialaccount_connections' %}"><i class="fa fa-fw fa-external-link" aria-hidden="true"></i> {% trans "Account Connections" %}</a></li>
+                <li class="divider"></li>
+                <li>
+                    <form id="logout-form" method="post" action="{% url 'account_logout' %}" style="display:none;">
+                        {% csrf_token %}
+                    </form>
+                    <a href="javascript:document.getElementById('logout-form').submit();">
+                        <i class="fa fa-fw fa-sign-out" aria-hidden="true"></i> {% trans "Log out" %}
+                    </a>
+                </li>
+            </ul>
+        </li>
+    {% else %}
+        <li><a href="{% url 'account_login' %}">{% trans "Log in" %}</a></li>
+        {% comment %}
+        <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                {% trans "Social Log in" %}
+                <b class="caret"></b>
+            </a>
+            <ul class="dropdown-menu">
+                <li><a href="{% provider_login_url 'facebook' %}"><i class="fa fa-fw fa-facebook" aria-hidden="true"></i> Facebook</a></li>
+                <li><a href="{% provider_login_url 'google' %}"><i class="fa fa-fw fa-google" aria-hidden="true"></i> Google</a></li>
+            </ul>
+        </li>
+        {% endcomment %}
     {% endif %}
 </ul>

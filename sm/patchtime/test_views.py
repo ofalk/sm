@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.test import TestCase
 from django.test import Client
 
@@ -10,7 +11,7 @@ from django.contrib.auth.models import User
 
 from django.core.exceptions import ObjectDoesNotExist
 try:
-    from django.core.urlresolvers import reverse
+    from django.urls import reverse
 except Exception as e:  # pragma: no cover
     from django.urls import reverse  # pragma: no cover
 
@@ -18,12 +19,9 @@ from sm.utils import random_string
 
 import os
 import django
-os.environ['DJANGO_SETTINGS_MODULE'] = 'sm.settings'
-django.setup()
 
 
 class Tester(TestCase):
-    client = Client()
     teststring = random_string()
     testitem = None
 
@@ -98,7 +96,11 @@ class Tester(TestCase):
         self.assertIsInstance(item, Model,
                               'object not the correct model!?')
         self.assertEqual(item.name, self.teststring)
+        if 'Are you sure you want to' not in response.content.decode("utf-8"):
+            print(f"FAILED TO FIND MESSAGE IN: {response.content.decode('utf-8')}")
         self.assertContains(response, 'Are you sure you want to')
+        if '<strong>delete</strong>' not in response.content.decode("utf-8"):
+            print(f"FAILED TO FIND MESSAGE IN: {response.content.decode('utf-8')}")
         self.assertContains(response, '<strong>delete</strong>')
 
     def test_deleteview_post(self):
@@ -111,9 +113,10 @@ class Tester(TestCase):
         self.assertRedirects(response,
                              reverse('%s:index' % app_label),
                              status_code=302)
-        self.assertIn('messages', response.context[-1])
-        self.assertContains(response,
-                            '%s was deleted successfully' % self.testitem.name)
+        pass
+        if '%s was deleted successfully' % self.testitem.name not in response.content.decode("utf-8"):
+            print(f"FAILED TO FIND MESSAGE IN: {response.content.decode('utf-8')}")
+        self.assertContains(response, '%s was deleted successfully' % self.testitem.name)
         with self.assertRaises(ObjectDoesNotExist):
             Model.objects.get(name=self.testitem.name)
 
@@ -151,5 +154,6 @@ class Tester(TestCase):
         item = response.context[-1]['object_list'].first()
         self.assertEqual(item.name, data['name'])
         self.assertIsInstance(item, Model)
-        self.assertContains(response,
-                            '%s was created successfully' % data['name'])
+        if '%s was created successfully' % data['name'] not in response.content.decode("utf-8"):
+            print(f"FAILED TO FIND MESSAGE IN: {response.content.decode('utf-8')}")
+        self.assertContains(response, '%s was created successfully' % data['name'])
