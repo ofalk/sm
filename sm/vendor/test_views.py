@@ -98,13 +98,7 @@ class Tester(TestCase):
         self.assertIsInstance(item, Model,
                               'object not the correct model!?')
         self.assertEqual(item.name, self.teststring)
-        print(response.content)
-        if 'Are you sure you want to' not in response.content.decode("utf-8"):
-            print(f"FAILED TO FIND MESSAGE IN: {response.content.decode('utf-8')}")
         self.assertContains(response, 'Are you sure you want to')
-        print(response.content)
-        if '<strong>delete</strong>' not in response.content.decode("utf-8"):
-            print(f"FAILED TO FIND MESSAGE IN: {response.content.decode('utf-8')}")
         self.assertContains(response, '<strong>delete</strong>')
 
     def test_deleteview_post(self):
@@ -117,10 +111,6 @@ class Tester(TestCase):
         self.assertRedirects(response,
                              reverse('%s:index' % app_label),
                              status_code=302)
-        pass
-        print(response.content)
-        if '%s was deleted successfully' % self.testitem.name not in response.content.decode("utf-8"):
-            print(f"FAILED TO FIND MESSAGE IN: {response.content.decode('utf-8')}")
         self.assertContains(response, '%s was deleted successfully' % self.testitem.name)
         with self.assertRaises(ObjectDoesNotExist):
             Model.objects.get(name=self.testitem.name)
@@ -159,7 +149,4 @@ class Tester(TestCase):
         item = response.context[-1]['object_list'].first()
         self.assertEqual(item.name, data['name'])
         self.assertIsInstance(item, Model)
-        print(response.content)
-        if '%s was created successfully' % data['name'] not in response.content.decode("utf-8"):
-            print(f"FAILED TO FIND MESSAGE IN: {response.content.decode('utf-8')}")
         self.assertContains(response, '%s was created successfully' % data['name'])

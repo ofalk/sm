@@ -3,7 +3,6 @@
 
 {% load i18n %}
 {% load bootstrap4 %}
-{% load bootstrap4 %}
 
 {% block head_title %}{% trans 'Cluster' %} :: {{ object }}{% endblock %}
 
@@ -30,11 +29,11 @@
 {% endbuttons %}
 
   <!-- TODO - that's wrong; Relation must be via cluster [doesn't exist yet].... -->
-  <div class="panel panel-default">
+  <div class="card">
     {% if not object.server_set.all %}
-      <div class="panel-heading"><b>{% trans 'No servers in this cluster' %}</b></div>
+      <div class="card-header"><b>{% trans 'No servers in this cluster' %}</b></div>
     {% else %}
-    <div class="panel-heading"><b>{% trans 'List of servers in this cluster' %}</b></div>
+    <div class="card-header"><b>{% trans 'List of servers in this cluster' %}</b></div>
     <table class="table table-hover table-striped" id="server_list" style="font-size:80%;">
       <thead>
         <tr>

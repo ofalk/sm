@@ -3,15 +3,19 @@
 
 {% load i18n %}
 {% load bootstrap4 %}
-{% load bootstrap4 %}
 
 {% block head_title %}{% trans "Domain" %} :: {% if object %}{{ object.name }}{% endif %}{% endblock %}
 
 {% block body_class %}domain domain-{% if object %}detail{% else %}create{% endif %}{% endblock %}
 
 {% block body %}
-
-{% if object %}
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header bg-white">
+            <h4 class="mb-0">{% trans "Domain" %}</h4>
+        </div>
+        <div class="card-body">
+            {% if object %}
   <form action="{% url 'domain:update' object.pk %}" method="post" class="form">
 {% else %}
   <form action="{% url 'domain:create' %}" method="post" class="form">
@@ -22,5 +26,7 @@
 {% buttons %}
 {% bootstrap_button "Save" button_type="submit" button_class="btn-primary" %}
 {% endbuttons %}
-
+        </div>
+    </div>
+</div>
 {% endblock %}

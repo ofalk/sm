@@ -3,7 +3,6 @@
 
 {% load i18n %}
 {% load bootstrap4 %}
-{% load bootstrap4 %}
  
 {% block head_title %}{% trans "Location" %} :: {{ object.name }}{% endblock %}
  
@@ -13,11 +12,11 @@
  
 {% bootstrap_form form %}
 
-  <div class="panel panel-default">
+  <div class="card">
     {% if not object.server_set.all %}
-      <div class="panel-heading"><b>{% trans 'No servers at this location' %}</b></div>
+      <div class="card-header"><b>{% trans 'No servers at this location' %}</b></div>
     {% else %}
-    <div class="panel-heading"><b>{% trans 'List of servers at this location' %}</b></div>
+    <div class="card-header"><b>{% trans 'List of servers at this location' %}</b></div>
     <table class="table table-hover table-striped" id="server_list" style="font-size:80%;">
       <thead>
         <tr>

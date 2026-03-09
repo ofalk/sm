@@ -3,7 +3,6 @@
 
 {% load i18n %}
 {% load bootstrap4 %}
-{% load bootstrap4 %}
 
 {% block head_title %}{% trans 'Clusterpackage' %} :: {{ object }}{% endblock %}
 
@@ -27,11 +26,11 @@
 {% endif %}
 {% endbuttons %}
 
-  <div class="panel panel-default">
+  <div class="card">
     {% if not object.cluster_set.all %}
-      <div class="panel-heading"><b>{% trans 'Not assigned to any cluster' %}</b></div>
+      <div class="card-header"><b>{% trans 'Not assigned to any cluster' %}</b></div>
     {% else %}
-    <div class="panel-heading"><b>{% trans 'Cluster this package is assigned to' %}</b></div>
+    <div class="card-header"><b>{% trans 'Cluster this package is assigned to' %}</b></div>
     <table class="table table-hover table-striped" id="server_list" style="font-size:80%;">
       <thead>
         <tr>

@@ -157,8 +157,10 @@ class Tester(TestCase):
                               'oobject not the correct model!?')
         self.assertEqual(item.hostname, self.teststring)
         if 'Are you sure you want to' not in response.content.decode("utf-8"):
+            print('Message not found')
         self.assertContains(response, 'Are you sure you want to')
         if '<strong>delete</strong>' not in response.content.decode("utf-8"):
+            print('Message not found')
         self.assertContains(response, '<strong>delete</strong>')
 
     def test_deleteview_post(self):
@@ -234,6 +236,7 @@ class Tester(TestCase):
 
         self.assertIsInstance(item, Model)
         if '%s was created successfully' % data['hostname'] not in response.content.decode("utf-8"):
+            print('Message not found')
         self.assertContains(response, '%s was created successfully' % data['hostname'])
 
     def test_createview_post_disposed_cookie_on(self):
@@ -280,6 +283,7 @@ class Tester(TestCase):
 
         self.assertIsInstance(item, Model)
         if '%s was created successfully' % data['hostname'] not in response.content.decode("utf-8"):
+            print('Message not found')
         self.assertContains(response, '%s was created successfully' % data['hostname'])
 
     def test_createview_post_disposed_cookie_off(self):
@@ -318,4 +322,5 @@ class Tester(TestCase):
         self.assertIsNone(item)
         # But creation must have succeeded
         if '%s was created successfully' % data['hostname'] not in response.content.decode("utf-8"):
+            print('Message not found')
         self.assertContains(response, '%s was created successfully' % data['hostname'])

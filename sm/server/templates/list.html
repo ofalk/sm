@@ -9,8 +9,8 @@
 {% block body_class %}server server-list{% endblock %}
 
 {% block body %}
-<div class="container" style="padding-top: 20px;">
-  <div class="panel panel-default">
+<div class="container mt-4">
+  <div class="card">
     <div class="checkbox" align="right" style="padding-right: 20px;">
       <label><input type="checkbox" id="show_disposed" checked> {% trans 'Show disposed' %}</label>
     </div>
@@ -30,7 +30,7 @@
     </script>
 
     {% if not object_list %}
-      <div class="panel-heading"><b>{% trans 'No results' %}</b></div>
+      <div class="card-header bg-white d-flex justify-content-between align-items-center"><h4 class="mb-0">Server</h4><a href="{% url 'server:create' %}" class="btn btn-sm btn-primary float-right"><i class="fa fa-plus-circle"></i> {% trans "Add New" %}</a></div><div class="card-body"><b>{% trans "No results" %}</b></div>
     {% else %}
     <table class="table table-hover table-striped" id="server_list" style="font-size:80%;">
       <thead>
@@ -87,7 +87,7 @@
     </table>
     {% endif %}
     {% include "pagination/pagination.html" %}
-  </div> <!-- panel -->
+  </div> <!-- card -->
 </div> <!-- container -->
 
 {% endblock %}

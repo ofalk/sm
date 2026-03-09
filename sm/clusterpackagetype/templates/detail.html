@@ -3,14 +3,19 @@
 
 {% load i18n %}
 {% load bootstrap4 %}
-{% load bootstrap4 %}
 
 {% block head_title %}{% trans 'Clusterpackagetype' %} :: {{ object }}{% endblock %}
 
 {% block body_class %}clusterpackagetype clusterpackagetype-{% if object %}detail{% else %}create{% endif %}{% endblock %}
 
 {% block body %}
-{% if object %}
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header bg-white">
+            <h4 class="mb-0">{% trans 'Clusterpackagetype' %}</h4>
+        </div>
+        <div class="card-body">
+            {% if object %}
   <form action="{% url 'clusterpackagetype:detail' object.pk %}" method="post" class="form">
 {% else %}
   <form action="{% url 'clusterpackagetype:create' %}" method="post" class="form">
@@ -26,5 +31,7 @@
 <a class="btn btn-danger" role="button" href="{% url 'clusterpackagetype:delete' object.pk %}">{% trans 'Delete' %}</a>
 {% endif %}
 {% endbuttons %}
-
+        </div>
+    </div>
+</div>
 {% endblock %}

@@ -8,7 +8,13 @@
 {% block head_title %}{% trans "Delete Account" %}{% endblock %}
 
 {% block body %}
-    <h1>{% trans "Delete Account" %}</h1>
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header bg-white">
+            <h4 class="mb-0">{% trans "Delete Account" %}</h4>
+        </div>
+        <div class="card-body">
+            <h1>{% trans "Delete Account" %}</h1>
     
     <p>{% blocktrans %}If you go ahead and delete your account, your information will be <b>expunged within {{ ACCOUNT_DELETION_EXPUNGE_HOURS }} hours</b>.{% endblocktrans %}</p>
     
@@ -18,5 +24,7 @@
             <button type="submit" class="btn btn-danger">{% trans "Delete My Account" %}</button>
         {% endbuttons %}
     </form>
-    
+        </div>
+    </div>
+</div>
 {% endblock %}

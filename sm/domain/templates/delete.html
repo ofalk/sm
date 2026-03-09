@@ -3,15 +3,19 @@
 
 {% load i18n %}
 {% load bootstrap4 %}
-{% load bootstrap4 %}
 
 {% block head_title %}{% trans "Domain" %} :: {% if object %}{{ object.name }}{% endif %}{% endblock %}
 
 {% block body_class %}domain{% endblock %}
 
 {% block body %}
-
-{% csrf_token %}
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header bg-white">
+            <h4 class="mb-0">{% trans "Domain" %}</h4>
+        </div>
+        <div class="card-body">
+            {% csrf_token %}
 <form action="{% url 'domain:delete' object.pk %}" method="post" class="form">{% csrf_token %}
     <div class="alert alert-danger fade show" role="alert">
       {% trans 'Are you sure you want to <strong>delete</strong>' %} <em>{{ object }}</em>?
@@ -20,5 +24,7 @@
     {% bootstrap_button "Confirm" button_type="submit" button_class="btn-danger" %}
     {% endbuttons %}
 </form>
-
+        </div>
+    </div>
+</div>
 {% endblock %}

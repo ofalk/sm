@@ -3,7 +3,6 @@
 
 {% load i18n %}
 {% load bootstrap4 %}
-{% load bootstrap4 %}
 
 {% block additionalstyles %}{% include "_additionalstyles.html" %}{% endblock %}
 {% block additionalscripts %}{% include "_additionalscripts.html" %}{% endblock %}
@@ -13,8 +12,13 @@
 {% block body_class %}server server-{% if object %}detail{% else %}create{% endif %}{% endblock %}
 
 {% block body %}
-
-{% if object %}
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header bg-white">
+            <h4 class="mb-0">{% trans "Server" %}</h4>
+        </div>
+        <div class="card-body">
+            {% if object %}
   <form action="{% url 'server:update' object.pk %}" method="post" class="form">
 {% else %}
   <form action="{% url 'server:create' %}" method="post" class="form">
@@ -25,5 +29,7 @@
 {% buttons %}
 {% bootstrap_button "Save" button_type="submit" button_class="btn-primary" %}
 {% endbuttons %}
-
+        </div>
+    </div>
+</div>
 {% endblock %}
