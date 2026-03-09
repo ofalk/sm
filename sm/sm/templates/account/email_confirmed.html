@@ -5,6 +5,24 @@
 {% block head_title %}{% trans "Email confirmed" %}{% endblock %}
 
 {% block body %}
-    <h1>{% trans "Email confirmed" %}</h1>
-    <p>{% blocktrans with email=confirmation.email_address.email %}You have confirmed <b>{{ email }}</b>{% endblocktrans %}</p>
+<div class="wide-container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="card shadow-sm">
+                <div class="card-header bg-white text-center py-4">
+                    <h3 class="mb-0">{% trans "Email Confirmed" %}</h3>
+                </div>
+                <div class="card-body p-4 text-center">
+                    {% blocktrans with email=confirmation.email_address.email %}
+                        <p class="mb-4">You have successfully confirmed <strong>{{ email }}</strong>.</p>
+                    {% endblocktrans %}
+
+                    <a href="{% url 'account_login' %}" class="btn btn-primary btn-block">
+                        <i class="fa fa-sign-in mr-1"></i> {% trans "Proceed to Login" %}
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

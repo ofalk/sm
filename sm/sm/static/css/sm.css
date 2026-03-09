@@ -18,6 +18,34 @@ body {
   transition: color 0.2s;
 }
 
+/* Spacing & Layout */
+.wide-container {
+  width: 100%;
+  padding-right: 1.5rem;
+  padding-left: 1.5rem;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+@media (min-width: 992px) {
+  .wide-container {
+    max-width: 95%;
+  }
+}
+
+@media (min-width: 1400px) {
+  .wide-container {
+    max-width: 85%; /* Don't let it get too wide on ultrawide screens */
+  }
+}
+
+@media (max-width: 576px) {
+  .wide-container {
+    padding-right: 0.75rem;
+    padding-left: 0.75rem;
+  }
+}
+
 .card {
   border: none;
   border-radius: 0.5rem;
@@ -33,29 +61,143 @@ body {
 }
 
 .table {
-  background-color: #fff;
-  border-radius: 0.5rem;
-  margin-bottom: 0;
+  background-color: transparent;
+  border-collapse: separate;
+  border-spacing: 0 0.5rem; /* Adds space between rows on desktop */
+  margin-top: -0.5rem;
 }
 
 .table thead th {
-  border-top: none;
-  border-bottom: 2px solid #dee2e6;
+  border: none;
   text-transform: uppercase;
-  font-size: 0.75rem;
-  letter-spacing: 0.05em;
-  color: #6c757d;
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  color: #adb5bd;
+  padding: 1rem 1.25rem;
+  font-weight: 700;
+}
+
+.table tbody tr {
+  background-color: #fff;
+  transition: all 0.2s ease-in-out;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.02);
+}
+
+.table tbody tr:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.08);
+  background-color: #fff !important;
 }
 
 .table td {
+  border: none;
+  border-top: 1px solid #f8f9fa;
+  border-bottom: 1px solid #f8f9fa;
+  padding: 1.25rem;
   vertical-align: middle;
-  padding: 0.75rem 1.25rem;
+}
+
+.table td:first-child {
+  border-left: 1px solid #f8f9fa;
+  border-top-left-radius: 0.5rem;
+  border-bottom-left-radius: 0.5rem;
+  font-weight: 600;
+  color: var(--primary-color);
+}
+
+.table td:last-child {
+  border-right: 1px solid #f8f9fa;
+  border-top-right-radius: 0.5rem;
+  border-bottom-right-radius: 0.5rem;
+  text-align: right;
+}
+
+/* Action Icons */
+.table td a i {
+  color: #adb5bd;
+  transition: color 0.2s;
+}
+
+.table td a:hover i.fa-pencil {
+  color: var(--primary-color);
+}
+.table td a:hover i.fa-trash {
+  color: #e74c3c;
+}
+
+/* Responsive Tables - Card Style */
+@media (max-width: 767.98px) {
+  .table,
+  .table tbody,
+  .table tr,
+  .table td {
+    display: block;
+    width: 100%;
+  }
+
+  .table {
+    border-spacing: 0;
+  }
+
+  .table thead {
+    display: none;
+  }
+
+  .table tbody tr {
+    margin-bottom: 1.5rem;
+    border: 1px solid #eee;
+    border-radius: 0.75rem;
+    overflow: hidden;
+    box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.05);
+  }
+
+  .table td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 1.25rem;
+    border: none;
+    border-bottom: 1px dotted #f1f1f1;
+    text-align: right;
+  }
+
+  .table td:first-child {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #eee;
+    font-size: 1.1rem;
+    padding: 1rem 1.25rem;
+    justify-content: center;
+    border-radius: 0;
+  }
+
+  .table td:last-child {
+    border-bottom: none;
+    background-color: #fff;
+    justify-content: center;
+    padding: 1rem;
+  }
+
+  .table td::before {
+    content: attr(data-label);
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.65rem;
+    color: #999;
+    margin-right: 1rem;
+    text-align: left;
+  }
+
+  /* Hide label for the first and last column in mobile card view */
+  .table td:first-child::before,
+  .table td:last-child::before {
+    display: none;
+  }
 }
 
 .btn {
-  border-radius: 0.25rem;
+  border-radius: 2rem !important;
   font-weight: 500;
-  padding: 0.375rem 1rem;
+  padding: 0.375rem 1.5rem;
   transition: all 0.2s;
 }
 
@@ -89,24 +231,4 @@ body {
   border: none;
   border-radius: 0.5rem;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-}
-
-/* Legacy overrides for older templates before they are migrated */
-.panel {
-  border: none;
-  border-radius: 0.5rem;
-  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
-  margin-bottom: 1.5rem;
-  background-color: #fff;
-}
-
-.panel-default > .panel-heading {
-  background-color: #fff;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.125);
-  font-weight: 600;
-  padding: 1rem 1.25rem;
-}
-
-.panel-body {
-  padding: 1.25rem;
 }

@@ -12,10 +12,7 @@ from django.contrib.messages.views import SuccessMessageMixin
 
 from django.utils.translation import gettext as _
 
-try:
-    from django.urls import reverse_lazy
-except Exception as e:  # pragma: no cover
-    from django.urls import reverse_lazy  # pragma: no cover
+from django.urls import reverse_lazy
 
 from django.contrib import messages
 

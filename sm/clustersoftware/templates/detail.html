@@ -19,7 +19,7 @@
 {% bootstrap_form form %}
 {% buttons %}
 {% if request.path == object.get_update_url %}
-{% bootstrap_button "Save" button_type="submit" button_class="btn-primary" %}
+{% bootstrap_button "Save" button_type="submit" button_class="btn-sm btn-primary" %}
 {% else %}
 <a class="btn btn-primary" role="button" href="{% url 'clustersoftware:update' object.pk %}">{% trans 'Edit' %}</a>
 <a class="btn btn-danger" role="button" href="{% url 'clustersoftware:delete' object.pk %}">{% trans 'Delete' %}</a>

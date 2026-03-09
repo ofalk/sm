@@ -9,40 +9,35 @@
 {% block body_class %}server server-list{% endblock %}
 
 {% block body %}
-<div class="container mt-4">
+<div class="wide-container mt-4">
   <div class="card">
-    <div class="checkbox" align="right" style="padding-right: 20px;">
-      <label><input type="checkbox" id="show_disposed" checked> {% trans 'Show disposed' %}</label>
+    <div class="card-header bg-white d-flex justify-content-between align-items-center">
+      <h4 class="mb-0">{% trans "Servers" %}</h4>
+      <div class="d-flex align-items-center">
+        <div class="custom-control custom-switch mr-3">
+          <input type="checkbox" class="custom-control-input cookie-sync" id="show_disposed" checked>
+          <label class="custom-control-label" for="show_disposed">{% trans 'Show disposed' %}</label>
+        </div>
+        <a href="{% url 'server:create' %}" class="btn btn-sm btn-primary">
+          <i class="fa fa-plus-circle"></i> {% trans "Add New" %}
+        </a>
+      </div>
     </div>
-    <script>
-      $('#show_disposed').ready(function(e) {
-        var checked = getCookie('srvmanager-show_disposed');
-        if(checked == 'true' || checked == '') {
-          document.getElementById('show_disposed').checked = true;
-        } else {
-          document.getElementById('show_disposed').checked = false;
-        }
-      });
-      $('#show_disposed').click(function() {
-        setCookie('srvmanager-show_disposed',this.checked, 30);
-        location.reload();
-      });
-    </script>
 
     {% if not object_list %}
-      <div class="card-header bg-white d-flex justify-content-between align-items-center"><h4 class="mb-0">Server</h4><a href="{% url 'server:create' %}" class="btn btn-sm btn-primary float-right"><i class="fa fa-plus-circle"></i> {% trans "Add New" %}</a></div><div class="card-body"><b>{% trans "No results" %}</b></div>
+      <div class="card-body"><b>{% trans "No results" %}</b></div>
     {% else %}
-    <table class="table table-hover table-striped" id="server_list" style="font-size:80%;">
+    <table class="table table-hover" id="server_list">
       <thead>
         <tr>
-          <th class="d-table-cell"          >{% trans 'Hostname' %}</th>
-          <th class="d-none d-md-table-cell">{% trans 'Status' %}</th>
-          <th class="d-none d-md-table-cell">{% trans 'Location' %}</th>
-          <th class="d-table-cell"          >{% trans 'Description' %}</th>
-          <th class="d-none d-md-table-cell">{% trans 'Operatingsystem' %}</th>
-          <th class="d-none d-sm-table-cell">{% trans 'Primary IP' %}</th>
-          <th class="d-none d-md-table-cell">{% trans 'Patchtime' %}</th>
-          <th class="d-table-cell"          >{% trans 'Actions' %}</th>
+          <th>{% trans 'Hostname' %}</th>
+          <th>{% trans 'Status' %}</th>
+          <th>{% trans 'Location' %}</th>
+          <th>{% trans 'Description' %}</th>
+          <th>{% trans 'Operatingsystem' %}</th>
+          <th>{% trans 'Primary IP' %}</th>
+          <th>{% trans 'Patchtime' %}</th>
+          <th>{% trans 'Actions' %}</th>
         </tr>
       </thead>
       <tbody>
@@ -51,28 +46,21 @@
             <td>
               <a href="{% url 'server:detail' object.pk %}"
                  title="{% trans 'View' %} {{ object.hostname }}.{{ object.domain }}">
-                <div class="d-none d-md-table-cell" style="white-space: nowrap;">
                   {{ object.hostname }}
-                </div>
-                <div class="d-table-cell d-md-none">
-                  {% include "status-icon.html" %}
-                  {{ object.hostname }}
-                </div>
               </a>
             </td>
-            <td class="d-none d-md-table-cell">
+            <td>
               {% include "status-icon.html" %}
             </td>
-            <td class="d-none d-md-table-cell" title="{{ object.location }}">{{ object.location|truncatechars:15 }}</td>
+            <td title="{{ object.location }}">{{ object.location|truncatechars:15 }}</td>
             <td>
-              <span class="d-table-cell d-md-none" style="float:left;">{% include "_vendor_icon.html" %}&nbsp;</span>
               {{ object.description }}
             </td>
-            <td class="d-none d-md-table-cell" style="white-space: nowrap;">
+            <td style="white-space: nowrap;">
               {% include "_vendor_icon.html" with vendor_name=object.operatingsystem.vendor.name %} {{ object.operatingsystem }}
             </td>
-            <td class="d-none d-sm-table-cell">{{ object.primary_ip }}</td>
-            <td class="d-none d-md-table-cell">{{ object.patchtime }}</td>
+            <td>{{ object.primary_ip }}</td>
+            <td>{{ object.patchtime }}</td>
             <td>
               <a href="{% url 'server:update' object.pk %}" title="{% trans 'Edit server' %}">
                 <i class="fa fa-pencil fa-fw fa-lg" aria-hidden="true"></i>

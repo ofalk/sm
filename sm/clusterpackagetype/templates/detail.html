@@ -9,7 +9,7 @@
 {% block body_class %}clusterpackagetype clusterpackagetype-{% if object %}detail{% else %}create{% endif %}{% endblock %}
 
 {% block body %}
-<div class="container mt-4">
+<div class="wide-container mt-4">
     <div class="card">
         <div class="card-header bg-white">
             <h4 class="mb-0">{% trans 'Clusterpackagetype' %}</h4>
@@ -25,7 +25,7 @@
 {% bootstrap_form form %}
 {% buttons %}
 {% if request.path == object.get_update_url %}
-{% bootstrap_button "Save" button_type="submit" button_class="btn-primary" %}
+{% bootstrap_button "Save" button_type="submit" button_class="btn-sm btn-primary" %}
 {% else %}
 <a class="btn btn-primary" role="button" href="{% url 'clusterpackagetype:update' object.pk %}">{% trans 'Edit' %}</a>
 <a class="btn btn-danger" role="button" href="{% url 'clusterpackagetype:delete' object.pk %}">{% trans 'Delete' %}</a>

@@ -9,17 +9,23 @@
 {% block body_class %}clustersoftware clustersoftware-list{% endblock %}
 
 {% block body %}
-<div class="container mt-4">
+<div class="wide-container mt-4">
   <div class="card">
+    <div class="card-header bg-white d-flex justify-content-between align-items-center">
+      <h4 class="mb-0">{% trans "Clustersoftware" %}</h4>
+      <a href="{% url 'clustersoftware:create' %}" class="btn btn-sm btn-primary">
+        <i class="fa fa-plus-circle"></i> {% trans "Add New" %}
+      </a>
+    </div>
     {% if not object_list %}
-      <div class="card-header bg-white d-flex justify-content-between align-items-center"><h4 class="mb-0">Clustersoftware</h4><a href="{% url 'clustersoftware:create' %}" class="btn btn-sm btn-primary float-right"><i class="fa fa-plus-circle"></i> {% trans "Add New" %}</a></div><div class="card-body"><b>{% trans "No results" %}</b></div>
+      <div class="card-body"><b>{% trans "No results" %}</b></div>
     {% else %}
-    <table class="table table-hover table-striped" id="clustersoftware_list" style="font-size:80%;">
+    <table class="table table-hover" id="clustersoftware_list">
       <thead>
         <tr>
-          <th>Name/Version</th>
-          <th>Vendor</th>
-          <th>Actions</th>
+          <th>{% trans "Name/Version" %}</th>
+          <th>{% trans "Vendor" %}</th>
+          <th>{% trans "Actions" %}</th>
         </tr>
       </thead>
       <tbody>

@@ -3,28 +3,34 @@
 {% load i18n %}
 
 {% block body %}
-<div class="card">
-    <div class="card-header"><strong>{% trans "Settings" %}</strong></div>
-    <div class="list-group">
-        {% comment %}
-        <a class="list-group-item account-settings" href="{% url "account_settings" %}">
-            {% trans "Account" %}
-        </a>
-        <a class="list-group-item account-social" href="{% url "account_social_accounts" %}">
-            {% trans "Social accounts" %}
-        </a>
-        {% endcomment %}
-        <a class="list-group-item account-password-change" href="{% url "account_change_password" %}">
-            {% trans "Change password" %}
-        </a>
-        <a class="list-group-item account-password-reset" href="{% url "account_reset_password" %}">
-            {% trans "Reset password" %}
-        </a>
-        {% comment %}
-        <a class="list-group-item account-delete" href="{% url "account_delete" %}">
-            {% trans "Delete account" %}
-        </a>
-        {% endcomment %}
+<div class="container mt-4">
+    <div class="row">
+        <!-- Sidebar Navigation -->
+        <div class="col-md-3 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0">{% trans "Settings" %}</h5>
+                </div>
+                <div class="list-group list-group-flush">
+                    <a class="list-group-item list-group-item-action account-email" href="{% url "account_email" %}">
+                        <i class="fa fa-envelope-o fa-fw mr-2 text-muted"></i> {% trans "Email addresses" %}
+                    </a>
+                    <a class="list-group-item list-group-item-action account-password-change" href="{% url "account_change_password" %}">
+                        <i class="fa fa-key fa-fw mr-2 text-muted"></i> {% trans "Change password" %}
+                    </a>
+                    <a class="list-group-item list-group-item-action account-social" href="{% url "socialaccount_connections" %}">
+                        <i class="fa fa-share-alt fa-fw mr-2 text-muted"></i> {% trans "Social accounts" %}
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="col-md-9">
+            <div class="card shadow-sm">
+                {% block account_content %}{% endblock %}
+            </div>
+        </div>
     </div>
 </div>
 {% endblock %}

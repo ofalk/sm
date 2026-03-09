@@ -22,6 +22,40 @@ $(function () {
     e.preventDefault();
     $("#accountLogOutForm").submit();
   });
+
+  // Cookie-synced checkboxes
+  $(".cookie-sync").each(function () {
+    var $cb = $(this);
+    var cookieName = "srvmanager-" + $cb.attr("id");
+    var checked = getCookie(cookieName);
+
+    if (checked === "true" || checked === "") {
+      $cb.prop("checked", true);
+    } else if (checked === "false") {
+      $cb.prop("checked", false);
+    }
+
+    $cb.on("change", function () {
+      setCookie(cookieName, this.checked, 30);
+      location.reload();
+    });
+  });
+
+  // Responsive table helper: populate data-label from th
+  $("table.table").each(function () {
+    var $table = $(this);
+    var $headers = $table.find("thead th");
+    $table.find("tbody tr").each(function () {
+      $(this)
+        .find("td")
+        .each(function (i) {
+          var label = $headers.eq(i).text().trim();
+          if (label && !$(this).attr("data-label")) {
+            $(this).attr("data-label", label);
+          }
+        });
+    });
+  });
 });
 
 $(document).ajaxSend(function (event, xhr, settings) {

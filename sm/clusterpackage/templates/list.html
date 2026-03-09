@@ -9,18 +9,24 @@
 {% block body_class %}clusterpackage clusterpackage-list{% endblock %}
 
 {% block body %}
-<div class="container mt-4">
+<div class="wide-container mt-4">
   <div class="card">
+    <div class="card-header bg-white d-flex justify-content-between align-items-center">
+      <h4 class="mb-0">{% trans "Clusterpackage" %}</h4>
+      <a href="{% url 'clusterpackage:create' %}" class="btn btn-sm btn-primary">
+        <i class="fa fa-plus-circle"></i> {% trans "Add New" %}
+      </a>
+    </div>
     {% if not object_list %}
-      <div class="card-header bg-white d-flex justify-content-between align-items-center"><h4 class="mb-0">Clusterpackage</h4><a href="{% url 'clusterpackage:create' %}" class="btn btn-sm btn-primary float-right"><i class="fa fa-plus-circle"></i> {% trans "Add New" %}</a></div><div class="card-body"><b>{% trans "No results" %}</b></div>
+      <div class="card-body"><b>{% trans "No results" %}</b></div>
     {% else %}
-    <table class="table table-hover table-striped" id="clusterpackage_list" style="font-size:80%;">
+    <table class="table table-hover" id="clusterpackage_list">
       <thead>
         <tr>
-          <th>Name</th>
-          <th>Type</th>
-          <th>Cluster</th>
-          <th>Actions</th>
+          <th>{% trans "Name" %}</th>
+          <th>{% trans "Type" %}</th>
+          <th>{% trans "Cluster" %}</th>
+          <th>{% trans "Actions" %}</th>
         </tr>
       </thead>
       <tbody>

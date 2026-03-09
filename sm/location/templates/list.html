@@ -9,17 +9,23 @@
 {% block body_class %}location location-list{% endblock %}
 
 {% block body %}
-<div class="container mt-4">
+<div class="wide-container mt-4">
   <div class="card">
+    <div class="card-header bg-white d-flex justify-content-between align-items-center">
+      <h4 class="mb-0">{% trans "Location" %}</h4>
+      <a href="{% url 'location:create' %}" class="btn btn-sm btn-primary">
+        <i class="fa fa-plus-circle"></i> {% trans "Add New" %}
+      </a>
+    </div>
     {% if not object_list %}
-      <div class="card-header bg-white d-flex justify-content-between align-items-center"><h4 class="mb-0">Location</h4><a href="{% url 'location:create' %}" class="btn btn-sm btn-primary float-right"><i class="fa fa-plus-circle"></i> {% trans "Add New" %}</a></div><div class="card-body"><b>{% trans "No results" %}</b></div>
+      <div class="card-body"><b>{% trans "No results" %}</b></div>
     {% else %}
-    <table class="table table-hover table-striped" id="location_list" style="font-size:80%;">
+    <table class="table table-hover" id="location_list">
       <thead>
         <tr>
           <th>{% trans 'Name' %}</th>
           <th>{% trans 'Country' %}</th>
-          <th>{% trans 'Action' %}</th>
+          <th>{% trans "Actions" %}</th>
         </tr>
       </thead>
       <tbody>
@@ -27,7 +33,7 @@
           <tr>
             <td>
               <a href="{% url 'location:detail' object.pk %}" title="{{ object.name }}">
-                <div>{{ object.name }}</div>
+                {{ object.name }}
               </a>
             </td>
             <td>

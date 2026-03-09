@@ -1,6 +1,4 @@
-from django.contrib import messages
 from django.test import TestCase
-from django.test import Client
 
 from .models import Model
 from vendor.models import Model as VendorModel
@@ -12,16 +10,10 @@ from django.contrib.auth.models import User
 
 from django.core.exceptions import ObjectDoesNotExist
 
-try:
-    from django.urls import reverse
-except Exception as e:  # pragma: no cover
-    from django.urls import reverse  # pragma: no cover
+from django.urls import reverse
 
 
 from sm.utils import random_string
-
-import os
-import django
 
 
 class Tester(TestCase):
@@ -102,7 +94,9 @@ class Tester(TestCase):
         self.assertIsInstance(form, Form)
         for field in ["version", "vendor"]:
             self.assertRaises(
-                KeyError, form.fields[field].widget.attrs.__getitem__, "disabled"
+                KeyError,
+                form.fields[field].widget.attrs.__getitem__,
+                "disabled",
             )
 
     def test_deleteview(self):
@@ -121,7 +115,8 @@ class Tester(TestCase):
     def test_deleteview_post(self):
         self.login()
         response = self.client.post(
-            reverse("%s:delete" % app_label, args=[self.testitem.pk]), follow=True
+            reverse("%s:delete" % app_label, args=[self.testitem.pk]),
+            follow=True,
         )
         self.assertEqual(response.status_code, 200, "no status 200?")
         self.assertRedirects(response, reverse("%s:index" % app_label), status_code=302)
@@ -141,7 +136,9 @@ class Tester(TestCase):
         self.assertIn("form", response.context[-1])
         form = response.context[-1]["form"]
         self.assertRaises(
-            KeyError, form.fields["version"].widget.attrs.__getitem__, "disabled"
+            KeyError,
+            form.fields["version"].widget.attrs.__getitem__,
+            "disabled",
         )
 
     def test_createview_post(self):
@@ -178,7 +175,8 @@ class Tester(TestCase):
         Model.objects.all().delete()
         response = self.client.get(reverse("%s:index" % app_label))
         item = response.context[-1]["object_list"].first()
-        # Since it returns all Vendors, CentOS (from fixtures) should still be there
+        # Since it returns all Vendors, CentOS (from fixtures) should still
+        # be there
         self.assertIsInstance(item, VendorModel)
 
     def test_listview_empty_false_w_obj(self):

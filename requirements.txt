@@ -1,16 +1,16 @@
 Django>=5.1
-djangorestframework>=3.15
-django-htmlmin
 django-allauth[socialaccount,mfa]>=65.4.0
-django-extensions>=3.2
+django-appconf
 django-bootstrap4>=23.4
-pyyaml
-git+https://github.com/ofalk/django-natural-keys.git@master
 django-countries>=7.6
-docutils
-whitenoise>=6.7
-gunicorn
 django-debug-toolbar>=4.4
+django-extensions>=3.2
+django-htmlmin
 # mysqlclient
 django-taggit>=6.0
-django-appconf
+djangorestframework>=3.15
+docutils
+gunicorn
+python-decouple
+pyyaml
+whitenoise>=6.7

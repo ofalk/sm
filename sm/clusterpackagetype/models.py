@@ -1,24 +1,40 @@
 from django.db import models
-from natural_keys import NaturalKeyModel
 from django.urls import reverse
 
 from . import app_label
 
 
-class Model(NaturalKeyModel):
+class ClusterPackageTypeManager(models.Manager):
+    def get_by_natural_key(self, name):
+        return self.get(name=name)
 
+
+class Model(models.Model):
+    objects = ClusterPackageTypeManager()
     name = models.CharField(max_length=45)
 
     def __str__(self):
-        return '%s' % self.name
+        return "%s" % self.name
+
+    def natural_key(self):
+        return (self.name,)
+
+    @classmethod
+    def get_natural_key_fields(cls):
+        return ["name"]
+
+    @classmethod
+    def get_natural_key_info(cls):
+        return [("name", None)]
 
     def get_absolute_url(self):
-        return reverse('%s:detail' % app_label, kwargs={'pk': self.pk})
 
-
+        return reverse("%s:detail" % app_label, kwargs={"pk": self.pk})
 
     class Meta:
-        managed = True
-        app_label = app_label
-        db_table = '%s_%s' % ('sm', app_label)
-        unique_together = (('name',),)
+        db_table = "{}_{}".format("sm", app_label)
+        constraints = [
+            models.UniqueConstraint(
+                fields=["name"], name="unique_sm_clusterpackagetype_name"
+            )
+        ]

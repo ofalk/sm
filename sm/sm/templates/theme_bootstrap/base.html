@@ -1,4 +1,4 @@
-{% load i18n %}          
+{% load i18n %}
 {% load bootstrap4 %}
 {% load static %}
 
@@ -36,21 +36,23 @@
         <div class="{% block body_container_class %}{% endblock %}">
             {% block topbar_base %}
                 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-                    <a class="navbar-brand d-none d-lg-block" href="#">ServerManager</a>
-                    <div class="collapse navbar-collapse" id="navbarNavDropdown">
-                        {% include "_nav.html" %}
-                    </div>
-                    <div>
-                        {% include "_account_bar.html" %}
+                    <div class="wide-container d-flex align-items-center">
+                        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+                        <a class="navbar-brand d-none d-lg-block" href="/">ServerManager</a>
+                        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                            {% include "_nav.html" %}
+                        </div>
+                        <div class="ml-auto">
+                            {% include "_account_bar.html" %}
+                        </div>
                     </div>
                 </nav>
             {% endblock %}
 
             <section id="content_body">
-                <div class="container">
+                <div class="wide-container">
                     {% include "_messages.html" %}
                 </div>
                 {% block body_base %}
@@ -63,7 +65,7 @@
 
             <footer>
                 {% block footer_base %}
-                    <div class="container">
+                    <div class="wide-container">
                         {% block footer %}{% endblock %}
                     </div>
                 {% endblock %}
