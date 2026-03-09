@@ -5,11 +5,11 @@
 
 body {
   background-color: #f8f9fa;
-  font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 }
 
 .navbar {
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   margin-bottom: 2rem;
 }
 
@@ -27,7 +27,7 @@ body {
 
 .card-header {
   background-color: #fff;
-  border-bottom: 1px solid rgba(0,0,0,0.125);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.125);
   font-weight: 600;
   padding: 1rem 1.25rem;
 }
@@ -88,7 +88,7 @@ body {
 .alert {
   border: none;
   border-radius: 0.5rem;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 /* Legacy overrides for older templates before they are migrated */
@@ -102,7 +102,7 @@ body {
 
 .panel-default > .panel-heading {
   background-color: #fff;
-  border-bottom: 1px solid rgba(0,0,0,0.125);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.125);
   font-weight: 600;
   padding: 1rem 1.25rem;
 }
