@@ -8,3 +8,4 @@ sm/htmlcov
 sm/.ropeproject
 sm/config_local.py
 sm/pycco/
+node_modules/
