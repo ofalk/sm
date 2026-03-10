@@ -26,8 +26,8 @@ class SocialAuthTestCase(TestCase):
             id=1, defaults={"domain": "example.com", "name": "example.com"}
         )
         app, _ = SocialApp.objects.get_or_create(
-            provider="facebook",
-            defaults={"name": "Facebook", "client_id": "12345", "secret": "67890"},
+            provider="google",
+            defaults={"name": "Google", "client_id": "12345", "secret": "67890"},
         )
         app.sites.add(site)
 
@@ -43,5 +43,5 @@ class SocialAuthTestCase(TestCase):
         # Allauth social accounts list
         r = c.get("/accounts/3rdparty/")
         self.assertEqual(200, r.status_code)
-        # Check if facebook login link is present
-        self.assertContains(r, "facebook")
+        # Check if google login link is present
+        self.assertContains(r, "google")
