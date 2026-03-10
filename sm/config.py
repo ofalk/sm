@@ -1,5 +1,4 @@
 import os
-from sys import platform, argv
 import django.contrib.messages as messages
 
 PACKAGE_ROOT = os.path.abspath(os.path.dirname(__file__))
@@ -98,9 +97,6 @@ AUTHENTICATION_BACKENDS = [
     "social_core.backends.facebook.FacebookOAuth2",
     "account.auth_backends.UsernameAuthenticationBackend",
 ]
-
-SOCIAL_AUTH_FACEBOOK_KEY = "562669153771397"
-SOCIAL_AUTH_FACEBOOK_SECRET = "464b2253199a60acd65ccb254cf84ff1"
 
 ACCOUNT_OPEN_SIGNUP = True
 ACCOUNT_EMAIL_UNIQUE = True
