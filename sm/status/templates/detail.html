@@ -3,13 +3,15 @@
 
 {% load i18n %}
 {% load bootstrap4 %}
- 
+{% load sm_history_tags %}
+
 {% block head_title %}{% trans "Status" %} :: {{ object.name }}{% endblock %}
- 
+
 {% block body_class %}status status-detail{% endblock %}
 
 {% block body %}
- 
+<div class="wide-container mt-4">
+
 {% bootstrap_form form %}
 
   <div class="card">
@@ -45,5 +47,68 @@
     </table>
     {% endif %}
   </div>
- 
+
+    <div class="card shadow-sm mt-4">
+        <div class="card-header bg-white d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">{% trans "Recent History" %}</h5>
+            <span class="badge badge-light border">{% trans "Last 10 changes" %}</span>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="bg-light">
+                        <tr>
+                            <th>{% trans "Date" %}</th>
+                            <th>{% trans "User" %}</th>
+                            <th>{% trans "Type" %}</th>
+                            <th>{% trans "Summary" %}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for record in object.history.all|slice:":10" %}
+                        <tr>
+                            <td class="text-nowrap">{{ record.history_date|date:"Y-m-d H:i" }}</td>
+                            <td>
+                                {% if record.history_user %}
+                                    {{ record.history_user.username }}
+                                {% else %}
+                                    <span class="text-muted small">{% trans "System" %}</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if record.history_type == "+" %}
+                                    <span class="badge badge-success">{% trans "Created" %}</span>
+                                {% elif record.history_type == "~" %}
+                                    <span class="badge badge-info">{% trans "Changed" %}</span>
+                                {% else %}
+                                    <span class="badge badge-danger">{% trans "Deleted" %}</span>
+                                {% endif %}
+                            </td>
+                            <td class="small text-muted">
+                                {% with changes=record|get_history_diff %}
+                                    {% if changes %}
+                                        {% for change in changes %}
+                                            <strong>{{ change.field }}</strong>: {{ change.old }} &rarr; {{ change.new }}{% if not forloop.last %}, {% endif %}
+                                        {% endfor %}
+                                    {% elif record.history_type == "+" %}
+                                        {% trans "Initial version" %}
+                                    {% else %}
+                                        {% trans "No data changes" %}
+                                    {% endif %}
+                                {% endwith %}
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="4" class="text-center py-4 text-muted">
+                                {% trans "No history records found." %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

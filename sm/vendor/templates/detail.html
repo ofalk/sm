@@ -1,57 +1,148 @@
 {% extends "site_base.html" %}
- 
+
 
 {% load i18n %}
 {% load bootstrap4 %}
- 
+{% load sm_history_tags %}
+
 {% block head_title %}{% trans "Vendor" %} :: {{ object.name }}{% endblock %}
- 
+
 {% block body_class %}vendor vendor-detail{% endblock %}
 
 {% block body %}
- 
-{% bootstrap_form form %}
+<div class="wide-container mt-4">
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-white">
+            <h4 class="mb-0">{% trans "Vendor Details" %}</h4>
+        </div>
+        <div class="card-body">
+            {% if object %}
+              <form action="{% url 'vendor:detail' object.pk %}" method="post" class="form">
+            {% else %}
+              <form action="{% url 'vendor:create' %}" method="post" class="form">
+            {% endif %}
 
-  <div class="card">
-    {% if not object.servermodel_set.all %}
-      <!-- <div class="card-header"><b>{% trans 'No servermodels from this vendor' %}</b></div> -->
-    {% else %}
-      <div class="card-header"><b>{% trans 'List of models from this vendor' %}</b></div>
-      <table class="table table-hover table-striped" id="servermodel_list" style="font-size:80%;">
-        <tbody>
-            <tr>
-              <td>{% trans 'Models' %}</td>
-              <td>
-                {% for servermodel in object.servermodel_set.all %}
-                  <a href="{% url 'servermodel:detail' servermodel.pk %}" title="{{ servermodel.name }}">
-                    {{ servermodel.name }}</a>{% if not forloop.last %}, {% endif %}
-                {% endfor %}
-              </td>
-            </tr>
-        </tbody>
-      </table>
-    {% endif %}
-  </div>
+            {% csrf_token %}
+            {% bootstrap_form form %}
+            {% buttons %}
+            {% if request.path == object.get_update_url %}
+            {% bootstrap_button "Save" button_type="submit" button_class="btn-sm btn-primary" %}
+            {% else %}
+            <a class="btn btn-primary" role="button" href="{% url 'vendor:update' object.pk %}">{% trans 'Edit' %}</a>
+            <a class="btn btn-danger" role="button" href="{% url 'vendor:delete' object.pk %}">{% trans 'Delete' %}</a>
+            {% endif %}
+            {% endbuttons %}
+            </form>
+        </div>
+    </div>
 
-  <div class="card">
-    {% if not object.operatingsystem_set.all %}
-      <div class="card-header"><b>{% trans 'No operatingsystems from this vendor' %}</b></div>
-    {% else %}
-      <div class="card-header"><b>{% trans 'List of operatingsystems versions from this vendor' %}</b></div>
-      <table class="table table-hover table-striped" id="operatingsystem_list" style="font-size:80%;">
-        <tbody>
-            <tr>
-              <td><b>{% trans 'Versions' %}</b></td>
-              <td>
-                {% for operatingsystem in object.operatingsystem_set.all %}
-                  <a href="{% url 'operatingsystem:detail' operatingsystem.pk %}" title="{{ operatingsysten }}">
-                    {{ operatingsystem.version }}</a>{% if not forloop.last %}, {% endif %}
-                {% endfor %}
-              </td>
-            </tr>
-        </tbody>
-      </table>
-    {% endif %}
-  </div>
- 
+    <div class="card shadow-sm mb-4">
+        {% if not object.servermodel_set.all %}
+          <div class="card-header bg-white"><b>{% trans 'No servermodels from this vendor' %}</b></div>
+        {% else %}
+          <div class="card-header bg-white"><b>{% trans 'List of models from this vendor' %}</b></div>
+          <div class="table-responsive">
+              <table class="table table-hover mb-0" id="servermodel_list">
+                <tbody>
+                    <tr>
+                      <td class="font-weight-bold" style="width: 200px;">{% trans 'Models' %}</td>
+                      <td>
+                        {% for servermodel in object.servermodel_set.all %}
+                          <a href="{% url 'servermodel:detail' servermodel.pk %}" title="{{ servermodel.name }}">
+                            {{ servermodel.name }}</a>{% if not forloop.last %}, {% endif %}
+                        {% endfor %}
+                      </td>
+                    </tr>
+                </tbody>
+              </table>
+          </div>
+        {% endif %}
+    </div>
+
+    <div class="card shadow-sm mb-4">
+        {% if not object.operatingsystem_set.all %}
+          <div class="card-header bg-white"><b>{% trans 'No operatingsystems from this vendor' %}</b></div>
+        {% else %}
+          <div class="card-header bg-white"><b>{% trans 'List of operatingsystems versions from this vendor' %}</b></div>
+          <div class="table-responsive">
+              <table class="table table-hover mb-0" id="operatingsystem_list">
+                <tbody>
+                    <tr>
+                      <td class="font-weight-bold" style="width: 200px;"><b>{% trans 'Versions' %}</b></td>
+                      <td>
+                        {% for operatingsystem in object.operatingsystem_set.all %}
+                          <a href="{% url 'operatingsystem:detail' operatingsystem.pk %}" title="{{ operatingsystem.version }}">
+                            {{ operatingsystem.version }}</a>{% if not forloop.last %}, {% endif %}
+                        {% endfor %}
+                      </td>
+                    </tr>
+                </tbody>
+              </table>
+          </div>
+        {% endif %}
+    </div>
+
+    <div class="card shadow-sm mt-4">
+        <div class="card-header bg-white d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">{% trans "Recent History" %}</h5>
+            <span class="badge badge-light border">{% trans "Last 10 changes" %}</span>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="bg-light">
+                        <tr>
+                            <th>{% trans "Date" %}</th>
+                            <th>{% trans "User" %}</th>
+                            <th>{% trans "Type" %}</th>
+                            <th>{% trans "Summary" %}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for record in object.history.all|slice:":10" %}
+                        <tr>
+                            <td class="text-nowrap">{{ record.history_date|date:"Y-m-d H:i" }}</td>
+                            <td>
+                                {% if record.history_user %}
+                                    {{ record.history_user.username }}
+                                {% else %}
+                                    <span class="text-muted small">{% trans "System" %}</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if record.history_type == "+" %}
+                                    <span class="badge badge-success">{% trans "Created" %}</span>
+                                {% elif record.history_type == "~" %}
+                                    <span class="badge badge-info">{% trans "Changed" %}</span>
+                                {% else %}
+                                    <span class="badge badge-danger">{% trans "Deleted" %}</span>
+                                {% endif %}
+                            </td>
+                            <td class="small text-muted">
+                                {% with changes=record|get_history_diff %}
+                                    {% if changes %}
+                                        {% for change in changes %}
+                                            <strong>{{ change.field }}</strong>: {{ change.old }} &rarr; {{ change.new }}{% if not forloop.last %}, {% endif %}
+                                        {% endfor %}
+                                    {% elif record.history_type == "+" %}
+                                        {% trans "Initial version" %}
+                                    {% else %}
+                                        {% trans "No data changes" %}
+                                    {% endif %}
+                                {% endwith %}
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="4" class="text-center py-4 text-muted">
+                                {% trans "No history records found." %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
