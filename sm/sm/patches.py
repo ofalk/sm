@@ -1,6 +1,4 @@
 import django.core.serializers.base
-from django.core.exceptions import ObjectDoesNotExist
-from django.db import models
 
 
 def patch_serializers():
@@ -8,8 +6,8 @@ def patch_serializers():
     Apply patches to django core serializers for better fixture loading.
     """
 
-    # 1. Patch build_instance to handle RelatedObjectDoesNotExist during natural key resolution
-    # This remains useful even without the library as it makes fixture loading more robust.
+    # Patch build_instance to handle RelatedObjectDoesNotExist during
+    # natural key resolution. This makes fixture loading more robust.
     def build_instance(Model, data, db):
         default_manager = Model._meta.default_manager
         pk = data.get(Model._meta.pk.attname)

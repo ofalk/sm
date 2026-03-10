@@ -1,6 +1,4 @@
-from django.contrib import messages
 from django.test import TestCase
-from django.test import Client
 
 from .models import Model
 from clustersoftware.models import Model as ClustersoftwareModel
@@ -13,13 +11,10 @@ from django.core.exceptions import ObjectDoesNotExist
 
 try:
     from django.urls import reverse
-except Exception as e:  # pragma: no cover
+except Exception:  # pragma: no cover
     from django.urls import reverse  # pragma: no cover
 
 from sm.utils import random_string
-
-import os
-import django
 
 
 class Tester(TestCase):

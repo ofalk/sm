@@ -1,10 +1,16 @@
-from django.urls import path, include, re_path
+from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 
-from django.views.generic import TemplateView
-from django.views.generic.base import RedirectView
+from drf_spectacular.views import (
+    SpectacularAPIView,
+    SpectacularRedocView,
+    SpectacularSwaggerView,
+)
+
+import debug_toolbar
+
 from .views import (
     DashboardView,
     SearchView,
@@ -37,14 +43,6 @@ router.register(r"clusters", ClusterViewSet, basename="api-cluster")
 router.register(
     r"clusterpackages", ClusterPackageViewSet, basename="api-clusterpackage"
 )
-
-from drf_spectacular.views import (
-    SpectacularAPIView,
-    SpectacularRedocView,
-    SpectacularSwaggerView,
-)
-
-import debug_toolbar
 
 urlpatterns = [
     path("__debug__/", include(debug_toolbar.urls)),

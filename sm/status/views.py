@@ -1,4 +1,6 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
+from sm.views import SafeDeleteMixin
+from django.http import HttpResponseRedirect
 
 from .models import Model
 from .forms import Form, FormDisabled
@@ -14,11 +16,10 @@ from django.utils.translation import gettext as _
 
 try:
     from django.urls import reverse_lazy
-except Exception as e:  # pragma: no cover
+except Exception:  # pragma: no cover
     from django.urls import reverse_lazy  # pragma: no cover
 
 from django.contrib import messages
-from django.db.models import ProtectedError
 
 
 class ListView(LoginRequiredMixin, GenericListView):
@@ -44,7 +45,6 @@ class UpdateView(SuccessMessageMixin, LoginRequiredMixin, GenericUpdateView):
     def form_valid(self, form):
         self.object = form.save()
         messages.success(self.request, self.success_message % self.object.__dict__)
-        from django.http import HttpResponseRedirect
 
         return HttpResponseRedirect(self.get_success_url())
 
@@ -63,12 +63,8 @@ class CreateView(SuccessMessageMixin, LoginRequiredMixin, GenericCreateView):
     def form_valid(self, form):
         self.object = form.save()
         messages.success(self.request, self.success_message % self.object.__dict__)
-        from django.http import HttpResponseRedirect
 
         return HttpResponseRedirect(self.get_success_url())
-
-
-from sm.views import SafeDeleteMixin
 
 
 class DeleteView(SafeDeleteMixin, LoginRequiredMixin, GenericDeleteView):

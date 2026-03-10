@@ -110,7 +110,7 @@ class FullIntegrationTest(StaticLiveServerTestCase):
             await page.goto(f"{self.live_server_url}/vendor/delete/{vendor1.pk}/")
             try:
                 await page.click('button:has-text("Confirm Delete")')
-            except:
+            except Exception:
                 await page.screenshot(path="delete_confirm_fail.png")
                 print(f"Failed to find Confirm Delete on {page.url}")
                 print(f"PAGE CONTENT: {await page.content()}")
@@ -157,7 +157,7 @@ class FullIntegrationTest(StaticLiveServerTestCase):
 
             page.once("dialog", lambda dialog: dialog.accept())
             async with page.expect_navigation():
-                await page.click('button:has-text("Option 2: Delete All")')
+                await page.click('button:has-text("Delete Everything")')
 
             exists = await asyncio.to_thread(
                 Vendor.objects.filter(pk=vendor3.pk).exists

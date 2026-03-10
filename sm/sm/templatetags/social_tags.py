@@ -52,4 +52,4 @@ def provider_icon_class(provider_id):
     p_id = provider_id.lower()
     if p_id in brands:
         return f"fa-brands fa-{p_id}"
-    return f"fa-solid fa-share-alt"  # Fallback
+    return "fa-solid fa-share-alt"  # Fallback

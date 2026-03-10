@@ -50,7 +50,8 @@ INSTALLED_APPS = [
 
 if not DISABLE_SOCIAL_AUTH:
     INSTALLED_APPS += [
-        "allauth.socialaccount.providers.facebook",
+        #        "allauth.socialaccount.providers.facebook",
+        "allauth.socialaccount.providers.google",
     ]
     SOCIALACCOUNT_ENABLED = True
 else:
@@ -220,24 +221,35 @@ if not DISABLE_SOCIAL_AUTH:
     SOCIALACCOUNT_ADAPTER = "sm.adapter.MySocialAccountAdapter"
 
     SOCIALACCOUNT_PROVIDERS = {
-        "facebook": {
-            "METHOD": "oauth2",
-            "SCOPE": ["email", "public_profile"],
-            "AUTH_PARAMS": {"auth_type": "reauthenticate"},
-            "INIT_PARAMS": {"cookie": True},
-            "FIELDS": [
-                "id",
-                "first_name",
-                "last_name",
-                "middle_name",
-                "name",
-                "name_format",
-                "picture",
-                "short_name",
+        #        "facebook": {
+        #            "METHOD": "oauth2",
+        #            "SCOPE": ["email", "public_profile"],
+        #            "AUTH_PARAMS": {"auth_type": "reauthenticate"},
+        #            "INIT_PARAMS": {"cookie": True},
+        #            "FIELDS": [
+        #                "id",
+        #                "first_name",
+        #                "last_name",
+        #                "middle_name",
+        #                "name",
+        #                "name_format",
+        #                "picture",
+        #                "short_name",
+        #            ],
+        #            "EXCHANGE_TOKEN": True,
+        #            "VERIFIED_EMAIL": False,
+        #            "VERSION": "v13.0",
+        #        },
+        "google": {
+            "SCOPE": [
+                "profile",
+                "email",
             ],
-            "EXCHANGE_TOKEN": True,
-            "VERIFIED_EMAIL": False,
-            "VERSION": "v13.0",
+            "AUTH_PARAMS": {
+                "access_type": "online",
+            },
+            "AUTH_PKCE_ENABLED": True,
+            "FETCH_USERINFO": True,
         }
     }
 

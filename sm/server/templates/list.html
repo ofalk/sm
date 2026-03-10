@@ -29,7 +29,7 @@
     {% else %}
     <form id="bulk_action_form" method="post" action="{% url 'server:bulk_action' %}">
     {% csrf_token %}
-    
+
     <!-- Bulk Actions Toolbar (Hidden by default) -->
     <div id="bulk_toolbar" class="bg-light border-bottom p-2 d-none">
         <div class="d-flex align-items-center justify-content-between px-3">

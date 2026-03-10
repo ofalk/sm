@@ -29,7 +29,7 @@ echo "Password: $ADMIN_PASSWORD"
 echo "----------------------------------------------------------------"
 
 # Create superuser using a Python script to handle existence check
-python << EOF
+python <<EOF
 import os
 import django
 django.setup()

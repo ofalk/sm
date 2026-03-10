@@ -1,8 +1,8 @@
-from django.conf import settings
 from django.urls import re_path as url
 
 from . import views
-from . import app_label as app_name
+
+app_name = "cluster"
 
 urlpatterns = [
     url(r"^$", views.ListView.as_view(), name="index"),

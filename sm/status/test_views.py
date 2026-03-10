@@ -1,6 +1,5 @@
-from django.contrib import messages
 from django.test import TestCase
-from django.test import Client
+
 
 from .models import Model
 from .forms import FormDisabled
@@ -13,13 +12,10 @@ from django.core.exceptions import ObjectDoesNotExist
 
 try:
     from django.urls import reverse
-except Exception as e:  # pragma: no cover
+except Exception:  # pragma: no cover
     from django.urls import reverse  # pragma: no cover
 
 from sm.utils import random_string
-
-import os
-import django
 
 
 class Tester(TestCase):
@@ -107,9 +103,7 @@ class Tester(TestCase):
         self.assertEqual(response.status_code, 200, "no status 200?")
         self.assertRedirects(response, reverse("%s:index" % app_label), status_code=302)
         pass
-        from django.contrib.messages import get_messages
 
-        msgs = list(get_messages(response.wsgi_request))
         if (
             "%s was deleted successfully" % self.testitem.name
             not in response.content.decode("utf-8")

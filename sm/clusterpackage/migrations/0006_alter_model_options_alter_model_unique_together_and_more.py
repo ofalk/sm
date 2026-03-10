@@ -15,7 +15,7 @@ class Migration(migrations.Migration):
         ("status", "0003_alter_model_options"),
         (
             "taggit",
-            "0006_rename_taggeditem_content_type_object_id_taggit_tagg_content_8fc721_idx",
+            "0006_rename_taggeditem_content_type_object_id_taggit_tagg_content_8fc721_idx",  # noqa # flake8: noqa # NOQA # pragma: no cover
         ),
     ]
 

@@ -1,0 +1,136 @@
+import os
+import django.contrib.messages as messages
+
+PACKAGE_ROOT = os.path.abspath(os.path.dirname(__file__))
+BASE_DIR = PACKAGE_ROOT
+
+DEBUG = False
+ADMIN_USERS = ["oliver@linux-kernel.at"]
+HTML_MINIFY = True
+SECRET_KEY = "c#s9btkc36=@8q^n#!c+%z+ne6*uzy)bc3f+*97^s-c8*f)^+8"
+ALLOWED_HOSTS = [
+    "sm.linux-kernel.at",
+    "sm.dev.linux-kernel.at",
+    "sm.linux-kernel.at",
+    "zipfer.linux-kernel.at",
+]
+
+from sm.settings import INSTALLED_APPS  # noqa
+
+INSTALLED_APPS.extend(
+    [
+        "django_extensions",
+        "rest_framework",
+        "django.contrib.sites",
+        "account",
+        "bootstrap3",
+        "bootstrap4",
+        "debug_toolbar",
+        "django_countries",
+        "django.contrib.admindocs",
+        "whitenoise",
+        "taggit",
+        "urlauth",
+        "sm",
+    ]
+)
+from sm.utils import add_to_installed  # noqa
+
+add_to_installed(INSTALLED_APPS)
+
+from sm.settings import MIDDLEWARE  # noqa
+
+MIDDLEWARE.extend(
+    [
+        "whitenoise.middleware.WhiteNoiseMiddleware",
+        "debug_toolbar.middleware.DebugToolbarMiddleware",
+        "htmlmin.middleware.HtmlMinifyMiddleware",
+        "htmlmin.middleware.MarkRequestMiddleware",
+        "django.contrib.sites.middleware.CurrentSiteMiddleware",
+    ]
+)
+
+from sm.settings import TEMPLATES  # noqa
+
+TEMPLATES[0]["OPTIONS"]["context_processors"].extend(
+    [
+        "account.context_processors.account",
+    ]
+)
+if "loaders" not in TEMPLATES[0]["OPTIONS"]:
+    TEMPLATES[0]["OPTIONS"]["loaders"] = []
+
+TEMPLATES[0]["OPTIONS"]["loaders"].extend(
+    [
+        ("django.template.loaders.filesystem.Loader",),
+        ("sm.template.loaders.app_directories_enhanced.Loader",),
+        # This is equivalent to APP_DIRS = True
+        ("django.template.loaders.app_directories.Loader",),
+    ]
+)
+
+# Required for eg. account/login.html
+TEMPLATES[0]["DIRS"].extend(
+    [
+        os.path.join(BASE_DIR, "sm", "templates"),
+    ]
+)
+
+# Settings for django-bootstrap4
+BOOTSTRAP4 = {
+    "error_css_class": "bootstrap4-error",
+    "required_css_class": "bootstrap4-required",
+    "javascript_in_head": True,
+    "success_css_class": "bootstrap4-bound",
+}
+
+SITE_ID = 1
+
+AUTHENTICATION_BACKENDS = [
+    # 'social.backends.twitter.TwitterOAuth',
+    "social.backends.google.GoogleOAuth2",
+    "account.auth_backends.UsernameAuthenticationBackend",
+]
+
+ACCOUNT_OPEN_SIGNUP = True
+ACCOUNT_EMAIL_UNIQUE = True
+ACCOUNT_EMAIL_CONFIRMATION_REQUIRED = True
+ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 2
+ACCOUNT_USE_AUTH_AUTHENTICATE = True
+ACCOUNT_LOGIN_REDIRECT_URL = LOGIN_REDIRECT_URL = "/"
+ACCOUNT_LOGOUT_REDIRECT_URL = "/"
+
+# For debug toolbar
+INTERNAL_IPS = ("127.0.0.1", "86.59.13.244", "213.129.242.83", "213.129.242.84")
+
+# Static files configuration (esp. req. during dev.)
+PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
+STATIC_URL = "/static/"
+STATIC_ROOT = os.path.join(BASE_DIR, "static")
+
+# Required for Bootstrap 3
+MESSAGE_TAGS = {messages.ERROR: "danger"}
+
+DATABASES = {  # pragma: no cover
+    "default": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
+    }
+}
+
+if "RDS_DB_NAME" in os.environ:
+    DATABASES = {
+        "default": {
+            "ENGINE": os.environ["RDS_ENGINE"],
+            "NAME": os.environ["RDS_DB_NAME"],
+            "USER": os.environ["RDS_USERNAME"],
+            "PASSWORD": os.environ["RDS_PASSWORD"],
+            "HOST": os.environ["RDS_HOSTNAME"],
+            "PORT": os.environ["RDS_PORT"],
+        }
+    }
+
+TAGGIT_CASE_INSENSITIVE = True
+
+if os.path.isfile(os.path.join(BASE_DIR, "config_local.py")):
+    from config_local import *  # noqa # flake8: noqa # NOQA # pragma: no cover

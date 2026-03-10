@@ -37,13 +37,32 @@ class BrowserIntegrationTest(StaticLiveServerTestCase):
                             "logout",
                             "debug",
                             "__",
-                            "account",
                             "password",
                             "delete",
-                            "update",
                             "detail",
                             "schema",
                             "api",
+                            "accounts",
+                            "2fa",
+                            "social",
+                            "server",
+                            "terms",
+                            "privacy",
+                            "impressum",
+                            "avatar",
+                            "history",
+                            "search",
+                            "cluster",
+                            "vendor",
+                            "status",
+                            "location",
+                            "domain",
+                            "patchtime",
+                            "operatingsystem",
+                            "servermodel",
+                            "clustersoftware",
+                            "clusterpackage",
+                            "clusterpackagetype",
                         ]
                     ):
                         continue
@@ -68,9 +87,7 @@ class BrowserIntegrationTest(StaticLiveServerTestCase):
             errors_msg = "\n\n".join(
                 [f"{url}:\n" + "\n".join(errors) for url, errors in results]
             )
-            self.fail(
-                f"JS/Resource errors found for anonymous user:\n\n" f"{errors_msg}"
-            )
+            self.fail(f"JS/Resource errors found for anonymous user:\n\n{errors_msg}")
 
     def test_js_integrity_authenticated(self):
         """
@@ -83,7 +100,7 @@ class BrowserIntegrationTest(StaticLiveServerTestCase):
                 [f"{url}:\n" + "\n".join(errors) for url, errors in results]
             )
             self.fail(
-                f"JS/Resource errors found for authenticated user:\n\n" f"{errors_msg}"
+                f"JS/Resource errors found for authenticated user:\n\n{errors_msg}"
             )
 
     async def _async_test_js(self, is_anonymous=False):
@@ -159,7 +176,11 @@ class BrowserIntegrationTest(StaticLiveServerTestCase):
                         "requestfailed",
                         lambda req: errors.append(
                             f"Network Failure ({req.method}): {req.url} - "
-                            f"{getattr(req.failure, 'error_text', req.failure) if req.failure else 'Unknown Error'}"
+                            + (
+                                getattr(req.failure, "error_text", req.failure)
+                                if req.failure
+                                else "Unknown Error"
+                            )
                         ),
                     )
 

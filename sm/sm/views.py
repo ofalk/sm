@@ -10,7 +10,6 @@ from django.apps import apps
 from django.http import Http404
 
 from django.db.models import ProtectedError
-from django.shortcuts import redirect
 from django.contrib import messages
 from django.utils.translation import gettext as _
 from django.http import HttpResponseRedirect
@@ -18,7 +17,8 @@ from django.http import HttpResponseRedirect
 
 class SafeDeleteMixin:
     """
-    Mixin to catch ProtectedError during deletion and offer reassignment or bulk deletion.
+    Mixin to catch ProtectedError during deletion and offer
+    reassignment or bulk deletion.
     """
 
     def get_context_data(self, **kwargs):
@@ -54,8 +54,8 @@ class SafeDeleteMixin:
                 new_obj_id = self.request.POST.get("new_target")
                 if new_obj_id:
                     new_obj = self.model.objects.get(pk=new_obj_id)
-                    # This part is tricky as we don't know the field name on the remote side
-                    # without inspecting the protected objects.
+                    # This part is tricky as we don't know the field name on
+                    # the remote side without inspecting the protected objects.
                     for protected in e.protected_objects:
                         # Find the FK field that points to our object
                         for field in protected._meta.fields:
@@ -109,7 +109,8 @@ class DashboardView(LoginRequiredMixin, TemplateView):
         )
 
         context["os_labels"] = [
-            f"{item['operatingsystem__vendor__name']} {item['operatingsystem__version']}"
+            f"{item['operatingsystem__vendor__name']} "
+            f"{item['operatingsystem__version']}"
             for item in os_dist
         ]
         context["os_data"] = [item["count"] for item in os_dist]
@@ -208,7 +209,6 @@ class HistoryDiffView(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         app_label = kwargs.get("app_label")
-        model_name = kwargs.get("model_name")
         history_id = kwargs.get("history_id")
 
         try:

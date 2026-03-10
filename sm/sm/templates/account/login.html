@@ -2,6 +2,7 @@
 
 {% load i18n %}
 {% load bootstrap4 %}
+{% load socialaccount %}
 
 {% block head_title %}{% trans "Log in" %}{% endblock %}
 
@@ -23,6 +24,14 @@
                         <div class="form-group mt-4">
                             <button class="btn btn-primary btn-block btn-lg" type="submit">{% trans "Log in" %}</button>
                         </div>
+                        {% get_providers as socialaccount_providers %}
+                        {% if socialaccount_providers %}
+                        <div class="text-center my-3">
+                            <hr>
+                            <p class="text-muted mb-3">{% trans "Or log in with" %}</p>
+                            {% include "socialaccount/snippets/provider_list.html" %}
+                        </div>
+                        {% endif %}
                         <div class="text-center">
                             <a href="{% url 'account_reset_password' %}" class="btn btn-link text-muted">{% trans "Forgot your password?" %}</a>
                         </div>

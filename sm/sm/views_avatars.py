@@ -1,8 +1,6 @@
 import requests
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core.cache import cache
-from sm.utils import get_libravatar_url
-from django.views.decorators.cache import cache_control
 
 
 def avatar_proxy(request, email_hash):

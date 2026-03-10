@@ -1,6 +1,5 @@
-from django.contrib import messages
 from django.test import TestCase
-from django.test import Client
+
 
 from .models import Model
 from cluster.models import Model as ClusterModel
@@ -18,15 +17,12 @@ from django.core.exceptions import ObjectDoesNotExist
 
 try:
     from django.urls import reverse
-except Exception as e:  # pragma: no cover
+except Exception:  # pragma: no cover
     from django.urls import reverse  # pragma: no cover
 
 from sm.utils import random_string
 
 import datetime
-
-import os
-import django
 
 
 class Tester(TestCase):

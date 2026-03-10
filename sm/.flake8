@@ -1,0 +1,6 @@
+[flake8]
+exclude =
+    */migrations/*,
+    __pycache__,
+    .ruff_cache
+max-line-length = 120

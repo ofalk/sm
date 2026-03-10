@@ -6,13 +6,11 @@ from cluster.models import Model as ClusterModel
 from clusterpackagetype.models import Model as ClusterpackagetypeModel
 
 from taggit.managers import TaggableManager
-import uuid
 
 from . import app_label
 
 
 class ClusterPackageManager(models.Manager):
-
     def get_by_natural_key(self, cluster, name):
         if isinstance(cluster, (list, tuple)):
             cluster = cluster[0]

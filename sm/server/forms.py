@@ -38,6 +38,4 @@ class BulkActionForm(forms.Form):
         label="Change Status to",
         empty_label="--- No Change ---",
     )
-    delete = forms.BooleanField(
-        required=False, label="Delete Selected Servers"
-    )
+    delete = forms.BooleanField(required=False, label="Delete Selected Servers")
