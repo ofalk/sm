@@ -1,6 +1,4 @@
-from __future__ import unicode_literals
-
-from . models import Model
+from .models import Model
 from sm.forms import SMForm, SMFormDisabled
 
 

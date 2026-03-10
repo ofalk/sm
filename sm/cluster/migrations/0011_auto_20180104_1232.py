@@ -7,13 +7,19 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('cluster', '0010_merge_20180103_1328'),
+        ("cluster", "0010_merge_20180103_1328"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='model',
-            name='group',
-            field=models.ForeignKey(blank=True, editable=False, null=True, on_delete=django.db.models.deletion.PROTECT, to='auth.Group'),
+            model_name="model",
+            name="group",
+            field=models.ForeignKey(
+                blank=True,
+                editable=False,
+                null=True,
+                on_delete=django.db.models.deletion.PROTECT,
+                to="auth.Group",
+            ),
         ),
     ]

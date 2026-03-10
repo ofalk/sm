@@ -7,13 +7,19 @@ import taggit.managers
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('clusterpackage', '0003_model_package_type'),
+        ("clusterpackage", "0003_model_package_type"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='model',
-            name='tags',
-            field=taggit.managers.TaggableManager(blank=True, help_text='A comma-separated list of tags.', through='taggit.TaggedItem', to='taggit.Tag', verbose_name='Tags'),
+            model_name="model",
+            name="tags",
+            field=taggit.managers.TaggableManager(
+                blank=True,
+                help_text="A comma-separated list of tags.",
+                through="taggit.TaggedItem",
+                to="taggit.Tag",
+                verbose_name="Tags",
+            ),
         ),
     ]

@@ -12,6 +12,7 @@ repos:
     rev: 26.3.0
     hooks:
     -   id: black
+        args: [--line-length=88]
 -   repo: https://github.com/asottile/pyupgrade
     rev: v3.21.2
     hooks:
@@ -44,6 +45,7 @@ repos:
     rev: 7.3.0
     hooks:
     -   id: flake8
+        args: [--max-line-length=88, "--extend-ignore=E203,W503"]
 -   repo: local
     hooks:
     -   id: shfmt
@@ -63,8 +65,3 @@ repos:
     rev: 1.20.0
     hooks:
     -   id: blacken-docs
--   repo: https://github.com/kadrach/pre-commit-gitlabci-lint
-    rev: 22d0495c9894e8b27cc37c2ed5d9a6b46385a44c
-    hooks:
-    -   id: gitlabci-lint
-        args: ["https://git.linux-kernel.at"]

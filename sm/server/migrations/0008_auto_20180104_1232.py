@@ -7,13 +7,20 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('server', '0007_merge_20180103_1328'),
+        ("server", "0007_merge_20180103_1328"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='model',
-            name='operatingsystem',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.PROTECT, related_name='server_set', related_query_name='server', to='operatingsystem.Model'),
+            model_name="model",
+            name="operatingsystem",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.PROTECT,
+                related_name="server_set",
+                related_query_name="server",
+                to="operatingsystem.Model",
+            ),
         ),
     ]

@@ -13,7 +13,9 @@ class VendorManager(models.Manager):
 class Model(models.Model):
     objects = VendorManager()
     name = models.CharField(max_length=45, unique=True)
-    is_hardware = models.BooleanField(default=True, verbose_name="(virtual) Hardware Vendor")
+    is_hardware = models.BooleanField(
+        default=True, verbose_name="(virtual) Hardware Vendor"
+    )
     is_software = models.BooleanField(default=True, verbose_name="Software Vendor")
     history = HistoricalRecords()
 

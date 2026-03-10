@@ -7,28 +7,53 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('server', '0008_auto_20180104_1232'),
+        ("server", "0008_auto_20180104_1232"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='model',
-            name='location',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.PROTECT, related_name='server_set', related_query_name='server', to='location.Model'),
+            model_name="model",
+            name="location",
+            field=models.ForeignKey(
+                null=True,
+                on_delete=django.db.models.deletion.PROTECT,
+                related_name="server_set",
+                related_query_name="server",
+                to="location.Model",
+            ),
         ),
         migrations.AlterField(
-            model_name='model',
-            name='patchtime',
-            field=models.ForeignKey(default=None, null=True, on_delete=django.db.models.deletion.PROTECT, related_name='server_set', related_query_name='server', to='patchtime.Model'),
+            model_name="model",
+            name="patchtime",
+            field=models.ForeignKey(
+                default=None,
+                null=True,
+                on_delete=django.db.models.deletion.PROTECT,
+                related_name="server_set",
+                related_query_name="server",
+                to="patchtime.Model",
+            ),
         ),
         migrations.AlterField(
-            model_name='model',
-            name='servermodel',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.PROTECT, related_name='server_set', related_query_name='server', to='servermodel.Model'),
+            model_name="model",
+            name="servermodel",
+            field=models.ForeignKey(
+                null=True,
+                on_delete=django.db.models.deletion.PROTECT,
+                related_name="server_set",
+                related_query_name="server",
+                to="servermodel.Model",
+            ),
         ),
         migrations.AlterField(
-            model_name='model',
-            name='status',
-            field=models.ForeignKey(default=1, on_delete=django.db.models.deletion.PROTECT, related_name='server_set', related_query_name='server', to='status.Model'),
+            model_name="model",
+            name="status",
+            field=models.ForeignKey(
+                default=1,
+                on_delete=django.db.models.deletion.PROTECT,
+                related_name="server_set",
+                related_query_name="server",
+                to="status.Model",
+            ),
         ),
     ]

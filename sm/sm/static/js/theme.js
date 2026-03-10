@@ -63,7 +63,7 @@ $(function () {
     if ((e.ctrlKey || e.metaKey) && e.key === "k") {
       e.preventDefault();
       $("#commandPalette").modal("show");
-      setTimeout(function() {
+      setTimeout(function () {
         $("#commandSearch").focus();
       }, 500);
     }

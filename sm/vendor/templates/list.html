@@ -24,9 +24,13 @@
       <thead>
         <tr>
           <th>{% trans "Name" %}</th>
-          <th class="text-center">
-            <i class="fa-solid fa-microchip mr-1"></i>H/W / 
-            <i class="fa-solid fa-code mr-1"></i>S/W
+          <th class="text-center" style="white-space: nowrap;">
+            <span class="d-inline-block text-center" style="width: 25px;">
+              <i class="fa-solid fa-microchip" title="{% trans '(virtual) Hardware Vendor' %}" data-toggle="tooltip"></i>
+            </span>
+            <span class="d-inline-block text-center" style="width: 25px;">
+              <i class="fa-solid fa-code" title="{% trans 'Software Vendor' %}" data-toggle="tooltip"></i>
+            </span>
           </th>
           <th>{% trans "Actions" %}</th>
         </tr>

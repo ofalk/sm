@@ -7,23 +7,30 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='Model',
+            name="Model",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=45)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=45)),
             ],
             options={
-                'managed': True,
-                'db_table': 'sm_clusterpackagetype',
+                "managed": True,
+                "db_table": "sm_clusterpackagetype",
             },
         ),
         migrations.AlterUniqueTogether(
-            name='model',
-            unique_together={('name',)},
+            name="model",
+            unique_together={("name",)},
         ),
     ]

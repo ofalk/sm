@@ -10,31 +10,63 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('status', '0001_initial'),
-        ('taggit', '0002_auto_20150616_2121'),
-        ('cluster', '0011_auto_20180104_1232'),
+        ("status", "0001_initial"),
+        ("taggit", "0002_auto_20150616_2121"),
+        ("cluster", "0011_auto_20180104_1232"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Model',
+            name="Model",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=45)),
-                ('description', models.CharField(max_length=256)),
-                ('host', models.CharField(max_length=253, verbose_name='IP/Hostname')),
-                ('port', models.CharField(max_length=10, verbose_name='Port or ID')),
-                ('cluster', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='clusterpackage_set', related_query_name='clusterpackage_set', to='cluster.Model')),
-                ('status', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='clusterpackage_set', related_query_name='clusterpackage_set', to='status.Model')),
-                ('tags', taggit.managers.TaggableManager(help_text='A comma-separated list of tags.', through='taggit.TaggedItem', to='taggit.Tag', verbose_name='Tags')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=45)),
+                ("description", models.CharField(max_length=256)),
+                ("host", models.CharField(max_length=253, verbose_name="IP/Hostname")),
+                ("port", models.CharField(max_length=10, verbose_name="Port or ID")),
+                (
+                    "cluster",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.PROTECT,
+                        related_name="clusterpackage_set",
+                        related_query_name="clusterpackage_set",
+                        to="cluster.Model",
+                    ),
+                ),
+                (
+                    "status",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.PROTECT,
+                        related_name="clusterpackage_set",
+                        related_query_name="clusterpackage_set",
+                        to="status.Model",
+                    ),
+                ),
+                (
+                    "tags",
+                    taggit.managers.TaggableManager(
+                        help_text="A comma-separated list of tags.",
+                        through="taggit.TaggedItem",
+                        to="taggit.Tag",
+                        verbose_name="Tags",
+                    ),
+                ),
             ],
             options={
-                'db_table': 'sm_clusterpackage',
-                'managed': True,
+                "db_table": "sm_clusterpackage",
+                "managed": True,
             },
         ),
         migrations.AlterUniqueTogether(
-            name='model',
-            unique_together={('cluster', 'name')},
+            name="model",
+            unique_together={("cluster", "name")},
         ),
     ]

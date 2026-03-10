@@ -1,7 +1,7 @@
 from django.test import TransactionTestCase as TestCase
 from django.urls import reverse
 
-from . models import Model
+from .models import Model
 from vendor.models import Model as VendorModel
 
 from . import app_label
@@ -10,17 +10,19 @@ from sm.utils import random_string, random_number
 
 import os
 import django
-os.environ['DJANGO_SETTINGS_MODULE'] = 'sm.settings'
+
+os.environ["DJANGO_SETTINGS_MODULE"] = "sm.settings"
 django.setup()
 
 
 class Tester(TestCase):
     model = Model
-    testversion = "%s.%s" % (random_number(), random_number())
+    testversion = "{}.{}".format(random_number(), random_number())
     teststring = random_string()
-    fixtures = ['%s/fixtures/01_initial.yaml' % 'vendor',
-                '%s/fixtures/01_initial.yaml' % app_label
-                ]
+    fixtures = [
+        "%s/fixtures/01_initial.yaml" % "vendor",
+        "%s/fixtures/01_initial.yaml" % app_label,
+    ]
     testitem = None
 
     def setUp(self):
@@ -40,29 +42,26 @@ class Tester(TestCase):
         # need to manually prune the DB and create a testitem
         self.model.objects.all().delete()
         obj, created = self.get_or_create_testitem()
-        self.assertEqual(created, True, 'the object was already there?')
-        self.assertIsInstance(obj, self.model,
-                              'object not correct model!?')
+        self.assertEqual(created, True, "the object was already there?")
+        self.assertIsInstance(obj, self.model, "object not correct model!?")
 
     def test_version(self):
-        self.assertEqual(self.testitem.version, self.testversion,
-                         'version not correct')
+        self.assertEqual(self.testitem.version, self.testversion, "version not correct")
 
     def test_name(self):
-        self.assertEqual(self.testitem.name, self.teststring,
-                         'name not correct')
+        self.assertEqual(self.testitem.name, self.teststring, "name not correct")
 
     def test___str__(self):
-        self.assertEqual("%s %s %s" % (self.vendor.name,
-                                       self.teststring,
-                                       self.testversion),
-                         "%s %s %s" % (self.testitem.vendor.name,
-                                       self.testitem.name,
-                                       self.testitem.version),
-                         'string representation not correct')
+        self.assertEqual(
+            "{} {} {}".format(self.vendor.name, self.teststring, self.testversion),
+            "%s %s %s"
+            % (self.testitem.vendor.name, self.testitem.name, self.testitem.version),
+            "string representation not correct",
+        )
 
     def test_absolute_url(self):
-        self.assertEqual('%s' % (self.testitem.get_absolute_url()),
-                         '%s' % (reverse('%s:detail' % app_label,
-                                         kwargs={'pk': self.testitem.pk})),
-                         'absolute url not built correctly')
+        self.assertEqual(
+            "%s" % (self.testitem.get_absolute_url()),
+            "%s" % (reverse("%s:detail" % app_label, kwargs={"pk": self.testitem.pk})),
+            "absolute url not built correctly",
+        )

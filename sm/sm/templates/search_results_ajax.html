@@ -12,7 +12,7 @@
                 <span class="badge badge-light border">{{ server.status }}</span>
             </a>
         {% endfor %}
-        
+
         {% for cluster in clusters %}
             <a href="{{ cluster.get_absolute_url }}" class="list-group-item list-group-item-action">
                 <i class="fa-solid fa-th-large mr-2 text-success"></i>

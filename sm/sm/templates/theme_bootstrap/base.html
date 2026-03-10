@@ -130,7 +130,7 @@
                     var q = $(this).val();
                     clearTimeout(searchTimeout);
                     if (q.length < 2) return;
-                    
+
                     searchTimeout = setTimeout(function() {
                         $.get('/search/?q=' + encodeURIComponent(q) + '&ajax=1', function(data) {
                             $('#commandResults').html(data);
