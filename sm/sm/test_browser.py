@@ -233,4 +233,8 @@ class BrowserIntegrationTest(StaticLiveServerTestCase):
 
                 await browser.close()
 
+            from django.db import connection
+
+            connection.close()
+
             return all_results
