@@ -27,9 +27,36 @@
     {% if not object_list %}
       <div class="card-body"><b>{% trans "No results" %}</b></div>
     {% else %}
+    <form id="bulk_action_form" method="post" action="{% url 'server:bulk_action' %}">
+    {% csrf_token %}
+    
+    <!-- Bulk Actions Toolbar (Hidden by default) -->
+    <div id="bulk_toolbar" class="bg-light border-bottom p-2 d-none">
+        <div class="d-flex align-items-center justify-content-between px-3">
+            <div class="d-flex align-items-center">
+                <span class="badge badge-primary mr-3"><span id="selected_count">0</span> {% trans "selected" %}</span>
+                <div class="form-inline">
+                    {{ bulk_form.status }}
+                    <div class="custom-control custom-checkbox ml-3 mr-3">
+                        <input type="checkbox" name="delete" class="custom-control-input" id="bulk_delete_check">
+                        <label class="custom-control-label text-danger" for="bulk_delete_check">{% trans "Delete selected" %}</label>
+                    </div>
+                    <button type="submit" class="btn btn-sm btn-primary ml-2" id="apply_bulk">{% trans "Apply" %}</button>
+                </div>
+            </div>
+            <button type="button" class="btn btn-sm btn-link text-muted" id="cancel_bulk">{% trans "Cancel" %}</button>
+        </div>
+    </div>
+
     <table class="table table-hover" id="server_list">
       <thead>
         <tr>
+          <th style="width: 40px;">
+            <div class="custom-control custom-checkbox">
+                <input type="checkbox" class="custom-control-input" id="select_all">
+                <label class="custom-control-label" for="select_all"></label>
+            </div>
+          </th>
           <th>{% trans 'Hostname' %}</th>
           <th>{% trans 'Status' %}</th>
           <th>{% trans 'Location' %}</th>
@@ -43,6 +70,12 @@
       <tbody>
         {% for object in object_list %}
           <tr>
+            <td>
+                <div class="custom-control custom-checkbox">
+                    <input type="checkbox" name="selected_servers" value="{{ object.id }}" class="custom-control-input server-checkbox" id="server_{{ object.id }}">
+                    <label class="custom-control-label" for="server_{{ object.id }}"></label>
+                </div>
+            </td>
             <td>
               <a href="{% url 'server:detail' object.pk %}"
                  title="{% trans 'View' %} {{ object.hostname }}.{{ object.domain }}">
@@ -73,6 +106,7 @@
         {% endfor %}
       </tbody>
     </table>
+    </form>
     {% endif %}
     {% include "pagination/pagination.html" %}
   </div> <!-- card -->

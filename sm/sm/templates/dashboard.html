@@ -74,22 +74,36 @@
     </div>
 
     <div class="row">
-        <!-- Chart -->
-        <div class="col-md-6 mb-4">
+        <!-- OS Distribution Chart -->
+        <div class="col-md-4 mb-4">
             <div class="card shadow-sm h-100">
                 <div class="card-header bg-white">
                     <h5 class="mb-0">{% trans "OS Distribution" %}</h5>
                 </div>
                 <div class="card-body">
-                    <div style="position: relative; height: 300px; width: 100%;">
+                    <div style="position: relative; height: 250px; width: 100%;">
                         <canvas id="osChart"></canvas>
                     </div>
                 </div>
             </div>
         </div>
 
+        <!-- Status Distribution Chart -->
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0">{% trans "Server Status" %}</h5>
+                </div>
+                <div class="card-body">
+                    <div style="position: relative; height: 250px; width: 100%;">
+                        <canvas id="statusChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Recent Activity -->
-        <div class="col-md-6 mb-4">
+        <div class="col-md-4 mb-4">
             <div class="card shadow-sm h-100">
                 <div class="card-header bg-white">
                     <h5 class="mb-0">{% trans "Recently Added Servers" %}</h5>
@@ -148,6 +162,34 @@
                 }
             },
             cutout: '70%'
+        }
+    });
+
+    const statusCtx = document.getElementById('statusChart').getContext('2d');
+    new Chart(statusCtx, {
+        type: 'pie',
+        data: {
+            labels: {{ status_labels|safe }},
+            datasets: [{
+                data: {{ status_data|safe }},
+                backgroundColor: [
+                    '#3fb618',
+                    '#2780e3',
+                    '#373a3c',
+                    '#ff0039',
+                    '#f0ad4e'
+                ],
+                borderWidth: 0
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                }
+            }
         }
     });
 </script>

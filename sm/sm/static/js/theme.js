@@ -131,9 +131,42 @@ $(function () {
       $selected.addClass("active bg-primary text-white");
       $selected[0].scrollIntoView({ block: "nearest" });
     }
-  }
-  });
+    }
 
+    // Bulk Actions Logic
+    $("#select_all").on("change", function () {
+    $(".server-checkbox").prop("checked", this.checked);
+    updateBulkToolbar();
+    });
+
+    $(".server-checkbox").on("change", function () {
+    updateBulkToolbar();
+    });
+
+    function updateBulkToolbar() {
+    var count = $(".server-checkbox:checked").length;
+    $("#selected_count").text(count);
+    if (count > 0) {
+      $("#bulk_toolbar").removeClass("d-none");
+    } else {
+      $("#bulk_toolbar").addClass("d-none");
+      $("#select_all").prop("checked", false);
+    }
+    }
+
+    $("#cancel_bulk").on("click", function () {
+    $(".server-checkbox, #select_all").prop("checked", false);
+    updateBulkToolbar();
+    });
+
+    $("#apply_bulk").on("click", function (e) {
+    if ($("#bulk_delete_check").is(":checked")) {
+      if (!confirm("Are you sure you want to delete the selected servers?")) {
+        e.preventDefault();
+      }
+    }
+    });
+    });
 
 $(document).ajaxSend(function (event, xhr, settings) {
   function getCookie(name) {

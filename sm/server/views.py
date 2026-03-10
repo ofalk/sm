@@ -1,9 +1,11 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .models import Model
-from .forms import Form
-from .forms import FormDisabled
+from .forms import Form, FormDisabled, BulkActionForm
 from . import app_label
+
+from django.views import View
+from django.shortcuts import redirect
 
 from django.views.generic import ListView as GenericListView
 from django.views.generic.edit import UpdateView as GenericUpdateView
@@ -37,6 +39,42 @@ class ListView(LoginRequiredMixin, GenericListView):
         return self.model.objects.exclude(status__name="Disposed").order_by(
             self.ordering
         )
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["bulk_form"] = BulkActionForm()
+        return context
+
+
+class BulkActionView(LoginRequiredMixin, View):
+    def post(self, request, *args, **kwargs):
+        server_ids = request.POST.getlist("selected_servers")
+        if not server_ids:
+            messages.warning(request, _("No servers selected."))
+            return redirect("server:index")
+
+        form = BulkActionForm(request.POST)
+        if form.is_valid():
+            servers = Model.objects.filter(id__in=server_ids)
+            count = servers.count()
+
+            if form.cleaned_data["delete"]:
+                servers.delete()
+                messages.success(request, _("Successfully deleted %d servers.") % count)
+            elif form.cleaned_data["status"]:
+                new_status = form.cleaned_data["status"]
+                for server in servers:
+                    server.status = new_status
+                    server.save()
+                messages.success(
+                    request,
+                    _("Successfully updated status to %s for %d servers.")
+                    % (new_status, count),
+                )
+            else:
+                messages.info(request, _("No action performed."))
+
+        return redirect("server:index")
 
 
 class DetailView(LoginRequiredMixin, GenericUpdateView):

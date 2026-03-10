@@ -7,6 +7,14 @@ from django.views.generic import TemplateView
 from django.views.generic.base import RedirectView
 from .views import DashboardView, SearchView, HistoryDiffView, TermsView, PrivacyView, ImpressumView
 from .views_avatars import avatar_proxy
+from .api.views import ServerViewSet, VendorViewSet, StatusViewSet
+from rest_framework import routers
+
+router = routers.DefaultRouter()
+router.register(r'servers', ServerViewSet, basename='api-server')
+router.register(r'vendors', VendorViewSet, basename='api-vendor')
+router.register(r'statuses', StatusViewSet, basename='api-status')
+
 from drf_spectacular.views import (
     SpectacularAPIView,
     SpectacularRedocView,
@@ -19,6 +27,8 @@ urlpatterns = [
     path("__debug__/", include(debug_toolbar.urls)),
     path("admin/doc/", include("django.contrib.admindocs.urls")),
     path("admin/", admin.site.urls),
+    # API
+    path("api/", include(router.urls)),
     # API Schema & Docs
     path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
     path(

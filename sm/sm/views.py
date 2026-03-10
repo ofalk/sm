@@ -30,6 +30,14 @@ class DashboardView(LoginRequiredMixin, TemplateView):
         context['os_labels'] = [f"{item['operatingsystem__vendor__name']} {item['operatingsystem__version']}" for item in os_dist]
         context['os_data'] = [item['count'] for item in os_dist]
         
+        # Status Distribution
+        status_dist = Server.objects.values('status__name') \
+            .annotate(count=Count('id')) \
+            .order_by('-count')
+        
+        context['status_labels'] = [item['status__name'] for item in status_dist]
+        context['status_data'] = [item['count'] for item in status_dist]
+        
         # Recent Activity
         context['recent_servers'] = Server.objects.all().order_by('-id')[:5]
         

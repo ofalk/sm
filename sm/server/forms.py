@@ -3,6 +3,7 @@ from sm.forms import SMForm, SMFormDisabled
 from status.models import Model as StatusModel
 
 from django.forms import DateInput
+from django import forms
 
 
 class Form(SMForm):
@@ -28,3 +29,15 @@ class Form(SMForm):
 
 class FormDisabled(Form, SMFormDisabled):
     pass
+
+
+class BulkActionForm(forms.Form):
+    status = forms.ModelChoiceField(
+        queryset=StatusModel.objects.all(),
+        required=False,
+        label="Change Status to",
+        empty_label="--- No Change ---",
+    )
+    delete = forms.BooleanField(
+        required=False, label="Delete Selected Servers"
+    )
