@@ -19,6 +19,8 @@ EMAIL_BACKEND = config(
 THEME_CONTACT_EMAIL = config("THEME_CONTACT_EMAIL", default="oliver@linux-kernel.at")
 THEME_GITHUB_URL = config("THEME_GITHUB_URL", default="https://github.com/ofalk/sm")
 
+DISABLE_SOCIAL_AUTH = config("DISABLE_SOCIAL_AUTH", default=False, cast=bool)
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -31,7 +33,6 @@ INSTALLED_APPS = [
     "django.contrib.sites",
     "django.contrib.admindocs",
     "rest_framework",
-    "django_extensions",
     "bootstrap4",
     "debug_toolbar",
     "django_countries",
@@ -43,8 +44,19 @@ INSTALLED_APPS = [
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
-    "allauth.socialaccount.providers.facebook",
     "allauth.mfa",
+    "social_django",
+]
+
+if not DISABLE_SOCIAL_AUTH:
+    INSTALLED_APPS += [
+        "allauth.socialaccount.providers.facebook",
+    ]
+    SOCIALACCOUNT_ENABLED = True
+else:
+    SOCIALACCOUNT_ENABLED = False
+
+INSTALLED_APPS += [
     # Project Apps
     "cluster",
     "operatingsystem",
@@ -195,30 +207,39 @@ ACCOUNT_EMAIL_CONFIRMATION_AUTHENTICATED_REDIRECT_URL = "/"
 ACCOUNT_LOGIN_REDIRECT_URL = "/"
 ACCOUNT_LOGOUT_REDIRECT_URL = "/"
 
-SOCIALACCOUNT_AUTO_SIGNUP = True
-SOCIALACCOUNT_ADAPTER = "sm.adapter.MySocialAccountAdapter"
+# Social Auth (Legacy/Transition)
+SOCIAL_AUTH_STRATEGY = "social_django.strategy.DjangoStrategy"
+SOCIAL_AUTH_STORAGE = "social_django.models.DjangoStorage"
 
-SOCIALACCOUNT_PROVIDERS = {
-    "facebook": {
-        "METHOD": "oauth2",
-        "SCOPE": ["email", "public_profile"],
-        "AUTH_PARAMS": {"auth_type": "reauthenticate"},
-        "INIT_PARAMS": {"cookie": True},
-        "FIELDS": [
-            "id",
-            "first_name",
-            "last_name",
-            "middle_name",
-            "name",
-            "name_format",
-            "picture",
-            "short_name",
-        ],
-        "EXCHANGE_TOKEN": True,
-        "VERIFIED_EMAIL": False,
-        "VERSION": "v13.0",
+# Disable MFA features that might cause issues if allauth.mfa is not fully configured
+MFA_PASSKEY_LOGIN_ENABLED = False
+MFA_SUPPORTED_TYPES = ["totp", "recovery_codes"]
+
+if not DISABLE_SOCIAL_AUTH:
+    SOCIALACCOUNT_AUTO_SIGNUP = True
+    SOCIALACCOUNT_ADAPTER = "sm.adapter.MySocialAccountAdapter"
+
+    SOCIALACCOUNT_PROVIDERS = {
+        "facebook": {
+            "METHOD": "oauth2",
+            "SCOPE": ["email", "public_profile"],
+            "AUTH_PARAMS": {"auth_type": "reauthenticate"},
+            "INIT_PARAMS": {"cookie": True},
+            "FIELDS": [
+                "id",
+                "first_name",
+                "last_name",
+                "middle_name",
+                "name",
+                "name_format",
+                "picture",
+                "short_name",
+            ],
+            "EXCHANGE_TOKEN": True,
+            "VERIFIED_EMAIL": False,
+            "VERSION": "v13.0",
+        }
     }
-}
 
 INTERNAL_IPS = [
     "127.0.0.1",
@@ -232,14 +253,14 @@ TAGGIT_CASE_INSENSITIVE = True
 
 # REST Framework Settings
 REST_FRAMEWORK = {
-    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
 }
 
 SPECTACULAR_SETTINGS = {
-    'TITLE': 'ServerManager API',
-    'DESCRIPTION': 'API for managing servers, clusters, and infrastructure.',
-    'VERSION': '1.0.0',
-    'SERVE_INCLUDE_SCHEMA': False,
+    "TITLE": "ServerManager API",
+    "DESCRIPTION": "API for managing servers, clusters, and infrastructure.",
+    "VERSION": "1.0.0",
+    "SERVE_INCLUDE_SCHEMA": False,
 }
 
 # Bootstrap 4 settings
@@ -252,5 +273,12 @@ BOOTSTRAP4 = {
 
 HTML_MINIFY = True
 
-if os.path.isfile(BASE_DIR / "config_local.py"):
+if not DISABLE_SOCIAL_AUTH and os.path.isfile(BASE_DIR / "config_local.py"):
     from config_local import *  # noqa
+
+# Redefine to ensure no social_core backends survive in quick test mode
+if DISABLE_SOCIAL_AUTH:
+    AUTHENTICATION_BACKENDS = [
+        "django.contrib.auth.backends.ModelBackend",
+        "allauth.account.auth_backends.AuthenticationBackend",
+    ]

@@ -109,8 +109,8 @@ class Tester(TestCase):
         self.assertIsInstance(item, Model, "object not the correct model!?")
         self.assertEqual(item.version, self.teststring)
         self.assertEqual(item.vendor.name, self.vendor.name)
-        self.assertContains(response, "Are you sure you want to")
-        self.assertContains(response, "<strong>delete</strong>")
+        self.assertContains(response, "Are you sure you want to delete")
+        self.assertContains(response, "Confirm Delete")
 
     def test_deleteview_post(self):
         self.login()

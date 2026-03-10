@@ -7,10 +7,16 @@ import django
 import random
 import string
 
+import unittest
+from django.conf import settings
+
 # os.environ['DJANGO_SETTINGS_MODULE'] = 'sm.settings'
 # django.setup()
 
 
+@unittest.skipIf(
+    not getattr(settings, "SOCIALACCOUNT_ENABLED", False), "Social auth is disabled"
+)
 class SocialAuthTestCase(TestCase):
     def setUp(self):
         from django.contrib.sites.models import Site

@@ -95,8 +95,8 @@ class Tester(TestCase):
         item = response.context[-1]["object"]
         self.assertIsInstance(item, Model, "object not the correct model!?")
         self.assertEqual(item.name, self.teststring)
-        self.assertContains(response, "Are you sure you want to")
-        self.assertContains(response, "<strong>delete</strong>")
+        self.assertContains(response, "Are you sure you want to delete")
+        self.assertContains(response, "Confirm Delete")
 
     def test_deleteview_post(self):
         self.login()

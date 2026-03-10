@@ -35,3 +35,8 @@ def get_message_tags(message):
     elif alert_level_tag:
         return alert_level_tag
     return ""
+
+
+@register.filter
+def has_unverified_emails(user):
+    return user.emailaddress_set.filter(verified=False).exists()

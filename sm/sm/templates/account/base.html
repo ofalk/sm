@@ -18,9 +18,11 @@
                     <a class="list-group-item list-group-item-action account-password-change" href="{% url "account_change_password" %}">
                         <i class="fa-solid fa-key fa-fw mr-2 text-muted"></i> {% trans "Change password" %}
                     </a>
+                    {% if SOCIALACCOUNT_ENABLED %}
                     <a class="list-group-item list-group-item-action account-social" href="{% url "socialaccount_connections" %}">
                         <i class="fa-solid fa-share-alt fa-fw mr-2 text-muted"></i> {% trans "Social accounts" %}
                     </a>
+                    {% endif %}
                 </div>
             </div>
         </div>

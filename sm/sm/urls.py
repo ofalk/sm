@@ -5,15 +5,38 @@ from django.contrib import admin
 
 from django.views.generic import TemplateView
 from django.views.generic.base import RedirectView
-from .views import DashboardView, SearchView, HistoryDiffView, TermsView, PrivacyView, ImpressumView
+from .views import (
+    DashboardView,
+    SearchView,
+    HistoryDiffView,
+    TermsView,
+    PrivacyView,
+    ImpressumView,
+)
 from .views_avatars import avatar_proxy
-from .api.views import ServerViewSet, VendorViewSet, StatusViewSet
+from .api.views import (
+    ServerViewSet,
+    VendorViewSet,
+    StatusViewSet,
+    LocationViewSet,
+    DomainViewSet,
+    PatchtimeViewSet,
+    ClusterViewSet,
+    ClusterPackageViewSet,
+)
 from rest_framework import routers
 
 router = routers.DefaultRouter()
-router.register(r'servers', ServerViewSet, basename='api-server')
-router.register(r'vendors', VendorViewSet, basename='api-vendor')
-router.register(r'statuses', StatusViewSet, basename='api-status')
+router.register(r"servers", ServerViewSet, basename="api-server")
+router.register(r"vendors", VendorViewSet, basename="api-vendor")
+router.register(r"statuses", StatusViewSet, basename="api-status")
+router.register(r"locations", LocationViewSet, basename="api-location")
+router.register(r"domains", DomainViewSet, basename="api-domain")
+router.register(r"patchtimes", PatchtimeViewSet, basename="api-patchtime")
+router.register(r"clusters", ClusterViewSet, basename="api-cluster")
+router.register(
+    r"clusterpackages", ClusterPackageViewSet, basename="api-clusterpackage"
+)
 
 from drf_spectacular.views import (
     SpectacularAPIView,
@@ -46,14 +69,16 @@ urlpatterns = [
     # Dashboard & Search
     path("", DashboardView.as_view(), name="dashboard"),
     path("search/", SearchView.as_view(), name="search"),
-    path('avatar/<str:email_hash>/', avatar_proxy, name='avatar_proxy'),
-    path('history/<str:app_label>/<str:model_name>/<int:history_id>/', HistoryDiffView.as_view(), name='history_diff'),
-
+    path("avatar/<str:email_hash>/", avatar_proxy, name="avatar_proxy"),
+    path(
+        "history/<str:app_label>/<str:model_name>/<int:history_id>/",
+        HistoryDiffView.as_view(),
+        name="history_diff",
+    ),
     # Legal Pages
-    path('terms/', TermsView.as_view(), name='terms'),
-    path('privacy/', PrivacyView.as_view(), name='privacy'),
-    path('impressum/', ImpressumView.as_view(), name='impressum'),
-
+    path("terms/", TermsView.as_view(), name="terms"),
+    path("privacy/", PrivacyView.as_view(), name="privacy"),
+    path("impressum/", ImpressumView.as_view(), name="impressum"),
     # Project Apps
     path("cluster/", include("cluster.urls")),
     path("operatingsystem/", include("operatingsystem.urls")),

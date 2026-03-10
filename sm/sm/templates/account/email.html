@@ -2,6 +2,7 @@
 
 {% load i18n %}
 {% load bootstrap4 %}
+{% load sm_theme_bootstrap_tags %}
 
 {% block body_class %}account account-email{% endblock %}
 
@@ -57,16 +58,22 @@
             </div>
 
             <div class="btn-toolbar mt-3" role="toolbar">
-                <div class="btn-group mr-2">
-                    <button class="btn btn-sm btn-outline-primary" type="submit" name="action_primary">
+                <div class="btn-group mr-3">
+                    <button class="btn btn-sm btn-outline-primary shadow-sm px-3" type="submit" name="action_primary">
                         <i class="fa-solid fa-star mr-1"></i> {% trans 'Make Primary' %}
                     </button>
-                    <button class="btn btn-sm btn-outline-info" type="submit" name="action_send">
-                        <i class="fa-regular fa-envelope mr-1"></i> {% trans 'Resend Verification' %}
-                    </button>
                 </div>
-                <div class="btn-group">
-                    <button class="btn btn-sm btn-outline-danger" type="submit" name="action_remove">
+
+                <div class="btn-group mr-3">
+                    {% if user|has_unverified_emails %}
+                        <button class="btn btn-sm btn-outline-info shadow-sm px-3" type="submit" name="action_send">
+                            <i class="fa-regular fa-envelope mr-1"></i> {% trans 'Resend Verification' %}
+                        </button>
+                    {% endif %}
+                </div>
+
+                <div class="btn-group ml-auto">
+                    <button class="btn btn-sm btn-outline-danger shadow-sm px-3" type="submit" name="action_remove">
                         <i class="fa-regular fa-trash-can mr-1"></i> {% trans 'Remove' %}
                     </button>
                 </div>

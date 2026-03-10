@@ -1,0 +1,19 @@
+{% load i18n %}
+{% load socialaccount %}
+{% load social_tags %}
+
+{% get_social_providers_safe as socialaccount_providers %}
+{% if socialaccount_providers %}
+    <li class="nav-item dropdown">
+        <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" id="socialLoginDropdown" role="button" aria-haspopup="true" aria-expanded="false">
+            {% trans "Social Login" %}
+        </a>
+        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="socialLoginDropdown">
+            {% for provider in socialaccount_providers %}
+                <a class="dropdown-item" href="{% provider_login_url provider.id %}">
+                    <i class="{{ provider.id|provider_icon_class }} fa-fw mr-2"></i> {{ provider.name }}
+                </a>
+            {% endfor %}
+        </div>
+    </li>
+{% endif %}

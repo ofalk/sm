@@ -70,17 +70,11 @@ class CreateView(SuccessMessageMixin, LoginRequiredMixin, GenericCreateView):
         return HttpResponseRedirect(self.get_success_url())
 
 
-class DeleteView(LoginRequiredMixin, GenericDeleteView):
+from sm.views import SafeDeleteMixin
+
+
+class DeleteView(SafeDeleteMixin, LoginRequiredMixin, GenericDeleteView):
     success_message = "%(name)s " + _("was deleted successfully")
-    template_name = "%s/delete.html" % app_label
+    template_name = "delete.html"
     model = Model
     success_url = reverse_lazy("%s:index" % app_label)
-
-    def form_valid(self, form):
-        success_url = self.get_success_url()
-        msg = self.success_message % {"name": getattr(self.object, "name")}
-        self.object.delete()
-        messages.success(self.request, msg)
-        from django.http import HttpResponseRedirect
-
-        return HttpResponseRedirect(success_url)

@@ -105,10 +105,8 @@ class Tester(TestCase):
         self.assertEqual(item.name, self.teststring)
         if "Are you sure you want to" not in response.content.decode("utf-8"):
             print(f"FAILED TO FIND MESSAGE IN: {response.content.decode('utf-8')}")
-        self.assertContains(response, "Are you sure you want to")
-        if "<strong>delete</strong>" not in response.content.decode("utf-8"):
-            print(f"FAILED TO FIND MESSAGE IN: {response.content.decode('utf-8')}")
-        self.assertContains(response, "<strong>delete</strong>")
+        self.assertContains(response, "Are you sure you want to delete")
+        self.assertContains(response, "Confirm Delete")
 
     def test_deleteview_post(self):
         self.login()

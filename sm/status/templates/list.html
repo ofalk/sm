@@ -24,6 +24,7 @@
       <thead>
         <tr>
           <th>{% trans 'Name' %}</th>
+          <th class="text-center">{% trans 'Icon' %}</th>
           <th>{% trans "Actions" %}</th>
         </tr>
       </thead>
@@ -34,6 +35,9 @@
               <a href="{% url 'status:detail' object.pk %}" title="{{ object.name }}">
                 {{ object.name }}
               </a>
+            </td>
+            <td class="text-center">
+              {% include "status-icon.html" %}
             </td>
             <td>
               <a href="{% url 'status:update' object.pk %}" title="{% trans 'Edit status' %}">

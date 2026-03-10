@@ -1,7 +1,6 @@
 from django.conf import settings
 from django.urls import re_path as url
 
-from social_core.utils import setting_name
 from . import views
 from . import app_label as app_name
 

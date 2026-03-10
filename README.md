@@ -4,6 +4,8 @@
 
 A modern Django-based server management application for tracking infrastructure, configurations, and clusters.
 
+> **Note:** This application is currently **single-tenant**. Multi-tenancy support is on the roadmap.
+
 ## Features
 
 - **Infrastructure Tracking:** Manage vendors, locations, operating systems, and server models.
@@ -16,6 +18,21 @@ A modern Django-based server management application for tracking infrastructure,
 
 - [Coverage Report (GitHub Pages)](https://<owner>.github.io/<repo>/coverage/)
 - [Code Documentation (Pycco)](https://<owner>.github.io/<repo>/pycco/)
+
+## Quick Start with Docker
+
+The fastest way to test the application is using Docker. This setup uses a local SQLite database and pre-loads reasonable defaults.
+
+1. **Build and run the container:**
+
+   ```bash
+   docker build -t sm .
+   docker run -p 8000:8000 sm
+   ```
+
+2. **Access the application:**
+   Open [http://localhost:8000](http://localhost:8000) in your browser.
+   The container will display a **randomly generated password** for the `admin` user upon startup.
 
 ## Local Development
 

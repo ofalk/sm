@@ -1,0 +1,102 @@
+{% extends "site_base.html" %}
+{% load i18n %}
+{% load bootstrap4 %}
+
+{% block head_title %}{% trans "Delete" %} :: {{ object }}{% endblock %}
+
+{% block body %}
+<div class="wide-container mt-4">
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-white border-bottom-0 py-3">
+            <h4 class="mb-0 text-dark"><i class="fa-solid fa-trash-can mr-2 text-muted"></i>{% trans "Delete Item" %}: <span class="text-primary">{{ object }}</span></h4>
+        </div>
+        <div class="card-body">
+            {% if protected_error %}
+                <div class="alert alert-secondary border-0 shadow-sm mb-4 py-3">
+                    <h5 class="alert-heading font-weight-bold"><i class="fa-solid fa-link-slash mr-2 text-warning"></i>{% trans "Action Required: This item is in use" %}</h5>
+                    <p class="mb-0">{% blocktrans with count=protected_count name=object %}The item <strong>{{ name }}</strong> is currently referenced by <strong>{{ count }}</strong> other resources. To delete it, you must either reassign these dependencies or delete them all together.{% endblocktrans %}</p>
+                </div>
+
+                <div class="row">
+                    <!-- Affected Items List -->
+                    <div class="col-md-12 mb-4">
+                        <div class="card bg-light border-0">
+                            <div class="card-header bg-transparent border-0 pb-0">
+                                <h6 class="text-uppercase text-muted small font-weight-bold">{% trans "Affected Items" %}</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="overflow-auto" style="max-height: 200px;">
+                                    <ul class="list-unstyled mb-0">
+                                        {% for protected in protected_objects %}
+                                            <li class="mb-1"><i class="fa-solid fa-caret-right mr-2 text-muted"></i>{{ protected }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Option 1: Reassign -->
+                    <div class="col-md-6 mb-4">
+                        <div class="card h-100 border-0 shadow-sm bg-white">
+                            <div class="card-body d-flex flex-column">
+                                <h5 class="card-title font-weight-bold">{% trans "Option 1: Reassign" %}</h5>
+                                <p class="card-text text-muted small">{% trans "Move all dependencies to another item before deleting this one." %}</p>
+
+                                <form method="post" class="mt-auto">
+                                    {% csrf_token %}
+                                    <div class="form-group">
+                                        <select name="new_target" id="new_target" class="form-control form-control-sm" required>
+                                            <option value="">--- {% trans "Choose replacement" %} ---</option>
+                                            {% for other in all_objects %}
+                                                <option value="{{ other.pk }}">{{ other }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <input type="hidden" name="protected_action" value="reassign">
+                                    <button type="submit" class="btn btn-primary btn-sm btn-block py-2">
+                                        {% blocktrans with name=object %}Reassign items and delete the {{ name }}{% endblocktrans %}
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Option 2: Delete All -->
+                    <div class="col-md-6 mb-4">
+                        <div class="card h-100 border-0 shadow-sm bg-white">
+                            <div class="card-body d-flex flex-column text-danger">
+                                <h5 class="card-title font-weight-bold text-danger">{% trans "Option 2: Delete All" %}</h5>
+                                <p class="card-text small">{% trans "This will permanently delete ALL dependent items listed above. This cannot be undone." %}</p>
+
+                                <form method="post" class="mt-auto">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="protected_action" value="delete_all">
+                                    <button type="submit" class="btn btn-outline-danger btn-sm btn-block py-2" onclick="return confirm('{% trans "Are you absolutely sure? Everything depending on this will be PERMANENTLY DELETED." %}')">
+                                        <i class="fa-solid fa-circle-exclamation mr-1"></i> {% trans "Delete Everything" %}
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <form method="post" class="text-center py-4">
+                    {% csrf_token %}
+                    <div class="mb-4">
+                        <i class="fa-solid fa-trash-can fa-4x text-light mb-3"></i>
+                        <h5 class="text-dark">{% trans 'Are you sure you want to delete' %} <span class="text-primary">{{ object }}</span>?</h5>
+                        <p class="text-muted">{% trans "This action is permanent and cannot be reversed." %}</p>
+                    </div>
+                    {% buttons %}
+                        <button type="submit" class="btn btn-danger px-4 mx-1">
+                            {% trans "Confirm Delete" %}
+                        </button>
+                        <a href="javascript:history.back()" class="btn btn-outline-secondary px-4 mx-1">{% trans "Cancel" %}</a>
+                    {% endbuttons %}
+                </form>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

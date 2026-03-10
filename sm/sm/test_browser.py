@@ -43,6 +43,7 @@ class BrowserIntegrationTest(StaticLiveServerTestCase):
                             "update",
                             "detail",
                             "schema",
+                            "api",
                         ]
                     ):
                         continue
@@ -98,17 +99,20 @@ class BrowserIntegrationTest(StaticLiveServerTestCase):
 
                 # Setup SocialApps in DB (inside async context)
                 from django.contrib.sites.models import Site
-                from allauth.socialaccount.models import SocialApp
+                from django.apps import apps
 
-                site = await asyncio.to_thread(Site.objects.get_current)
-                for p_id in ["facebook", "google"]:
-                    app, _ = await asyncio.to_thread(
-                        SocialApp.objects.get_or_create,
-                        provider=p_id,
-                        name=p_id.title(),
-                        defaults={"client_id": "123", "secret": "abc"},
-                    )
-                    await asyncio.to_thread(app.sites.add, site)
+                if apps.is_installed("allauth.socialaccount"):
+                    from allauth.socialaccount.models import SocialApp
+
+                    site = await asyncio.to_thread(Site.objects.get_current)
+                    for p_id in ["facebook", "google"]:
+                        app, _ = await asyncio.to_thread(
+                            SocialApp.objects.get_or_create,
+                            provider=p_id,
+                            name=p_id.title(),
+                            defaults={"client_id": "123", "secret": "abc"},
+                        )
+                        await asyncio.to_thread(app.sites.add, site)
 
                 if not is_anonymous:
                     # Login

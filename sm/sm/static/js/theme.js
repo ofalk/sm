@@ -58,71 +58,95 @@ $(function () {
     });
   });
 
-  // Command Palette (Ctrl+K or Cmd+K)
-  var isMac = navigator.platform.toUpperCase().indexOf("MAC") >= 0;
-  var cmdKeyHint = isMac ? "⌘K" : "Ctrl+K";
+  // Command Palette (Ctrl+K or Cmd+K) - Only if search results container exists (implies authenticated)
+  if ($("#commandSearch").length) {
+    var isMac = navigator.platform.toUpperCase().indexOf("MAC") >= 0;
+    var cmdKeyHint = isMac ? "⌘K" : "Ctrl+K";
 
-  // Update placeholders with OS-aware hints
-  $("#commandSearch").attr(
-    "placeholder",
-    $("#commandSearch").attr("placeholder").replace("...", " (" + cmdKeyHint + ")")
-  );
-  $(".search-form input").attr(
-    "placeholder",
-    $(".search-form input").attr("placeholder") + " (" + cmdKeyHint + ")"
-  );
+    // Update placeholders with OS-aware hints
+    $("#commandSearch").attr(
+      "placeholder",
+      $("#commandSearch")
+        .attr("placeholder")
+        .replace("...", " (" + cmdKeyHint + ")"),
+    );
+    $(".search-form input").attr(
+      "placeholder",
+      $(".search-form input").attr("placeholder") + " (" + cmdKeyHint + ")",
+    );
 
-  $(document).on("keydown", function (e) {
-    if (e.key.toLowerCase() === "k" && (e.ctrlKey || e.metaKey)) {
-      e.preventDefault();
-      e.stopPropagation();
-      $("#commandPalette").modal("show");
-    }
-  });
+    $(document).on("keydown", function (e) {
+      // Don't trigger if user is typing in an input/textarea/select or if a modal is already open
+      if ($(e.target).is("input, textarea, select") || $(".modal.show").length)
+        return;
 
-  $("#commandPalette").on("shown.bs.modal", function () {
-    $("#commandSearch").focus();
-  });
-
-  var searchTimeout;
-  var selectedIndex = -1;
-
-  $("#commandSearch").on("input", function () {
-    var q = $(this).val();
-    clearTimeout(searchTimeout);
-    if (q.length < 2) {
-      $("#commandResults").html("");
-      selectedIndex = -1;
-      return;
-    }
-
-    searchTimeout = setTimeout(function () {
-      $.get("/search/?q=" + encodeURIComponent(q) + "&ajax=1", function (data) {
-        $("#commandResults").html(data);
-        selectedIndex = -1;
-      });
-    }, 300);
-  });
-
-  $("#commandSearch").on("keydown", function (e) {
-    var $items = $("#commandResults .list-group-item");
-    if (!$items.length) return;
-
-    if (e.key === "ArrowDown") {
-      e.preventDefault();
-      selectedIndex = Math.min(selectedIndex + 1, $items.length - 1);
-      updateSelection($items);
-    } else if (e.key === "ArrowUp") {
-      e.preventDefault();
-      selectedIndex = Math.max(selectedIndex - 1, 0);
-      updateSelection($items);
-    } else if (e.key === "Enter") {
-      if (selectedIndex >= 0) {
+      if (e.key.toLowerCase() === "k" && (e.ctrlKey || e.metaKey)) {
         e.preventDefault();
-        $items.eq(selectedIndex)[0].click();
+        e.stopPropagation();
+        $("#commandPalette").modal("show");
       }
-    }
-  });
+    });
+
+    // Prevent search form from submitting empty queries
+    $(".search-form").on("submit", function (e) {
+      var q = $(this).find('input[name="q"]').val();
+      if (!q || q.trim().length < 2) {
+        e.preventDefault();
+        return false;
+      }
+    });
+
+    $("#commandPalette").on("shown.bs.modal", function () {
+      $("#commandSearch").focus();
+    });
+
+    var searchTimeout;
+    var selectedIndex = -1;
+
+    $("#commandSearch").on("input", function () {
+      var q = $(this).val();
+      clearTimeout(searchTimeout);
+      if (q.length < 2) {
+        $("#commandResults").html("");
+        selectedIndex = -1;
+        return;
+      }
+
+      searchTimeout = setTimeout(function () {
+        $.get(
+          "/search/?q=" + encodeURIComponent(q) + "&ajax=1",
+          function (data) {
+            $("#commandResults").html(data);
+            selectedIndex = -1;
+          },
+        );
+      }, 300);
+    });
+
+    $("#commandSearch").on("keydown", function (e) {
+      var $items = $("#commandResults .list-group-item");
+      if (!$items.length) return;
+
+      if (e.key === "ArrowDown") {
+        e.preventDefault();
+        selectedIndex = Math.min(selectedIndex + 1, $items.length - 1);
+        updateSelection($items);
+      } else if (e.key === "ArrowUp") {
+        e.preventDefault();
+        selectedIndex = Math.max(selectedIndex - 1, 0);
+        updateSelection($items);
+      } else if (e.key === "Enter") {
+        if (selectedIndex >= 0) {
+          e.preventDefault();
+          $items.eq(selectedIndex)[0].click();
+        } else if ($items.length > 0) {
+          // If Enter is pressed but no item selected, pick the first one
+          e.preventDefault();
+          $items.eq(0)[0].click();
+        }
+      }
+    });
+  }
 
   function updateSelection($items) {
     $items.removeClass("active bg-primary text-white");
@@ -131,19 +155,19 @@ $(function () {
       $selected.addClass("active bg-primary text-white");
       $selected[0].scrollIntoView({ block: "nearest" });
     }
-    }
+  }
 
-    // Bulk Actions Logic
-    $("#select_all").on("change", function () {
+  // Bulk Actions Logic
+  $("#select_all").on("change", function () {
     $(".server-checkbox").prop("checked", this.checked);
     updateBulkToolbar();
-    });
+  });
 
-    $(".server-checkbox").on("change", function () {
+  $(".server-checkbox").on("change", function () {
     updateBulkToolbar();
-    });
+  });
 
-    function updateBulkToolbar() {
+  function updateBulkToolbar() {
     var count = $(".server-checkbox:checked").length;
     $("#selected_count").text(count);
     if (count > 0) {
@@ -152,21 +176,21 @@ $(function () {
       $("#bulk_toolbar").addClass("d-none");
       $("#select_all").prop("checked", false);
     }
-    }
+  }
 
-    $("#cancel_bulk").on("click", function () {
+  $("#cancel_bulk").on("click", function () {
     $(".server-checkbox, #select_all").prop("checked", false);
     updateBulkToolbar();
-    });
+  });
 
-    $("#apply_bulk").on("click", function (e) {
+  $("#apply_bulk").on("click", function (e) {
     if ($("#bulk_delete_check").is(":checked")) {
       if (!confirm("Are you sure you want to delete the selected servers?")) {
         e.preventDefault();
       }
     }
-    });
-    });
+  });
+});
 
 $(document).ajaxSend(function (event, xhr, settings) {
   function getCookie(name) {

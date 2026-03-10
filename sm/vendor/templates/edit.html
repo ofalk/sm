@@ -22,7 +22,23 @@
 {% endif %}
 
 {% csrf_token %}
-{% bootstrap_form form %}
+{% bootstrap_field form.name %}
+
+<div class="row mb-3">
+    <div class="col-md-6">
+        <div class="custom-control custom-checkbox">
+            {{ form.is_hardware }}
+            <label class="custom-control-label" for="{{ form.is_hardware.id_for_label }}">{{ form.is_hardware.label }}</label>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="custom-control custom-checkbox">
+            {{ form.is_software }}
+            <label class="custom-control-label" for="{{ form.is_software.id_for_label }}">{{ form.is_software.label }}</label>
+        </div>
+    </div>
+</div>
+
 {% buttons %}
 {% bootstrap_button "Save" button_type="submit" button_class="btn-sm btn-primary" %}
 {% endbuttons %}
