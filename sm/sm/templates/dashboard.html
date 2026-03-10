@@ -12,56 +12,64 @@
     <!-- Stat Cards -->
     <div class="row mb-4">
         <div class="col-md-3">
-            <div class="card shadow-sm border-0 bg-primary text-white">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <h6 class="text-uppercase mb-1 small">{% trans "Total Servers" %}</h6>
-                            <h2 class="mb-0">{{ server_count }}</h2>
+            <a href="{% url 'server:index' %}" class="text-decoration-none">
+                <div class="card shadow-sm border-0 bg-primary text-white card-hover-lift">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="text-uppercase mb-1 small">{% trans "Total Servers" %}</h6>
+                                <h2 class="mb-0">{{ server_count }}</h2>
+                            </div>
+                            <i class="fa fa-server fa-2x opacity-50"></i>
                         </div>
-                        <i class="fa fa-server fa-2x opacity-50"></i>
                     </div>
                 </div>
-            </div>
+            </a>
         </div>
         <div class="col-md-3">
-            <div class="card shadow-sm border-0 bg-success text-white">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <h6 class="text-uppercase mb-1 small">{% trans "Active Clusters" %}</h6>
-                            <h2 class="mb-0">{{ cluster_count }}</h2>
+            <a href="{% url 'cluster:index' %}" class="text-decoration-none">
+                <div class="card shadow-sm border-0 bg-success text-white card-hover-lift">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="text-uppercase mb-1 small">{% trans "Active Clusters" %}</h6>
+                                <h2 class="mb-0">{{ cluster_count }}</h2>
+                            </div>
+                            <i class="fa fa-th-large fa-2x opacity-50"></i>
                         </div>
-                        <i class="fa fa-th-large fa-2x opacity-50"></i>
                     </div>
                 </div>
-            </div>
+            </a>
         </div>
         <div class="col-md-3">
-            <div class="card shadow-sm border-0 bg-info text-white">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <h6 class="text-uppercase mb-1 small">{% trans "Vendors" %}</h6>
-                            <h2 class="mb-0">{{ vendor_count }}</h2>
+            <a href="{% url 'vendor:index' %}" class="text-decoration-none">
+                <div class="card shadow-sm border-0 bg-info text-white card-hover-lift">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="text-uppercase mb-1 small">{% trans "Vendors" %}</h6>
+                                <h2 class="mb-0">{{ vendor_count }}</h2>
+                            </div>
+                            <i class="fa fa-industry fa-2x opacity-50"></i>
                         </div>
-                        <i class="fa fa-industry fa-2x opacity-50"></i>
                     </div>
                 </div>
-            </div>
+            </a>
         </div>
         <div class="col-md-3">
-            <div class="card shadow-sm border-0 bg-warning text-white">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <h6 class="text-uppercase mb-1 small">{% trans "Operating Systems" %}</h6>
-                            <h2 class="mb-0">{{ os_count }}</h2>
+            <a href="{% url 'operatingsystem:index' %}" class="text-decoration-none">
+                <div class="card shadow-sm border-0 bg-warning text-white card-hover-lift">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="text-uppercase mb-1 small">{% trans "Operating Systems" %}</h6>
+                                <h2 class="mb-0">{{ os_count }}</h2>
+                            </div>
+                            <i class="fa fa-laptop fa-2x opacity-50"></i>
                         </div>
-                        <i class="fa fa-laptop fa-2x opacity-50"></i>
                     </div>
                 </div>
-            </div>
+            </a>
         </div>
     </div>
 
