@@ -110,14 +110,8 @@ body {
   margin-top: -0.5rem;
 }
 
-.table thead th {
-  border: none;
-  text-transform: uppercase;
-  font-size: 0.7rem;
-  letter-spacing: 0.1em;
-  color: #adb5bd;
-  padding: 1rem 1.25rem;
-  font-weight: 700;
+.table thead th:last-child {
+  text-align: right;
 }
 
 .table tbody tr {

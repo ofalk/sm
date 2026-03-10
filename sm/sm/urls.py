@@ -6,6 +6,7 @@ from django.contrib import admin
 from django.views.generic import TemplateView
 from django.views.generic.base import RedirectView
 from .views import DashboardView, SearchView
+from .views_avatars import avatar_proxy
 
 import debug_toolbar
 
@@ -20,6 +21,7 @@ urlpatterns = [
     # Dashboard & Search
     path('', DashboardView.as_view(), name='dashboard'),
     path('search/', SearchView.as_view(), name='search'),
+    path('avatar/<str:email_hash>/', avatar_proxy, name='avatar_proxy'),
 
     # Project Apps
     path('cluster/', include('cluster.urls')),

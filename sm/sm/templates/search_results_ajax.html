@@ -1,0 +1,36 @@
+{% load i18n %}
+
+{% if has_results %}
+    <div class="list-group list-group-flush">
+        {% for server in servers %}
+            <a href="{{ server.get_absolute_url }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                <div>
+                    <i class="fa-solid fa-server mr-2 text-primary"></i>
+                    <strong>{{ server.hostname }}</strong>
+                    <span class="text-muted small ml-2">{{ server.operatingsystem }}</span>
+                </div>
+                <span class="badge badge-light border">{{ server.status }}</span>
+            </a>
+        {% endfor %}
+        
+        {% for cluster in clusters %}
+            <a href="{{ cluster.get_absolute_url }}" class="list-group-item list-group-item-action">
+                <i class="fa-solid fa-th-large mr-2 text-success"></i>
+                <strong>{{ cluster.name }}</strong>
+                <span class="text-muted small ml-2">{% trans "Cluster" %}</span>
+            </a>
+        {% endfor %}
+
+        {% for vendor in vendors %}
+            <a href="{{ vendor.get_absolute_url }}" class="list-group-item list-group-item-action">
+                <i class="fa-solid fa-industry mr-2 text-info"></i>
+                <strong>{{ vendor.name }}</strong>
+                <span class="text-muted small ml-2">{% trans "Vendor" %}</span>
+            </a>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="text-center p-4 text-muted">
+        <p class="mb-0">{% trans "No matching resources found." %}</p>
+    </div>
+{% endif %}

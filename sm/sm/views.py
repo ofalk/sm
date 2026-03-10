@@ -35,6 +35,11 @@ class DashboardView(LoginRequiredMixin, TemplateView):
 class SearchView(LoginRequiredMixin, TemplateView):
     template_name = "search.html"
 
+    def get_template_names(self):
+        if self.request.GET.get('ajax'):
+            return ["search_results_ajax.html"]
+        return [self.template_name]
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         query = self.request.GET.get('q', '')

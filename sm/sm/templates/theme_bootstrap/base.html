@@ -93,5 +93,51 @@
         {% block extra_body_base %}
             {% block extra_body %}{% endblock %}
         {% endblock %}
+
+        <!-- Command Palette Modal -->
+        <div class="modal fade" id="commandPalette" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content border-0 shadow-lg" style="border-radius: 1rem;">
+                    <div class="modal-body p-0">
+                        <div class="p-4 border-bottom bg-light" style="border-top-left-radius: 1rem; border-top-right-radius: 1rem;">
+                            <div class="input-group input-group-lg">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text bg-transparent border-0"><i class="fa-solid fa-magnifying-glass"></i></span>
+                                </div>
+                                <input type="text" id="commandSearch" class="form-control border-0 bg-transparent shadow-none" placeholder="{% trans 'Search anything... (Servers, Clusters, Vendors)' %}" autocomplete="off">
+                            </div>
+                        </div>
+                        <div id="commandResults" class="p-2" style="max-height: 400px; overflow-y: auto;">
+                            <div class="text-center p-5 text-muted">
+                                <i class="fa-solid fa-keyboard fa-3x mb-3 opacity-25"></i>
+                                <p class="mb-0">{% trans "Type to start searching across the infrastructure." %}</p>
+                            </div>
+                        </div>
+                        <div class="p-3 bg-light text-muted small d-flex justify-content-between" style="border-bottom-left-radius: 1rem; border-bottom-right-radius: 1rem;">
+                            <span><kbd class="mr-1">Enter</kbd> {% trans "to select" %}</span>
+                            <span><kbd class="mr-1">Esc</kbd> {% trans "to close" %}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            // Simple Command Palette Logic
+            $(function() {
+                var searchTimeout;
+                $('#commandSearch').on('input', function() {
+                    var q = $(this).val();
+                    clearTimeout(searchTimeout);
+                    if (q.length < 2) return;
+                    
+                    searchTimeout = setTimeout(function() {
+                        $.get('/search/?q=' + encodeURIComponent(q) + '&ajax=1', function(data) {
+                            $('#commandResults').html(data);
+                        });
+                    }, 300);
+                });
+            });
+        </script>
     </body>
 </html>

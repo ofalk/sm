@@ -7,6 +7,7 @@ except Exception:
 
 import random
 import string
+import hashlib
 from libravatar import libravatar_url
 
 
@@ -15,6 +16,15 @@ def get_libravatar_url(email, size=80, default="mm"):
     Get Libravatar URL for an email address
     """
     return libravatar_url(email=email, size=size, default=default)
+
+
+def get_email_hash(email):
+    """
+    Returns MD5 hash of lowercase email for avatar services.
+    """
+    if not email:
+        return "00000000000000000000000000000000"
+    return hashlib.md5(email.lower().encode('utf-8')).hexdigest()
 
 
 def random_string(len=10):

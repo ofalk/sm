@@ -57,6 +57,17 @@ $(function () {
         });
     });
   });
+
+  // Command Palette (Ctrl+K)
+  $(document).on("keydown", function (e) {
+    if ((e.ctrlKey || e.metaKey) && e.key === "k") {
+      e.preventDefault();
+      $("#commandPalette").modal("show");
+      setTimeout(function() {
+        $("#commandSearch").focus();
+      }, 500);
+    }
+  });
 });
 
 $(document).ajaxSend(function (event, xhr, settings) {
