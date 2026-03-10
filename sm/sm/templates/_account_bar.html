@@ -1,6 +1,7 @@
 {% load i18n %}
 {% load socialaccount %}
 {% load avatar_tags %}
+{% load social_tags %}
 
 <ul class="navbar-nav">
     {% if request.user.is_authenticated %}
@@ -10,29 +11,35 @@
                 {{ request.user.username }}
             </a>
             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
-                <a class="dropdown-item" href="/accounts/password/change/"><i class="fa fa-key fa-fw mr-2"></i> {% trans "Change Password" %}</a>
-                <a class="dropdown-item" href="/accounts/3rdparty/"><i class="fa fa-external-link fa-fw mr-2"></i> {% trans "Account Connections" %}</a>
+                <a class="dropdown-item" href="/accounts/password/change/"><i class="fa-solid fa-key fa-fw mr-2"></i> {% trans "Change Password" %}</a>
+                <a class="dropdown-item" href="/accounts/3rdparty/"><i class="fa-solid fa-arrow-up-right-from-square fa-fw mr-2"></i> {% trans "Account Connections" %}</a>
                 <div class="dropdown-divider"></div>
                 <form id="logout-form" method="post" action="/accounts/logout/" style="display:none;">
                     {% csrf_token %}
                 </form>
                 <a class="dropdown-item text-danger" href="javascript:document.getElementById('logout-form').submit();">
-                    <i class="fa fa-sign-out fa-fw mr-2"></i> {% trans "Log out" %}
+                    <i class="fa-solid fa-right-from-bracket fa-fw mr-2"></i> {% trans "Log out" %}
                 </a>
             </div>
         </li>
     {% else %}
         <li class="nav-item">
-            <a class="nav-link" href="{% url 'account_login' %}"><i class="fa fa-sign-in mr-1"></i> {% trans "Log in" %}</a>
+            <a class="nav-link" href="{% url 'account_login' %}"><i class="fa-solid fa-right-to-bracket mr-1"></i> {% trans "Log in" %}</a>
         </li>
-        <li class="nav-item dropdown">
-            <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" id="socialLoginDropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                {% trans "Social Login" %}
-            </a>
-            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="socialLoginDropdown">
-                <a class="dropdown-item" href="{% provider_login_url 'facebook' %}"><i class="fa fa-facebook fa-fw mr-2"></i> Facebook</a>
-                <a class="dropdown-item" href="{% provider_login_url 'google' %}"><i class="fa fa-google fa-fw mr-2"></i> Google</a>
-            </div>
-        </li>
+        {% get_social_providers_safe as socialaccount_providers %}
+        {% if socialaccount_providers %}
+            <li class="nav-item dropdown">
+                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" id="socialLoginDropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                    {% trans "Social Login" %}
+                </a>
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="socialLoginDropdown">
+                    {% for provider in socialaccount_providers %}
+                        <a class="dropdown-item" href="{% provider_login_url provider.id %}">
+                            <i class="fa-solid fa-{{ provider.id }} fa-fw mr-2"></i> {{ provider.name }}
+                        </a>
+                    {% endfor %}
+                </div>
+            </li>
+        {% endif %}
     {% endif %}
 </ul>

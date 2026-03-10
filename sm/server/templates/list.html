@@ -19,7 +19,7 @@
           <label class="custom-control-label" for="show_disposed">{% trans 'Show disposed' %}</label>
         </div>
         <a href="{% url 'server:create' %}" class="btn btn-sm btn-primary">
-          <i class="fa fa-plus-circle"></i> {% trans "Add New" %}
+          <i class="fa-solid fa-plus-circle"></i> {% trans "Add New" %}
         </a>
       </div>
     </div>
@@ -63,10 +63,10 @@
             <td>{{ object.patchtime }}</td>
             <td>
               <a href="{% url 'server:update' object.pk %}" title="{% trans 'Edit server' %}">
-                <i class="fa fa-pencil fa-fw fa-lg" aria-hidden="true"></i>
+                <i class="fa-solid fa-pen fa-fw fa-lg" aria-hidden="true"></i>
               </a>
               <a href="{% url 'server:delete' object.pk %}" title="{% trans 'Delete server' %}">
-                <i class="fa fa-trash fa-fw fa-lg" aria-hidden="true"></i>
+                <i class="fa-solid fa-trash fa-fw fa-lg" aria-hidden="true"></i>
               </a>
             </td>
           </tr>

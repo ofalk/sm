@@ -27,15 +27,15 @@
             {% buttons %}
             {% if request.path == object.get_update_url %}
                 <button type="submit" class="btn btn-sm btn-primary">
-                    <i class="fa fa-save mr-1"></i> {% trans "Save" %}
+                    <i class="fa-solid fa-save mr-1"></i> {% trans "Save" %}
                 </button>
             {% else %}
                 {% if object.group in user.groups.all or user.is_superuser %}
                     <a class="btn btn-sm btn-primary" role="button" href="{% url 'cluster:update' object.pk %}">
-                        <i class="fa fa-pencil mr-1"></i> {% trans 'Edit' %}
+                        <i class="fa-solid fa-pen mr-1"></i> {% trans 'Edit' %}
                     </a>
                     <a class="btn btn-sm btn-danger" role="button" href="{% url 'cluster:delete' object.pk %}">
-                        <i class="fa fa-trash mr-1"></i> {% trans 'Delete' %}
+                        <i class="fa-solid fa-trash mr-1"></i> {% trans 'Delete' %}
                     </a>
                 {% endif %}
             {% endif %}
@@ -55,7 +55,7 @@
         <div class="card-body p-0">
             {% if not object.server_set.all %}
                 <div class="p-4 text-center text-muted">
-                    <i class="fa fa-server fa-2x mb-2 opacity-25"></i>
+                    <i class="fa-solid fa-server fa-2x mb-2 opacity-25"></i>
                     <p class="mb-0">{% trans 'No servers assigned to this cluster.' %}</p>
                 </div>
             {% else %}

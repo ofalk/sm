@@ -19,7 +19,7 @@
           <label class="custom-control-label" for="show_empty">{% trans 'Show empty' %}</label>
         </div>
         <a href="{% url 'operatingsystem:create' %}" class="btn btn-sm btn-primary">
-          <i class="fa fa-plus-circle"></i> {% trans "Add New" %}
+          <i class="fa-solid fa-plus-circle"></i> {% trans "Add New" %}
         </a>
       </div>
     </div>
@@ -52,7 +52,7 @@
               {% endfor %}
             </td>
             <td>
-              <a href="{% url 'operatingsystem:create' vendor.pk %}" title="Add new operatingsystem"><i class="fa fa-plus-circle" aria-hidden="true"></i></a>
+              <a href="{% url 'operatingsystem:create' vendor.pk %}" title="Add new operatingsystem"><i class="fa-solid fa-plus-circle" aria-hidden="true"></i></a>
             </td>
           </tr>
         {% endfor %}

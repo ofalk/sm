@@ -1,15 +1,15 @@
 {% if object.status.name == 'In use' %}
-<i style="color:green;" class="fa fa-check-square" title="In use"></i>
+<i style="color:green;" class="fa-regular fa-square-check" title="In use"></i>
 {% elif object.status.name == 'Ordered' %}
-<i style="color:gold;" class="fa fa-caret-square-o-up" title="Ordered"></i>
+<i style="color:gold;" class="fa-regular fa-square-caret-up" title="Ordered"></i>
 {% elif object.status.name == 'Disposed' %}
-<i style="color:black;" class="fa fa-trash" title="Disposed"></i>
+<i style="color:black;" class="fa-solid fa-trash" title="Disposed"></i>
 {% elif object.status.name == 'To be disposed' %}
-<i style="color:red;" class="fa fa-square" title="To be disposed"></i>
+<i style="color:red;" class="fa-solid fa-square" title="To be disposed"></i>
 {% elif object.status.name == 'Stored' %}
-<i style="color:blue;" class="fa fa-caret-square-o-down" title="Stored"></i>
+<i style="color:blue;" class="fa-regular fa-square-caret-down" title="Stored"></i>
 {% elif object.status.name == 'Name reserved' %}
-<i style="color:grey;" class="fa fa-square" title="Name reserved"></i>
+<i style="color:grey;" class="fa-solid fa-square" title="Name reserved"></i>
 {% else %}
 {{ object.status }}
 {% endif %}

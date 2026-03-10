@@ -4,6 +4,7 @@ $(function () {
 
   var class_list = $("body").attr("class").split(/\s+/);
   $.each(class_list, function (index, item) {
+    if (!item) return;
     var selector;
     // Main menu entry
     selector = "ul.nav li#tab_" + item;

@@ -19,7 +19,7 @@
           <label class="custom-control-label" for="show_empty">{% trans 'Show empty' %}</label>
         </div>
         <a href="{% url 'servermodel:create' %}" class="btn btn-sm btn-primary">
-          <i class="fa fa-plus-circle"></i> {% trans "Add New" %}
+          <i class="fa-solid fa-plus-circle"></i> {% trans "Add New" %}
         </a>
       </div>
     </div>
@@ -47,14 +47,14 @@
               {% for servermodel in vendor.servermodel_set.all %}
                 <a href="{% url 'servermodel:detail' servermodel.pk %}" title="{{ servermodel }}">
                   {{ servermodel.name }}</a>
-                <a href="{% url 'servermodel:update' servermodel.pk %}" title="{% trans 'Edit servermodel' %}"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                <a href="{% url 'servermodel:update' servermodel.pk %}" title="{% trans 'Edit servermodel' %}"><i class="fa-solid fa-pen" aria-hidden="true"></i></a>
                 {% if not forloop.last %}, {% endif %}
               {% empty %}
                 {% trans "None" %}
               {% endfor %}
             </td>
             <td>
-              <a href="{% url 'servermodel:create' vendor.pk %}" title="{% trans 'Add new servermodel' %}"><i class="fa fa-plus-circle" aria-hidden="true"></i></a>
+              <a href="{% url 'servermodel:create' vendor.pk %}" title="{% trans 'Add new servermodel' %}"><i class="fa-solid fa-plus-circle" aria-hidden="true"></i></a>
             </td>
           </tr>
         {% endfor %}

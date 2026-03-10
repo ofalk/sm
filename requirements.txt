@@ -1,3 +1,5 @@
+coverage
+dj-database-url
 Django>=5.1
 django-allauth[socialaccount,mfa]>=65.4.0
 django-appconf
@@ -12,7 +14,10 @@ django-taggit>=6.0
 djangorestframework>=3.15
 docutils
 gunicorn
-python-decouple
+playwright
+psycopg2-binary
+pycco
 pylibravatar
+python-decouple
 pyyaml
 whitenoise>=6.7

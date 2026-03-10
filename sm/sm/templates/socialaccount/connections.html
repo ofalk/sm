@@ -34,7 +34,7 @@
                             {% with base_account.get_provider_account as account %}
                                 <tr>
                                     <td>
-                                        <i class="fa fa-{{ account.get_provider.id }} fa-fw mr-2"></i>
+                                        <i class="fa-solid fa-{{ account.get_provider.id }} fa-fw mr-2"></i>
                                         {{ account.get_provider.name }}
                                     </td>
                                     <td>
@@ -54,7 +54,7 @@
             </div>
             <div class="form-group mt-3">
                 <button type="submit" class="btn btn-sm btn-outline-danger">
-                    <i class="fa fa-unlink mr-1"></i> {% trans "Remove Selected" %}
+                    <i class="fa-solid fa-unlink mr-1"></i> {% trans "Remove Selected" %}
                 </button>
             </div>
         </form>
