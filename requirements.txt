@@ -1,4 +1,5 @@
 beautifulsoup4
+coverage
 dj-database-url
 django>=6.0,<7.0
 django-allauth
@@ -13,6 +14,8 @@ django-taggit
 djangorestframework
 drf-spectacular
 gunicorn
+psycopg
+pycco
 pyLibravatar
 python-decouple
 python3-openid
