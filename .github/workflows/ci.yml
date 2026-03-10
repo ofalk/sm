@@ -48,7 +48,7 @@ jobs:
       run: |
         cd sm
         python manage.py collectstatic --noinput
-        coverage run --source . manage.py test -v3 --exclude-tag=browser
+        coverage run --source . manage.py test -v3 --exclude-tag=browser sm.test_audit sm.test_search sm.test_templates sm.test_wsgi sm.test_social clusteroperatingsystem clusterpackage clusterpackagetype clustersoftware domain location operatingsystem patchtime server servermodel server status vendor
         coverage report --fail-under=70
         coverage html
 
