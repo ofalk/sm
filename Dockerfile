@@ -1,38 +1,24 @@
-# Use an official Python runtime as a parent image
-FROM python:3.14-slim-bookworm
+FROM python:3.11-slim
 
-# Set environment variables
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
+ENV PIP_NO_CACHE_DIR=1
+ENV PIP_DISABLE_PIP_VERSION_CHECK=1
 ENV DJANGO_SETTINGS_MODULE=sm.settings
-ENV SECRET_KEY="docker-insecure-key-for-quick-test"
-ENV DEBUG=True
-ENV ALLOWED_HOSTS="*"
-ENV DISABLE_SOCIAL_AUTH=True
 
-# Set work directory
 WORKDIR /app
 
-# Install system dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    sqlite3 \
+    gcc \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Python dependencies
-COPY requirements.txt /app/
-RUN pip install --no-cache-dir -r requirements.txt
+COPY sm/requirements.txt /app/
+RUN pip install --no-cache-dir -r /app/requirements.txt
 
-# Copy project files
-COPY . /app/
+COPY sm/ /app/
 
-# Make the entrypoint script executable
-RUN chmod +x /app/entrypoint.sh
+RUN python manage.py collectstatic --noinput || true
 
-# Set work directory to the Django app root
-WORKDIR /app/sm
-
-# Expose port 8000
 EXPOSE 8000
 
-# Start the entrypoint script using its absolute path
-CMD ["/app/entrypoint.sh"]
+CMD ["gunicorn", "--bind", "0.0.0.0:8000", "--workers", "4", "sm.wsgi:application"]
