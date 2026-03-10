@@ -173,9 +173,9 @@ class Tester(TestCase):
         self.assertEqual(item.vendor.name, self.vendor.name)
 
         self.assertIsInstance(item, Model)
-        if "%s was created successfully" % data[
-            "version"
-        ] not in response.content.decode("utf-8"):
+        if "%s was created successfully" % data["name"] not in response.content.decode(
+            "utf-8"
+        ):
             print(f"FAILED TO FIND MESSAGE IN: {response.content.decode('utf-8')}")
         self.assertContains(response, "%s was created successfully" % data["name"])
 
