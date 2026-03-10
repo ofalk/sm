@@ -13,6 +13,7 @@ django-simple-history
 django-taggit
 djangorestframework
 drf-spectacular
+fido2
 gunicorn
 psycopg
 pycco
