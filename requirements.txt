@@ -15,6 +15,7 @@ djangorestframework
 drf-spectacular
 fido2
 gunicorn
+playwright
 psycopg
 pycco
 pyLibravatar
