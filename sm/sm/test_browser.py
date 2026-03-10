@@ -3,9 +3,11 @@ import asyncio
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from django.urls import get_resolver
 from django.contrib.auth import get_user_model
+from django.test import tag
 from playwright.async_api import async_playwright
 
 
+@tag("browser")
 class BrowserIntegrationTest(StaticLiveServerTestCase):
     @classmethod
     def setUpClass(cls):

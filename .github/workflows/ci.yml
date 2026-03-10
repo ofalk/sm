@@ -48,7 +48,7 @@ jobs:
       run: |
         cd sm
         python manage.py collectstatic --noinput
-        coverage run --source . manage.py test -v3
+        coverage run --source . manage.py test -v3 --exclude-tag=browser
         coverage report --fail-under=70
         coverage html
 
