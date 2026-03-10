@@ -4,7 +4,6 @@ from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from django.urls import get_resolver
 from django.contrib.auth import get_user_model
 from playwright.async_api import async_playwright
-import unittest
 
 
 class BrowserIntegrationTest(StaticLiveServerTestCase):
@@ -58,27 +57,32 @@ class BrowserIntegrationTest(StaticLiveServerTestCase):
 
     def test_js_integrity_anonymous(self):
         """
-        Test public pages as an anonymous user to ensure login snippets etc are OK.
+        Test public pages as an anonymous user to ensure login snippets etc are
+        OK.
         """
         results = asyncio.run(self._async_test_js(is_anonymous=True))
-        
+
         if results:
             errors_msg = "\n\n".join(
                 [f"{url}:\n" + "\n".join(errors) for url, errors in results]
             )
-            self.fail(f"JS/Resource errors found for anonymous user:\n\n{errors_msg}")
+            self.fail(
+                f"JS/Resource errors found for anonymous user:\n\n" f"{errors_msg}"
+            )
 
     def test_js_integrity_authenticated(self):
         """
         Test project pages as an authenticated user.
         """
         results = asyncio.run(self._async_test_js(is_anonymous=False))
-        
+
         if results:
             errors_msg = "\n\n".join(
                 [f"{url}:\n" + "\n".join(errors) for url, errors in results]
             )
-            self.fail(f"JS/Resource errors found for authenticated user:\n\n{errors_msg}")
+            self.fail(
+                f"JS/Resource errors found for authenticated user:\n\n" f"{errors_msg}"
+            )
 
     async def _async_test_js(self, is_anonymous=False):
         async with async_playwright() as p:
@@ -118,50 +122,75 @@ class BrowserIntegrationTest(StaticLiveServerTestCase):
                 target_urls = self.get_all_urls()
                 if is_anonymous:
                     # For anonymous, only test root and login-related pages
-                    target_urls = ['/', '/accounts/login/']
-                
-                print(f"\n[{browser_name}] Testing {len(target_urls)} URLs (Anonymous={is_anonymous})...")
+                    target_urls = ["/", "/accounts/login/"]
+
+                print(
+                    f"\n[{browser_name}] Testing {len(target_urls)} URLs "
+                    f"(Anonymous={is_anonymous})..."
+                )
 
                 async def check_url(url, browser_name=browser_name):
                     new_page = await context.new_page()
                     errors = []
-                    
+
                     # Capture ALL console messages (errors AND warnings)
-                    new_page.on("console", lambda msg: errors.append(f"Console {msg.type.upper()}: {msg.text}") if msg.type in ["error", "warning"] else None)
-                    
+                    new_page.on(
+                        "console",
+                        lambda msg: (
+                            errors.append(f"Console {msg.type.upper()}: {msg.text}")
+                            if msg.type in ["error", "warning"]
+                            else None
+                        ),
+                    )
+
                     # Capture unhandled exceptions
-                    new_page.on("pageerror", lambda exc: errors.append(f"JS Exception: {exc}"))
-                    
+                    new_page.on(
+                        "pageerror",
+                        lambda exc: errors.append(f"JS Exception: {exc}"),
+                    )
+
                     # Capture failed network requests
-                    new_page.on("requestfailed", lambda req: errors.append(f"Network Failure ({req.method}): {req.url} - {req.failure.error_text}"))
-                    
+                    new_page.on(
+                        "requestfailed",
+                        lambda req: errors.append(
+                            f"Network Failure ({req.method}): {req.url} - "
+                            f"{req.failure.error_text}"
+                        ),
+                    )
+
                     # Capture non-OK responses and MIME mismatches
                     async def handle_response(res):
                         # 3xx are fine (redirects), but 4xx and 5xx are errors
                         if res.status >= 400:
                             errors.append(f"HTTP {res.status} on {res.url}")
-                        
+
                         # Check for MIME type conflicts on scripts
                         content_type = res.headers.get("content-type", "")
                         if res.ok and ".js" in res.url and "text/html" in content_type:
-                            errors.append(f"MIME Type Conflict: {res.url} returned {content_type} (expected javascript)")
+                            errors.append(
+                                f"MIME Type Conflict: {res.url} returned "
+                                f"{content_type} (expected javascript)"
+                            )
 
                     new_page.on("response", handle_response)
-                    
+
                     try:
                         await new_page.goto(
                             f"{self.live_server_url}{url}",
                             wait_until="networkidle",
                             timeout=15000,
                         )
-                        # Explicit wait for any late-firing JS (like Chart.js initialization)
+                        # Explicit wait for any late-firing JS
                         await asyncio.sleep(1.0)
-                        
+
                         if errors:
                             return (f"[{browser_name}] {url}", errors)
                         return None
                     except Exception as e:
-                        return (f"[{browser_name}] {url}", [f"Navigation Error: {str(e)}"])
+                        return (
+                            f"[{browser_name}] {url}",
+                            [f"Navigation Error: {str(e)}"],
+                        )
                     finally:
                         await new_page.close()
 

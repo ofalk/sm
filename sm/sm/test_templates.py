@@ -7,8 +7,9 @@ from django.conf import settings
 class TemplateIntegrityTest(TestCase):
     def test_no_scripts_block_override(self):
         """
-        Verify that no template overrides the 'scripts' block without calling {{ block.super }}.
-        Overriding 'scripts' without super() blocks jQuery and causes JS errors.
+        Verify that no template overrides the 'scripts' block without calling
+        {{ block.super }}. Overriding 'scripts' without super() blocks jQuery
+        and causes JS errors.
         """
         template_dirs = [os.path.join(settings.BASE_DIR, "sm", "templates")]
         # Also check app templates
@@ -39,8 +40,9 @@ class TemplateIntegrityTest(TestCase):
                                 if not block_super_re.search(content):
                                     rel_path = os.path.relpath(path, settings.BASE_DIR)
                                     errors.append(
-                                        f"{rel_path} overrides 'scripts' block "
-                                        "without calling {{ block.super }}"
+                                        f"{rel_path} overrides 'scripts' block"
+                                        " without calling"
+                                        " {{ block.super }}"
                                     )
 
         self.assertEqual(errors, [], "\n".join(errors))
