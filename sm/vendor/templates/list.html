@@ -24,6 +24,10 @@
       <thead>
         <tr>
           <th>{% trans "Name" %}</th>
+          <th class="text-center">
+            <i class="fa-solid fa-microchip mr-1"></i>H/W / 
+            <i class="fa-solid fa-code mr-1"></i>S/W
+          </th>
           <th>{% trans "Actions" %}</th>
         </tr>
       </thead>
@@ -34,6 +38,18 @@
               <a href="{% url 'vendor:detail' object.pk %}" title="{{ object.name }}">
                 {{ object.name }}
               </a>
+            </td>
+            <td class="text-center" style="white-space: nowrap;">
+              <span class="d-inline-block text-center" style="width: 25px;">
+                {% if object.is_hardware %}
+                  <i class="fa-solid fa-microchip text-muted" title="{% trans '(virtual) Hardware Vendor' %}" data-toggle="tooltip"></i>
+                {% endif %}
+              </span>
+              <span class="d-inline-block text-center" style="width: 25px;">
+                {% if object.is_software %}
+                  <i class="fa-solid fa-code text-muted" title="{% trans 'Software Vendor' %}" data-toggle="tooltip"></i>
+                {% endif %}
+              </span>
             </td>
             <td>
               <a href="{% url 'vendor:update' object.pk %}" title="{% trans 'Edit vendor' %}">

@@ -59,10 +59,10 @@ class UpdateView(SuccessMessageMixin, LoginRequiredMixin, GenericUpdateView):
 class CreateView(SuccessMessageMixin, LoginRequiredMixin, GenericCreateView):
     success_message = "%(name)s " + _("was created successfully")
 
-    template_name = '%s/edit.html' % app_label
-    fields = '__all__'
+    template_name = "%s/edit.html" % app_label
+    form_class = Form
     model = Model
-    success_url = reverse_lazy('%s:index' % app_label)
+    success_url = reverse_lazy("%s:index" % app_label)
 
     def get_initial(self):
         from vendor.models import Model as VendorModel

@@ -27,12 +27,11 @@ class ListView(LoginRequiredMixin, GenericListView):
     def get_queryset(self):
         from vendor.models import Model as VendorModel
 
+        qs = VendorModel.objects.filter(is_software=True)
         if "srvmanager-show_empty" in self.request.COOKIES:
             if self.request.COOKIES["srvmanager-show_empty"] == "false":
-                return VendorModel.objects.exclude(operatingsystem=None).order_by(
-                    "name"
-                )
-        return VendorModel.objects.all().order_by("name")
+                return qs.exclude(operatingsystem=None).order_by("name")
+        return qs.order_by("name")
 
 
 class DetailView(LoginRequiredMixin, GenericUpdateView):
@@ -60,7 +59,7 @@ class CreateView(SuccessMessageMixin, LoginRequiredMixin, GenericCreateView):
     success_message = "%(version)s " + _("was created successfully")
 
     template_name = "%s/edit.html" % app_label
-    fields = "__all__"
+    form_class = Form
     model = Model
     success_url = reverse_lazy("%s:index" % app_label)
 
