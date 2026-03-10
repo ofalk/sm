@@ -1,0 +1,82 @@
+{% extends "site_base.html" %}
+{% load i18n %}
+
+{% block head_title %}{% trans "Version Comparison" %}{% endblock %}
+
+{% block body %}
+<div class="wide-container mt-4">
+    <div class="mb-4 d-flex justify-content-between align-items-center">
+        <div>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb bg-transparent p-0 mb-2">
+                    <li class="breadcrumb-item"><a href="{{ instance.get_absolute_url }}">{{ instance }}</a></li>
+                    <li class="breadcrumb-item active">{% trans "Version History" %}</li>
+                </ol>
+            </nav>
+            <h3>{% trans "Changes in version from" %} <span class="text-primary">{{ record.history_date|date:"Y-m-d H:i" }}</span></h3>
+        </div>
+        <a href="{{ instance.get_absolute_url }}" class="btn btn-sm btn-outline-secondary">
+            <i class="fa-solid fa-arrow-left mr-1"></i> {% trans "Back to Detail" %}
+        </a>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-header bg-white d-flex justify-content-between align-items-center">
+            <div>
+                <span class="badge badge-light border mr-2">
+                    <i class="fa-solid fa-user mr-1"></i>
+                    {% if record.history_user %}{{ record.history_user.username }}{% else %}{% trans "System" %}{% endif %}
+                </span>
+                {% if record.history_type == "+" %}
+                    <span class="badge badge-success">{% trans "Created" %}</span>
+                {% elif record.history_type == "~" %}
+                    <span class="badge badge-info">{% trans "Changed" %}</span>
+                {% else %}
+                    <span class="badge badge-danger">{% trans "Deleted" %}</span>
+                {% endif %}
+            </div>
+            <div class="text-muted small">
+                ID: {{ record.history_id }}
+            </div>
+        </div>
+        <div class="card-body p-0">
+            {% if diff and diff.changes %}
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead class="bg-light">
+                            <tr>
+                                <th style="width: 25%;">{% trans "Field" %}</th>
+                                <th style="width: 35%;">{% trans "Old Value" %}</th>
+                                <th style="width: 5%;"></th>
+                                <th style="width: 35%;">{% trans "New Value" %}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for change in diff.changes %}
+                            <tr>
+                                <td class="font-weight-bold">{{ change.field }}</td>
+                                <td class="text-muted"><del>{{ change.old|default:"(None)" }}</del></td>
+                                <td class="text-center text-primary"><i class="fa-solid fa-arrow-right"></i></td>
+                                <td class="font-weight-bold text-success">{{ change.new|default:"(None)" }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% elif record.history_type == "+" %}
+                <div class="p-5 text-center text-muted">
+                    <i class="fa-solid fa-star fa-3x mb-3 opacity-25"></i>
+                    <h4>{% trans "Initial Version" %}</h4>
+                    <p>{% trans "This is the very first record of this object. All data was newly created." %}</p>
+                </div>
+            {% else %}
+                <div class="p-5 text-center text-muted">
+                    <i class="fa-solid fa-info-circle fa-3x mb-3 opacity-25"></i>
+                    <h4>{% trans "No Data Changes" %}</h4>
+                    <p>{% trans "Metadata (like the user or date) was updated, but no actual data fields were changed." %}</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

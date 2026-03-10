@@ -58,16 +58,20 @@ $(function () {
     });
   });
 
-  // Command Palette (Ctrl+K)
+  // Command Palette (Ctrl+K or Cmd+K)
   $(document).on("keydown", function (e) {
-    if ((e.ctrlKey || e.metaKey) && e.key === "k") {
+    // Check for K key AND (Ctrl or Cmd)
+    if (e.key.toLowerCase() === "k" && (e.ctrlKey || e.metaKey)) {
       e.preventDefault();
+      e.stopPropagation();
       $("#commandPalette").modal("show");
-      setTimeout(function () {
+      // Focus the input once the modal is shown
+      $("#commandPalette").on("shown.bs.modal", function () {
         $("#commandSearch").focus();
-      }, 500);
+      });
     }
   });
+
 });
 
 $(document).ajaxSend(function (event, xhr, settings) {

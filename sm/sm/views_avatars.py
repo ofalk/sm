@@ -25,9 +25,8 @@ def avatar_proxy(request, email_hash):
     # For now, we'll just redirect to the real URL but with a script that fetches it
     # OR we fetch it here. Fetching is better for "hiding" the slow load.
 
-    # We need the email to get the URL, but we only have the hash in the URL for security.
-    # If we don't have the email, we'll just redirect to libravatar.
-    url = f"https://se.libravatar.org/avatar/{email_hash}?s={size}&d=mm"
+    # Fetch from libravatar
+    url = f"https://cdn.libravatar.org/avatar/{email_hash}?s={size}&d=mm"
 
     try:
         res = requests.get(url, timeout=5)

@@ -16,6 +16,9 @@ EMAIL_BACKEND = config(
     "EMAIL_BACKEND", default="django.core.mail.backends.console.EmailBackend"
 )
 
+THEME_CONTACT_EMAIL = config("THEME_CONTACT_EMAIL", default="oliver@linux-kernel.at")
+THEME_GITHUB_URL = config("THEME_GITHUB_URL", default="https://github.com/ofalk/sm")
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -35,6 +38,7 @@ INSTALLED_APPS = [
     "whitenoise.runserver_nostatic",
     "taggit",
     "simple_history",
+    "drf_spectacular",
     # Allauth
     "allauth",
     "allauth.account",
@@ -91,6 +95,7 @@ TEMPLATES = [
                 "django.template.context_processors.media",
                 "django.template.context_processors.static",
                 "django.template.context_processors.tz",
+                "sm.context_processors.theme_settings",
             ],
             "loaders": [
                 "django.template.loaders.filesystem.Loader",
@@ -224,6 +229,18 @@ MESSAGE_TAGS = {messages.ERROR: "danger"}
 MESSAGE_STORAGE = "django.contrib.messages.storage.fallback.FallbackStorage"
 
 TAGGIT_CASE_INSENSITIVE = True
+
+# REST Framework Settings
+REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'ServerManager API',
+    'DESCRIPTION': 'API for managing servers, clusters, and infrastructure.',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+}
 
 # Bootstrap 4 settings
 BOOTSTRAP4 = {

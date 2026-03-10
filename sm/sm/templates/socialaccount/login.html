@@ -2,6 +2,7 @@
 
 {% load i18n %}
 {% load bootstrap4 %}
+{% load social_tags %}
 
 {% block head_title %}{% trans "Sign In" %}{% endblock %}
 
@@ -31,7 +32,7 @@
                     <form method="post">
                         {% csrf_token %}
                         <button type="submit" class="btn btn-{{ provider.id }} btn-block">
-                            <i class="fa-solid fa-{{ provider.id }} mr-1"></i> {% trans "Continue" %}
+                            <i class="{{ provider.id|provider_icon_class }} mr-1"></i> {% trans "Continue" %}
                         </button>
                     </form>
                 </div>
@@ -40,3 +41,4 @@
     </div>
 </div>
 {% endblock %}
+

@@ -1,6 +1,11 @@
 {% load i18n %}
 <div class="container text-center text-muted my-5">
     <hr>
-    <p class="mb-0">&copy; {% now "Y" %} ServerManager - {% trans "Efficient Server Infrastructure Management" %}</p>
-    <p><small>{% trans "Created by" %} <a href="https://github.com/ofalk" target="_blank" rel="noopener">@ofalk</a></small></p>
+    <p class="mb-2">&copy; {% now "Y" %} ServerManager - {% trans "Efficient Server Infrastructure Management" %}</p>
+    <p class="mb-3 small">
+        <a href="{% url 'terms' %}" class="text-muted mx-2">{% trans "Terms" %}</a>
+        <a href="{% url 'privacy' %}" class="text-muted mx-2">{% trans "Privacy" %}</a>
+        <a href="{% url 'impressum' %}" class="text-muted mx-2">{% trans "Impressum" %}</a>
+        <a href="{{ THEME_GITHUB_URL }}" class="text-muted mx-2" target="_blank" rel="noopener"><i class="fa-brands fa-github mr-1"></i> GitHub</a>
+    </p>
 </div>

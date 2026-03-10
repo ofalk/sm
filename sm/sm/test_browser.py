@@ -42,6 +42,7 @@ class BrowserIntegrationTest(StaticLiveServerTestCase):
                             "delete",
                             "update",
                             "detail",
+                            "schema",
                         ]
                     ):
                         continue
@@ -154,7 +155,7 @@ class BrowserIntegrationTest(StaticLiveServerTestCase):
                         "requestfailed",
                         lambda req: errors.append(
                             f"Network Failure ({req.method}): {req.url} - "
-                            f"{req.failure.error_text}"
+                            f"{getattr(req.failure, 'error_text', req.failure) if req.failure else 'Unknown Error'}"
                         ),
                     )
 

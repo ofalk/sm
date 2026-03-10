@@ -11,7 +11,8 @@ django-htmlmin
 django-simple-history
 # mysqlclient
 django-taggit>=6.0
-djangorestframework>=3.15
+djangorestframework
+drf-spectacular>=3.15
 docutils
 gunicorn
 playwright

@@ -4,6 +4,7 @@
 {% load i18n %}
 {% load bootstrap4 %}
 {% load sm_history_tags %}
+{% load history_url_tags %}
 
 {% block head_title %}{% trans "Patchtime" %} :: {{ object.name }}{% endblock %}
 
@@ -75,7 +76,7 @@
                     <tbody>
                         {% for record in object.history.all|slice:":10" %}
                         <tr>
-                            <td class="text-nowrap">{{ record.history_date|date:"Y-m-d H:i" }}</td>
+                            <td class="text-nowrap"><a href="{% get_history_diff_url record %}">{{ record.history_date|date:"Y-m-d H:i" }}</a></td>
                             <td>
                                 {% if record.history_user %}
                                     {{ record.history_user.username }}
