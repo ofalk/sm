@@ -45,16 +45,37 @@ class SearchView(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        query = self.request.GET.get('q', '')
+        query = self.request.GET.get('q', '').lower()
         context['query'] = query
         
+        # Navigation Quick Jumps
+        nav_targets = [
+            {'name': 'Dashboard', 'url': '/', 'icon': 'fa-gauge-high'},
+            {'name': 'Servers', 'url': '/server/', 'icon': 'fa-server'},
+            {'name': 'Server Models', 'url': '/servermodel/', 'icon': 'fa-cubes'},
+            {'name': 'Vendors', 'url': '/vendor/', 'icon': 'fa-industry'},
+            {'name': 'Clusters', 'url': '/cluster/', 'icon': 'fa-th-large'},
+            {'name': 'Operating Systems', 'url': '/operatingsystem/', 'icon': 'fa-laptop'},
+            {'name': 'Statuses', 'url': '/status/', 'icon': 'fa-tag'},
+            {'name': 'Locations', 'url': '/location/', 'icon': 'fa-map-marker-alt'},
+            {'name': 'Domains', 'url': '/domain/', 'icon': 'fa-globe'},
+            {'name': 'Patch Times', 'url': '/patchtime/', 'icon': 'fa-calendar'},
+            {'name': 'Cluster Software', 'url': '/clustersoftware/', 'icon': 'fa-shield-halved'},
+            {'name': 'Cluster Packages', 'url': '/clusterpackage/', 'icon': 'fa-archive'},
+            {'name': 'API Documentation', 'url': '/api/schema/swagger-ui/', 'icon': 'fa-book'},
+        ]
+        
         if len(query) >= 2:
+            # Filter navigation targets
+            context['nav_results'] = [item for item in nav_targets if query in (item['name'].lower())]
+            
             context['servers'] = Server.objects.filter(hostname__icontains=query)[:10]
             context['vendors'] = Vendor.objects.filter(name__icontains=query)[:10]
             context['clusters'] = Cluster.objects.filter(name__icontains=query)[:10]
             
             # Simple check if anything was found
             context['has_results'] = any([
+                context['nav_results'],
                 context['servers'].exists(),
                 context['vendors'].exists(),
                 context['clusters'].exists()

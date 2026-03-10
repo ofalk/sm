@@ -120,23 +120,5 @@
                 </div>
             </div>
         </div>
-
-        <script>
-            // Simple Command Palette Logic
-            $(function() {
-                var searchTimeout;
-                $('#commandSearch').on('input', function() {
-                    var q = $(this).val();
-                    clearTimeout(searchTimeout);
-                    if (q.length < 2) return;
-
-                    searchTimeout = setTimeout(function() {
-                        $.get('/search/?q=' + encodeURIComponent(q) + '&ajax=1', function(data) {
-                            $('#commandResults').html(data);
-                        });
-                    }, 300);
-                });
-            });
-        </script>
     </body>
 </html>

@@ -59,20 +59,81 @@ $(function () {
   });
 
   // Command Palette (Ctrl+K or Cmd+K)
+  var isMac = navigator.platform.toUpperCase().indexOf("MAC") >= 0;
+  var cmdKeyHint = isMac ? "⌘K" : "Ctrl+K";
+
+  // Update placeholders with OS-aware hints
+  $("#commandSearch").attr(
+    "placeholder",
+    $("#commandSearch").attr("placeholder").replace("...", " (" + cmdKeyHint + ")")
+  );
+  $(".search-form input").attr(
+    "placeholder",
+    $(".search-form input").attr("placeholder") + " (" + cmdKeyHint + ")"
+  );
+
   $(document).on("keydown", function (e) {
-    // Check for K key AND (Ctrl or Cmd)
     if (e.key.toLowerCase() === "k" && (e.ctrlKey || e.metaKey)) {
       e.preventDefault();
       e.stopPropagation();
       $("#commandPalette").modal("show");
-      // Focus the input once the modal is shown
-      $("#commandPalette").on("shown.bs.modal", function () {
-        $("#commandSearch").focus();
-      });
     }
   });
 
-});
+  $("#commandPalette").on("shown.bs.modal", function () {
+    $("#commandSearch").focus();
+  });
+
+  var searchTimeout;
+  var selectedIndex = -1;
+
+  $("#commandSearch").on("input", function () {
+    var q = $(this).val();
+    clearTimeout(searchTimeout);
+    if (q.length < 2) {
+      $("#commandResults").html("");
+      selectedIndex = -1;
+      return;
+    }
+
+    searchTimeout = setTimeout(function () {
+      $.get("/search/?q=" + encodeURIComponent(q) + "&ajax=1", function (data) {
+        $("#commandResults").html(data);
+        selectedIndex = -1;
+      });
+    }, 300);
+  });
+
+  $("#commandSearch").on("keydown", function (e) {
+    var $items = $("#commandResults .list-group-item");
+    if (!$items.length) return;
+
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      selectedIndex = Math.min(selectedIndex + 1, $items.length - 1);
+      updateSelection($items);
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      selectedIndex = Math.max(selectedIndex - 1, 0);
+      updateSelection($items);
+    } else if (e.key === "Enter") {
+      if (selectedIndex >= 0) {
+        e.preventDefault();
+        $items.eq(selectedIndex)[0].click();
+      }
+    }
+  });
+
+  function updateSelection($items) {
+    $items.removeClass("active bg-primary text-white");
+    if (selectedIndex >= 0) {
+      var $selected = $items.eq(selectedIndex);
+      $selected.addClass("active bg-primary text-white");
+      $selected[0].scrollIntoView({ block: "nearest" });
+    }
+  }
+  });
+
 
 $(document).ajaxSend(function (event, xhr, settings) {
   function getCookie(name) {

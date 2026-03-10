@@ -11,6 +11,28 @@
 
     {% if has_results %}
         <div class="row">
+            {% if nav_results %}
+            <div class="col-md-12 mb-4">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-white">
+                        <h5 class="mb-0"><i class="fa-solid fa-rocket mr-2"></i> {% trans "Quick Jumps" %}</h5>
+                    </div>
+                    <div class="card-body p-0">
+                        <ul class="list-group list-group-flush">
+                            {% for nav in nav_results %}
+                            <li class="list-group-item py-3">
+                                <a href="{{ nav.url }}" class="font-weight-bold">
+                                    <i class="fa-solid {{ nav.icon }} mr-2 text-muted"></i>
+                                    {{ nav.name }}
+                                </a>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
             {% if servers %}
             <div class="col-md-12 mb-4">
                 <div class="card shadow-sm">

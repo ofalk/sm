@@ -2,6 +2,14 @@
 
 {% if has_results %}
     <div class="list-group list-group-flush">
+        {% for nav in nav_results %}
+            <a href="{{ nav.url }}" class="list-group-item list-group-item-action d-flex align-items-center">
+                <i class="fa-solid {{ nav.icon }} mr-2 text-muted"></i>
+                <strong>{{ nav.name }}</strong>
+                <span class="text-muted small ml-2">{% trans "Jump to Page" %}</span>
+            </a>
+        {% endfor %}
+
         {% for server in servers %}
             <a href="{{ server.get_absolute_url }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
                 <div>
