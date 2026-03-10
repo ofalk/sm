@@ -1,5 +1,6 @@
 from django.db import models
 from django.urls import reverse
+from simple_history.models import HistoricalRecords
 
 from . import app_label
 
@@ -12,6 +13,7 @@ class VendorManager(models.Manager):
 class Model(models.Model):
     objects = VendorManager()
     name = models.CharField(max_length=45, unique=True)
+    history = HistoricalRecords()
 
     def __str__(self):
         return "%s" % self.name

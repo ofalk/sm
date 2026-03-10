@@ -1,5 +1,6 @@
 from django.db import models
 from django.urls import reverse
+from simple_history.models import HistoricalRecords
 
 from . import app_label
 
@@ -14,6 +15,7 @@ class Model(models.Model):
     name = models.CharField(max_length=45, unique=True)
 
     objects = ModelManager()
+    history = HistoricalRecords()
 
     def natural_key(self):
         return (self.name,)

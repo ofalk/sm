@@ -1,0 +1,93 @@
+{% extends "site_base.html" %}
+{% load i18n %}
+
+{% block head_title %}{% trans "Search Results" %}{% endblock %}
+
+{% block body %}
+<div class="wide-container mt-4">
+    <div class="mb-4">
+        <h3>{% trans "Search Results for" %} <span class="text-primary">"{{ query }}"</span></h3>
+    </div>
+
+    {% if has_results %}
+        <div class="row">
+            {% if servers %}
+            <div class="col-md-12 mb-4">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-white">
+                        <h5 class="mb-0"><i class="fa fa-server mr-2"></i> {% trans "Servers" %}</h5>
+                    </div>
+                    <div class="card-body p-0">
+                        <ul class="list-group list-group-flush">
+                            {% for server in servers %}
+                            <li class="list-group-item d-flex justify-content-between align-items-center py-3">
+                                <div>
+                                    <a href="{{ server.get_absolute_url }}" class="font-weight-bold">{{ server.hostname }}</a>
+                                    <div class="small text-muted">{{ server.operatingsystem }} | {{ server.location }}</div>
+                                </div>
+                                <span class="badge badge-light border">{{ server.status }}</span>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            {% if vendors %}
+            <div class="col-md-6 mb-4">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-white">
+                        <h5 class="mb-0"><i class="fa fa-industry mr-2"></i> {% trans "Vendors" %}</h5>
+                    </div>
+                    <div class="card-body p-0">
+                        <ul class="list-group list-group-flush">
+                            {% for vendor in vendors %}
+                            <li class="list-group-item py-3">
+                                <a href="{{ vendor.get_absolute_url }}" class="font-weight-bold">{{ vendor.name }}</a>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            {% if clusters %}
+            <div class="col-md-6 mb-4">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-white">
+                        <h5 class="mb-0"><i class="fa fa-th-large mr-2"></i> {% trans "Clusters" %}</h5>
+                    </div>
+                    <div class="card-body p-0">
+                        <ul class="list-group list-group-flush">
+                            {% for cluster in clusters %}
+                            <li class="list-group-item py-3">
+                                <a href="{{ cluster.get_absolute_url }}" class="font-weight-bold">{{ cluster.name }}</a>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    {% else %}
+        <div class="card shadow-sm mt-5">
+            <div class="card-body text-center py-5">
+                <i class="fa fa-search fa-4x text-light mb-4"></i>
+                {% if query_too_short %}
+                    <h4 class="text-muted">{% trans "Query too short." %}</h4>
+                    <p class="text-muted">{% trans "Please enter at least 2 characters to search." %}</p>
+                {% else %}
+                    <h4 class="text-muted">{% trans "No results found." %}</h4>
+                    <p class="text-muted">{% trans "Try searching for a different hostname, vendor, or cluster name." %}</p>
+                {% endif %}
+                <a href="{% url 'dashboard' %}" class="btn btn-primary mt-3">
+                    {% trans "Back to Dashboard" %}
+                </a>
+            </div>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

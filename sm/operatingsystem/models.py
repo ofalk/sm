@@ -1,5 +1,6 @@
 from django.db import models
 from django.urls import reverse
+from simple_history.models import HistoricalRecords
 from vendor.models import Model as VendorModel
 
 from django.core.exceptions import ObjectDoesNotExist
@@ -91,6 +92,8 @@ class Model(models.Model):
         related_query_name="%s" % app_label,
         on_delete=models.PROTECT,
     )
+
+    history = HistoricalRecords()
 
     def __str__(self):
         return "{} {}".format(self.vendor.name, self.version)

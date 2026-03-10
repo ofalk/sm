@@ -1,6 +1,7 @@
 from django.db import models
 from django_countries.fields import CountryField
 from django.urls import reverse
+from simple_history.models import HistoricalRecords
 
 from . import app_label
 
@@ -12,6 +13,7 @@ class LocationManager(models.Manager):
 
 class Model(models.Model):
     objects = LocationManager()
+    history = HistoricalRecords()
     name = models.CharField(max_length=45)
     country = CountryField()
 

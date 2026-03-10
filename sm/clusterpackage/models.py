@@ -1,10 +1,12 @@
 from django.db import models
 from django.urls import reverse
+from simple_history.models import HistoricalRecords
 from status.models import Model as StatusModel
 from cluster.models import Model as ClusterModel
 from clusterpackagetype.models import Model as ClusterpackagetypeModel
 
 from taggit.managers import TaggableManager
+import uuid
 
 from . import app_label
 
@@ -23,13 +25,11 @@ class Model(models.Model):
     status = models.ForeignKey(
         StatusModel,
         related_name="%s_set" % app_label,
-        related_query_name="%s_set" % app_label,
         on_delete=models.PROTECT,
     )
     cluster = models.ForeignKey(
         ClusterModel,
         related_name="%s_set" % app_label,
-        related_query_name="%s_set" % app_label,
         on_delete=models.PROTECT,
     )
     description = models.CharField(max_length=256)
@@ -40,10 +40,10 @@ class Model(models.Model):
     package_type = models.ForeignKey(
         ClusterpackagetypeModel,
         related_name="%s_set" % app_label,
-        related_query_name="%s_set" % app_label,
         on_delete=models.PROTECT,
     )
     tags = TaggableManager(blank=True)
+    history = HistoricalRecords(related_name="clusterpackage_history")
 
     def __str__(self):
         return "{}-{}".format(self.cluster, self.name)

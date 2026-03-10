@@ -1,5 +1,6 @@
 from django.db import models
 from django.urls import reverse
+from simple_history.models import HistoricalRecords
 from vendor.models import Model as VendorModel
 
 from . import app_label
@@ -14,6 +15,7 @@ class ServerModelManager(models.Manager):
 
 class Model(models.Model):
     objects = ServerModelManager()
+    history = HistoricalRecords()
     name = models.CharField(max_length=45)
     vendor = models.ForeignKey(
         VendorModel,

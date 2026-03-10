@@ -5,6 +5,7 @@ from django.contrib import admin
 
 from django.views.generic import TemplateView
 from django.views.generic.base import RedirectView
+from .views import DashboardView, SearchView
 
 import debug_toolbar
 
@@ -15,6 +16,10 @@ urlpatterns = [
     
     # Allauth URLs
     path('accounts/', include('allauth.urls')),
+
+    # Dashboard & Search
+    path('', DashboardView.as_view(), name='dashboard'),
+    path('search/', SearchView.as_view(), name='search'),
 
     # Project Apps
     path('cluster/', include('cluster.urls')),
@@ -29,9 +34,6 @@ urlpatterns = [
     path('clustersoftware/', include('clustersoftware.urls')),
     path('clusterpackagetype/', include('clusterpackagetype.urls')),
     path('vendor/', include('vendor.urls')),
-
-    # Home redirect
-    re_path(r'^$', RedirectView.as_view(url='/server/')),
 ]
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

@@ -12,10 +12,11 @@
                >{{ brand.name }}</a>
         {% endfor %}
     {% endif %}
-    <a title="{{ provider.name }}"
-       class="btn btn-sm btn-outline-primary socialaccount_provider {{ provider.id }}"
+    <a title="{{ provider.name }}" 
+       class="btn btn-sm btn-outline-{{ provider.id }} socialaccount_provider {{ provider.id }}" 
        href="{% provider_login_url provider.id process=process %}">
        <i class="fa fa-{{ provider.id }} mr-1"></i> {{ provider.name }}
     </a>
+
 </li>
 {% endfor %}

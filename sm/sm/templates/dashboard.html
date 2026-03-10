@@ -1,0 +1,146 @@
+{% extends "site_base.html" %}
+{% load i18n %}
+
+{% block head_title %}{% trans "Dashboard" %}{% endblock %}
+
+{% block extra_head %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endblock %}
+
+{% block body %}
+<div class="wide-container mt-4">
+    <!-- Stat Cards -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card shadow-sm border-0 bg-primary text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-uppercase mb-1 small">{% trans "Total Servers" %}</h6>
+                            <h2 class="mb-0">{{ server_count }}</h2>
+                        </div>
+                        <i class="fa fa-server fa-2x opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card shadow-sm border-0 bg-success text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-uppercase mb-1 small">{% trans "Active Clusters" %}</h6>
+                            <h2 class="mb-0">{{ cluster_count }}</h2>
+                        </div>
+                        <i class="fa fa-th-large fa-2x opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card shadow-sm border-0 bg-info text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-uppercase mb-1 small">{% trans "Vendors" %}</h6>
+                            <h2 class="mb-0">{{ vendor_count }}</h2>
+                        </div>
+                        <i class="fa fa-industry fa-2x opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card shadow-sm border-0 bg-warning text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-uppercase mb-1 small">{% trans "Operating Systems" %}</h6>
+                            <h2 class="mb-0">{{ os_count }}</h2>
+                        </div>
+                        <i class="fa fa-laptop fa-2x opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Chart -->
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0">{% trans "OS Distribution" %}</h5>
+                </div>
+                <div class="card-body">
+                    <div style="position: relative; height: 300px; width: 100%;">
+                        <canvas id="osChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0">{% trans "Recently Added Servers" %}</h5>
+                </div>
+                <div class="card-body p-0">
+                    <ul class="list-group list-group-flush">
+                        {% for server in recent_servers %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center py-3">
+                            <div>
+                                <a href="{{ server.get_absolute_url }}" class="font-weight-bold">{{ server.hostname }}</a>
+                                <div class="small text-muted">{{ server.operatingsystem }}</div>
+                            </div>
+                            <span class="badge badge-light border">{{ server.status }}</span>
+                        </li>
+                        {% empty %}
+                        <li class="list-group-item text-center text-muted py-4">
+                            {% trans "No servers found." %}
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="card-footer bg-white text-center">
+                    <a href="{% url 'server:index' %}" class="btn btn-sm btn-link text-primary font-weight-bold">
+                        {% trans "View All Servers" %} <i class="fa fa-arrow-right ml-1"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const ctx = document.getElementById('osChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: {{ os_labels|safe }},
+            datasets: [{
+                data: {{ os_data|safe }},
+                backgroundColor: [
+                    '#2780e3',
+                    '#3fb618',
+                    '#ff0039',
+                    '#f0ad4e',
+                    '#9954bb'
+                ],
+                borderWidth: 0
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                }
+            },
+            cutout: '70%'
+        }
+    });
+</script>
+{% endblock %}

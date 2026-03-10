@@ -7,6 +7,7 @@ Current only one model is defined:
 
 from django.db import models
 from django.urls import reverse
+from simple_history.models import HistoricalRecords
 from clustersoftware.models import Model as ClustersoftwareModel
 from django.contrib.auth.models import Group
 
@@ -43,6 +44,8 @@ class Model(models.Model):
     group = models.ForeignKey(
         Group, editable=False, blank=True, null=True, on_delete=models.PROTECT
     )
+
+    history = HistoricalRecords()
 
     objects = ModelManager()
 

@@ -7,6 +7,14 @@ except Exception:
 
 import random
 import string
+from libravatar import libravatar_url
+
+
+def get_libravatar_url(email, size=80, default="mm"):
+    """
+    Get Libravatar URL for an email address
+    """
+    return libravatar_url(email=email, size=size, default=default)
 
 
 def random_string(len=10):

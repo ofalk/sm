@@ -1,5 +1,6 @@
 from django.db import models
 from django.urls import reverse
+from simple_history.models import HistoricalRecords
 
 from . import app_label
 
@@ -11,6 +12,7 @@ class ClusterPackageTypeManager(models.Manager):
 
 class Model(models.Model):
     objects = ClusterPackageTypeManager()
+    history = HistoricalRecords()
     name = models.CharField(max_length=45)
 
     def __str__(self):

@@ -18,7 +18,44 @@ body {
   transition: color 0.2s;
 }
 
-/* Spacing & Layout */
+/* Social Provider Colors */
+.btn-facebook {
+  background-color: #3b5998 !important;
+  border-color: #3b5998 !important;
+  color: #fff !important;
+}
+.btn-facebook:hover {
+  background-color: #2d4373 !important;
+  filter: brightness(90%);
+}
+
+.btn-google {
+  background-color: #db4437 !important;
+  border-color: #db4437 !important;
+  color: #fff !important;
+}
+.btn-google:hover {
+  background-color: #c53929 !important;
+  filter: brightness(90%);
+}
+
+.btn-outline-facebook {
+  color: #3b5998 !important;
+  border-color: #3b5998 !important;
+}
+.btn-outline-facebook:hover {
+  background-color: #3b5998 !important;
+  color: #fff !important;
+}
+
+.btn-outline-google {
+  color: #db4437 !important;
+  border-color: #db4437 !important;
+}
+.btn-outline-google:hover {
+  background-color: #db4437 !important;
+  color: #fff !important;
+}
 .wide-container {
   width: 100%;
   padding-right: 1.5rem;
@@ -192,6 +229,24 @@ body {
   .table td:last-child::before {
     display: none;
   }
+}
+
+.search-form .form-control {
+  border-radius: 2rem 0 0 2rem !important;
+  width: 250px;
+  transition: width 0.3s;
+}
+
+.search-form .form-control:focus {
+  width: 350px;
+  background-color: #2b2e30 !important;
+  box-shadow: none;
+}
+
+.search-form .btn {
+  border-radius: 0 2rem 2rem 0 !important;
+  padding-left: 1rem;
+  padding-right: 1.25rem;
 }
 
 .btn {

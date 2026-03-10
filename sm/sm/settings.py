@@ -33,6 +33,7 @@ INSTALLED_APPS = [
     "django_countries",
     "whitenoise.runserver_nostatic",
     "taggit",
+    "simple_history",
     # Allauth
     "allauth",
     "allauth.account",
@@ -68,6 +69,7 @@ MIDDLEWARE = [
     "htmlmin.middleware.HtmlMinifyMiddleware",
     "htmlmin.middleware.MarkRequestMiddleware",
     "django.contrib.sites.middleware.CurrentSiteMiddleware",
+    "simple_history.middleware.HistoryRequestMiddleware",
     # Allauth middleware
     "allauth.account.middleware.AccountMiddleware",
 ]
@@ -169,16 +171,20 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 # Allauth settings
-LOGIN_REDIRECT_URL = "/"
-ACCOUNT_LOGIN_METHODS = {"username", "email"}
-ACCOUNT_SIGNUP_FIELDS = ["email*", "username*", "password1*", "password2*"]
-ACCOUNT_EMAIL_VERIFICATION = "optional"
-ACCOUNT_EMAIL_CONFIRMATION_ANONYMOUS_REDIRECT_URL = "/"
-ACCOUNT_EMAIL_CONFIRMATION_AUTHENTICATED_REDIRECT_URL = "/"
-ACCOUNT_LOGIN_REDIRECT_URL = "/"
-ACCOUNT_LOGOUT_REDIRECT_URL = "/"
+LOGIN_REDIRECT_URL = '/'
+ACCOUNT_LOGIN_METHODS = {'username', 'email'}
+ACCOUNT_SIGNUP_FIELDS = ['email*', 'username*', 'password1*', 'password2*']
+ACCOUNT_EMAIL_VERIFICATION = 'optional'
+ACCOUNT_EMAIL_CONFIRMATION_ANONYMOUS_REDIRECT_URL = '/'
+ACCOUNT_EMAIL_CONFIRMATION_AUTHENTICATED_REDIRECT_URL = '/'
+ACCOUNT_LOGIN_REDIRECT_URL = '/'
+ACCOUNT_LOGOUT_REDIRECT_URL = '/'
+
+SOCIALACCOUNT_AUTO_SIGNUP = True
+SOCIALACCOUNT_ADAPTER = 'sm.adapter.MySocialAccountAdapter'
 
 SOCIALACCOUNT_PROVIDERS = {
+
     "facebook": {
         "METHOD": "oauth2",
         "SCOPE": ["email", "public_profile"],

@@ -40,10 +40,22 @@
                         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
                             <span class="navbar-toggler-icon"></span>
                         </button>
-                        <a class="navbar-brand d-none d-lg-block" href="/">ServerManager</a>
+                        <a class="navbar-brand d-none d-lg-block" href="{% url 'dashboard' %}">ServerManager</a>
                         <div class="collapse navbar-collapse" id="navbarNavDropdown">
                             {% include "_nav.html" %}
                         </div>
+                        
+                        <form class="form-inline mx-auto d-none d-md-flex search-form" action="{% url 'search' %}" method="get">
+                            <div class="input-group">
+                                <input class="form-control form-control-sm bg-dark border-secondary text-white" type="search" name="q" placeholder="{% trans 'Search...' %}" aria-label="Search">
+                                <div class="input-group-append">
+                                    <button class="btn btn-sm btn-outline-secondary border-secondary text-light" type="submit">
+                                        <i class="fa fa-search"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+
                         <div class="ml-auto">
                             {% include "_account_bar.html" %}
                         </div>

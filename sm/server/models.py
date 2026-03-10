@@ -8,6 +8,7 @@ from servermodel.models import Model as ServermodelModel
 from cluster.models import Model as ClusterModel
 from django.urls import reverse
 from django.utils.timezone import now
+from simple_history.models import HistoricalRecords
 
 from . import app_label
 
@@ -92,6 +93,8 @@ class Model(models.Model):
         related_name="%s_set" % app_label,
         related_query_name="%s" % app_label,
     )
+
+    history = HistoricalRecords()
 
     def __str__(self):
         return "%s" % self.hostname
