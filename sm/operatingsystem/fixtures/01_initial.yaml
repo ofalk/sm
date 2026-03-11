@@ -3,6 +3,8 @@
 - model: operatingsystem.model
   fields: {version: '7.8', vendor: [Red Hat]}
 - model: operatingsystem.model
+  fields: {version: '7.0', vendor: [Red Hat]}
+- model: operatingsystem.model
   fields: {version: '8.10', vendor: [Red Hat]}
 - model: operatingsystem.model
   fields: {version: '8.9', vendor: [Red Hat]}

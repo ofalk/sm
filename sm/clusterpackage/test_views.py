@@ -35,7 +35,6 @@ class Tester(TestCase):
         "%s/fixtures/01_initial.yaml" % "domain",
         "%s/fixtures/01_initial.yaml" % "patchtime",
         "%s/fixtures/01_initial.yaml" % "operatingsystem",
-        "%s/fixtures/01_initial.yaml" % "server",
         "%s/fixtures/01_initial.yaml" % "clustersoftware",
         "%s/fixtures/01_initial.yaml" % "cluster",
         "%s/fixtures/01_initial.yaml" % "clusterpackagetype",
