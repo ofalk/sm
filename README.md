@@ -1,6 +1,6 @@
 # ServerManager (sm)
 
-![CI](https://github.com/<owner>/<repo>/actions/workflows/ci.yml/badge.svg?branch=main)
+![CI](https://github.com/ofalk/sm/actions/workflows/ci.yml/badge.svg?branch=main)
 
 A modern Django-based server management application for tracking infrastructure, configurations, and clusters.
 
@@ -16,8 +16,8 @@ A modern Django-based server management application for tracking infrastructure,
 
 ## Documentation & Reports
 
-- [Coverage Report (GitHub Pages)](https://<owner>.github.io/<repo>/coverage/)
-- [Code Documentation (Pycco)](https://<owner>.github.io/<repo>/pycco/)
+- [Coverage Report (GitHub Pages)](https://ofalk.github.io/sm/coverage/)
+- [Code Documentation (Pycco)](https://ofalk.github.io/sm/pycco/)
 
 ## Quick Start with Docker
 
@@ -46,7 +46,7 @@ The fastest way to test the application is using Docker. This setup uses a local
 1. **Clone the repository:**
 
    ```bash
-   git clone https://github.com/<owner>/<repo>.git
+   git clone https://github.com/ofalk/sm.git
    cd sm
    ```
 
