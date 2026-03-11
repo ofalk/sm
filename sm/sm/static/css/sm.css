@@ -29,14 +29,19 @@ body {
   filter: brightness(90%);
 }
 
-.btn-google {
-  background-color: #db4437 !important;
-  border-color: #db4437 !important;
-  color: #fff !important;
+.btn-google,
+a.google-btn {
+  background-color: #fff !important;
+  border: 1px solid #2780e3 !important;
+  color: #2780e3 !important;
+  font-family: "Roboto", sans-serif;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
 }
-.btn-google:hover {
-  background-color: #c53929 !important;
-  filter: brightness(90%);
+.btn-google:hover,
+a.google-btn:hover {
+  background-color: #2780e3 !important;
+  color: #fff !important;
 }
 
 .btn-outline-facebook {
