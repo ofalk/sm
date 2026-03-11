@@ -96,21 +96,112 @@ jobs:
       - name: Create index.html
         run: |
           mkdir -p public
-          cat > public/index.html << 'EOF'
+          cat > public/index.html << 'HTMLEOF'
           <!DOCTYPE html>
-          <html>
+          <html lang="en">
           <head>
-              <title>ServerManager - Documentation</title>
+              <meta charset="UTF-8">
+              <meta name="viewport" content="width=device-width, initial-scale=1.0">
+              <title>ServerManager</title>
+              <style>
+                  * { margin: 0; padding: 0; box-sizing: border-box; }
+                  body {
+                      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+                      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+                      min-height: 100vh;
+                      display: flex;
+                      align-items: center;
+                      justify-content: center;
+                      color: #fff;
+                  }
+                  .container {
+                      text-align: center;
+                      padding: 3rem;
+                      background: rgba(255,255,255,0.05);
+                      border-radius: 20px;
+                      backdrop-filter: blur(10px);
+                      border: 1px solid rgba(255,255,255,0.1);
+                      max-width: 600px;
+                  }
+                  h1 {
+                      font-size: 3.5rem;
+                      font-weight: 700;
+                      margin-bottom: 0.5rem;
+                      background: linear-gradient(90deg, #00d9ff, #00ff88);
+                      -webkit-background-clip: text;
+                      -webkit-text-fill-color: transparent;
+                      background-clip: text;
+                  }
+                  .subtitle {
+                      font-size: 1.3rem;
+                      color: #8892b0;
+                      margin-bottom: 2.5rem;
+                  }
+                  .links {
+                      display: flex;
+                      gap: 1rem;
+                      justify-content: center;
+                      flex-wrap: wrap;
+                  }
+                  .link-card {
+                      display: flex;
+                      flex-direction: column;
+                      align-items: center;
+                      padding: 1.5rem 2rem;
+                      background: rgba(255,255,255,0.08);
+                      border-radius: 12px;
+                      text-decoration: none;
+                      color: #fff;
+                      transition: all 0.3s ease;
+                      border: 1px solid rgba(255,255,255,0.1);
+                      min-width: 180px;
+                  }
+                  .link-card:hover {
+                      transform: translateY(-5px);
+                      background: rgba(255,255,255,0.15);
+                      border-color: #00d9ff;
+                  }
+                  .link-icon {
+                      font-size: 2rem;
+                      margin-bottom: 0.5rem;
+                  }
+                  .link-title {
+                      font-weight: 600;
+                      font-size: 1.1rem;
+                  }
+                  .link-desc {
+                      font-size: 0.85rem;
+                      color: #8892b0;
+                      margin-top: 0.3rem;
+                  }
+                  .footer {
+                      margin-top: 3rem;
+                      color: #4a5568;
+                      font-size: 0.85rem;
+                  }
+              </style>
           </head>
           <body>
-              <h1>ServerManager Documentation</h1>
-              <ul>
-                  <li><a href="coverage/">Coverage Report</a></li>
-                  <li><a href="pycco/">API Documentation (Pycco)</a></li>
-              </ul>
+              <div class="container">
+                  <h1>ServerManager</h1>
+                  <p class="subtitle">Server Inventory Management System</p>
+                  <div class="links">
+                      <a href="coverage/" class="link-card">
+                          <span class="link-icon">📊</span>
+                          <span class="link-title">Coverage</span>
+                          <span class="link-desc">Test coverage report</span>
+                      </a>
+                      <a href="pycco/" class="link-card">
+                          <span class="link-icon">📚</span>
+                          <span class="link-title">Pycco</span>
+                          <span class="link-desc">API documentation</span>
+                      </a>
+                  </div>
+                  <p class="footer">Powered by Django &amp; GitHub Actions</p>
+              </div>
           </body>
           </html>
-          EOF
+          HTMLEOF
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
