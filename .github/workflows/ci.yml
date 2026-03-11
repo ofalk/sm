@@ -93,11 +93,29 @@ jobs:
           name: pycco-docs
           path: public/pycco
 
-      - name: Create public dir if not exists
-        run: mkdir -p public
+      - name: Create index.html
+        run: |
+          mkdir -p public
+          cat > public/index.html << 'EOF'
+          <!DOCTYPE html>
+          <html>
+          <head>
+              <title>ServerManager - Documentation</title>
+          </head>
+          <body>
+              <h1>ServerManager Documentation</h1>
+              <ul>
+                  <li><a href="coverage/">Coverage Report</a></li>
+                  <li><a href="pycco/">API Documentation (Pycco)</a></li>
+              </ul>
+          </body>
+          </html>
+          EOF
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./public
+          publish_branch: main
+          force_orphan: true
