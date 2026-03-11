@@ -1,0 +1,15 @@
+- model: server.model
+  fields:
+    active: true
+    cluster: null
+    comment: "Test server"
+    delivery_date: "2024-01-01"
+    domain: 1
+    hostname: "test-server-01"
+    install_date: "2024-01-01"
+    ipmi_ip: "192.168.1.1"
+    location: 1
+    mac: "00:11:22:33:44:55"
+    patchtime: 1
+    servermodel: 1
+    status: 1
