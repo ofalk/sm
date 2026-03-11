@@ -32,7 +32,6 @@ class Tester(TestCase):
         "%s/fixtures/01_initial.yaml" % "patchtime",
         "%s/fixtures/01_initial.yaml" % "cluster",
         "%s/fixtures/01_initial.yaml" % "servermodel",
-        "%s/fixtures/01_initial.yaml" % app_label,
     ]
     testitem = None
 
