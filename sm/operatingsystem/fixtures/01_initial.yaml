@@ -17,6 +17,10 @@
 - model: operatingsystem.model
   fields: {version: '8.4', vendor: [Red Hat]}
 - model: operatingsystem.model
+  fields: {version: '10.1', vendor: [Red Hat]}
+- model: operatingsystem.model
+  fields: {version: '10.0', vendor: [Red Hat]}
+- model: operatingsystem.model
   fields: {version: '9.4', vendor: [Red Hat]}
 - model: operatingsystem.model
   fields: {version: '9.3', vendor: [Red Hat]}
@@ -40,10 +44,16 @@
 - model: operatingsystem.model
   fields: {version: '7.4', vendor: [CentOS]}
 - model: operatingsystem.model
+  fields: {version: 'Stream 10', vendor: [CentOS]}
+- model: operatingsystem.model
   fields: {version: 'Stream 9', vendor: [CentOS]}
 - model: operatingsystem.model
   fields: {version: 'Stream 8', vendor: [CentOS]}
 
+- model: operatingsystem.model
+  fields: {version: '10.1', vendor: [AlmaLinux]}
+- model: operatingsystem.model
+  fields: {version: '10.0', vendor: [AlmaLinux]}
 - model: operatingsystem.model
   fields: {version: '9.4', vendor: [AlmaLinux]}
 - model: operatingsystem.model
@@ -65,6 +75,10 @@
 - model: operatingsystem.model
   fields: {version: '8.6', vendor: [AlmaLinux]}
 
+- model: operatingsystem.model
+  fields: {version: '10.1', vendor: [Rocky Linux]}
+- model: operatingsystem.model
+  fields: {version: '10.0', vendor: [Rocky Linux]}
 - model: operatingsystem.model
   fields: {version: '9.4', vendor: [Rocky Linux]}
 - model: operatingsystem.model
@@ -122,17 +136,6 @@
   fields: {version: '15 GA', vendor: [SUSE]}
 
 - model: operatingsystem.model
-  fields: {version: '8.0', vendor: [VMware]}
-- model: operatingsystem.model
-  fields: {version: '7.0 U3', vendor: [VMware]}
-- model: operatingsystem.model
-  fields: {version: '7.0 U2', vendor: [VMware]}
-- model: operatingsystem.model
-  fields: {version: '7.0 U1', vendor: [VMware]}
-- model: operatingsystem.model
-  fields: {version: '7.0', vendor: [VMware]}
-
-- model: operatingsystem.model
   fields: {version: '41', vendor: [Fedora]}
 - model: operatingsystem.model
   fields: {version: '40', vendor: [Fedora]}
@@ -141,6 +144,10 @@
 - model: operatingsystem.model
   fields: {version: '38', vendor: [Fedora]}
 
+- model: operatingsystem.model
+  fields: {version: '10.1', vendor: [Oracle]}
+- model: operatingsystem.model
+  fields: {version: '10.0', vendor: [Oracle]}
 - model: operatingsystem.model
   fields: {version: '9.4', vendor: [Oracle]}
 - model: operatingsystem.model
