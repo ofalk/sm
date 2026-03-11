@@ -3,7 +3,7 @@
     "pk": 1,
     "model": "sites.site",
     "fields": {
-      "domain": "sm.dev.linux-kernel.at",
+      "domain": "sm.localghost.com",
       "name": "SM"
     }
   }

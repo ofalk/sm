@@ -1,6 +1,4 @@
 - model: domain.model
-  fields: {name: vie.linux-kernel.at}
+  fields: {name: example.com}
 - model: domain.model
-  fields: {name: linux-kernel.at}
-- model: domain.model
-  fields: {name: ir-facility.org}
+  fields: {name: example2.com}
