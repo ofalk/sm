@@ -5,6 +5,9 @@ ENV PYTHONUNBUFFERED=1
 ENV PIP_NO_CACHE_DIR=1
 ENV PIP_DISABLE_PIP_VERSION_CHECK=1
 ENV DJANGO_SETTINGS_MODULE=sm.settings
+ENV SECRET_KEY="docker-insecure-key-for-quick-test"
+ENV DEBUG=True
+ENV ALLOWED_HOSTS="*"
 
 WORKDIR /app
 
@@ -15,10 +18,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 COPY requirements.txt /app/
 RUN pip install --no-cache-dir -r /app/requirements.txt
 
-COPY sm/ /app/
+COPY . /app/
 
-RUN python manage.py collectstatic --noinput || true
+RUN chmod +x /app/entrypoint.sh
+
+WORKDIR /app/sm
 
 EXPOSE 8000
 
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "--workers", "4", "sm.wsgi:application"]
+CMD ["/app/entrypoint.sh"]
