@@ -1,15 +1,22 @@
 - model: server.model
   fields:
-    active: true
-    cluster: null
-    comment: "Test server"
-    delivery_date: "2024-01-01"
-    domain: 1
     hostname: "test-server-01"
+    domain: 1
+    delivery_date: "2024-01-01"
     install_date: "2024-01-01"
-    ipmi_ip: "192.168.1.1"
+    last_update: "2024-01-01T00:00:00Z"
+    documentation_url: ""
+    memory_in_mb: 8192
+    monitoring_from_puppet: false
     location: 1
-    mac: "00:11:22:33:44:55"
-    patchtime: 1
-    servermodel: 1
+    operatingsystem: 1
     status: 1
+    servermodel: 1
+    cluster: null
+    primary_ip: "192.168.1.10"
+    management_ip: "192.168.1.1"
+    management_hostname: "test-server-01-mgmt"
+    delivery_note_id: ""
+    serial_nr: "SN123456789"
+    description: "Test server"
+    patchtime: 1
