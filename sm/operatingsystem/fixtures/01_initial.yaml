@@ -1,227 +1,163 @@
 - model: operatingsystem.model
-  fields:
-    version: '5.0'
-    vendor: [Red Hat]
+  fields: {version: '7.9', vendor: [Red Hat]}
 - model: operatingsystem.model
-  fields:
-    version: '5.1'
-    vendor: [Red Hat]
+  fields: {version: '7.8', vendor: [Red Hat]}
 - model: operatingsystem.model
-  fields:
-    version: '5.2'
-    vendor: [Red Hat]
+  fields: {version: '8.10', vendor: [Red Hat]}
 - model: operatingsystem.model
-  fields:
-    version: '5.3'
-    vendor: [Red Hat]
+  fields: {version: '8.9', vendor: [Red Hat]}
 - model: operatingsystem.model
-  fields:
-    version: '5.4'
-    vendor: [Red Hat]
+  fields: {version: '8.8', vendor: [Red Hat]}
 - model: operatingsystem.model
-  fields:
-    version: '5.5'
-    vendor: [Red Hat]
+  fields: {version: '8.7', vendor: [Red Hat]}
 - model: operatingsystem.model
-  fields:
-    version: '5.6'
-    vendor: [Red Hat]
+  fields: {version: '8.6', vendor: [Red Hat]}
 - model: operatingsystem.model
-  fields:
-    version: '5.7'
-    vendor: [Red Hat]
+  fields: {version: '8.5', vendor: [Red Hat]}
 - model: operatingsystem.model
-  fields:
-    version: '5.8'
-    vendor: [Red Hat]
+  fields: {version: '8.4', vendor: [Red Hat]}
 - model: operatingsystem.model
-  fields:
-    version: '5.9'
-    vendor: [Red Hat]
+  fields: {version: '9.4', vendor: [Red Hat]}
 - model: operatingsystem.model
-  fields:
-    version: '5.10'
-    vendor: [Red Hat]
+  fields: {version: '9.3', vendor: [Red Hat]}
 - model: operatingsystem.model
-  fields:
-    version: '5.11'
-    vendor: [Red Hat]
+  fields: {version: '9.2', vendor: [Red Hat]}
 - model: operatingsystem.model
-  fields:
-    version: '6.0'
-    vendor: [Red Hat]
+  fields: {version: '9.1', vendor: [Red Hat]}
 - model: operatingsystem.model
-  fields:
-    version: '6.1'
-    vendor: [Red Hat]
-- model: operatingsystem.model
-  fields:
-    version: '6.2'
-    vendor: [Red Hat]
-- model: operatingsystem.model
-  fields:
-    version: '6.3'
-    vendor: [Red Hat]
-- model: operatingsystem.model
-  fields:
-    version: '6.4'
-    vendor: [Red Hat]
-- model: operatingsystem.model
-  fields:
-    version: '6.5'
-    vendor: [Red Hat]
-- model: operatingsystem.model
-  fields:
-    version: '6.6'
-    vendor: [Red Hat]
-- model: operatingsystem.model
-  fields:
-    version: '6.7'
-    vendor: [Red Hat]
-- model: operatingsystem.model
-  fields:
-    version: '6.8'
-    vendor: [Red Hat]
-- model: operatingsystem.model
-  fields:
-    version: '6.9'
-    vendor: [Red Hat]
-- model: operatingsystem.model
-  fields:
-    version: '7.0'
-    vendor: [Red Hat]
-- model: operatingsystem.model
-  fields:
-    version: '7.1'
-    vendor: [Red Hat]
-- model: operatingsystem.model
-  fields:
-    version: '7.2'
-    vendor: [Red Hat]
-- model: operatingsystem.model
-  fields:
-    version: '7.3'
-    vendor: [Red Hat]
-- model: operatingsystem.model
-  fields:
-    version: '7.4'
-    vendor: [Red Hat]
+  fields: {version: '9.0', vendor: [Red Hat]}
 
 - model: operatingsystem.model
-  fields:
-    version: '5.0'
-    vendor: [CentOS]
+  fields: {version: '7.9', vendor: [CentOS]}
 - model: operatingsystem.model
-  fields:
-    version: '5.1'
-    vendor: [CentOS]
+  fields: {version: '7.8', vendor: [CentOS]}
 - model: operatingsystem.model
-  fields:
-    version: '5.2'
-    vendor: [CentOS]
+  fields: {version: '7.7', vendor: [CentOS]}
 - model: operatingsystem.model
-  fields:
-    version: '5.3'
-    vendor: [CentOS]
+  fields: {version: '7.6', vendor: [CentOS]}
 - model: operatingsystem.model
-  fields:
-    version: '5.4'
-    vendor: [CentOS]
+  fields: {version: '7.5', vendor: [CentOS]}
 - model: operatingsystem.model
-  fields:
-    version: '5.5'
-    vendor: [CentOS]
+  fields: {version: '7.4', vendor: [CentOS]}
 - model: operatingsystem.model
-  fields:
-    version: '5.6'
-    vendor: [CentOS]
+  fields: {version: 'Stream 9', vendor: [CentOS]}
 - model: operatingsystem.model
-  fields:
-    version: '5.7'
-    vendor: [CentOS]
-- model: operatingsystem.model
-  fields:
-    version: '5.8'
-    vendor: [CentOS]
-- model: operatingsystem.model
-  fields:
-    version: '5.9'
-    vendor: [CentOS]
-- model: operatingsystem.model
-  fields:
-    version: '5.10'
-    vendor: [CentOS]
-- model: operatingsystem.model
-  fields:
-    version: '5.11'
-    vendor: [CentOS]
-- model: operatingsystem.model
-  fields:
-    version: '6.0'
-    vendor: [CentOS]
-- model: operatingsystem.model
-  fields:
-    version: '6.1'
-    vendor: [CentOS]
-- model: operatingsystem.model
-  fields:
-    version: '6.2'
-    vendor: [CentOS]
-- model: operatingsystem.model
-  fields:
-    version: '6.3'
-    vendor: [CentOS]
-- model: operatingsystem.model
-  fields:
-    version: '6.4'
-    vendor: [CentOS]
-- model: operatingsystem.model
-  fields:
-    version: '6.5'
-    vendor: [CentOS]
-- model: operatingsystem.model
-  fields:
-    version: '6.6'
-    vendor: [CentOS]
-- model: operatingsystem.model
-  fields:
-    version: '6.7'
-    vendor: [CentOS]
-- model: operatingsystem.model
-  fields:
-    version: '6.8'
-    vendor: [CentOS]
-- model: operatingsystem.model
-  fields:
-    version: '6.9'
-    vendor: [CentOS]
-- model: operatingsystem.model
-  fields:
-    version: '7.0'
-    vendor: [CentOS]
-- model: operatingsystem.model
-  fields:
-    version: '7.1'
-    vendor: [CentOS]
-- model: operatingsystem.model
-  fields:
-    version: '7.2'
-    vendor: [CentOS]
-- model: operatingsystem.model
-  fields:
-    version: '7.3'
-    vendor: [CentOS]
-- model: operatingsystem.model
-  fields:
-    version: '7.4'
-    vendor: [CentOS]
-
+  fields: {version: 'Stream 8', vendor: [CentOS]}
 
 - model: operatingsystem.model
-  fields:
-    version: '8'
-    vendor: [Debian]
+  fields: {version: '9.4', vendor: [AlmaLinux]}
 - model: operatingsystem.model
-  fields:
-    version: 'SLES 10.0'
-    vendor: [Novell]
+  fields: {version: '9.3', vendor: [AlmaLinux]}
+- model: operatingsystem.model
+  fields: {version: '9.2', vendor: [AlmaLinux]}
+- model: operatingsystem.model
+  fields: {version: '9.1', vendor: [AlmaLinux]}
+- model: operatingsystem.model
+  fields: {version: '9.0', vendor: [AlmaLinux]}
+- model: operatingsystem.model
+  fields: {version: '8.10', vendor: [AlmaLinux]}
+- model: operatingsystem.model
+  fields: {version: '8.9', vendor: [AlmaLinux]}
+- model: operatingsystem.model
+  fields: {version: '8.8', vendor: [AlmaLinux]}
+- model: operatingsystem.model
+  fields: {version: '8.7', vendor: [AlmaLinux]}
+- model: operatingsystem.model
+  fields: {version: '8.6', vendor: [AlmaLinux]}
+
+- model: operatingsystem.model
+  fields: {version: '9.4', vendor: [Rocky Linux]}
+- model: operatingsystem.model
+  fields: {version: '9.3', vendor: [Rocky Linux]}
+- model: operatingsystem.model
+  fields: {version: '9.2', vendor: [Rocky Linux]}
+- model: operatingsystem.model
+  fields: {version: '9.1', vendor: [Rocky Linux]}
+- model: operatingsystem.model
+  fields: {version: '9.0', vendor: [Rocky Linux]}
+- model: operatingsystem.model
+  fields: {version: '8.10', vendor: [Rocky Linux]}
+- model: operatingsystem.model
+  fields: {version: '8.9', vendor: [Rocky Linux]}
+- model: operatingsystem.model
+  fields: {version: '8.8', vendor: [Rocky Linux]}
+- model: operatingsystem.model
+  fields: {version: '8.7', vendor: [Rocky Linux]}
+- model: operatingsystem.model
+  fields: {version: '8.6', vendor: [Rocky Linux]}
+
+- model: operatingsystem.model
+  fields: {version: '9', vendor: [Debian]}
+- model: operatingsystem.model
+  fields: {version: '12', vendor: [Debian]}
+- model: operatingsystem.model
+  fields: {version: '11', vendor: [Debian]}
+- model: operatingsystem.model
+  fields: {version: '10', vendor: [Debian]}
+
+- model: operatingsystem.model
+  fields: {version: '24.04 LTS', vendor: [Ubuntu]}
+- model: operatingsystem.model
+  fields: {version: '22.04 LTS', vendor: [Ubuntu]}
+- model: operatingsystem.model
+  fields: {version: '20.04 LTS', vendor: [Ubuntu]}
+- model: operatingsystem.model
+  fields: {version: '24.10', vendor: [Ubuntu]}
+- model: operatingsystem.model
+  fields: {version: '24.04', vendor: [Ubuntu]}
+
+- model: operatingsystem.model
+  fields: {version: '15 SP6', vendor: [SUSE]}
+- model: operatingsystem.model
+  fields: {version: '15 SP5', vendor: [SUSE]}
+- model: operatingsystem.model
+  fields: {version: '15 SP4', vendor: [SUSE]}
+- model: operatingsystem.model
+  fields: {version: '15 SP3', vendor: [SUSE]}
+- model: operatingsystem.model
+  fields: {version: '15 SP2', vendor: [SUSE]}
+- model: operatingsystem.model
+  fields: {version: '15 SP1', vendor: [SUSE]}
+- model: operatingsystem.model
+  fields: {version: '15 GA', vendor: [SUSE]}
+
+- model: operatingsystem.model
+  fields: {version: '8.0', vendor: [VMware]}
+- model: operatingsystem.model
+  fields: {version: '7.0 U3', vendor: [VMware]}
+- model: operatingsystem.model
+  fields: {version: '7.0 U2', vendor: [VMware]}
+- model: operatingsystem.model
+  fields: {version: '7.0 U1', vendor: [VMware]}
+- model: operatingsystem.model
+  fields: {version: '7.0', vendor: [VMware]}
+
+- model: operatingsystem.model
+  fields: {version: '41', vendor: [Fedora]}
+- model: operatingsystem.model
+  fields: {version: '40', vendor: [Fedora]}
+- model: operatingsystem.model
+  fields: {version: '39', vendor: [Fedora]}
+- model: operatingsystem.model
+  fields: {version: '38', vendor: [Fedora]}
+
+- model: operatingsystem.model
+  fields: {version: '9.4', vendor: [Oracle]}
+- model: operatingsystem.model
+  fields: {version: '9.3', vendor: [Oracle]}
+- model: operatingsystem.model
+  fields: {version: '9.2', vendor: [Oracle]}
+- model: operatingsystem.model
+  fields: {version: '9.1', vendor: [Oracle]}
+- model: operatingsystem.model
+  fields: {version: '9.0', vendor: [Oracle]}
+- model: operatingsystem.model
+  fields: {version: '8.10', vendor: [Oracle]}
+- model: operatingsystem.model
+  fields: {version: '8.9', vendor: [Oracle]}
+- model: operatingsystem.model
+  fields: {version: '8.8', vendor: [Oracle]}
+- model: operatingsystem.model
+  fields: {version: '8.7', vendor: [Oracle]}
+- model: operatingsystem.model
+  fields: {version: '8.6', vendor: [Oracle]}

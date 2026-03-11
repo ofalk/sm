@@ -28,3 +28,13 @@
   fields: {name: Cisco}
 - model: vendor.model
   fields: {name: Fedora}
+- model: vendor.model
+  fields: {name: AlmaLinux}
+- model: vendor.model
+  fields: {name: Rocky Linux}
+- model: vendor.model
+  fields: {name: Ubuntu}
+- model: vendor.model
+  fields: {name: Oracle}
+- model: vendor.model
+  fields: {name: SUSE}
