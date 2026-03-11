@@ -72,9 +72,14 @@ jobs:
     if: github.ref == 'refs/heads/main'
     needs: test
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Download coverage report
         uses: actions/download-artifact@v4
@@ -87,6 +92,9 @@ jobs:
         with:
           name: pycco-docs
           path: public/pycco
+
+      - name: Create public dir if not exists
+        run: mkdir -p public
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
