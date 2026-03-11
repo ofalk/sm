@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <title>test_browser.py</title>
+  <link rel="stylesheet" href="../../pycco.css">
+</head>
+<body>
+<div id='container'>
+  <div id="background"></div>
+  <div class='section'>
+    <div class='docs'><h1>test_browser.py</h1></div>
+  </div>
+  <div class='clearall'>
+  <div class='section' id='section-0'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-0'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.contrib.staticfiles.testing</span><span class="w"> </span><span class="kn">import</span> <span class="n">StaticLiveServerTestCase</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.urls</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_resolver</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.contrib.auth</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_user_model</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.test</span><span class="w"> </span><span class="kn">import</span> <span class="n">tag</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">playwright.async_api</span><span class="w"> </span><span class="kn">import</span> <span class="n">async_playwright</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-1'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-1'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="nd">@tag</span><span class="p">(</span><span class="s2">&quot;browser&quot;</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">BrowserIntegrationTest</span><span class="p">(</span><span class="n">StaticLiveServerTestCase</span><span class="p">):</span>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setUpClass</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;DJANGO_ALLOW_ASYNC_UNSAFE&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;true&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">setUpClass</span><span class="p">()</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-2'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-2'>#</a>
+      </div>
+      <p>Create a superuser for testing all pages</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="n">User</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span>
+        <span class="bp">cls</span><span class="o">.</span><span class="n">username</span> <span class="o">=</span> <span class="s2">&quot;testadmin&quot;</span>
+        <span class="bp">cls</span><span class="o">.</span><span class="n">password</span> <span class="o">=</span> <span class="s2">&quot;testpass123&quot;</span>
+        <span class="bp">cls</span><span class="o">.</span><span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create_superuser</span><span class="p">(</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="n">username</span><span class="p">,</span> <span class="s2">&quot;admin@example.com&quot;</span><span class="p">,</span> <span class="bp">cls</span><span class="o">.</span><span class="n">password</span>
+        <span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-3'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-3'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">get_all_urls</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">resolver</span> <span class="o">=</span> <span class="n">get_resolver</span><span class="p">()</span>
+        <span class="n">urls</span> <span class="o">=</span> <span class="p">[]</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-4'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-4'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="k">def</span><span class="w"> </span><span class="nf">collect_urls</span><span class="p">(</span><span class="n">patterns</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">pattern</span> <span class="ow">in</span> <span class="n">patterns</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="s2">&quot;url_patterns&quot;</span><span class="p">):</span>
+                    <span class="n">collect_urls</span><span class="p">(</span><span class="n">pattern</span><span class="o">.</span><span class="n">url_patterns</span><span class="p">,</span> <span class="n">prefix</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">pattern</span><span class="o">.</span><span class="n">pattern</span><span class="p">))</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">url</span> <span class="o">=</span> <span class="n">prefix</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">pattern</span><span class="o">.</span><span class="n">pattern</span><span class="p">)</span>
+                    <span class="n">url</span> <span class="o">=</span> <span class="n">url</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;^&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;$&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="nb">any</span><span class="p">(</span>
+                        <span class="n">skip</span> <span class="ow">in</span> <span class="n">url</span>
+                        <span class="k">for</span> <span class="n">skip</span> <span class="ow">in</span> <span class="p">[</span>
+                            <span class="s2">&quot;admin&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;logout&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;debug&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;__&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;password&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;delete&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;detail&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;schema&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;api&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;accounts&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;2fa&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;social&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;server&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;terms&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;privacy&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;impressum&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;avatar&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;history&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;search&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;cluster&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;vendor&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;status&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;location&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;domain&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;patchtime&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;operatingsystem&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;servermodel&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;clustersoftware&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;clusterpackage&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;clusterpackagetype&quot;</span><span class="p">,</span>
+                        <span class="p">]</span>
+                    <span class="p">):</span>
+                        <span class="k">continue</span>
+                    <span class="k">if</span> <span class="s2">&quot;&lt;&quot;</span> <span class="ow">in</span> <span class="n">url</span> <span class="ow">or</span> <span class="s2">&quot;(&quot;</span> <span class="ow">in</span> <span class="n">url</span><span class="p">:</span>
+                        <span class="k">continue</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">url</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">):</span>
+                        <span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="n">url</span>
+                    <span class="k">if</span> <span class="n">url</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">urls</span><span class="p">:</span>
+                        <span class="n">urls</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+
+        <span class="n">collect_urls</span><span class="p">(</span><span class="n">resolver</span><span class="o">.</span><span class="n">url_patterns</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">urls</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-5'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-5'>#</a>
+      </div>
+      <p>Test public pages as an anonymous user to ensure login snippets etc are
+OK.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">test_js_integrity_anonymous</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-6'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-6'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="n">results</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_async_test_js</span><span class="p">(</span><span class="n">is_anonymous</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="n">results</span><span class="p">:</span>
+            <span class="n">errors_msg</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">url</span><span class="si">}</span><span class="s2">:</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">errors</span><span class="p">)</span> <span class="k">for</span> <span class="n">url</span><span class="p">,</span> <span class="n">errors</span> <span class="ow">in</span> <span class="n">results</span><span class="p">]</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fail</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;JS/Resource errors found for anonymous user:</span><span class="se">\n\n</span><span class="si">{</span><span class="n">errors_msg</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-7'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-7'>#</a>
+      </div>
+      <p>Test project pages as an authenticated user.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">test_js_integrity_authenticated</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-8'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-8'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="n">results</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_async_test_js</span><span class="p">(</span><span class="n">is_anonymous</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="n">results</span><span class="p">:</span>
+            <span class="n">errors_msg</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">url</span><span class="si">}</span><span class="s2">:</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">errors</span><span class="p">)</span> <span class="k">for</span> <span class="n">url</span><span class="p">,</span> <span class="n">errors</span> <span class="ow">in</span> <span class="n">results</span><span class="p">]</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fail</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;JS/Resource errors found for authenticated user:</span><span class="se">\n\n</span><span class="si">{</span><span class="n">errors_msg</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_async_test_js</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">is_anonymous</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="k">async</span> <span class="k">with</span> <span class="n">async_playwright</span><span class="p">()</span> <span class="k">as</span> <span class="n">p</span><span class="p">:</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-9'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-9'>#</a>
+      </div>
+      <p>Test in multiple browsers</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>            <span class="n">browser_types</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span><span class="o">.</span><span class="n">chromium</span><span class="p">,</span> <span class="n">p</span><span class="o">.</span><span class="n">firefox</span><span class="p">]</span>
+            <span class="n">all_results</span> <span class="o">=</span> <span class="p">[]</span>
+
+            <span class="k">for</span> <span class="n">browser_type</span> <span class="ow">in</span> <span class="n">browser_types</span><span class="p">:</span>
+                <span class="n">browser_name</span> <span class="o">=</span> <span class="n">browser_type</span><span class="o">.</span><span class="n">name</span>
+                <span class="n">browser</span> <span class="o">=</span> <span class="k">await</span> <span class="n">browser_type</span><span class="o">.</span><span class="n">launch</span><span class="p">(</span><span class="n">headless</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                <span class="n">context</span> <span class="o">=</span> <span class="k">await</span> <span class="n">browser</span><span class="o">.</span><span class="n">new_context</span><span class="p">()</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-10'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-10'>#</a>
+      </div>
+      <p>Setup SocialApps in DB (inside async context)</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>                <span class="kn">from</span><span class="w"> </span><span class="nn">django.contrib.sites.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">Site</span>
+                <span class="kn">from</span><span class="w"> </span><span class="nn">django.apps</span><span class="w"> </span><span class="kn">import</span> <span class="n">apps</span>
+
+                <span class="k">if</span> <span class="n">apps</span><span class="o">.</span><span class="n">is_installed</span><span class="p">(</span><span class="s2">&quot;allauth.socialaccount&quot;</span><span class="p">):</span>
+                    <span class="kn">from</span><span class="w"> </span><span class="nn">allauth.socialaccount.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">SocialApp</span>
+
+                    <span class="n">site</span> <span class="o">=</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">to_thread</span><span class="p">(</span><span class="n">Site</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_current</span><span class="p">)</span>
+                    <span class="k">for</span> <span class="n">p_id</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;facebook&quot;</span><span class="p">,</span> <span class="s2">&quot;google&quot;</span><span class="p">]:</span>
+                        <span class="n">app</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">to_thread</span><span class="p">(</span>
+                            <span class="n">SocialApp</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">,</span>
+                            <span class="n">provider</span><span class="o">=</span><span class="n">p_id</span><span class="p">,</span>
+                            <span class="n">name</span><span class="o">=</span><span class="n">p_id</span><span class="o">.</span><span class="n">title</span><span class="p">(),</span>
+                            <span class="n">defaults</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;client_id&quot;</span><span class="p">:</span> <span class="s2">&quot;123&quot;</span><span class="p">,</span> <span class="s2">&quot;secret&quot;</span><span class="p">:</span> <span class="s2">&quot;abc&quot;</span><span class="p">},</span>
+                        <span class="p">)</span>
+                        <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">to_thread</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">sites</span><span class="o">.</span><span class="n">add</span><span class="p">,</span> <span class="n">site</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">is_anonymous</span><span class="p">:</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-11'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-11'>#</a>
+      </div>
+      <p>Login</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>                    <span class="n">page</span> <span class="o">=</span> <span class="k">await</span> <span class="n">context</span><span class="o">.</span><span class="n">new_page</span><span class="p">()</span>
+                    <span class="k">await</span> <span class="n">page</span><span class="o">.</span><span class="n">goto</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">live_server_url</span><span class="si">}</span><span class="s2">/accounts/login/&quot;</span><span class="p">)</span>
+                    <span class="k">await</span> <span class="n">page</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span><span class="s1">&#39;input[name=&quot;login&quot;]&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">username</span><span class="p">)</span>
+                    <span class="k">await</span> <span class="n">page</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span><span class="s1">&#39;input[name=&quot;password&quot;]&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">password</span><span class="p">)</span>
+                    <span class="k">await</span> <span class="n">page</span><span class="o">.</span><span class="n">click</span><span class="p">(</span><span class="s1">&#39;button[type=&quot;submit&quot;]&#39;</span><span class="p">)</span>
+                    <span class="k">await</span> <span class="n">page</span><span class="o">.</span><span class="n">wait_for_load_state</span><span class="p">(</span><span class="s2">&quot;networkidle&quot;</span><span class="p">)</span>
+                    <span class="k">await</span> <span class="n">page</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+                <span class="n">target_urls</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_all_urls</span><span class="p">()</span>
+                <span class="k">if</span> <span class="n">is_anonymous</span><span class="p">:</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-12'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-12'>#</a>
+      </div>
+      <p>For anonymous, only test root and login-related pages</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>                    <span class="n">target_urls</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;/&quot;</span><span class="p">,</span> <span class="s2">&quot;/accounts/login/&quot;</span><span class="p">]</span>
+
+                <span class="nb">print</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">[</span><span class="si">{</span><span class="n">browser_name</span><span class="si">}</span><span class="s2">] Testing </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">target_urls</span><span class="p">)</span><span class="si">}</span><span class="s2"> URLs &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;(Anonymous=</span><span class="si">{</span><span class="n">is_anonymous</span><span class="si">}</span><span class="s2">)...&quot;</span>
+                <span class="p">)</span>
+
+                <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">check_url</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">browser_name</span><span class="o">=</span><span class="n">browser_name</span><span class="p">):</span>
+                    <span class="n">new_page</span> <span class="o">=</span> <span class="k">await</span> <span class="n">context</span><span class="o">.</span><span class="n">new_page</span><span class="p">()</span>
+                    <span class="n">errors</span> <span class="o">=</span> <span class="p">[]</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-13'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-13'>#</a>
+      </div>
+      <p>Capture ALL console messages (errors AND warnings)</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>                    <span class="n">new_page</span><span class="o">.</span><span class="n">on</span><span class="p">(</span>
+                        <span class="s2">&quot;console&quot;</span><span class="p">,</span>
+                        <span class="k">lambda</span> <span class="n">msg</span><span class="p">:</span> <span class="p">(</span>
+                            <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Console </span><span class="si">{</span><span class="n">msg</span><span class="o">.</span><span class="n">type</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">msg</span><span class="o">.</span><span class="n">text</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                            <span class="k">if</span> <span class="n">msg</span><span class="o">.</span><span class="n">type</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;error&quot;</span><span class="p">,</span> <span class="s2">&quot;warning&quot;</span><span class="p">]</span>
+                            <span class="k">else</span> <span class="kc">None</span>
+                        <span class="p">),</span>
+                    <span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-14'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-14'>#</a>
+      </div>
+      <p>Capture unhandled exceptions</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>                    <span class="n">new_page</span><span class="o">.</span><span class="n">on</span><span class="p">(</span>
+                        <span class="s2">&quot;pageerror&quot;</span><span class="p">,</span>
+                        <span class="k">lambda</span> <span class="n">exc</span><span class="p">:</span> <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;JS Exception: </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">),</span>
+                    <span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-15'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-15'>#</a>
+      </div>
+      <p>Capture failed network requests</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>                    <span class="n">new_page</span><span class="o">.</span><span class="n">on</span><span class="p">(</span>
+                        <span class="s2">&quot;requestfailed&quot;</span><span class="p">,</span>
+                        <span class="k">lambda</span> <span class="n">req</span><span class="p">:</span> <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                            <span class="sa">f</span><span class="s2">&quot;Network Failure (</span><span class="si">{</span><span class="n">req</span><span class="o">.</span><span class="n">method</span><span class="si">}</span><span class="s2">): </span><span class="si">{</span><span class="n">req</span><span class="o">.</span><span class="n">url</span><span class="si">}</span><span class="s2"> - &quot;</span>
+                            <span class="o">+</span> <span class="p">(</span>
+                                <span class="nb">getattr</span><span class="p">(</span><span class="n">req</span><span class="o">.</span><span class="n">failure</span><span class="p">,</span> <span class="s2">&quot;error_text&quot;</span><span class="p">,</span> <span class="n">req</span><span class="o">.</span><span class="n">failure</span><span class="p">)</span>
+                                <span class="k">if</span> <span class="n">req</span><span class="o">.</span><span class="n">failure</span>
+                                <span class="k">else</span> <span class="s2">&quot;Unknown Error&quot;</span>
+                            <span class="p">)</span>
+                        <span class="p">),</span>
+                    <span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-16'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-16'>#</a>
+      </div>
+      <p>Capture non-OK responses and MIME mismatches</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>                    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">handle_response</span><span class="p">(</span><span class="n">res</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-17'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-17'>#</a>
+      </div>
+      <p>3xx are fine (redirects), but 4xx and 5xx are errors</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>                        <span class="k">if</span> <span class="n">res</span><span class="o">.</span><span class="n">status</span> <span class="o">&gt;=</span> <span class="mi">400</span><span class="p">:</span>
+                            <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;HTTP </span><span class="si">{</span><span class="n">res</span><span class="o">.</span><span class="n">status</span><span class="si">}</span><span class="s2"> on </span><span class="si">{</span><span class="n">res</span><span class="o">.</span><span class="n">url</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-18'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-18'>#</a>
+      </div>
+      <p>Check for MIME type conflicts on scripts</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>                        <span class="n">content_type</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">headers</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;content-type&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="n">res</span><span class="o">.</span><span class="n">ok</span> <span class="ow">and</span> <span class="s2">&quot;.js&quot;</span> <span class="ow">in</span> <span class="n">res</span><span class="o">.</span><span class="n">url</span> <span class="ow">and</span> <span class="s2">&quot;text/html&quot;</span> <span class="ow">in</span> <span class="n">content_type</span><span class="p">:</span>
+                            <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                                <span class="sa">f</span><span class="s2">&quot;MIME Type Conflict: </span><span class="si">{</span><span class="n">res</span><span class="o">.</span><span class="n">url</span><span class="si">}</span><span class="s2"> returned &quot;</span>
+                                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">content_type</span><span class="si">}</span><span class="s2"> (expected javascript)&quot;</span>
+                            <span class="p">)</span>
+
+                    <span class="n">new_page</span><span class="o">.</span><span class="n">on</span><span class="p">(</span><span class="s2">&quot;response&quot;</span><span class="p">,</span> <span class="n">handle_response</span><span class="p">)</span>
+
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="k">await</span> <span class="n">new_page</span><span class="o">.</span><span class="n">goto</span><span class="p">(</span>
+                            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">live_server_url</span><span class="si">}{</span><span class="n">url</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                            <span class="n">wait_until</span><span class="o">=</span><span class="s2">&quot;networkidle&quot;</span><span class="p">,</span>
+                            <span class="n">timeout</span><span class="o">=</span><span class="mi">15000</span><span class="p">,</span>
+                        <span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-19'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-19'>#</a>
+      </div>
+      <p>Explicit wait for any late-firing JS</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>                        <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">1.0</span><span class="p">)</span>
+
+                        <span class="k">if</span> <span class="n">errors</span><span class="p">:</span>
+                            <span class="k">return</span> <span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[</span><span class="si">{</span><span class="n">browser_name</span><span class="si">}</span><span class="s2">] </span><span class="si">{</span><span class="n">url</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">errors</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="kc">None</span>
+                    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                        <span class="k">return</span> <span class="p">(</span>
+                            <span class="sa">f</span><span class="s2">&quot;[</span><span class="si">{</span><span class="n">browser_name</span><span class="si">}</span><span class="s2">] </span><span class="si">{</span><span class="n">url</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                            <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;Navigation Error: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">],</span>
+                        <span class="p">)</span>
+                    <span class="k">finally</span><span class="p">:</span>
+                        <span class="k">await</span> <span class="n">new_page</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-20'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-20'>#</a>
+      </div>
+      <p>Run up to 5 concurrent checks</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>                <span class="n">semaphore</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">Semaphore</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+
+                <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">sem_check</span><span class="p">(</span><span class="n">url</span><span class="p">):</span>
+                    <span class="k">async</span> <span class="k">with</span> <span class="n">semaphore</span><span class="p">:</span>
+                        <span class="k">return</span> <span class="k">await</span> <span class="n">check_url</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+
+                <span class="n">tasks</span> <span class="o">=</span> <span class="p">[</span><span class="n">sem_check</span><span class="p">(</span><span class="n">url</span><span class="p">)</span> <span class="k">for</span> <span class="n">url</span> <span class="ow">in</span> <span class="n">target_urls</span><span class="p">]</span>
+                <span class="n">results</span> <span class="o">=</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="o">*</span><span class="n">tasks</span><span class="p">)</span>
+                <span class="n">all_results</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">r</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">results</span> <span class="k">if</span> <span class="n">r</span><span class="p">])</span>
+
+                <span class="k">await</span> <span class="n">browser</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+            <span class="kn">from</span><span class="w"> </span><span class="nn">django.db</span><span class="w"> </span><span class="kn">import</span> <span class="n">connection</span>
+
+            <span class="n">connection</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+            <span class="k">return</span> <span class="n">all_results</span>
+
+</pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+</div>
+</body>

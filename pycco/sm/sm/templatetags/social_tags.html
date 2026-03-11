@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <title>social_tags.py</title>
+  <link rel="stylesheet" href="../../../pycco.css">
+</head>
+<body>
+<div id='container'>
+  <div id="background"></div>
+  <div class='section'>
+    <div class='docs'><h1>social_tags.py</h1></div>
+  </div>
+  <div class='clearall'>
+  <div class='section' id='section-0'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-0'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">django</span><span class="w"> </span><span class="kn">import</span> <span class="n">template</span>
+
+<span class="n">register</span> <span class="o">=</span> <span class="n">template</span><span class="o">.</span><span class="n">Library</span><span class="p">()</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-1'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-1'>#</a>
+      </div>
+      <p>Safely returns social providers without crashing if request is missing
+or if allauth.socialaccount is not in INSTALLED_APPS.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="nd">@register</span><span class="o">.</span><span class="n">simple_tag</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">user_can_disconnect</span><span class="p">(</span><span class="n">user_social_auth</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">user_social_auth</span><span class="o">.</span><span class="n">allowed_to_disconnect</span><span class="p">(</span>
+        <span class="n">user_social_auth</span><span class="o">.</span><span class="n">user</span><span class="p">,</span> <span class="n">user_social_auth</span><span class="o">.</span><span class="n">provider</span>
+    <span class="p">)</span>
+
+
+<span class="nd">@register</span><span class="o">.</span><span class="n">simple_tag</span><span class="p">(</span><span class="n">takes_context</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_social_providers_safe</span><span class="p">(</span><span class="n">context</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-2'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-2'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="kn">from</span><span class="w"> </span><span class="nn">django.conf</span><span class="w"> </span><span class="kn">import</span> <span class="n">settings</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">settings</span><span class="p">,</span> <span class="s2">&quot;SOCIALACCOUNT_ENABLED&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[]</span>
+
+    <span class="n">request</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;request&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="s2">&quot;request&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">request</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">[]</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">allauth.socialaccount.adapter</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_adapter</span>
+
+        <span class="n">adapter</span> <span class="o">=</span> <span class="n">get_adapter</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">adapter</span><span class="o">.</span><span class="n">list_providers</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">[]</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-3'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-3'>#</a>
+      </div>
+      <p>Returns the correct FontAwesome class for a provider.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="nd">@register</span><span class="o">.</span><span class="n">filter</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">provider_icon_class</span><span class="p">(</span><span class="n">provider_id</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-4'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-4'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">brands</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="s2">&quot;facebook&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;google&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;github&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;twitter&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;linkedin&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;apple&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;microsoft&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;slack&quot;</span><span class="p">,</span>
+    <span class="p">]</span>
+    <span class="n">p_id</span> <span class="o">=</span> <span class="n">provider_id</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">p_id</span> <span class="ow">in</span> <span class="n">brands</span><span class="p">:</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;fa-brands fa-</span><span class="si">{</span><span class="n">p_id</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="k">return</span> <span class="s2">&quot;fa-solid fa-share-alt&quot;</span>  <span class="c1"># Fallback</span>
+
+</pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+</div>
+</body>

@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <title>test_sm_theme_bootstrap_tags.py</title>
+  <link rel="stylesheet" href="../../../pycco.css">
+</head>
+<body>
+<div id='container'>
+  <div id="background"></div>
+  <div class='section'>
+    <div class='docs'><h1>test_sm_theme_bootstrap_tags.py</h1></div>
+  </div>
+  <div class='clearall'>
+  <div class='section' id='section-0'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-0'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">django.test</span><span class="w"> </span><span class="kn">import</span> <span class="n">TestCase</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.contrib.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">constants</span> <span class="k">as</span> <span class="n">DEFAULT_MESSAGE_LEVELS</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.template</span><span class="w"> </span><span class="kn">import</span> <span class="n">Context</span><span class="p">,</span> <span class="n">Template</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-1'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-1'>#</a>
+      </div>
+      <p>The following two lines are required to test rewrite of error to danger
+in sm_theme_bootstrap_tags</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="kn">from</span><span class="w"> </span><span class="nn">django.conf</span><span class="w"> </span><span class="kn">import</span> <span class="n">settings</span>
+
+<span class="k">del</span> <span class="n">settings</span><span class="o">.</span><span class="n">MESSAGE_TAGS</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-2'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-2'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">TestCase</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-3'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-3'>#</a>
+      </div>
+      <p>Follows the <code>django.contrib.messages</code> API</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">class</span><span class="w"> </span><span class="nc">FakeMessage</span><span class="p">:</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-4'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-4'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="n">level</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">extra_tags</span> <span class="o">=</span> <span class="kc">None</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-5'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-5'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="n">message</span><span class="p">,</span> <span class="n">extra_tags</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">level</span> <span class="o">=</span> <span class="n">level</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">extra_tags</span> <span class="o">=</span> <span class="n">extra_tags</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">message</span> <span class="o">=</span> <span class="n">message</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-6'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-6'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">test_00_load</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">string</span> <span class="o">=</span> <span class="s2">&quot;{</span><span class="si">% lo</span><span class="s2">ad sm_theme_bootstrap_tags %}&quot;</span>
+        <span class="n">rendered</span> <span class="o">=</span> <span class="n">Template</span><span class="p">(</span><span class="n">string</span><span class="p">)</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">Context</span><span class="p">({}))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">rendered</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-7'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-7'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">test_01_warning</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">string</span> <span class="o">=</span> <span class="s2">&quot;{</span><span class="si">% lo</span><span class="s2">ad sm_theme_bootstrap_tags %}&quot;</span>
+        <span class="n">string</span> <span class="o">+=</span> <span class="s2">&quot;{</span><span class="si">% g</span><span class="s2">et_message_tags message %}&quot;</span>
+        <span class="n">rendered</span> <span class="o">=</span> <span class="n">Template</span><span class="p">(</span><span class="n">string</span><span class="p">)</span><span class="o">.</span><span class="n">render</span><span class="p">(</span>
+            <span class="n">Context</span><span class="p">(</span>
+                <span class="p">{</span>
+                    <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="n">TestCase</span><span class="o">.</span><span class="n">FakeMessage</span><span class="p">(</span>
+                        <span class="n">DEFAULT_MESSAGE_LEVELS</span><span class="o">.</span><span class="n">WARNING</span><span class="p">,</span> <span class="s2">&quot;warning message&quot;</span>
+                    <span class="p">)</span>
+                <span class="p">}</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">rendered</span><span class="p">,</span> <span class="s2">&quot;alert-warning&quot;</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-8'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-8'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">test_02_error</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">string</span> <span class="o">=</span> <span class="s2">&quot;{</span><span class="si">% lo</span><span class="s2">ad sm_theme_bootstrap_tags %}&quot;</span>
+        <span class="n">string</span> <span class="o">+=</span> <span class="s2">&quot;{</span><span class="si">% g</span><span class="s2">et_message_tags message %}&quot;</span>
+        <span class="n">rendered</span> <span class="o">=</span> <span class="n">Template</span><span class="p">(</span><span class="n">string</span><span class="p">)</span><span class="o">.</span><span class="n">render</span><span class="p">(</span>
+            <span class="n">Context</span><span class="p">(</span>
+                <span class="p">{</span>
+                    <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="n">TestCase</span><span class="o">.</span><span class="n">FakeMessage</span><span class="p">(</span>
+                        <span class="n">DEFAULT_MESSAGE_LEVELS</span><span class="o">.</span><span class="n">ERROR</span><span class="p">,</span> <span class="s2">&quot;error message&quot;</span>
+                    <span class="p">)</span>
+                <span class="p">}</span>
+            <span class="p">)</span>
+        <span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-9'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-9'>#</a>
+      </div>
+      <p>error is danger in Bootstrap 3</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">rendered</span><span class="p">,</span> <span class="s2">&quot;alert-danger&quot;</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-10'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-10'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">test_02_warning_with_extra_tag</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">string</span> <span class="o">=</span> <span class="s2">&quot;{</span><span class="si">% lo</span><span class="s2">ad sm_theme_bootstrap_tags %}&quot;</span>
+        <span class="n">string</span> <span class="o">+=</span> <span class="s2">&quot;{</span><span class="si">% g</span><span class="s2">et_message_tags message %}&quot;</span>
+        <span class="n">rendered</span> <span class="o">=</span> <span class="n">Template</span><span class="p">(</span><span class="n">string</span><span class="p">)</span><span class="o">.</span><span class="n">render</span><span class="p">(</span>
+            <span class="n">Context</span><span class="p">(</span>
+                <span class="p">{</span>
+                    <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="n">TestCase</span><span class="o">.</span><span class="n">FakeMessage</span><span class="p">(</span>
+                        <span class="n">DEFAULT_MESSAGE_LEVELS</span><span class="o">.</span><span class="n">WARNING</span><span class="p">,</span> <span class="s2">&quot;message&quot;</span><span class="p">,</span> <span class="s2">&quot;testtag&quot;</span>
+                    <span class="p">)</span>
+                <span class="p">}</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">rendered</span><span class="p">,</span> <span class="s2">&quot;testtag alert-warning&quot;</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-11'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-11'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">test_03_extra_tag_only</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">string</span> <span class="o">=</span> <span class="s2">&quot;{</span><span class="si">% lo</span><span class="s2">ad sm_theme_bootstrap_tags %}&quot;</span>
+        <span class="n">string</span> <span class="o">+=</span> <span class="s2">&quot;{</span><span class="si">% g</span><span class="s2">et_message_tags message %}&quot;</span>
+        <span class="n">rendered</span> <span class="o">=</span> <span class="n">Template</span><span class="p">(</span><span class="n">string</span><span class="p">)</span><span class="o">.</span><span class="n">render</span><span class="p">(</span>
+            <span class="n">Context</span><span class="p">({</span><span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="n">TestCase</span><span class="o">.</span><span class="n">FakeMessage</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;message&quot;</span><span class="p">,</span> <span class="s2">&quot;testtag&quot;</span><span class="p">)})</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">rendered</span><span class="p">,</span> <span class="s2">&quot;testtag&quot;</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-12'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-12'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">test_04_empty</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">string</span> <span class="o">=</span> <span class="s2">&quot;{</span><span class="si">% lo</span><span class="s2">ad sm_theme_bootstrap_tags %}&quot;</span>
+        <span class="n">string</span> <span class="o">+=</span> <span class="s2">&quot;{</span><span class="si">% g</span><span class="s2">et_message_tags message %}&quot;</span>
+        <span class="n">rendered</span> <span class="o">=</span> <span class="n">Template</span><span class="p">(</span><span class="n">string</span><span class="p">)</span><span class="o">.</span><span class="n">render</span><span class="p">(</span>
+            <span class="n">Context</span><span class="p">({</span><span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="n">TestCase</span><span class="o">.</span><span class="n">FakeMessage</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)})</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">rendered</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+
+</pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+</div>
+</body>

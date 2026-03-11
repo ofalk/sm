@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <title>sm_theme_bootstrap_tags.py</title>
+  <link rel="stylesheet" href="../../../pycco.css">
+</head>
+<body>
+<div id='container'>
+  <div id="background"></div>
+  <div class='section'>
+    <div class='docs'><h1>sm_theme_bootstrap_tags.py</h1></div>
+  </div>
+  <div class='clearall'>
+  <div class='section' id='section-0'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-0'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">django</span><span class="w"> </span><span class="kn">import</span> <span class="n">template</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.contrib.messages.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_level_tags</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.utils.encoding</span><span class="w"> </span><span class="kn">import</span> <span class="n">force_str</span> <span class="k">as</span> <span class="n">force_text</span>
+
+<span class="n">LEVEL_TAGS</span> <span class="o">=</span> <span class="n">get_level_tags</span><span class="p">()</span>
+
+<span class="n">register</span> <span class="o">=</span> <span class="n">template</span><span class="o">.</span><span class="n">Library</span><span class="p">()</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-1'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-1'>#</a>
+      </div>
+      <p>Returns the message&rsquo;s level_tag prefixed with Bootstrap&rsquo;s &ldquo;alert-&rdquo; prefix
+along with any tags included in message.extra_tags</p>
+<p>Messages in Django &gt;= 1.7 have a message.level_tag attr</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="nd">@register</span><span class="o">.</span><span class="n">simple_tag</span><span class="p">()</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_message_tags</span><span class="p">(</span><span class="n">message</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-2'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-2'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">level_tag</span> <span class="o">=</span> <span class="n">force_text</span><span class="p">(</span><span class="n">LEVEL_TAGS</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">message</span><span class="o">.</span><span class="n">level</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">),</span> <span class="n">strings_only</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">level_tag</span> <span class="o">==</span> <span class="s2">&quot;error&quot;</span><span class="p">:</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-3'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-3'>#</a>
+      </div>
+      <p>Alias the error tag as danger, since .alert-error no longer exists
+in Bootstrap 3</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="n">level_tag</span> <span class="o">=</span> <span class="s2">&quot;danger&quot;</span>
+
+    <span class="k">if</span> <span class="n">level_tag</span><span class="p">:</span>
+        <span class="n">alert_level_tag</span> <span class="o">=</span> <span class="s2">&quot;alert-</span><span class="si">{tag}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="o">=</span><span class="n">level_tag</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">alert_level_tag</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="n">extra_tags</span> <span class="o">=</span> <span class="n">force_text</span><span class="p">(</span><span class="n">message</span><span class="o">.</span><span class="n">extra_tags</span><span class="p">,</span> <span class="n">strings_only</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">extra_tags</span> <span class="ow">and</span> <span class="n">alert_level_tag</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">extra_tags</span><span class="p">,</span> <span class="n">alert_level_tag</span><span class="p">])</span>
+    <span class="k">elif</span> <span class="n">extra_tags</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">extra_tags</span>
+    <span class="k">elif</span> <span class="n">alert_level_tag</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">alert_level_tag</span>
+    <span class="k">return</span> <span class="s2">&quot;&quot;</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-4'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-4'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="nd">@register</span><span class="o">.</span><span class="n">filter</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">has_unverified_emails</span><span class="p">(</span><span class="n">user</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">user</span><span class="o">.</span><span class="n">emailaddress_set</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">verified</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span>
+
+</pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+</div>
+</body>
