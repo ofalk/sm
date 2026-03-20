@@ -16,7 +16,7 @@ drf-spectacular
 fido2
 gunicorn
 playwright
-psycopg
+psycopg[binary]
 pycco
 pyLibravatar
 python-decouple

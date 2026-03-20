@@ -1,0 +1,102 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sm
+  namespace: localghost
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: sm
+  template:
+    metadata:
+      labels:
+        app: sm
+    spec:
+      initContainers:
+        - name: migrate
+          image: ghcr.io/ofalk/sm:main
+          command: ["/app/entrypoint.sh", "migrate"]
+          envFrom:
+            - secretRef:
+                name: sm-secrets
+            - configMapRef:
+                name: sm-config
+        - name: loaddata
+          image: ghcr.io/ofalk/sm:main
+          command: ["/app/entrypoint.sh", "loaddata"]
+          envFrom:
+            - secretRef:
+                name: sm-secrets
+            - configMapRef:
+                name: sm-config
+        - name: ensure-admin
+          image: ghcr.io/ofalk/sm:main
+          command: ["/app/entrypoint.sh", "ensure_admin"]
+          envFrom:
+            - secretRef:
+                name: sm-secrets
+            - configMapRef:
+                name: sm-config
+        - name: collectstatic
+          image: ghcr.io/ofalk/sm:main
+          command: ["/app/entrypoint.sh", "collectstatic"]
+          envFrom:
+            - secretRef:
+                name: sm-secrets
+            - configMapRef:
+                name: sm-config
+          volumeMounts:
+            - name: static-assets
+              mountPath: /app/sm/static
+      containers:
+        - name: sm
+          image: ghcr.io/ofalk/sm:main
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8000
+              name: http
+          envFrom:
+            - secretRef:
+                name: sm-secrets
+            - configMapRef:
+                name: sm-config
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "100m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 8000
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 8000
+            initialDelaySeconds: 10
+            periodSeconds: 5
+          volumeMounts:
+            - name: static-assets
+              mountPath: /app/sm/static
+        - name: caddy
+          image: caddy:2-alpine
+          ports:
+            - containerPort: 8080
+              name: caddy-http
+          volumeMounts:
+            - name: static-assets
+              mountPath: /app/sm/static
+            - name: caddy-config
+              mountPath: /etc/caddy/Caddyfile
+              subPath: Caddyfile
+      volumes:
+        - name: static-assets
+          emptyDir: {}
+        - name: caddy-config
+          configMap:
+            name: sm-caddy-config
