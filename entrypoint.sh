@@ -60,6 +60,35 @@ else:
     user.set_password(password)
     user.save()
     print(f"Password for superuser '{username}' updated.")
+
+# Ensure Google SocialApp
+google_client_id = os.environ.get('GOOGLE_CLIENT_ID')
+google_secret = os.environ.get('GOOGLE_SECRET')
+if google_client_id and google_secret:
+    from django.contrib.sites.models import Site
+    try:
+        from allauth.socialaccount.models import SocialApp
+        site = Site.objects.get_current()
+        app, created = SocialApp.objects.get_or_create(
+            provider='google',
+            defaults={
+                'name': 'Google',
+                'client_id': google_client_id,
+                'secret': google_secret
+            }
+        )
+        if not created:
+            app.client_id = google_client_id
+            app.secret = google_secret
+            app.save()
+        app.sites.add(site)
+        print(f"Google SocialApp ensured (created: {created})")
+    except ImportError:
+        print("allauth.socialaccount not installed, skipping SocialApp setup")
+    except Exception as e:
+        print(f"Error setting up SocialApp: {e}")
+else:
+    print("GOOGLE_CLIENT_ID or GOOGLE_SECRET not provided, skipping SocialApp setup")
 EOF
     exit 0
     ;;
