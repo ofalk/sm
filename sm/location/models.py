@@ -2,6 +2,7 @@ from django.db import models
 from django_countries.fields import CountryField
 from django.urls import reverse
 from simple_history.models import HistoricalRecords
+from django.contrib.auth.models import Group
 
 from . import app_label
 
@@ -16,6 +17,15 @@ class Model(models.Model):
     history = HistoricalRecords()
     name = models.CharField(max_length=45)
     country = CountryField()
+
+    group = models.ForeignKey(
+        Group,
+        editable=False,
+        blank=True,
+        null=True,
+        on_delete=models.PROTECT,
+        related_name="locations",
+    )
 
     def __str__(self):
         if self.country:
@@ -42,6 +52,7 @@ class Model(models.Model):
         db_table = "{}_{}".format("sm", app_label)
         constraints = [
             models.UniqueConstraint(
-                fields=["name", "country"], name="unique_sm_location_name_country"
+                fields=["name", "country", "group"],
+                name="unique_sm_location_name_country_group",
             )
         ]

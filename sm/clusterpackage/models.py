@@ -4,6 +4,7 @@ from simple_history.models import HistoricalRecords
 from status.models import Model as StatusModel
 from cluster.models import Model as ClusterModel
 from clusterpackagetype.models import Model as ClusterpackagetypeModel
+from django.contrib.auth.models import Group
 
 from taggit.managers import TaggableManager
 
@@ -43,6 +44,15 @@ class Model(models.Model):
     tags = TaggableManager(blank=True)
     history = HistoricalRecords(related_name="clusterpackage_history")
 
+    group = models.ForeignKey(
+        Group,
+        editable=False,
+        blank=True,
+        null=True,
+        on_delete=models.PROTECT,
+        related_name="clusterpackages",
+    )
+
     def __str__(self):
         return "{}-{}".format(self.cluster, self.name)
 
@@ -68,5 +78,9 @@ class Model(models.Model):
         constraints = [
             models.UniqueConstraint(
                 fields=["cluster", "name"], name="unique_sm_clusterpackage_cluster_name"
-            )
+            ),
+            models.UniqueConstraint(
+                fields=["cluster", "name", "group"],
+                name="unique_sm_clusterpackage_cluster_name_group",
+            ),
         ]

@@ -1,6 +1,7 @@
 from django.db import models
 from django.urls import reverse
 from simple_history.models import HistoricalRecords
+from django.contrib.auth.models import Group
 
 from . import app_label
 
@@ -12,7 +13,16 @@ class ModelManager(models.Manager):
 
 class Model(models.Model):
 
-    name = models.CharField(max_length=45, unique=True)
+    name = models.CharField(max_length=45)
+
+    group = models.ForeignKey(
+        Group,
+        editable=False,
+        blank=True,
+        null=True,
+        on_delete=models.PROTECT,
+        related_name="patchtimes",
+    )
 
     objects = ModelManager()
     history = HistoricalRecords()
@@ -36,3 +46,8 @@ class Model(models.Model):
 
     class Meta:
         db_table = "{}_{}".format("sm", app_label)
+        constraints = [
+            models.UniqueConstraint(
+                fields=["name", "group"], name="unique_sm_patchtime_name_group"
+            )
+        ]

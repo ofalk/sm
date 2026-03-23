@@ -18,6 +18,13 @@ def get_tenant_model_counts(group: Optional[Group]) -> int:
     from domain.models import Model as Domain
     from vendor.models import Model as Vendor
     from operatingsystem.models import Model as OS
+    from status.models import Model as Status
+    from location.models import Model as Location
+    from patchtime.models import Model as Patchtime
+    from servermodel.models import Model as ServerModel
+    from clusterpackage.models import Model as ClusterPackage
+    from clustersoftware.models import Model as ClusterSoftware
+    from clusterpackagetype.models import Model as ClusterPackageType
 
     return (
         Server.objects.filter(group=group).count()
@@ -25,6 +32,13 @@ def get_tenant_model_counts(group: Optional[Group]) -> int:
         + Domain.objects.filter(group=group).count()
         + Vendor.objects.filter(group=group).count()
         + OS.objects.filter(group=group).count()
+        + Status.objects.filter(group=group).count()
+        + Location.objects.filter(group=group).count()
+        + Patchtime.objects.filter(group=group).count()
+        + ServerModel.objects.filter(group=group).count()
+        + ClusterPackage.objects.filter(group=group).count()
+        + ClusterSoftware.objects.filter(group=group).count()
+        + ClusterPackageType.objects.filter(group=group).count()
     )
 
 

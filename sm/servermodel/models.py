@@ -2,6 +2,7 @@ from django.db import models
 from django.urls import reverse
 from simple_history.models import HistoricalRecords
 from vendor.models import Model as VendorModel
+from django.contrib.auth.models import Group
 
 from . import app_label
 
@@ -24,6 +25,15 @@ class Model(models.Model):
         related_name="%s_set" % app_label,
         related_query_name="%s" % app_label,
         on_delete=models.PROTECT,
+    )
+
+    group = models.ForeignKey(
+        Group,
+        editable=False,
+        blank=True,
+        null=True,
+        on_delete=models.PROTECT,
+        related_name="servermodels",
     )
 
     def __str__(self):
@@ -51,5 +61,9 @@ class Model(models.Model):
         constraints = [
             models.UniqueConstraint(
                 fields=["vendor", "name"], name="unique_sm_servermodel_vendor_name"
-            )
+            ),
+            models.UniqueConstraint(
+                fields=["vendor", "name", "group"],
+                name="unique_sm_servermodel_vendor_name_group",
+            ),
         ]
