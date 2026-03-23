@@ -91,7 +91,7 @@
         <form method="post" action="{% url 'account_email' %}" class="add_email mt-3">
             {% csrf_token %}
             {% bootstrap_form form %}
-            <button class="btn btn-sm btn-primary" name="action_add" type="submit">
+            <button class="btn btn-sm btn-primary pill" name="action_add" type="submit">
                 <i class="fa-solid fa-plus-circle mr-1"></i> {% trans "Add Email" %}
             </button>
         </form>

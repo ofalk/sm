@@ -1,6 +1,9 @@
-from django.contrib.auth.mixins import LoginRequiredMixin
-from sm.views import SafeDeleteMixin
+from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.contrib import messages
 from django.http import HttpResponseRedirect
+from sm.views import SafeDeleteMixin
+from sm.mixins import MultiTenantMixin
+from typing import Any
 
 from .models import Model
 from .forms import Form, FormDisabled
@@ -19,10 +22,9 @@ try:
 except Exception:  # pragma: no cover
     from django.urls import reverse_lazy  # pragma: no cover
 
-from django.contrib import messages
 
-
-class ListView(LoginRequiredMixin, GenericListView):
+class ListView(PermissionRequiredMixin, MultiTenantMixin, GenericListView):
+    permission_required = "vendor.view_model"
     template_name = "%s/list.html" % app_label
     model = Model
     paginate_by = 20
@@ -30,44 +32,39 @@ class ListView(LoginRequiredMixin, GenericListView):
     ordering = "name"
 
 
-class DetailView(LoginRequiredMixin, GenericUpdateView):
+class DetailView(PermissionRequiredMixin, MultiTenantMixin, GenericUpdateView):
+    permission_required = "vendor.view_model"
     template_name = "%s/detail.html" % app_label
     model = Model
     form_class = FormDisabled
 
 
-class UpdateView(SuccessMessageMixin, LoginRequiredMixin, GenericUpdateView):
+class UpdateView(
+    SuccessMessageMixin, PermissionRequiredMixin, MultiTenantMixin, GenericUpdateView
+):
+    permission_required = "vendor.change_model"
     success_message = "%(name)s " + _("was updated successfully")
     model = Model
-
     template_name = "%s/edit.html" % app_label
-
-    def form_valid(self, form):
-        self.object = form.save()
-        messages.success(self.request, self.success_message % self.object.__dict__)
-
-        return HttpResponseRedirect(self.get_success_url())
-
     form_class = Form
     success_url = reverse_lazy("%s:index" % app_label)
 
 
-class CreateView(SuccessMessageMixin, LoginRequiredMixin, GenericCreateView):
+class CreateView(
+    SuccessMessageMixin, PermissionRequiredMixin, MultiTenantMixin, GenericCreateView
+):
+    permission_required = "vendor.add_model"
     success_message = "%(name)s " + _("was created successfully")
-
     template_name = "%s/edit.html" % app_label
     fields = "__all__"
     model = Model
     success_url = reverse_lazy("%s:index" % app_label)
 
-    def form_valid(self, form):
-        self.object = form.save()
-        messages.success(self.request, self.success_message % self.object.__dict__)
 
-        return HttpResponseRedirect(self.get_success_url())
-
-
-class DeleteView(SafeDeleteMixin, LoginRequiredMixin, GenericDeleteView):
+class DeleteView(
+    SafeDeleteMixin, PermissionRequiredMixin, MultiTenantMixin, GenericDeleteView
+):
+    permission_required = "vendor.delete_model"
     success_message = "%(name)s " + _("was deleted successfully")
     template_name = "delete.html"
     model = Model

@@ -1,44 +1,76 @@
 {% load i18n %}
 <ul class="navbar-nav mr-auto">
+    {% if user.is_authenticated %}
     <!-- Infrastructure Group -->
+    {% if perms.server.view_model or perms.servermodel.view_model or perms.domain.view_model or perms.location.view_model %}
     <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="infraDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <i class="fa-solid fa-server mr-1"></i> {% trans "Infrastructure" %}
         </a>
         <div class="dropdown-menu" aria-labelledby="infraDropdown">
             <h6 class="dropdown-header">{% trans "Servers & Network" %}</h6>
+            {% if perms.server.view_model %}
             <a class="dropdown-item" href="/server/"><i class="fa-regular fa-hard-drive fa-fw mr-2"></i> {% trans "Servers" %}</a>
+            {% endif %}
+            {% if perms.servermodel.view_model %}
             <a class="dropdown-item" href="/servermodel/"><i class="fa-solid fa-cubes fa-fw mr-2"></i> {% trans "Server Models" %}</a>
+            {% endif %}
+            {% if perms.domain.view_model %}
             <a class="dropdown-item" href="/domain/"><i class="fa-solid fa-globe fa-fw mr-2"></i> {% trans "Domains" %}</a>
+            {% endif %}
+            {% if perms.location.view_model %}
             <a class="dropdown-item" href="/location/"><i class="fa-solid fa-map-marker fa-fw mr-2"></i> {% trans "Locations" %}</a>
+            {% endif %}
         </div>
     </li>
+    {% endif %}
 
     <!-- Configuration Group -->
+    {% if perms.operatingsystem.view_model or perms.vendor.view_model or perms.status.view_model or perms.patchtime.view_model %}
     <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="configDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <i class="fa-solid fa-cog mr-1"></i> {% trans "Configuration" %}
         </a>
         <div class="dropdown-menu" aria-labelledby="configDropdown">
+            {% if perms.operatingsystem.view_model %}
             <a class="dropdown-item" href="/operatingsystem/"><i class="fa-solid fa-laptop fa-fw mr-2"></i> {% trans "Operating Systems" %}</a>
+            {% endif %}
+            {% if perms.vendor.view_model %}
             <a class="dropdown-item" href="/vendor/"><i class="fa-solid fa-industry fa-fw mr-2"></i> {% trans "Vendors" %}</a>
+            {% endif %}
+            {% if perms.status.view_model %}
             <a class="dropdown-item" href="/status/"><i class="fa-solid fa-tag fa-fw mr-2"></i> {% trans "Statuses" %}</a>
+            {% endif %}
+            {% if perms.patchtime.view_model %}
             <a class="dropdown-item" href="/patchtime/"><i class="fa-solid fa-calendar fa-fw mr-2"></i> {% trans "Patch Times" %}</a>
+            {% endif %}
             <div class="dropdown-divider"></div>
             <a class="dropdown-item" href="{% url 'swagger-ui' %}" target="_blank"><i class="fa-solid fa-book fa-fw mr-2"></i> {% trans "API Documentation" %}</a>
         </div>
     </li>
+    {% endif %}
 
     <!-- Cluster Group -->
+    {% if perms.cluster.view_model or perms.clustersoftware.view_model or perms.clusterpackage.view_model or perms.clusterpackagetype.view_model %}
     <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="clusterDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <i class="fa-solid fa-th-large mr-1"></i> {% trans "Clusters" %}
         </a>
         <div class="dropdown-menu" aria-labelledby="clusterDropdown">
+            {% if perms.cluster.view_model %}
             <a class="dropdown-item" href="/cluster/"><i class="fa-solid fa-th-large fa-fw mr-2"></i> {% trans "Clusters" %}</a>
+            {% endif %}
+            {% if perms.clustersoftware.view_model %}
             <a class="dropdown-item" href="/clustersoftware/"><i class="fa-solid fa-shield fa-fw mr-2"></i> {% trans "Cluster Software" %}</a>
+            {% endif %}
+            {% if perms.clusterpackage.view_model %}
             <a class="dropdown-item" href="/clusterpackage/"><i class="fa-solid fa-archive fa-fw mr-2"></i> {% trans "Cluster Packages" %}</a>
+            {% endif %}
+            {% if perms.clusterpackagetype.view_model %}
             <a class="dropdown-item" href="/clusterpackagetype/"><i class="fa-solid fa-list-alt fa-fw mr-2"></i> {% trans "Package Types" %}</a>
+            {% endif %}
         </div>
     </li>
+    {% endif %}
+    {% endif %}
 </ul>

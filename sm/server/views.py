@@ -1,6 +1,8 @@
-from django.contrib.auth.mixins import LoginRequiredMixin
-from sm.views import SafeDeleteMixin
+from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.contrib import messages
 from django.http import HttpResponseRedirect
+from sm.views import SafeDeleteMixin
+from sm.mixins import MultiTenantMixin
 
 from .models import Model
 from .forms import Form, FormDisabled, BulkActionForm
@@ -23,10 +25,9 @@ try:
 except Exception:  # pragma: no cover
     from django.urls import reverse_lazy  # pragma: no cover
 
-from django.contrib import messages
 
-
-class ListView(LoginRequiredMixin, GenericListView):
+class ListView(PermissionRequiredMixin, MultiTenantMixin, GenericListView):
+    permission_required = "server.view_model"
     template_name = "%s/list.html" % app_label
     model = Model
     paginate_by = 20
@@ -35,12 +36,11 @@ class ListView(LoginRequiredMixin, GenericListView):
     ordering = "hostname"
 
     def get_queryset(self):
+        queryset = super().get_queryset()
         if "srvmanager-show_disposed" in self.request.COOKIES:
             if self.request.COOKIES["srvmanager-show_disposed"] == "true":
-                return self.model.objects.all().order_by(self.ordering)
-        return self.model.objects.exclude(status__name="Disposed").order_by(
-            self.ordering
-        )
+                return queryset.order_by(self.ordering)
+        return queryset.exclude(status__name="Disposed").order_by(self.ordering)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -48,7 +48,9 @@ class ListView(LoginRequiredMixin, GenericListView):
         return context
 
 
-class BulkActionView(LoginRequiredMixin, View):
+class BulkActionView(PermissionRequiredMixin, MultiTenantMixin, View):
+    permission_required = "server.change_model"
+
     def post(self, request, *args, **kwargs):
         server_ids = request.POST.getlist("selected_servers")
         if not server_ids:
@@ -57,10 +59,18 @@ class BulkActionView(LoginRequiredMixin, View):
 
         form = BulkActionForm(request.POST)
         if form.is_valid():
-            servers = Model.objects.filter(id__in=server_ids)
+            # Use get_queryset to ensure multi-tenancy filtering
+            servers = self.get_queryset().filter(id__in=server_ids)
             count = servers.count()
 
             if form.cleaned_data["delete"]:
+                # Check delete permission
+                if not request.user.has_perm("server.delete_model"):
+                    messages.error(
+                        request,
+                        _("You don't have permission to delete servers."),
+                    )
+                    return redirect("server:index")
                 servers.delete()
                 messages.success(request, _("Successfully deleted %d servers.") % count)
             elif form.cleaned_data["status"]:
@@ -79,53 +89,58 @@ class BulkActionView(LoginRequiredMixin, View):
         return redirect("server:index")
 
 
-class DetailView(LoginRequiredMixin, GenericUpdateView):
+class DetailView(PermissionRequiredMixin, MultiTenantMixin, GenericUpdateView):
+    permission_required = "server.view_model"
     template_name = "%s/detail.html" % app_label
     model = Model
     form_class = FormDisabled
 
 
-class UpdateView(SuccessMessageMixin, LoginRequiredMixin, GenericUpdateView):
+class UpdateView(
+    SuccessMessageMixin,
+    PermissionRequiredMixin,
+    MultiTenantMixin,
+    GenericUpdateView,
+):
+    permission_required = "server.change_model"
     success_message = "%(hostname)s " + _("was updated successfully")
     model = Model
 
     template_name = "%s/edit.html" % app_label
-
-    def form_valid(self, form):
-        self.object = form.save()
-        messages.success(self.request, self.success_message % self.object.__dict__)
-
-        return HttpResponseRedirect(self.get_success_url())
-
     form_class = Form
     success_url = reverse_lazy("%s:index" % app_label)
 
 
-class CreateView(SuccessMessageMixin, LoginRequiredMixin, GenericCreateView):
+class CreateView(
+    SuccessMessageMixin,
+    PermissionRequiredMixin,
+    MultiTenantMixin,
+    GenericCreateView,
+):
+    permission_required = "server.add_model"
     success_message = "%(hostname)s " + _("was created successfully")
     model = Model
 
     template_name = "%s/edit.html" % app_label
-
-    def form_valid(self, form):
-        self.object = form.save()
-        messages.success(self.request, self.success_message % self.object.__dict__)
-
-        return HttpResponseRedirect(self.get_success_url())
-
     form_class = Form
-    model = Model
     success_url = reverse_lazy("%s:index" % app_label)
 
 
-class DeleteView(SafeDeleteMixin, LoginRequiredMixin, GenericDeleteView):
+class DeleteView(
+    SafeDeleteMixin,
+    PermissionRequiredMixin,
+    MultiTenantMixin,
+    GenericDeleteView,
+):
+    permission_required = "server.delete_model"
     success_message = "%(hostname)s " + _("was deleted successfully")
     template_name = "delete.html"
     model = Model
     success_url = reverse_lazy("%s:index" % app_label)
 
 
-class SearchView(LoginRequiredMixin, GenericListView):
+class SearchView(PermissionRequiredMixin, MultiTenantMixin, GenericListView):
+    permission_required = "server.view_model"
     template_name = "%s/list.html" % app_label
     model = Model
     paginate_by = 20

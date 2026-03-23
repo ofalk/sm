@@ -13,8 +13,8 @@
   <div class="card">
     <div class="card-header bg-white d-flex justify-content-between align-items-center">
       <h4 class="mb-0">{% trans "Clusterpackagetype" %}</h4>
-      <a href="{% url 'clusterpackagetype:create' %}" class="btn btn-sm btn-primary">
-        <i class="fa-solid fa-plus-circle"></i> {% trans "Add New" %}
+      <a href="{% url 'clusterpackagetype:create' %}" class="btn btn-sm btn-primary pill">
+        <i class="fa-solid fa-plus-circle mr-1"></i> {% trans "Add New" %}
       </a>
     </div>
     {% if not object_list %}

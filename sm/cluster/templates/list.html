@@ -13,9 +13,11 @@
   <div class="card">
     <div class="card-header bg-white d-flex justify-content-between align-items-center">
       <h4 class="mb-0">{% trans "Cluster" %}</h4>
-      <a href="{% url 'cluster:create' %}" class="btn btn-sm btn-primary">
-        <i class="fa-solid fa-plus-circle"></i> {% trans "Add New" %}
+      {% if perms.cluster.add_model %}
+      <a href="{% url 'cluster:create' %}" class="btn btn-sm btn-primary pill">
+        <i class="fa-solid fa-plus-circle mr-1"></i> {% trans "Add New" %}
       </a>
+      {% endif %}
     </div>
     {% if not object_list %}
       <div class="card-body"><b>{% trans "No results" %}</b></div>
@@ -48,16 +50,20 @@
 
             <td>
               {% if object.group in user.groups.all or user.is_superuser %}
+                {% if perms.cluster.change_model %}
                 <a href="{% url 'cluster:update' object.pk %}" title="{% trans 'Edit cluster' %}">
                   <i class="fa-solid fa-pen fa-fw fa-lg" aria-hidden="true"></i>
                 </a>
+                {% endif %}
+                {% if perms.cluster.delete_model %}
                 <a href="{% url 'cluster:delete' object.pk %}" title="{% trans 'Delete cluster' %}">
                   <i class="fa-solid fa-trash fa-fw fa-lg" aria-hidden="true"></i>
                 </a>
+                {% endif %}
               {% else %}
                 <span class="text-muted" title="{% trans 'Shared resource - insufficient permissions' %}" data-toggle="tooltip">
-                  <i class="fa-solid fa-pen fa-fw fa-lg opacity-25" aria-hidden="true"></i>
-                  <i class="fa-solid fa-trash fa-fw fa-lg opacity-25" aria-hidden="true"></i>
+                  {% if perms.cluster.change_model %}<i class="fa-solid fa-pen fa-fw fa-lg opacity-25" aria-hidden="true"></i>{% endif %}
+                  {% if perms.cluster.delete_model %}<i class="fa-solid fa-trash fa-fw fa-lg opacity-25" aria-hidden="true"></i>{% endif %}
                 </span>
               {% endif %}
             </td>

@@ -1,0 +1,86 @@
+{% extends "site_base.html" %}
+{% load i18n %}
+
+{% block head_title %}{% trans "User & Group Management" %}{% endblock %}
+
+{% block body %}
+<div class="wide-container mt-4">
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-white">
+            <h4 class="mb-0">{% trans "Groups & Quotas" %}</h4>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead class="bg-light">
+                    <tr>
+                        <th>{% trans "Group Name" %}</th>
+                        <th>{% trans "Owner" %}</th>
+                        <th>{% trans "Members" %}</th>
+                        <th>{% trans "Item Quota" %}</th>
+                        <th>{% trans "User Quota" %}</th>
+                        <th>{% trans "Actions" %}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for group in groups %}
+                    <tr>
+                        <td><strong>{{ group.name }}</strong></td>
+                        <td>{{ group.profile.owner.username|default:"-" }}</td>
+                        <td>{{ group.user_set.count }}</td>
+                        <td>{{ group.profile.max_items }}</td>
+                        <td>{{ group.profile.max_users }}</td>
+                        <td>
+                            <a href="{% url 'group_profile_edit' group.profile.pk %}" class="btn btn-sm btn-outline-primary pill">
+                                <i class="fa-solid fa-edit mr-1"></i> {% trans "Edit Quotas" %}
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-header bg-white">
+            <h4 class="mb-0">{% trans "All Users" %}</h4>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead class="bg-light">
+                    <tr>
+                        <th>{% trans "Username" %}</th>
+                        <th>{% trans "Email" %}</th>
+                        <th>{% trans "Groups" %}</th>
+                        <th>{% trans "Status" %}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                    <tr>
+                        <td>{{ user.username }}</td>
+                        <td>{{ user.email }}</td>
+                        <td>
+                            {% for g in user.groups.all %}
+                            <span class="badge badge-secondary">{{ g.name }}</span>
+                            {% empty %}
+                            <span class="text-muted small">{% trans "No groups" %}</span>
+                            {% endfor %}
+                        </td>
+                        <td>
+                            {% if user.is_superuser %}
+                            <span class="badge badge-danger">{% trans "Superuser" %}</span>
+                            {% elif user.is_staff %}
+                            <span class="badge badge-warning">{% trans "Staff" %}</span>
+                            {% else %}
+                            <span class="badge badge-info">{% trans "User" %}</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

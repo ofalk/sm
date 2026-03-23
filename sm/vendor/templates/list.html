@@ -13,9 +13,19 @@
   <div class="card">
     <div class="card-header bg-white d-flex justify-content-between align-items-center">
       <h4 class="mb-0">{% trans "Vendor" %}</h4>
-      <a href="{% url 'vendor:create' %}" class="btn btn-sm btn-primary">
-        <i class="fa-solid fa-plus-circle"></i> {% trans "Add New" %}
-      </a>
+      <div class="d-flex">
+        <form method="post" action="{% url 'starter_pack_import' %}" class="mr-2">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-sm btn-outline-info pill">
+            <i class="fa-solid fa-download mr-1"></i> {% trans "Import Starter Pack" %}
+          </button>
+        </form>
+        {% if perms.vendor.add_model %}
+        <a href="{% url 'vendor:create' %}" class="btn btn-sm btn-primary pill">
+          <i class="fa-solid fa-plus-circle mr-1"></i> {% trans "Add New" %}
+        </a>
+        {% endif %}
+      </div>
     </div>
     {% if not object_list %}
       <div class="card-body"><b>{% trans "No results" %}</b></div>
@@ -56,12 +66,16 @@
               </span>
             </td>
             <td>
+              {% if perms.vendor.change_model %}
               <a href="{% url 'vendor:update' object.pk %}" title="{% trans 'Edit vendor' %}">
                 <i class="fa-solid fa-pen fa-fw fa-lg" aria-hidden="true"></i>
               </a>
+              {% endif %}
+              {% if perms.vendor.delete_model %}
               <a href="{% url 'vendor:delete' object.pk %}" title="{% trans 'Delete vendor' %}">
                 <i class="fa-solid fa-trash fa-fw fa-lg" aria-hidden="true"></i>
               </a>
+              {% endif %}
             </td>
           </tr>
         {% endfor %}

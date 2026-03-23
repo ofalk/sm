@@ -14,10 +14,18 @@ import debug_toolbar
 from .views import (
     DashboardView,
     SearchView,
+    ImportStarterPackView,
     HistoryDiffView,
     TermsView,
     PrivacyView,
     ImpressumView,
+)
+from .views_admin import UserListView, GroupProfileUpdateView
+from .views_group import (
+    GroupMemberListView,
+    AddGroupMemberView,
+    RemoveGroupMemberView,
+    GroupPermissionUpdateView,
 )
 from .views_avatars import avatar_proxy
 from .api.views import (
@@ -67,6 +75,11 @@ urlpatterns = [
     # Dashboard & Search
     path("", DashboardView.as_view(), name="dashboard"),
     path("search/", SearchView.as_view(), name="search"),
+    path(
+        "starter-pack/import/",
+        ImportStarterPackView.as_view(),
+        name="starter_pack_import",
+    ),
     path("avatar/<str:email_hash>/", avatar_proxy, name="avatar_proxy"),
     path(
         "history/<str:app_label>/<str:model_name>/<int:history_id>/",
@@ -77,6 +90,30 @@ urlpatterns = [
     path("terms/", TermsView.as_view(), name="terms"),
     path("privacy/", PrivacyView.as_view(), name="privacy"),
     path("impressum/", ImpressumView.as_view(), name="impressum"),
+    # User Management (Staff)
+    path("admin/users/", UserListView.as_view(), name="user_management_list"),
+    path(
+        "admin/groups/<int:pk>/",
+        GroupProfileUpdateView.as_view(),
+        name="group_profile_edit",
+    ),
+    # Group Management (Owner)
+    path("group/members/", GroupMemberListView.as_view(), name="group_member_list"),
+    path(
+        "group/members/add/<int:group_id>/",
+        AddGroupMemberView.as_view(),
+        name="group_member_add",
+    ),
+    path(
+        "group/members/remove/<int:group_id>/<int:user_id>/",
+        RemoveGroupMemberView.as_view(),
+        name="group_member_remove",
+    ),
+    path(
+        "group/permissions/<int:group_id>/",
+        GroupPermissionUpdateView.as_view(),
+        name="group_permission_edit",
+    ),
     # Project Apps
     path("cluster/", include("cluster.urls")),
     path("operatingsystem/", include("operatingsystem.urls")),

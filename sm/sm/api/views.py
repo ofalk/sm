@@ -8,6 +8,8 @@ from patchtime.models import Model as Patchtime
 from cluster.models import Model as Cluster
 from clusterpackage.models import Model as ClusterPackage
 
+from sm.mixins import APIMultiTenantMixin
+
 from .serializers import (
     ServerSerializer,
     VendorSerializer,
@@ -20,14 +22,14 @@ from .serializers import (
 )
 
 
-class ServerViewSet(viewsets.ModelViewSet):
+class ServerViewSet(APIMultiTenantMixin, viewsets.ModelViewSet):
     """
     API endpoint that allows servers to be viewed or edited.
     """
 
     queryset = Server.objects.all().order_by("hostname")
     serializer_class = ServerSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.DjangoModelPermissions]
 
 
 class VendorViewSet(viewsets.ModelViewSet):
@@ -37,7 +39,7 @@ class VendorViewSet(viewsets.ModelViewSet):
 
     queryset = Vendor.objects.all().order_by("name")
     serializer_class = VendorSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.DjangoModelPermissions]
 
 
 class StatusViewSet(viewsets.ModelViewSet):
@@ -47,34 +49,42 @@ class StatusViewSet(viewsets.ModelViewSet):
 
     queryset = Status.objects.all().order_by("name")
     serializer_class = StatusSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.DjangoModelPermissions]
 
 
 class LocationViewSet(viewsets.ModelViewSet):
     queryset = Location.objects.all().order_by("name")
     serializer_class = LocationSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.DjangoModelPermissions]
 
 
-class DomainViewSet(viewsets.ModelViewSet):
+class DomainViewSet(APIMultiTenantMixin, viewsets.ModelViewSet):
     queryset = Domain.objects.all().order_by("name")
     serializer_class = DomainSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.DjangoModelPermissions]
 
 
 class PatchtimeViewSet(viewsets.ModelViewSet):
     queryset = Patchtime.objects.all().order_by("name")
     serializer_class = PatchtimeSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.DjangoModelPermissions]
 
 
-class ClusterViewSet(viewsets.ModelViewSet):
+class ClusterViewSet(APIMultiTenantMixin, viewsets.ModelViewSet):
     queryset = Cluster.objects.all().order_by("name")
     serializer_class = ClusterSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.DjangoModelPermissions]
 
 
 class ClusterPackageViewSet(viewsets.ModelViewSet):
+    # ClusterPackage is linked to Cluster (MultiTenant)
     queryset = ClusterPackage.objects.all().order_by("name")
     serializer_class = ClusterPackageSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.DjangoModelPermissions]
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        if self.request.user.is_superuser:
+            return queryset
+        user_groups = self.request.user.groups.all()
+        return queryset.filter(cluster__group__in=user_groups)

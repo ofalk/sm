@@ -41,7 +41,7 @@ class Tester(TestCase):
         Create user
         Create some item in models for testing
         """
-        self.user = User.objects.create_user(
+        self.user = User.objects.create_superuser(
             username=random_string(),
             password=self.password,
         )

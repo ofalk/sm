@@ -27,17 +27,21 @@
             {% bootstrap_form form %}
             {% buttons %}
             {% if request.path == object.get_update_url %}
-                <button type="submit" class="btn btn-sm btn-primary">
+                <button type="submit" class="btn btn-sm btn-primary pill">
                     <i class="fa-solid fa-save mr-1"></i> {% trans "Save" %}
                 </button>
             {% else %}
                 {% if object.group in user.groups.all or user.is_superuser %}
-                    <a class="btn btn-sm btn-primary" role="button" href="{% url 'cluster:update' object.pk %}">
+                    {% if perms.cluster.change_model %}
+                    <a class="btn btn-sm btn-primary pill" role="button" href="{% url 'cluster:update' object.pk %}">
                         <i class="fa-solid fa-pen mr-1"></i> {% trans 'Edit' %}
                     </a>
+                    {% endif %}
+                    {% if perms.cluster.delete_model %}
                     <a class="btn btn-sm btn-danger" role="button" href="{% url 'cluster:delete' object.pk %}">
                         <i class="fa-solid fa-trash mr-1"></i> {% trans 'Delete' %}
                     </a>
+                    {% endif %}
                 {% endif %}
             {% endif %}
             {% endbuttons %}

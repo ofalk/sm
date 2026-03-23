@@ -1,6 +1,9 @@
-from django.contrib.auth.mixins import LoginRequiredMixin
-from sm.views import SafeDeleteMixin
+from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.contrib import messages
 from django.http import HttpResponseRedirect
+from sm.views import SafeDeleteMixin
+from sm.mixins import MultiTenantMixin
+from typing import Any
 
 from .models import Model
 from .forms import Form, FormDisabled
@@ -16,47 +19,61 @@ from django.utils.translation import gettext as _
 
 from django.urls import reverse_lazy
 
-from django.contrib import messages
 
-
-class ListView(LoginRequiredMixin, GenericListView):
+class ListView(PermissionRequiredMixin, MultiTenantMixin, GenericListView):
+    permission_required = "operatingsystem.view_model"
     template_name = "%s/list.html" % app_label
     model = Model
     paginate_by = 20
     paginate_orphans = paginate_by / 4
     ordering = "vendor"
 
-    def get_queryset(self):
+    def get_queryset(self) -> Any:
         from vendor.models import Model as VendorModel
 
-        qs = VendorModel.objects.filter(is_software=True)
+        # Filtering by group is handled by MultiTenantMixin
+        # (via super().get_queryset())
+        # But we need the vendor grouping logic
+        qs = VendorModel.objects.filter(
+            is_software=True, group__in=self.request.user.groups.all()
+        )
+        if self.request.user.is_superuser:
+            qs = VendorModel.objects.filter(is_software=True)
+
         if "srvmanager-show_empty" in self.request.COOKIES:
             if self.request.COOKIES["srvmanager-show_empty"] == "false":
                 return qs.exclude(operatingsystem=None).order_by("name")
         return qs.order_by("name")
 
 
-class DetailView(LoginRequiredMixin, GenericUpdateView):
+class DetailView(PermissionRequiredMixin, MultiTenantMixin, GenericUpdateView):
+    permission_required = "operatingsystem.view_model"
     template_name = "%s/detail.html" % app_label
     model = Model
     form_class = FormDisabled
 
 
-class UpdateView(SuccessMessageMixin, LoginRequiredMixin, GenericUpdateView):
+class UpdateView(
+    SuccessMessageMixin,
+    PermissionRequiredMixin,
+    MultiTenantMixin,
+    GenericUpdateView,
+):
+    permission_required = "operatingsystem.change_model"
     success_message = "%(version)s " + _("was updated successfully")
     template_name = "%s/edit.html" % app_label
     model = Model
     form_class = Form
     success_url = reverse_lazy("%s:index" % app_label)
 
-    def form_valid(self, form):
-        self.object = form.save()
-        messages.success(self.request, self.success_message % self.object.__dict__)
 
-        return HttpResponseRedirect(self.get_success_url())
-
-
-class CreateView(SuccessMessageMixin, LoginRequiredMixin, GenericCreateView):
+class CreateView(
+    SuccessMessageMixin,
+    PermissionRequiredMixin,
+    MultiTenantMixin,
+    GenericCreateView,
+):
+    permission_required = "operatingsystem.add_model"
     success_message = "%(version)s " + _("was created successfully")
 
     template_name = "%s/edit.html" % app_label
@@ -64,7 +81,7 @@ class CreateView(SuccessMessageMixin, LoginRequiredMixin, GenericCreateView):
     model = Model
     success_url = reverse_lazy("%s:index" % app_label)
 
-    def get_initial(self):
+    def get_initial(self) -> Any:
         from vendor.models import Model as VendorModel
 
         initial = super().get_initial()
@@ -74,14 +91,14 @@ class CreateView(SuccessMessageMixin, LoginRequiredMixin, GenericCreateView):
             ).first()
         return initial
 
-    def form_valid(self, form):
-        self.object = form.save()
-        messages.success(self.request, self.success_message % self.object.__dict__)
 
-        return HttpResponseRedirect(self.get_success_url())
-
-
-class DeleteView(SafeDeleteMixin, LoginRequiredMixin, GenericDeleteView):
+class DeleteView(
+    SafeDeleteMixin,
+    PermissionRequiredMixin,
+    MultiTenantMixin,
+    GenericDeleteView,
+):
+    permission_required = "operatingsystem.delete_model"
     success_message = "%(version)s " + _("was deleted successfully")
     template_name = "delete.html"
     model = Model

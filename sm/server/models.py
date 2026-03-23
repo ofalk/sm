@@ -9,6 +9,7 @@ from cluster.models import Model as ClusterModel
 from django.urls import reverse
 from django.utils.timezone import now
 from simple_history.models import HistoricalRecords
+from django.contrib.auth.models import Group
 
 from . import app_label
 
@@ -94,6 +95,15 @@ class Model(models.Model):
         related_query_name="%s" % app_label,
     )
 
+    group = models.ForeignKey(
+        Group,
+        editable=False,
+        blank=True,
+        null=True,
+        on_delete=models.PROTECT,
+        related_name="servers",
+    )
+
     history = HistoricalRecords()
 
     def __str__(self):
@@ -120,5 +130,9 @@ class Model(models.Model):
         constraints = [
             models.UniqueConstraint(
                 fields=["hostname", "status"], name="unique_sm_server_hostname_status"
-            )
+            ),
+            models.UniqueConstraint(
+                fields=["hostname", "status", "group"],
+                name="unique_sm_server_hostname_status_group",
+            ),
         ]

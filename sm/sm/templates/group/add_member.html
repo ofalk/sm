@@ -1,0 +1,36 @@
+{% extends "site_base.html" %}
+{% load i18n %}
+{% load bootstrap4 %}
+
+{% block head_title %}{% trans "Add Group Member" %}{% endblock %}
+
+{% block body %}
+<div class="wide-container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow-sm">
+                <div class="card-header bg-white">
+                    <h4 class="mb-0">{% trans "Add Member to Group" %}</h4>
+                </div>
+                <div class="card-body">
+                    <p class="text-muted small mb-4">
+                        {% trans "Enter the username or email of the user you want to add to your group." %}
+                    </p>
+                    <form method="post" class="form">
+                        {% csrf_token %}
+                        {% bootstrap_form form %}
+                        <div class="form-group mt-4">
+                            <button type="submit" class="btn btn-primary pill">
+                                <i class="fa-solid fa-user-plus mr-1"></i> {% trans "Add to Group" %}
+                            </button>
+                            <a href="{% url 'group_member_list' %}" class="btn btn-link text-muted">
+                                {% trans "Cancel" %}
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

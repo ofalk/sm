@@ -1,0 +1,138 @@
+from django.test import TestCase, Client
+from django.contrib.auth.models import User, Group, Permission
+from vendor.models import Model as Vendor
+from django.urls import reverse
+from .utils_starterpack import import_starter_pack
+
+
+class MultiTenancyExpandedTest(TestCase):
+    def setUp(self) -> None:
+        self.password = "password123"
+
+        # Create two groups
+        self.group_a = Group.objects.create(name="Group A")
+        self.group_b = Group.objects.create(name="Group B")
+
+        # Create profiles
+        self.profile_a = self.group_a.profile
+        self.profile_b = self.group_b.profile
+
+        # Create users
+        self.user_a = User.objects.create_user(
+            username="user_a", password=self.password
+        )
+        self.user_b = User.objects.create_user(
+            username="user_b", password=self.password
+        )
+
+        self.user_a.groups.add(self.group_a)
+        self.user_b.groups.add(self.group_b)
+
+        # Set owners
+        self.profile_a.owner = self.user_a
+        self.profile_a.save()
+        self.profile_b.owner = self.user_b
+        self.profile_b.save()
+
+        # Create clients
+        self.client_a = Client()
+        self.client_a.login(username="user_a", password=self.password)
+        self.client_b = Client()
+        self.client_b.login(username="user_b", password=self.password)
+
+    def test_vendor_partitioning(self) -> None:
+        """Test that vendors are filtered by group."""
+        Vendor.objects.create(name="Vendor A", group=self.group_a)
+        Vendor.objects.create(name="Vendor B", group=self.group_b)
+
+        # User A should only see Vendor A
+        # Give permission first
+        view_perm = Permission.objects.get(
+            codename="view_model", content_type__app_label="vendor"
+        )
+        self.group_a.permissions.add(view_perm)
+
+        response = self.client_a.get(reverse("vendor:index"))
+        self.assertContains(response, "Vendor A")
+        self.assertNotContains(response, "Vendor B")
+
+    def test_starter_pack_import(self) -> None:
+        """Test starter pack utility logic."""
+        # Ensure group is empty
+        Vendor.objects.filter(group=self.group_a).delete()
+
+        results = import_starter_pack(self.group_a)
+        self.assertGreater(results["vendors"], 0)
+        self.assertGreater(results["os"], 0)
+
+        self.assertTrue(
+            Vendor.objects.filter(group=self.group_a, name="Red Hat").exists()
+        )
+
+    def test_item_quota_enforcement(self) -> None:
+        """Test that group item quota is enforced."""
+        self.profile_a.max_items = 1
+        self.profile_a.save()
+
+        # Create one vendor
+        Vendor.objects.create(name="Vendor 1", group=self.group_a)
+
+        # Try to create another via view (should fail)
+        add_perm = Permission.objects.get(
+            codename="add_model", content_type__app_label="vendor"
+        )
+        self.group_a.permissions.add(add_perm)
+
+        response = self.client_a.post(
+            reverse("vendor:create"),
+            {"name": "Vendor 2", "is_hardware": True, "is_software": True},
+            follow=True,
+        )
+        self.assertContains(response, "Quota exceeded")
+        self.assertEqual(Vendor.objects.filter(group=self.group_a).count(), 1)
+
+    def test_user_quota_enforcement(self) -> None:
+        """Test that group user quota is enforced."""
+        self.profile_a.max_users = 1  # Only user_a
+        self.profile_a.save()
+
+        user_c = User.objects.create_user(username="user_c", password=self.password)
+
+        response = self.client_a.post(
+            reverse("group_member_add", args=[self.group_a.id]),
+            {"username": "user_c"},
+            follow=True,
+        )
+        self.assertContains(response, "User quota exceeded")
+        self.assertNotIn(user_c, self.group_a.user_set.all())
+
+    def test_group_owner_permissions_management(self) -> None:
+        """Test that group owner can change group permissions."""
+        # Check initial perms (view only by default signal)
+        from django.contrib.contenttypes.models import ContentType
+
+        server_ct = ContentType.objects.get(app_label="server", model="model")
+        change_perm = Permission.objects.get(
+            content_type=server_ct, codename="change_model"
+        )
+
+        self.assertNotIn(change_perm, self.group_a.permissions.all())
+
+        # Toggle edit_server
+        # The form field name is edit_<app_label>
+        response = self.client_a.post(
+            reverse("group_permission_edit", args=[self.group_a.id]),
+            {"edit_server": True},
+            follow=True,
+        )
+        self.assertEqual(response.status_code, 200)
+
+        self.assertIn(change_perm, self.group_a.permissions.all())
+
+        # Toggle off
+        self.client_a.post(
+            reverse("group_permission_edit", args=[self.group_a.id]),
+            {"edit_server": False},
+            follow=True,
+        )
+        self.assertNotIn(change_perm, self.group_a.permissions.all())

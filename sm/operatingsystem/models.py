@@ -2,6 +2,7 @@ from django.db import models
 from django.urls import reverse
 from simple_history.models import HistoricalRecords
 from vendor.models import Model as VendorModel
+from django.contrib.auth.models import Group
 
 from django.core.exceptions import ObjectDoesNotExist
 
@@ -31,7 +32,11 @@ class Manager(models.Manager):
         vendorobj = None
         try:
             if isinstance(vendor, str):
-                vendorobj = VendorModel.objects.get(name=vendor)
+                # When using natural keys during loaddata, we don't have a
+                # group context easily but for global/initial ones, they
+                # might be in a specific group or null group.
+                # For now, we search all vendors.
+                vendorobj = VendorModel.objects.filter(name=vendor).first()
             else:
                 vendorobj = vendor
         except Exception:
@@ -49,23 +54,23 @@ class Manager(models.Manager):
 
         if object is None and not isinstance(version, (tuple, list, dict)):
             if version[0:7] == "Red Hat":
-                vendorobj = VendorModel.objects.get(name="Red Hat")
+                vendorobj = VendorModel.objects.filter(name="Red Hat").first()
                 vers = version[7:].lstrip()
                 if len(vers) == 1:
                     vers += ".0"
                 object = self.get(vendor=vendorobj, version=vers)
             elif version[0:4] == "RHEL":
-                vendorobj = VendorModel.objects.get(name="Red Hat")
+                vendorobj = VendorModel.objects.filter(name="Red Hat").first()
                 vers = version[4:].lstrip()
                 if len(vers) == 1:
                     vers += ".0"
                 object = self.get(vendor=vendorobj, version=vers)
             elif version[0:4] == "SUSE" or version[0:4] == "SLES":
-                vendorobj = VendorModel.objects.get(name="Novell")
+                vendorobj = VendorModel.objects.filter(name="Novell").first()
                 object = self.get(vendor=vendorobj, version=version[4:].lstrip())
         elif isinstance(version, (tuple, list)):
             try:
-                vendorobj = VendorModel.objects.get(name=version[0])
+                vendorobj = VendorModel.objects.filter(name=version[0]).first()
                 object = self.get(vendor=vendorobj, version=version[1])
                 return object
             except Exception as e:  # pragma: no cover
@@ -75,8 +80,8 @@ class Manager(models.Manager):
             raise Exception("No idea how to handle query with %s" % version.__class__)
 
         if object is None:
-            vendorobj = VendorModel.objects.get(name=vendor)
-            self.get(vendor=vendorobj, version=version)
+            vendorobj = VendorModel.objects.filter(name=vendor).first()
+            object = self.get(vendor=vendorobj, version=version)
 
         return object
 
@@ -91,6 +96,15 @@ class Model(models.Model):
         related_name="%s_set" % app_label,
         related_query_name="%s" % app_label,
         on_delete=models.PROTECT,
+    )
+
+    group = models.ForeignKey(
+        Group,
+        editable=False,
+        blank=True,
+        null=True,
+        on_delete=models.PROTECT,
+        related_name="operatingsystems",
     )
 
     history = HistoricalRecords()
@@ -118,7 +132,7 @@ class Model(models.Model):
         db_table = "{}_{}".format("sm", app_label)
         constraints = [
             models.UniqueConstraint(
-                fields=["vendor", "version"],
-                name="unique_sm_operatingsystem_vendor_version",
+                fields=["vendor", "version", "group"],
+                name="unique_sm_operatingsystem_vendor_version_group",
             )
         ]

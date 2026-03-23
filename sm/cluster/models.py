@@ -72,3 +72,8 @@ class Model(models.Model):
     # === Class meta data ===
     class Meta:
         db_table = "{}_{}".format("sm", app_label)
+        constraints = [
+            models.UniqueConstraint(
+                fields=["name", "group"], name="unique_sm_cluster_name_group"
+            )
+        ]

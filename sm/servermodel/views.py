@@ -1,6 +1,7 @@
-from django.contrib.auth.mixins import LoginRequiredMixin
-from sm.views import SafeDeleteMixin
+from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.contrib import messages
 from django.http import HttpResponseRedirect
+from sm.views import SafeDeleteMixin
 
 from .models import Model
 from .forms import Form, FormDisabled
@@ -19,10 +20,9 @@ try:
 except Exception:  # pragma: no cover
     from django.urls import reverse_lazy  # pragma: no cover
 
-from django.contrib import messages
 
-
-class ListView(LoginRequiredMixin, GenericListView):
+class ListView(PermissionRequiredMixin, GenericListView):
+    permission_required = "servermodel.view_model"
     template_name = "%s/list.html" % app_label
     model = Model
     paginate_by = 20
@@ -39,13 +39,15 @@ class ListView(LoginRequiredMixin, GenericListView):
         return qs.order_by("name")
 
 
-class DetailView(LoginRequiredMixin, GenericUpdateView):
+class DetailView(PermissionRequiredMixin, GenericUpdateView):
+    permission_required = "servermodel.view_model"
     template_name = "%s/detail.html" % app_label
     model = Model
     form_class = FormDisabled
 
 
-class UpdateView(SuccessMessageMixin, LoginRequiredMixin, GenericUpdateView):
+class UpdateView(SuccessMessageMixin, PermissionRequiredMixin, GenericUpdateView):
+    permission_required = "servermodel.change_model"
     success_message = "%(name)s " + _("was updated successfully")
 
     template_name = "%s/edit.html" % app_label
@@ -61,7 +63,8 @@ class UpdateView(SuccessMessageMixin, LoginRequiredMixin, GenericUpdateView):
     success_url = reverse_lazy("%s:index" % app_label)
 
 
-class CreateView(SuccessMessageMixin, LoginRequiredMixin, GenericCreateView):
+class CreateView(SuccessMessageMixin, PermissionRequiredMixin, GenericCreateView):
+    permission_required = "servermodel.add_model"
     success_message = "%(name)s " + _("was created successfully")
 
     template_name = "%s/edit.html" % app_label
@@ -86,7 +89,8 @@ class CreateView(SuccessMessageMixin, LoginRequiredMixin, GenericCreateView):
         return HttpResponseRedirect(self.get_success_url())
 
 
-class DeleteView(SafeDeleteMixin, LoginRequiredMixin, GenericDeleteView):
+class DeleteView(SafeDeleteMixin, PermissionRequiredMixin, GenericDeleteView):
+    permission_required = "servermodel.delete_model"
     success_message = "%(name)s " + _("was deleted successfully")
     template_name = "delete.html"
     model = Model

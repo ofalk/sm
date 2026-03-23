@@ -1,0 +1,70 @@
+{% extends "site_base.html" %}
+{% load i18n %}
+
+{% block head_title %}{% trans "Manage Group Members" %}{% endblock %}
+
+{% block body %}
+<div class="wide-container mt-4">
+    <h2 class="mb-4">{% trans "Manage My Groups" %}</h2>
+
+    {% for group in groups %}
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-white d-flex justify-content-between align-items-center">
+            <h4 class="mb-0">{{ group.name }}</h4>
+            <div>
+                <span class="badge badge-info mr-2">
+                    {% trans "Users:" %} {{ group.user_set.count }} / {{ group.profile.max_users }}
+                </span>
+                <a href="{% url 'group_permission_edit' group.id %}" class="btn btn-sm btn-outline-secondary pill mr-2">
+                    <i class="fa-solid fa-lock mr-1"></i> {% trans "Permissions" %}
+                </a>
+                <a href="{% url 'group_member_add' group.id %}" class="btn btn-sm btn-primary pill">
+                    <i class="fa-solid fa-user-plus mr-1"></i> {% trans "Add Member" %}
+                </a>
+            </div>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead class="bg-light">
+                    <tr>
+                        <th>{% trans "User" %}</th>
+                        <th>{% trans "Email" %}</th>
+                        <th>{% trans "Status" %}</th>
+                        <th>{% trans "Actions" %}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in group.user_set.all %}
+                    <tr>
+                        <td>{{ user.username }}</td>
+                        <td>{{ user.email }}</td>
+                        <td>
+                            {% if user == group.profile.owner %}
+                            <span class="badge badge-primary">{% trans "Owner" %}</span>
+                            {% else %}
+                            <span class="badge badge-secondary">{% trans "Member" %}</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if user != request.user %}
+                            <form method="post" action="{% url 'group_member_remove' group.id user.id %}" class="d-inline" onsubmit="return confirm('{% trans "Are you sure you want to remove this user from the group?" %}');">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-sm btn-outline-danger pill">
+                                    <i class="fa-solid fa-user-minus mr-1"></i> {% trans "Remove" %}
+                                </button>
+                            </form>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% empty %}
+    <div class="alert alert-info">
+        {% trans "You do not own any groups." %}
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

@@ -1,7 +1,8 @@
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.contrib import messages
+from django.http import HttpResponseRedirect
 from sm.views import SafeDeleteMixin
 
-from django.http import HttpResponseRedirect
 
 from .models import Model
 from .forms import Form, FormDisabled
@@ -20,10 +21,9 @@ try:
 except Exception:  # pragma: no cover
     from django.urls import reverse_lazy  # pragma: no cover
 
-from django.contrib import messages
 
-
-class ListView(LoginRequiredMixin, GenericListView):
+class ListView(PermissionRequiredMixin, GenericListView):
+    permission_required = "clusterpackage.view_model"
     template_name = "%s/list.html" % app_label
     model = Model
     paginate_by = 20
@@ -31,16 +31,29 @@ class ListView(LoginRequiredMixin, GenericListView):
     ordering = "name"
 
     def get_queryset(self):
-        return Model.objects.all().order_by("name")
+        queryset = super().get_queryset()
+        if self.request.user.is_superuser:
+            return queryset.order_by(self.ordering)
+        user_groups = self.request.user.groups.all()
+        return queryset.filter(cluster__group__in=user_groups).order_by(self.ordering)
 
 
-class DetailView(LoginRequiredMixin, GenericUpdateView):
+class DetailView(PermissionRequiredMixin, GenericUpdateView):
+    permission_required = "clusterpackage.view_model"
     template_name = "%s/detail.html" % app_label
     model = Model
     form_class = FormDisabled
 
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        if self.request.user.is_superuser:
+            return queryset
+        user_groups = self.request.user.groups.all()
+        return queryset.filter(cluster__group__in=user_groups)
 
-class UpdateView(SuccessMessageMixin, LoginRequiredMixin, GenericUpdateView):
+
+class UpdateView(SuccessMessageMixin, PermissionRequiredMixin, GenericUpdateView):
+    permission_required = "clusterpackage.change_model"
     success_message = "%(name)s " + _("was updated successfully")
 
     template_name = "%s/edit.html" % app_label
@@ -52,11 +65,19 @@ class UpdateView(SuccessMessageMixin, LoginRequiredMixin, GenericUpdateView):
 
         return HttpResponseRedirect(self.get_success_url())
 
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        if self.request.user.is_superuser:
+            return queryset
+        user_groups = self.request.user.groups.all()
+        return queryset.filter(cluster__group__in=user_groups)
+
     form_class = Form
     success_url = reverse_lazy("%s:index" % app_label)
 
 
-class CreateView(SuccessMessageMixin, LoginRequiredMixin, GenericCreateView):
+class CreateView(SuccessMessageMixin, PermissionRequiredMixin, GenericCreateView):
+    permission_required = "clusterpackage.add_model"
     success_message = "%(name)s " + _("was created successfully")
 
     template_name = "%s/edit.html" % app_label
@@ -71,8 +92,16 @@ class CreateView(SuccessMessageMixin, LoginRequiredMixin, GenericCreateView):
         return HttpResponseRedirect(self.get_success_url())
 
 
-class DeleteView(SafeDeleteMixin, LoginRequiredMixin, GenericDeleteView):
+class DeleteView(SafeDeleteMixin, PermissionRequiredMixin, GenericDeleteView):
+    permission_required = "clusterpackage.delete_model"
     success_message = "%(name)s " + _("was deleted successfully")
     template_name = "delete.html"
     model = Model
     success_url = reverse_lazy("%s:index" % app_label)
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        if self.request.user.is_superuser:
+            return queryset
+        user_groups = self.request.user.groups.all()
+        return queryset.filter(cluster__group__in=user_groups)

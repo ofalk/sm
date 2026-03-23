@@ -18,9 +18,11 @@
           <input type="checkbox" class="custom-control-input cookie-sync" id="show_disposed" checked>
           <label class="custom-control-label" for="show_disposed">{% trans 'Show disposed' %}</label>
         </div>
-        <a href="{% url 'server:create' %}" class="btn btn-sm btn-primary">
-          <i class="fa-solid fa-plus-circle"></i> {% trans "Add New" %}
+        {% if perms.server.add_model %}
+        <a href="{% url 'server:create' %}" class="btn btn-sm btn-primary pill">
+          <i class="fa-solid fa-plus-circle mr-1"></i> {% trans "Add New" %}
         </a>
+        {% endif %}
       </div>
     </div>
 
@@ -37,11 +39,13 @@
                 <span class="badge badge-primary mr-3"><span id="selected_count">0</span> {% trans "selected" %}</span>
                 <div class="form-inline">
                     {{ bulk_form.status }}
+                    {% if perms.server.delete_model %}
                     <div class="custom-control custom-checkbox ml-3 mr-3">
                         <input type="checkbox" name="delete" class="custom-control-input" id="bulk_delete_check">
                         <label class="custom-control-label text-danger" for="bulk_delete_check">{% trans "Delete selected" %}</label>
                     </div>
-                    <button type="submit" class="btn btn-sm btn-primary ml-2" id="apply_bulk">{% trans "Apply" %}</button>
+                    {% endif %}
+                    <button type="submit" class="btn btn-sm btn-primary pill ml-2 pill" id="apply_bulk">{% trans "Apply" %}</button>
                 </div>
             </div>
             <button type="button" class="btn btn-sm btn-link text-muted" id="cancel_bulk">{% trans "Cancel" %}</button>
@@ -95,12 +99,16 @@
             <td>{{ object.primary_ip }}</td>
             <td>{{ object.patchtime }}</td>
             <td>
+              {% if perms.server.change_model %}
               <a href="{% url 'server:update' object.pk %}" title="{% trans 'Edit server' %}">
                 <i class="fa-solid fa-pen fa-fw fa-lg" aria-hidden="true"></i>
               </a>
+              {% endif %}
+              {% if perms.server.delete_model %}
               <a href="{% url 'server:delete' object.pk %}" title="{% trans 'Delete server' %}">
                 <i class="fa-solid fa-trash fa-fw fa-lg" aria-hidden="true"></i>
               </a>
+              {% endif %}
             </td>
           </tr>
         {% endfor %}
