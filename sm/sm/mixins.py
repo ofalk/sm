@@ -1,9 +1,31 @@
 from django.db.models import Q
 from django.contrib import messages
 from django.utils.translation import gettext as _
-from typing import Any
+from typing import Any, Optional
 from django.db.models.query import QuerySet
 from django.forms import ModelForm
+from django.contrib.auth.models import Group
+from django.db import transaction
+
+
+def get_tenant_model_counts(group: Optional[Group]) -> int:
+    """Helper function to count tenant items across all models for quota checking."""
+    if not group:
+        return 0
+
+    from server.models import Model as Server
+    from cluster.models import Model as Cluster
+    from domain.models import Model as Domain
+    from vendor.models import Model as Vendor
+    from operatingsystem.models import Model as OS
+
+    return (
+        Server.objects.filter(group=group).count()
+        + Cluster.objects.filter(group=group).count()
+        + Domain.objects.filter(group=group).count()
+        + Vendor.objects.filter(group=group).count()
+        + OS.objects.filter(group=group).count()
+    )
 
 
 class MultiTenantMixin:
@@ -20,31 +42,22 @@ class MultiTenantMixin:
         user_groups = self.request.user.groups.all()
         return queryset.filter(Q(group__in=user_groups) | Q(group__isnull=True))
 
-    def check_quota(self, group: Any) -> bool:
+    def check_quota(self, group: Optional[Group]) -> bool:
         if not group or not hasattr(group, "profile"):
             return True
 
         profile = group.profile
         max_items = profile.max_items
 
-        # Count items across models
-        from server.models import Model as Server
-        from cluster.models import Model as Cluster
-        from domain.models import Model as Domain
-        from vendor.models import Model as Vendor
-        from operatingsystem.models import Model as OS
+        # Count items across models with transaction to prevent race conditions
+        with transaction.atomic():
+            # Lock the group profile to prevent concurrent modifications
+            GroupProfile = group.profile.__class__
+            GroupProfile.objects.select_for_update().get(pk=profile.pk)
 
-        count = (
-            Server.objects.filter(group=group).count()
-            + Cluster.objects.filter(group=group).count()
-            + Domain.objects.filter(group=group).count()
-            + Vendor.objects.filter(group=group).count()
-            + OS.objects.filter(group=group).count()
-        )
+            count = get_tenant_model_counts(group)
 
-        if count >= max_items:
-            return False
-        return True
+            return count < max_items
 
     def form_valid(self, form: ModelForm) -> Any:
         # Auto-assign first group if not set and not superuser
@@ -88,21 +101,15 @@ class APIMultiTenantMixin:
         group = user_groups.first() if user_groups.exists() else None
 
         if not self.request.user.is_superuser:
-            # Simple quota check for API
+            # Simple quota check for API with transaction
             if group and hasattr(group, "profile"):
-                from server.models import Model as Server
-                from cluster.models import Model as Cluster
-                from domain.models import Model as Domain
-                from vendor.models import Model as Vendor
-                from operatingsystem.models import Model as OS
+                # Use transaction to ensure atomic count
+                with transaction.atomic():
+                    # Lock the group profile to prevent concurrent modifications
+                    GroupProfile = group.profile.__class__
+                    GroupProfile.objects.select_for_update().get(pk=group.profile.pk)
 
-                count = (
-                    Server.objects.filter(group=group).count()
-                    + Cluster.objects.filter(group=group).count()
-                    + Domain.objects.filter(group=group).count()
-                    + Vendor.objects.filter(group=group).count()
-                    + OS.objects.filter(group=group).count()
-                )
+                    count = get_tenant_model_counts(group)
                 if count >= group.profile.max_items:
                     from rest_framework.exceptions import ValidationError
 
