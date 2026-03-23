@@ -14,15 +14,20 @@ from .utils_permissions import get_group_permissions_for_model
 
 class GroupOwnerRequiredMixin(UserPassesTestMixin):
     def test_func(self) -> bool:
+        # Superusers can manage all groups
+        if self.request.user.is_superuser:
+            return True
         # Check if user is owner of at least one group
         return GroupProfile.objects.filter(owner=self.request.user).exists()
 
 
-class GroupMemberListView(GroupOwnerRequiredMixin, ListView):
+class GroupMemberListView(LoginRequiredMixin, GroupOwnerRequiredMixin, ListView):
     template_name = "group/member_list.html"
     context_object_name = "groups"
 
     def get_queryset(self) -> Any:
+        if self.request.user.is_superuser:
+            return Group.objects.all().prefetch_related("user_set", "profile")
         return Group.objects.filter(profile__owner=self.request.user).prefetch_related(
             "user_set", "profile"
         )
@@ -41,7 +46,7 @@ class AddGroupMemberForm(forms.Form):
             raise forms.ValidationError(_("User does not exist."))
 
 
-class AddGroupMemberView(GroupOwnerRequiredMixin, FormView):
+class AddGroupMemberView(LoginRequiredMixin, GroupOwnerRequiredMixin, FormView):
     form_class = AddGroupMemberForm
     template_name = "group/add_member.html"
 
@@ -50,7 +55,14 @@ class AddGroupMemberView(GroupOwnerRequiredMixin, FormView):
 
     def form_valid(self, form: Any) -> Any:
         group_id = self.kwargs.get("group_id")
-        group = get_object_or_404(Group, pk=group_id, profile__owner=self.request.user)
+        # Ensure the user is the owner OR a superuser
+        if self.request.user.is_superuser:
+            group = get_object_or_404(Group, pk=group_id)
+        else:
+            group = get_object_or_404(
+                Group, pk=group_id, profile__owner=self.request.user
+            )
+
         user_to_add = form.cleaned_data["username"]
 
         if group.user_set.count() >= group.profile.max_users:
@@ -73,10 +85,17 @@ class RemoveGroupMemberView(LoginRequiredMixin, GroupOwnerRequiredMixin, View):
     def post(self, request: Any, *args: Any, **kwargs: Any) -> Any:
         group_id = self.kwargs.get("group_id")
         user_id = self.kwargs.get("user_id")
-        group = get_object_or_404(Group, pk=group_id, profile__owner=self.request.user)
+
+        if self.request.user.is_superuser:
+            group = get_object_or_404(Group, pk=group_id)
+        else:
+            group = get_object_or_404(
+                Group, pk=group_id, profile__owner=self.request.user
+            )
+
         user_to_remove = get_object_or_404(User, pk=user_id)
 
-        if user_to_remove == self.request.user:
+        if user_to_remove == self.request.user and not self.request.user.is_superuser:
             messages.error(
                 request, _("You cannot remove yourself from your own group.")
             )
@@ -107,21 +126,22 @@ class GroupPermissionForm(forms.Form):
         current_perms = self.group.permissions.all().values_list("codename", flat=True)
 
         for app_label, label in self.models_to_manage:
-            self.fields[f"edit_{app_label}"] = forms.BooleanField(
-                label=_("Can Edit %s") % label,
-                required=False,
-                initial="change_model" in current_perms,  # Simplified codename check
-            )
             # Find the actual change permission codename which might be 'change_model'
             # because we named our model 'Model'
             perms = get_group_permissions_for_model(app_label)
             change_perm = next(
                 (p for p in perms if p.codename.startswith("change_")), None
             )
+
+            initial_val = False
             if change_perm:
-                self.fields[f"edit_{app_label}"].initial = (
-                    change_perm.codename in current_perms
-                )
+                initial_val = change_perm.codename in current_perms
+
+            self.fields[f"edit_{app_label}"] = forms.BooleanField(
+                label=_("Can Edit %s") % label,
+                required=False,
+                initial=initial_val,
+            )
 
     def save(self) -> None:
         for app_label_tuple in self.models_to_manage:
@@ -140,15 +160,19 @@ class GroupPermissionForm(forms.Form):
                 self.group.permissions.remove(*edit_perms)
 
 
-class GroupPermissionUpdateView(GroupOwnerRequiredMixin, FormView):
+class GroupPermissionUpdateView(LoginRequiredMixin, GroupOwnerRequiredMixin, FormView):
     template_name = "group/permission_edit.html"
     form_class = GroupPermissionForm
 
     def get_form_kwargs(self) -> Any:
         kwargs = super().get_form_kwargs()
-        kwargs["group"] = get_object_or_404(
-            Group, pk=self.kwargs.get("group_id"), profile__owner=self.request.user
-        )
+        group_id = self.kwargs.get("group_id")
+        if self.request.user.is_superuser:
+            kwargs["group"] = get_object_or_404(Group, pk=group_id)
+        else:
+            kwargs["group"] = get_object_or_404(
+                Group, pk=group_id, profile__owner=self.request.user
+            )
         return kwargs
 
     def get_success_url(self) -> str:
