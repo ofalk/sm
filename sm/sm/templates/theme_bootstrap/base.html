@@ -56,6 +56,29 @@
                             </div>
                         </form>
 
+                        {% if request.user.is_authenticated and request.user.groups.count > 1 %}
+                        <div class="mx-2">
+                            <div class="dropdown">
+                                <button class="btn btn-sm btn-outline-light dropdown-toggle" type="button" id="groupFilterDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="fa-solid fa-filter mr-1"></i> {% trans "Groups" %}
+                                </button>
+                                <div class="dropdown-menu dropdown-menu-right p-2" style="min-width: 220px;">
+                                    <div class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input" id="selectAllGroups" {% if not request.session.selected_groups %}checked{% endif %}>
+                                        <label class="custom-control-label font-weight-bold" for="selectAllGroups">{% trans "All" %}</label>
+                                    </div>
+                                    <div class="dropdown-divider"></div>
+                                    {% for group in request.user.groups.all %}
+                                    <div class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input group-filter-checkbox" id="group_{{ group.id }}" value="{{ group.id }}" {% if not request.session.selected_groups or group.id|add:"" in request.session.selected_groups %}checked{% endif %}>
+                                        <label class="custom-control-label" for="group_{{ group.id }}">{{ group.name }}</label>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+
                         <div class="ml-auto">
                             {% include "_account_bar.html" %}
                         </div>
@@ -103,7 +126,7 @@
                                 <div class="input-group-prepend">
                                     <span class="input-group-text bg-transparent border-0"><i class="fa-solid fa-magnifying-glass"></i></span>
                                 </div>
-                                <input type="text" id="commandSearch" class="form-control border-0 bg-transparent shadow-none" placeholder="{% trans 'Search anything... (Servers, Clusters, Vendors)' %}" autocomplete="off">
+                                <input type="text" id="commandSearch" class="form-control border-0 bg-transparent shadow-none" placeholder="{% trans 'Search anything... (Servers, Clusters, Groups, Vendors)' %}" autocomplete="off">
                             </div>
                         </div>
                         <div id="commandResults" class="p-2" style="max-height: 400px; overflow-y: auto;">

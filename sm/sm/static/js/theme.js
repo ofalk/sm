@@ -256,3 +256,51 @@ function getCookie(c_name) {
   }
   return "";
 }
+
+// Group Filter Logic
+if ($("#selectAllGroups").length) {
+  var $selectAll = $("#selectAllGroups");
+  var $groupCheckboxes = $(".group-filter-checkbox");
+
+  $selectAll.on("change", function () {
+    if (this.checked) {
+      $groupCheckboxes.prop("checked", true);
+    } else {
+      $groupCheckboxes.prop("checked", false);
+    }
+    updateGroupFilter();
+  });
+
+  $groupCheckboxes.on("change", function () {
+    var allChecked =
+      $groupCheckboxes.filter(":checked").length === $groupCheckboxes.length;
+    $selectAll.prop("checked", allChecked);
+    updateGroupFilter();
+  });
+
+  function updateGroupFilter() {
+    var selectedGroups = $groupCheckboxes
+      .filter(":checked")
+      .map(function () {
+        return $(this).val();
+      })
+      .get();
+
+    $.ajax({
+      url: "/group/filter/",
+      method: "POST",
+      data: {
+        groups: selectedGroups.join(","),
+        csrfmiddlewaretoken: getCookie("csrftoken"),
+      },
+      success: function () {
+        // Reload to apply filter
+        window.location.reload();
+      },
+      error: function () {
+        // Silent fail - just reload
+        window.location.reload();
+      },
+    });
+  }
+}

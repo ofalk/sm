@@ -1,0 +1,62 @@
+{% extends "site_base.html" %}
+{% load i18n %}
+{% load bootstrap4 %}
+
+{% block head_title %}{% trans "Accept Invitation" %}{% endblock %}
+
+{% block body %}
+<div class="wide-container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            {% if error %}
+            <div class="alert alert-danger" role="alert">
+                <i class="fa-solid fa-exclamation-circle mr-2"></i>
+                {{ error }}
+            </div>
+            <a href="{% url 'account_login' %}" class="btn btn-primary">{% trans "Go to Login" %}</a>
+            {% else %}
+            <div class="card shadow-sm">
+                <div class="card-header bg-white">
+                    <h4 class="mb-0">{% trans "Join Group" %}</h4>
+                </div>
+                <div class="card-body">
+                    <p class="text-muted mb-4">
+                        {% blocktrans with group_name=invitation.group.name owner=invitation.created_by.username %}You have been invited by {{ owner }} to join <strong>{{ group_name }}</strong> on ServerManager.{% endblocktrans %}
+                    </p>
+                    <p class="small text-muted">
+                        {% trans "This invitation expires in 24 hours." %}
+                    </p>
+                    <form method="post" class="form">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="username">{% trans "Username" %}</label>
+                            <input type="text" name="username" id="username" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">{% trans "Email" %}</label>
+                            <input type="email" name="email" id="email" class="form-control" value="{{ invitation.email }}" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="password">{% trans "Password" %}</label>
+                            <input type="password" name="password" id="password" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="password_confirm">{% trans "Confirm Password" %}</label>
+                            <input type="password" name="password_confirm" id="password_confirm" class="form-control" required>
+                        </div>
+                        <div class="form-group mt-4">
+                            <button type="submit" class="btn btn-primary pill">
+                                <i class="fa-solid fa-user-plus mr-1"></i> {% trans "Create Account & Join" %}
+                            </button>
+                            <a href="{% url 'account_login' %}" class="btn btn-link text-muted">
+                                {% trans "Already have an account? Log in" %}
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

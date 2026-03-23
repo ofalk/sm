@@ -1,6 +1,5 @@
-from django.contrib.auth.mixins import PermissionRequiredMixin
-from django.contrib import messages
-from django.http import HttpResponseRedirect
+from django.contrib.auth.mixins import LoginRequiredMixin
+
 from sm.views import SafeDeleteMixin
 from sm.mixins import MultiTenantMixin
 
@@ -22,8 +21,7 @@ except Exception:  # pragma: no cover
     from django.urls import reverse_lazy  # pragma: no cover
 
 
-class ListView(PermissionRequiredMixin, MultiTenantMixin, GenericListView):
-    permission_required = "domain.view_model"
+class ListView(LoginRequiredMixin, MultiTenantMixin, GenericListView):
     template_name = "%s/list.html" % app_label
     model = Model
     paginate_by = 20
@@ -31,8 +29,7 @@ class ListView(PermissionRequiredMixin, MultiTenantMixin, GenericListView):
     ordering = "name"
 
 
-class DetailView(PermissionRequiredMixin, MultiTenantMixin, GenericUpdateView):
-    permission_required = "domain.view_model"
+class DetailView(LoginRequiredMixin, MultiTenantMixin, GenericUpdateView):
     template_name = "%s/detail.html" % app_label
     model = Model
     form_class = FormDisabled
@@ -40,11 +37,10 @@ class DetailView(PermissionRequiredMixin, MultiTenantMixin, GenericUpdateView):
 
 class UpdateView(
     SuccessMessageMixin,
-    PermissionRequiredMixin,
+    LoginRequiredMixin,
     MultiTenantMixin,
     GenericUpdateView,
 ):
-    permission_required = "domain.change_model"
     success_message = "%(name)s " + _("was updated successfully")
     model = Model
 
@@ -55,11 +51,10 @@ class UpdateView(
 
 class CreateView(
     SuccessMessageMixin,
-    PermissionRequiredMixin,
+    LoginRequiredMixin,
     MultiTenantMixin,
     GenericCreateView,
 ):
-    permission_required = "domain.add_model"
     success_message = "%(name)s " + _("was created successfully")
 
     template_name = "%s/edit.html" % app_label
@@ -70,11 +65,10 @@ class CreateView(
 
 class DeleteView(
     SafeDeleteMixin,
-    PermissionRequiredMixin,
+    LoginRequiredMixin,
     MultiTenantMixin,
     GenericDeleteView,
 ):
-    permission_required = "domain.delete_model"
     success_message = "%(name)s " + _("was deleted successfully")
     template_name = "delete.html"
     model = Model

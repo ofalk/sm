@@ -1,6 +1,5 @@
-from django.contrib.auth.mixins import PermissionRequiredMixin
-from django.contrib import messages
-from django.http import HttpResponseRedirect
+from django.contrib.auth.mixins import LoginRequiredMixin
+
 from sm.views import SafeDeleteMixin
 from sm.mixins import MultiTenantMixin
 from typing import Any
@@ -20,8 +19,7 @@ from django.utils.translation import gettext as _
 from django.urls import reverse_lazy
 
 
-class ListView(PermissionRequiredMixin, MultiTenantMixin, GenericListView):
-    permission_required = "operatingsystem.view_model"
+class ListView(LoginRequiredMixin, MultiTenantMixin, GenericListView):
     template_name = "%s/list.html" % app_label
     model = Model
     paginate_by = 20
@@ -46,8 +44,7 @@ class ListView(PermissionRequiredMixin, MultiTenantMixin, GenericListView):
         return qs.order_by("name")
 
 
-class DetailView(PermissionRequiredMixin, MultiTenantMixin, GenericUpdateView):
-    permission_required = "operatingsystem.view_model"
+class DetailView(LoginRequiredMixin, MultiTenantMixin, GenericUpdateView):
     template_name = "%s/detail.html" % app_label
     model = Model
     form_class = FormDisabled
@@ -55,11 +52,10 @@ class DetailView(PermissionRequiredMixin, MultiTenantMixin, GenericUpdateView):
 
 class UpdateView(
     SuccessMessageMixin,
-    PermissionRequiredMixin,
+    LoginRequiredMixin,
     MultiTenantMixin,
     GenericUpdateView,
 ):
-    permission_required = "operatingsystem.change_model"
     success_message = "%(version)s " + _("was updated successfully")
     template_name = "%s/edit.html" % app_label
     model = Model
@@ -69,11 +65,10 @@ class UpdateView(
 
 class CreateView(
     SuccessMessageMixin,
-    PermissionRequiredMixin,
+    LoginRequiredMixin,
     MultiTenantMixin,
     GenericCreateView,
 ):
-    permission_required = "operatingsystem.add_model"
     success_message = "%(version)s " + _("was created successfully")
 
     template_name = "%s/edit.html" % app_label
@@ -94,11 +89,10 @@ class CreateView(
 
 class DeleteView(
     SafeDeleteMixin,
-    PermissionRequiredMixin,
+    LoginRequiredMixin,
     MultiTenantMixin,
     GenericDeleteView,
 ):
-    permission_required = "operatingsystem.delete_model"
     success_message = "%(version)s " + _("was deleted successfully")
     template_name = "delete.html"
     model = Model

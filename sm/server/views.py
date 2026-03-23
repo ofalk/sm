@@ -1,6 +1,6 @@
-from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
-from django.http import HttpResponseRedirect
+
 from sm.views import SafeDeleteMixin
 from sm.mixins import MultiTenantMixin
 
@@ -26,8 +26,7 @@ except Exception:  # pragma: no cover
     from django.urls import reverse_lazy  # pragma: no cover
 
 
-class ListView(PermissionRequiredMixin, MultiTenantMixin, GenericListView):
-    permission_required = "server.view_model"
+class ListView(LoginRequiredMixin, MultiTenantMixin, GenericListView):
     template_name = "%s/list.html" % app_label
     model = Model
     paginate_by = 20
@@ -48,9 +47,7 @@ class ListView(PermissionRequiredMixin, MultiTenantMixin, GenericListView):
         return context
 
 
-class BulkActionView(PermissionRequiredMixin, MultiTenantMixin, View):
-    permission_required = "server.change_model"
-
+class BulkActionView(LoginRequiredMixin, MultiTenantMixin, View):
     def post(self, request, *args, **kwargs):
         server_ids = request.POST.getlist("selected_servers")
         if not server_ids:
@@ -89,8 +86,7 @@ class BulkActionView(PermissionRequiredMixin, MultiTenantMixin, View):
         return redirect("server:index")
 
 
-class DetailView(PermissionRequiredMixin, MultiTenantMixin, GenericUpdateView):
-    permission_required = "server.view_model"
+class DetailView(LoginRequiredMixin, MultiTenantMixin, GenericUpdateView):
     template_name = "%s/detail.html" % app_label
     model = Model
     form_class = FormDisabled
@@ -98,11 +94,10 @@ class DetailView(PermissionRequiredMixin, MultiTenantMixin, GenericUpdateView):
 
 class UpdateView(
     SuccessMessageMixin,
-    PermissionRequiredMixin,
+    LoginRequiredMixin,
     MultiTenantMixin,
     GenericUpdateView,
 ):
-    permission_required = "server.change_model"
     success_message = "%(hostname)s " + _("was updated successfully")
     model = Model
 
@@ -113,11 +108,10 @@ class UpdateView(
 
 class CreateView(
     SuccessMessageMixin,
-    PermissionRequiredMixin,
+    LoginRequiredMixin,
     MultiTenantMixin,
     GenericCreateView,
 ):
-    permission_required = "server.add_model"
     success_message = "%(hostname)s " + _("was created successfully")
     model = Model
 
@@ -128,19 +122,17 @@ class CreateView(
 
 class DeleteView(
     SafeDeleteMixin,
-    PermissionRequiredMixin,
+    LoginRequiredMixin,
     MultiTenantMixin,
     GenericDeleteView,
 ):
-    permission_required = "server.delete_model"
     success_message = "%(hostname)s " + _("was deleted successfully")
     template_name = "delete.html"
     model = Model
     success_url = reverse_lazy("%s:index" % app_label)
 
 
-class SearchView(PermissionRequiredMixin, MultiTenantMixin, GenericListView):
-    permission_required = "server.view_model"
+class SearchView(LoginRequiredMixin, MultiTenantMixin, GenericListView):
     template_name = "%s/list.html" % app_label
     model = Model
     paginate_by = 20

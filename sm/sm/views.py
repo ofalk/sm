@@ -180,6 +180,11 @@ class SearchView(LoginRequiredMixin, TemplateView):
         # Navigation Quick Jumps
         nav_targets = [
             {"name": _("Dashboard"), "url": "/", "icon": "fa-gauge-high"},
+            {
+                "name": _("Group Management"),
+                "url": "/group/members/",
+                "icon": "fa-users",
+            },
             {"name": _("Servers"), "url": "/server/", "icon": "fa-server"},
             {"name": _("Server Models"), "url": "/servermodel/", "icon": "fa-cubes"},
             {"name": _("Vendors"), "url": "/vendor/", "icon": "fa-industry"},

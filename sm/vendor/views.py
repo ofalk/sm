@@ -1,9 +1,7 @@
-from django.contrib.auth.mixins import PermissionRequiredMixin
-from django.contrib import messages
-from django.http import HttpResponseRedirect
+from django.contrib.auth.mixins import LoginRequiredMixin
+
 from sm.views import SafeDeleteMixin
 from sm.mixins import MultiTenantMixin
-from typing import Any
 
 from .models import Model
 from .forms import Form, FormDisabled
@@ -23,8 +21,7 @@ except Exception:  # pragma: no cover
     from django.urls import reverse_lazy  # pragma: no cover
 
 
-class ListView(PermissionRequiredMixin, MultiTenantMixin, GenericListView):
-    permission_required = "vendor.view_model"
+class ListView(LoginRequiredMixin, MultiTenantMixin, GenericListView):
     template_name = "%s/list.html" % app_label
     model = Model
     paginate_by = 20
@@ -32,17 +29,15 @@ class ListView(PermissionRequiredMixin, MultiTenantMixin, GenericListView):
     ordering = "name"
 
 
-class DetailView(PermissionRequiredMixin, MultiTenantMixin, GenericUpdateView):
-    permission_required = "vendor.view_model"
+class DetailView(LoginRequiredMixin, MultiTenantMixin, GenericUpdateView):
     template_name = "%s/detail.html" % app_label
     model = Model
     form_class = FormDisabled
 
 
 class UpdateView(
-    SuccessMessageMixin, PermissionRequiredMixin, MultiTenantMixin, GenericUpdateView
+    SuccessMessageMixin, LoginRequiredMixin, MultiTenantMixin, GenericUpdateView
 ):
-    permission_required = "vendor.change_model"
     success_message = "%(name)s " + _("was updated successfully")
     model = Model
     template_name = "%s/edit.html" % app_label
@@ -51,9 +46,8 @@ class UpdateView(
 
 
 class CreateView(
-    SuccessMessageMixin, PermissionRequiredMixin, MultiTenantMixin, GenericCreateView
+    SuccessMessageMixin, LoginRequiredMixin, MultiTenantMixin, GenericCreateView
 ):
-    permission_required = "vendor.add_model"
     success_message = "%(name)s " + _("was created successfully")
     template_name = "%s/edit.html" % app_label
     fields = "__all__"
@@ -62,9 +56,8 @@ class CreateView(
 
 
 class DeleteView(
-    SafeDeleteMixin, PermissionRequiredMixin, MultiTenantMixin, GenericDeleteView
+    SafeDeleteMixin, LoginRequiredMixin, MultiTenantMixin, GenericDeleteView
 ):
-    permission_required = "vendor.delete_model"
     success_message = "%(name)s " + _("was deleted successfully")
     template_name = "delete.html"
     model = Model

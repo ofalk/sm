@@ -26,6 +26,11 @@ from .views_group import (
     AddGroupMemberView,
     RemoveGroupMemberView,
     GroupPermissionUpdateView,
+    UserPermissionUpdateView,
+    InviteGroupMemberView,
+    AcceptInvitationView,
+    GroupFilterView,
+    GroupCreateView,
 )
 from .views_avatars import avatar_proxy
 from .api.views import (
@@ -99,6 +104,7 @@ urlpatterns = [
     ),
     # Group Management (Owner)
     path("group/members/", GroupMemberListView.as_view(), name="group_member_list"),
+    path("group/create/", GroupCreateView.as_view(), name="group_create"),
     path(
         "group/members/add/<int:group_id>/",
         AddGroupMemberView.as_view(),
@@ -113,6 +119,26 @@ urlpatterns = [
         "group/permissions/<int:group_id>/",
         GroupPermissionUpdateView.as_view(),
         name="group_permission_edit",
+    ),
+    path(
+        "group/permissions/<int:group_id>/user/<int:user_id>/",
+        UserPermissionUpdateView.as_view(),
+        name="group_user_permission_edit",
+    ),
+    path(
+        "group/invite/<int:group_id>/",
+        InviteGroupMemberView.as_view(),
+        name="group_member_invite",
+    ),
+    path(
+        "invitation/<uuid:token>/",
+        AcceptInvitationView.as_view(),
+        name="accept_invitation",
+    ),
+    path(
+        "group/filter/",
+        GroupFilterView.as_view(),
+        name="group_filter",
     ),
     # Project Apps
     path("cluster/", include("cluster.urls")),

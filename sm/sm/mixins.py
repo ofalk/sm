@@ -53,7 +53,16 @@ class MultiTenantMixin:
         if self.request.user.is_superuser:
             return queryset
 
+        selected_groups = self.request.session.get("selected_groups", [])
         user_groups = self.request.user.groups.all()
+
+        if selected_groups:
+            group_ids = [int(g) for g in selected_groups if g.isdigit()]
+            if group_ids:
+                return queryset.filter(
+                    Q(group__id__in=group_ids) | Q(group__isnull=True)
+                )
+
         return queryset.filter(Q(group__in=user_groups) | Q(group__isnull=True))
 
     def check_quota(self, group: Optional[Group]) -> bool:
@@ -107,7 +116,16 @@ class APIMultiTenantMixin:
         if self.request.user.is_superuser:
             return queryset
 
+        selected_groups = self.request.session.get("selected_groups", [])
         user_groups = self.request.user.groups.all()
+
+        if selected_groups:
+            group_ids = [int(g) for g in selected_groups if g.isdigit()]
+            if group_ids:
+                return queryset.filter(
+                    Q(group__id__in=group_ids) | Q(group__isnull=True)
+                )
+
         return queryset.filter(Q(group__in=user_groups) | Q(group__isnull=True))
 
     def perform_create(self, serializer: Any) -> None:

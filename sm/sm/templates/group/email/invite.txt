@@ -1,0 +1,14 @@
+{% load i18n %}{% trans "Hello" %},
+
+{% blocktrans with group_name=invitation.group.name owner_name=owner_name %}You have been invited by {{ owner_name }} to join the group "{{ group_name }}" on ServerManager.{% endblocktrans %}
+
+{% trans "Click the link below to accept the invitation and create your account:" %}
+
+{{ invite_url }}
+
+{% trans "This invitation will expire in 24 hours." %}
+
+{% trans "If you did not expect this invitation, you can safely ignore this email." %}
+
+{% trans "Best regards" %},
+ServerManager
