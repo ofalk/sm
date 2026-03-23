@@ -1,5 +1,6 @@
 from django.views.generic import TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib import messages
 from server.models import Model as Server
 from cluster.models import Model as Cluster
 from vendor.models import Model as Vendor
@@ -46,7 +47,7 @@ class SafeDeleteMixin:
             # Try normal deletion first
             obj_name = str(self.object)  # type: ignore
             self.object.delete()  # type: ignore
-            if hasattr(self, "success_message") and self.success_message:  # type: ignore
+            if hasattr(self, "success_message") and self.success_message:  # type: ignore  # noqa: E501
                 messages.success(
                     # type: ignore
                     self.request,
