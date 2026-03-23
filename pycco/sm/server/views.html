@@ -20,9 +20,11 @@
       
     </div>
     <div class='code'>
-      <div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">django.contrib.auth.mixins</span><span class="w"> </span><span class="kn">import</span> <span class="n">LoginRequiredMixin</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">sm.views</span><span class="w"> </span><span class="kn">import</span> <span class="n">SafeDeleteMixin</span>
+      <div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">django.contrib.auth.mixins</span><span class="w"> </span><span class="kn">import</span> <span class="n">PermissionRequiredMixin</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.contrib</span><span class="w"> </span><span class="kn">import</span> <span class="n">messages</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">django.http</span><span class="w"> </span><span class="kn">import</span> <span class="n">HttpResponseRedirect</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sm.views</span><span class="w"> </span><span class="kn">import</span> <span class="n">SafeDeleteMixin</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sm.mixins</span><span class="w"> </span><span class="kn">import</span> <span class="n">MultiTenantMixin</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">Model</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.forms</span><span class="w"> </span><span class="kn">import</span> <span class="n">Form</span><span class="p">,</span> <span class="n">FormDisabled</span><span class="p">,</span> <span class="n">BulkActionForm</span>
@@ -43,9 +45,7 @@
 <span class="k">try</span><span class="p">:</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">django.urls</span><span class="w"> </span><span class="kn">import</span> <span class="n">reverse_lazy</span>
 <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
-    <span class="kn">from</span><span class="w"> </span><span class="nn">django.urls</span><span class="w"> </span><span class="kn">import</span> <span class="n">reverse_lazy</span>  <span class="c1"># pragma: no cover</span>
-
-<span class="kn">from</span><span class="w"> </span><span class="nn">django.contrib</span><span class="w"> </span><span class="kn">import</span> <span class="n">messages</span></pre></div>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">django.urls</span><span class="w"> </span><span class="kn">import</span> <span class="n">reverse_lazy</span>  <span class="c1"># pragma: no cover</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -57,7 +57,8 @@
       
     </div>
     <div class='code'>
-      <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">ListView</span><span class="p">(</span><span class="n">LoginRequiredMixin</span><span class="p">,</span> <span class="n">GenericListView</span><span class="p">):</span>
+      <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">ListView</span><span class="p">(</span><span class="n">PermissionRequiredMixin</span><span class="p">,</span> <span class="n">MultiTenantMixin</span><span class="p">,</span> <span class="n">GenericListView</span><span class="p">):</span>
+    <span class="n">permission_required</span> <span class="o">=</span> <span class="s2">&quot;server.view_model&quot;</span>
     <span class="n">template_name</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">/list.html&quot;</span> <span class="o">%</span> <span class="n">app_label</span>
     <span class="n">model</span> <span class="o">=</span> <span class="n">Model</span>
     <span class="n">paginate_by</span> <span class="o">=</span> <span class="mi">20</span>
@@ -86,12 +87,11 @@
     </div>
     <div class='code'>
       <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">get_queryset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">queryset</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_queryset</span><span class="p">()</span>
         <span class="k">if</span> <span class="s2">&quot;srvmanager-show_disposed&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">COOKIES</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">COOKIES</span><span class="p">[</span><span class="s2">&quot;srvmanager-show_disposed&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;true&quot;</span><span class="p">:</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ordering</span><span class="p">)</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">status__name</span><span class="o">=</span><span class="s2">&quot;Disposed&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">ordering</span>
-        <span class="p">)</span></pre></div>
+                <span class="k">return</span> <span class="n">queryset</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ordering</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">queryset</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">status__name</span><span class="o">=</span><span class="s2">&quot;Disposed&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ordering</span><span class="p">)</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -118,7 +118,8 @@
       
     </div>
     <div class='code'>
-      <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">BulkActionView</span><span class="p">(</span><span class="n">LoginRequiredMixin</span><span class="p">,</span> <span class="n">View</span><span class="p">):</span></pre></div>
+      <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">BulkActionView</span><span class="p">(</span><span class="n">PermissionRequiredMixin</span><span class="p">,</span> <span class="n">MultiTenantMixin</span><span class="p">,</span> <span class="n">View</span><span class="p">):</span>
+    <span class="n">permission_required</span> <span class="o">=</span> <span class="s2">&quot;server.change_model&quot;</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -137,11 +138,39 @@
             <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;server:index&quot;</span><span class="p">)</span>
 
         <span class="n">form</span> <span class="o">=</span> <span class="n">BulkActionForm</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">form</span><span class="o">.</span><span class="n">is_valid</span><span class="p">():</span>
-            <span class="n">servers</span> <span class="o">=</span> <span class="n">Model</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">id__in</span><span class="o">=</span><span class="n">server_ids</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">form</span><span class="o">.</span><span class="n">is_valid</span><span class="p">():</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-7'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-7'>#</a>
+      </div>
+      <p>Use get_queryset to ensure multi-tenancy filtering</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>            <span class="n">servers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_queryset</span><span class="p">()</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">id__in</span><span class="o">=</span><span class="n">server_ids</span><span class="p">)</span>
             <span class="n">count</span> <span class="o">=</span> <span class="n">servers</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
 
-            <span class="k">if</span> <span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s2">&quot;delete&quot;</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s2">&quot;delete&quot;</span><span class="p">]:</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-8'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-8'>#</a>
+      </div>
+      <p>Check delete permission</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>                <span class="k">if</span> <span class="ow">not</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">has_perm</span><span class="p">(</span><span class="s2">&quot;server.delete_model&quot;</span><span class="p">):</span>
+                    <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                        <span class="n">request</span><span class="p">,</span>
+                        <span class="n">_</span><span class="p">(</span><span class="s2">&quot;You don&#39;t have permission to delete servers.&quot;</span><span class="p">),</span>
+                    <span class="p">)</span>
+                    <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;server:index&quot;</span><span class="p">)</span>
                 <span class="n">servers</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
                 <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Successfully deleted </span><span class="si">%d</span><span class="s2"> servers.&quot;</span><span class="p">)</span> <span class="o">%</span> <span class="n">count</span><span class="p">)</span>
             <span class="k">elif</span> <span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s2">&quot;status&quot;</span><span class="p">]:</span>
@@ -161,37 +190,6 @@
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-7'>
-    <div class='docs'>
-      <div class='octowrap'>
-        <a class='octothorpe' href='#section-7'>#</a>
-      </div>
-      
-    </div>
-    <div class='code'>
-      <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">DetailView</span><span class="p">(</span><span class="n">LoginRequiredMixin</span><span class="p">,</span> <span class="n">GenericUpdateView</span><span class="p">):</span>
-    <span class="n">template_name</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">/detail.html&quot;</span> <span class="o">%</span> <span class="n">app_label</span>
-    <span class="n">model</span> <span class="o">=</span> <span class="n">Model</span>
-    <span class="n">form_class</span> <span class="o">=</span> <span class="n">FormDisabled</span></pre></div>
-    </div>
-  </div>
-  <div class='clearall'></div>
-  <div class='section' id='section-8'>
-    <div class='docs'>
-      <div class='octowrap'>
-        <a class='octothorpe' href='#section-8'>#</a>
-      </div>
-      
-    </div>
-    <div class='code'>
-      <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">UpdateView</span><span class="p">(</span><span class="n">SuccessMessageMixin</span><span class="p">,</span> <span class="n">LoginRequiredMixin</span><span class="p">,</span> <span class="n">GenericUpdateView</span><span class="p">):</span>
-    <span class="n">success_message</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%(hostname)s</span><span class="s2"> &quot;</span> <span class="o">+</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;was updated successfully&quot;</span><span class="p">)</span>
-    <span class="n">model</span> <span class="o">=</span> <span class="n">Model</span>
-
-    <span class="n">template_name</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">/edit.html&quot;</span> <span class="o">%</span> <span class="n">app_label</span></pre></div>
-    </div>
-  </div>
-  <div class='clearall'></div>
   <div class='section' id='section-9'>
     <div class='docs'>
       <div class='octowrap'>
@@ -200,14 +198,11 @@
       
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">form_valid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">form</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">object</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
-        <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">success_message</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">)</span>
-
-        <span class="k">return</span> <span class="n">HttpResponseRedirect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_success_url</span><span class="p">())</span>
-
-    <span class="n">form_class</span> <span class="o">=</span> <span class="n">Form</span>
-    <span class="n">success_url</span> <span class="o">=</span> <span class="n">reverse_lazy</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">:index&quot;</span> <span class="o">%</span> <span class="n">app_label</span><span class="p">)</span></pre></div>
+      <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">DetailView</span><span class="p">(</span><span class="n">PermissionRequiredMixin</span><span class="p">,</span> <span class="n">MultiTenantMixin</span><span class="p">,</span> <span class="n">GenericUpdateView</span><span class="p">):</span>
+    <span class="n">permission_required</span> <span class="o">=</span> <span class="s2">&quot;server.view_model&quot;</span>
+    <span class="n">template_name</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">/detail.html&quot;</span> <span class="o">%</span> <span class="n">app_label</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">Model</span>
+    <span class="n">form_class</span> <span class="o">=</span> <span class="n">FormDisabled</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -219,11 +214,19 @@
       
     </div>
     <div class='code'>
-      <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">CreateView</span><span class="p">(</span><span class="n">SuccessMessageMixin</span><span class="p">,</span> <span class="n">LoginRequiredMixin</span><span class="p">,</span> <span class="n">GenericCreateView</span><span class="p">):</span>
-    <span class="n">success_message</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%(hostname)s</span><span class="s2"> &quot;</span> <span class="o">+</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;was created successfully&quot;</span><span class="p">)</span>
+      <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">UpdateView</span><span class="p">(</span>
+    <span class="n">SuccessMessageMixin</span><span class="p">,</span>
+    <span class="n">PermissionRequiredMixin</span><span class="p">,</span>
+    <span class="n">MultiTenantMixin</span><span class="p">,</span>
+    <span class="n">GenericUpdateView</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="n">permission_required</span> <span class="o">=</span> <span class="s2">&quot;server.change_model&quot;</span>
+    <span class="n">success_message</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%(hostname)s</span><span class="s2"> &quot;</span> <span class="o">+</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;was updated successfully&quot;</span><span class="p">)</span>
     <span class="n">model</span> <span class="o">=</span> <span class="n">Model</span>
 
-    <span class="n">template_name</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">/edit.html&quot;</span> <span class="o">%</span> <span class="n">app_label</span></pre></div>
+    <span class="n">template_name</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">/edit.html&quot;</span> <span class="o">%</span> <span class="n">app_label</span>
+    <span class="n">form_class</span> <span class="o">=</span> <span class="n">Form</span>
+    <span class="n">success_url</span> <span class="o">=</span> <span class="n">reverse_lazy</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">:index&quot;</span> <span class="o">%</span> <span class="n">app_label</span><span class="p">)</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -235,14 +238,18 @@
       
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">form_valid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">form</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">object</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
-        <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">success_message</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">)</span>
-
-        <span class="k">return</span> <span class="n">HttpResponseRedirect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_success_url</span><span class="p">())</span>
-
-    <span class="n">form_class</span> <span class="o">=</span> <span class="n">Form</span>
+      <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">CreateView</span><span class="p">(</span>
+    <span class="n">SuccessMessageMixin</span><span class="p">,</span>
+    <span class="n">PermissionRequiredMixin</span><span class="p">,</span>
+    <span class="n">MultiTenantMixin</span><span class="p">,</span>
+    <span class="n">GenericCreateView</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="n">permission_required</span> <span class="o">=</span> <span class="s2">&quot;server.add_model&quot;</span>
+    <span class="n">success_message</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%(hostname)s</span><span class="s2"> &quot;</span> <span class="o">+</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;was created successfully&quot;</span><span class="p">)</span>
     <span class="n">model</span> <span class="o">=</span> <span class="n">Model</span>
+
+    <span class="n">template_name</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">/edit.html&quot;</span> <span class="o">%</span> <span class="n">app_label</span>
+    <span class="n">form_class</span> <span class="o">=</span> <span class="n">Form</span>
     <span class="n">success_url</span> <span class="o">=</span> <span class="n">reverse_lazy</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">:index&quot;</span> <span class="o">%</span> <span class="n">app_label</span><span class="p">)</span></pre></div>
     </div>
   </div>
@@ -255,7 +262,13 @@
       
     </div>
     <div class='code'>
-      <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">DeleteView</span><span class="p">(</span><span class="n">SafeDeleteMixin</span><span class="p">,</span> <span class="n">LoginRequiredMixin</span><span class="p">,</span> <span class="n">GenericDeleteView</span><span class="p">):</span>
+      <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">DeleteView</span><span class="p">(</span>
+    <span class="n">SafeDeleteMixin</span><span class="p">,</span>
+    <span class="n">PermissionRequiredMixin</span><span class="p">,</span>
+    <span class="n">MultiTenantMixin</span><span class="p">,</span>
+    <span class="n">GenericDeleteView</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="n">permission_required</span> <span class="o">=</span> <span class="s2">&quot;server.delete_model&quot;</span>
     <span class="n">success_message</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%(hostname)s</span><span class="s2"> &quot;</span> <span class="o">+</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;was deleted successfully&quot;</span><span class="p">)</span>
     <span class="n">template_name</span> <span class="o">=</span> <span class="s2">&quot;delete.html&quot;</span>
     <span class="n">model</span> <span class="o">=</span> <span class="n">Model</span>
@@ -271,7 +284,8 @@
       
     </div>
     <div class='code'>
-      <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">SearchView</span><span class="p">(</span><span class="n">LoginRequiredMixin</span><span class="p">,</span> <span class="n">GenericListView</span><span class="p">):</span>
+      <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">SearchView</span><span class="p">(</span><span class="n">PermissionRequiredMixin</span><span class="p">,</span> <span class="n">MultiTenantMixin</span><span class="p">,</span> <span class="n">GenericListView</span><span class="p">):</span>
+    <span class="n">permission_required</span> <span class="o">=</span> <span class="s2">&quot;server.view_model&quot;</span>
     <span class="n">template_name</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">/list.html&quot;</span> <span class="o">%</span> <span class="n">app_label</span>
     <span class="n">model</span> <span class="o">=</span> <span class="n">Model</span>
     <span class="n">paginate_by</span> <span class="o">=</span> <span class="mi">20</span>
