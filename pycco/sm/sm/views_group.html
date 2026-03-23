@@ -64,10 +64,11 @@
       <div class='octowrap'>
         <a class='octothorpe' href='#section-3'>#</a>
       </div>
-      <p>Check if user is owner of at least one group</p>
+      <p>Superusers can manage all groups</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>        <span class="k">return</span> <span class="n">GroupProfile</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">owner</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span></pre></div>
+      <div class="highlight"><pre>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_superuser</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -76,12 +77,10 @@
       <div class='octowrap'>
         <a class='octothorpe' href='#section-4'>#</a>
       </div>
-      
+      <p>Check if user is owner of at least one group</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">GroupMemberListView</span><span class="p">(</span><span class="n">GroupOwnerRequiredMixin</span><span class="p">,</span> <span class="n">ListView</span><span class="p">):</span>
-    <span class="n">template_name</span> <span class="o">=</span> <span class="s2">&quot;group/member_list.html&quot;</span>
-    <span class="n">context_object_name</span> <span class="o">=</span> <span class="s2">&quot;groups&quot;</span></pre></div>
+      <div class="highlight"><pre>        <span class="k">return</span> <span class="n">GroupProfile</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">owner</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -93,10 +92,9 @@
       
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">get_queryset</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">Group</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">profile__owner</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span><span class="o">.</span><span class="n">prefetch_related</span><span class="p">(</span>
-            <span class="s2">&quot;user_set&quot;</span><span class="p">,</span> <span class="s2">&quot;profile&quot;</span>
-        <span class="p">)</span></pre></div>
+      <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">GroupMemberListView</span><span class="p">(</span><span class="n">LoginRequiredMixin</span><span class="p">,</span> <span class="n">GroupOwnerRequiredMixin</span><span class="p">,</span> <span class="n">ListView</span><span class="p">):</span>
+    <span class="n">template_name</span> <span class="o">=</span> <span class="s2">&quot;group/member_list.html&quot;</span>
+    <span class="n">context_object_name</span> <span class="o">=</span> <span class="s2">&quot;groups&quot;</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -108,8 +106,12 @@
       
     </div>
     <div class='code'>
-      <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">AddGroupMemberForm</span><span class="p">(</span><span class="n">forms</span><span class="o">.</span><span class="n">Form</span><span class="p">):</span>
-    <span class="n">username</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="n">_</span><span class="p">(</span><span class="s2">&quot;Username or Email&quot;</span><span class="p">))</span></pre></div>
+      <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">get_queryset</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_superuser</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">Group</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">prefetch_related</span><span class="p">(</span><span class="s2">&quot;user_set&quot;</span><span class="p">,</span> <span class="s2">&quot;profile&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">Group</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">profile__owner</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span><span class="o">.</span><span class="n">prefetch_related</span><span class="p">(</span>
+            <span class="s2">&quot;user_set&quot;</span><span class="p">,</span> <span class="s2">&quot;profile&quot;</span>
+        <span class="p">)</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -117,6 +119,19 @@
     <div class='docs'>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-7'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">AddGroupMemberForm</span><span class="p">(</span><span class="n">forms</span><span class="o">.</span><span class="n">Form</span><span class="p">):</span>
+    <span class="n">username</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="n">_</span><span class="p">(</span><span class="s2">&quot;Username or Email&quot;</span><span class="p">))</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-8'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-8'>#</a>
       </div>
       
     </div>
@@ -132,20 +147,6 @@
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-8'>
-    <div class='docs'>
-      <div class='octowrap'>
-        <a class='octothorpe' href='#section-8'>#</a>
-      </div>
-      
-    </div>
-    <div class='code'>
-      <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">AddGroupMemberView</span><span class="p">(</span><span class="n">GroupOwnerRequiredMixin</span><span class="p">,</span> <span class="n">FormView</span><span class="p">):</span>
-    <span class="n">form_class</span> <span class="o">=</span> <span class="n">AddGroupMemberForm</span>
-    <span class="n">template_name</span> <span class="o">=</span> <span class="s2">&quot;group/add_member.html&quot;</span></pre></div>
-    </div>
-  </div>
-  <div class='clearall'></div>
   <div class='section' id='section-9'>
     <div class='docs'>
       <div class='octowrap'>
@@ -154,8 +155,9 @@
       
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">get_success_url</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">reverse_lazy</span><span class="p">(</span><span class="s2">&quot;group_member_list&quot;</span><span class="p">)</span></pre></div>
+      <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">AddGroupMemberView</span><span class="p">(</span><span class="n">LoginRequiredMixin</span><span class="p">,</span> <span class="n">GroupOwnerRequiredMixin</span><span class="p">,</span> <span class="n">FormView</span><span class="p">):</span>
+    <span class="n">form_class</span> <span class="o">=</span> <span class="n">AddGroupMemberForm</span>
+    <span class="n">template_name</span> <span class="o">=</span> <span class="s2">&quot;group/add_member.html&quot;</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -167,9 +169,39 @@
       
     </div>
     <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">get_success_url</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">reverse_lazy</span><span class="p">(</span><span class="s2">&quot;group_member_list&quot;</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-11'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-11'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
       <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">form_valid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">form</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
-        <span class="n">group_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;group_id&quot;</span><span class="p">)</span>
-        <span class="n">group</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">Group</span><span class="p">,</span> <span class="n">pk</span><span class="o">=</span><span class="n">group_id</span><span class="p">,</span> <span class="n">profile__owner</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
+        <span class="n">group_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;group_id&quot;</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-12'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-12'>#</a>
+      </div>
+      <p>Ensure the user is the owner OR a superuser</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_superuser</span><span class="p">:</span>
+            <span class="n">group</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">Group</span><span class="p">,</span> <span class="n">pk</span><span class="o">=</span><span class="n">group_id</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">group</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span>
+                <span class="n">Group</span><span class="p">,</span> <span class="n">pk</span><span class="o">=</span><span class="n">group_id</span><span class="p">,</span> <span class="n">profile__owner</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">user</span>
+            <span class="p">)</span>
+
         <span class="n">user_to_add</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s2">&quot;username&quot;</span><span class="p">]</span>
 
         <span class="k">if</span> <span class="n">group</span><span class="o">.</span><span class="n">user_set</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="n">group</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">max_users</span><span class="p">:</span>
@@ -189,10 +221,10 @@
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-11'>
+  <div class='section' id='section-13'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-11'>#</a>
+        <a class='octothorpe' href='#section-13'>#</a>
       </div>
       
     </div>
@@ -201,10 +233,10 @@
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-12'>
+  <div class='section' id='section-14'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-12'>#</a>
+        <a class='octothorpe' href='#section-14'>#</a>
       </div>
       
     </div>
@@ -212,10 +244,17 @@
       <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">post</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
         <span class="n">group_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;group_id&quot;</span><span class="p">)</span>
         <span class="n">user_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;user_id&quot;</span><span class="p">)</span>
-        <span class="n">group</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">Group</span><span class="p">,</span> <span class="n">pk</span><span class="o">=</span><span class="n">group_id</span><span class="p">,</span> <span class="n">profile__owner</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_superuser</span><span class="p">:</span>
+            <span class="n">group</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">Group</span><span class="p">,</span> <span class="n">pk</span><span class="o">=</span><span class="n">group_id</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">group</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span>
+                <span class="n">Group</span><span class="p">,</span> <span class="n">pk</span><span class="o">=</span><span class="n">group_id</span><span class="p">,</span> <span class="n">profile__owner</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">user</span>
+            <span class="p">)</span>
+
         <span class="n">user_to_remove</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">User</span><span class="p">,</span> <span class="n">pk</span><span class="o">=</span><span class="n">user_id</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">user_to_remove</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">user_to_remove</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">user</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_superuser</span><span class="p">:</span>
             <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
                 <span class="n">request</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;You cannot remove yourself from your own group.&quot;</span><span class="p">)</span>
             <span class="p">)</span>
@@ -231,10 +270,10 @@
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-13'>
+  <div class='section' id='section-15'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-13'>#</a>
+        <a class='octothorpe' href='#section-15'>#</a>
       </div>
       
     </div>
@@ -243,10 +282,10 @@
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-14'>
+  <div class='section' id='section-16'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-14'>#</a>
+        <a class='octothorpe' href='#section-16'>#</a>
       </div>
       
     </div>
@@ -265,19 +304,14 @@
 
         <span class="n">current_perms</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">group</span><span class="o">.</span><span class="n">permissions</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s2">&quot;codename&quot;</span><span class="p">,</span> <span class="n">flat</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-        <span class="k">for</span> <span class="n">app_label</span><span class="p">,</span> <span class="n">label</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">models_to_manage</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;edit_</span><span class="si">{</span><span class="n">app_label</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span>
-                <span class="n">label</span><span class="o">=</span><span class="n">_</span><span class="p">(</span><span class="s2">&quot;Can Edit </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">)</span> <span class="o">%</span> <span class="n">label</span><span class="p">,</span>
-                <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-                <span class="n">initial</span><span class="o">=</span><span class="s2">&quot;change_model&quot;</span> <span class="ow">in</span> <span class="n">current_perms</span><span class="p">,</span>  <span class="c1"># Simplified codename check</span>
-            <span class="p">)</span></pre></div>
+        <span class="k">for</span> <span class="n">app_label</span><span class="p">,</span> <span class="n">label</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">models_to_manage</span><span class="p">:</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-15'>
+  <div class='section' id='section-17'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-15'>#</a>
+        <a class='octothorpe' href='#section-17'>#</a>
       </div>
       <p>Find the actual change permission codename which might be &lsquo;change_model&rsquo;
 because we named our model &lsquo;Model&rsquo;</p>
@@ -287,17 +321,23 @@ because we named our model &lsquo;Model&rsquo;</p>
             <span class="n">change_perm</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span>
                 <span class="p">(</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">perms</span> <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">codename</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;change_&quot;</span><span class="p">)),</span> <span class="kc">None</span>
             <span class="p">)</span>
+
+            <span class="n">initial_val</span> <span class="o">=</span> <span class="kc">False</span>
             <span class="k">if</span> <span class="n">change_perm</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;edit_</span><span class="si">{</span><span class="n">app_label</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">initial</span> <span class="o">=</span> <span class="p">(</span>
-                    <span class="n">change_perm</span><span class="o">.</span><span class="n">codename</span> <span class="ow">in</span> <span class="n">current_perms</span>
-                <span class="p">)</span></pre></div>
+                <span class="n">initial_val</span> <span class="o">=</span> <span class="n">change_perm</span><span class="o">.</span><span class="n">codename</span> <span class="ow">in</span> <span class="n">current_perms</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;edit_</span><span class="si">{</span><span class="n">app_label</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span>
+                <span class="n">label</span><span class="o">=</span><span class="n">_</span><span class="p">(</span><span class="s2">&quot;Can Edit </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">)</span> <span class="o">%</span> <span class="n">label</span><span class="p">,</span>
+                <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="n">initial</span><span class="o">=</span><span class="n">initial_val</span><span class="p">,</span>
+            <span class="p">)</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-16'>
+  <div class='section' id='section-18'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-16'>#</a>
+        <a class='octothorpe' href='#section-18'>#</a>
       </div>
       
     </div>
@@ -309,10 +349,10 @@ because we named our model &lsquo;Model&rsquo;</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-17'>
+  <div class='section' id='section-19'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-17'>#</a>
+        <a class='octothorpe' href='#section-19'>#</a>
       </div>
       <p>We manage add, change, delete as &ldquo;Edit&rdquo;</p>
     </div>
@@ -330,41 +370,45 @@ because we named our model &lsquo;Model&rsquo;</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-18'>
+  <div class='section' id='section-20'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-18'>#</a>
+        <a class='octothorpe' href='#section-20'>#</a>
       </div>
       
     </div>
     <div class='code'>
-      <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">GroupPermissionUpdateView</span><span class="p">(</span><span class="n">GroupOwnerRequiredMixin</span><span class="p">,</span> <span class="n">FormView</span><span class="p">):</span>
+      <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">GroupPermissionUpdateView</span><span class="p">(</span><span class="n">LoginRequiredMixin</span><span class="p">,</span> <span class="n">GroupOwnerRequiredMixin</span><span class="p">,</span> <span class="n">FormView</span><span class="p">):</span>
     <span class="n">template_name</span> <span class="o">=</span> <span class="s2">&quot;group/permission_edit.html&quot;</span>
     <span class="n">form_class</span> <span class="o">=</span> <span class="n">GroupPermissionForm</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-19'>
+  <div class='section' id='section-21'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-19'>#</a>
+        <a class='octothorpe' href='#section-21'>#</a>
       </div>
       
     </div>
     <div class='code'>
       <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">get_form_kwargs</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
         <span class="n">kwargs</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_form_kwargs</span><span class="p">()</span>
-        <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;group&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span>
-            <span class="n">Group</span><span class="p">,</span> <span class="n">pk</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;group_id&quot;</span><span class="p">),</span> <span class="n">profile__owner</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">user</span>
-        <span class="p">)</span>
+        <span class="n">group_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;group_id&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_superuser</span><span class="p">:</span>
+            <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;group&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">Group</span><span class="p">,</span> <span class="n">pk</span><span class="o">=</span><span class="n">group_id</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;group&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span>
+                <span class="n">Group</span><span class="p">,</span> <span class="n">pk</span><span class="o">=</span><span class="n">group_id</span><span class="p">,</span> <span class="n">profile__owner</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">user</span>
+            <span class="p">)</span>
         <span class="k">return</span> <span class="n">kwargs</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-20'>
+  <div class='section' id='section-22'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-20'>#</a>
+        <a class='octothorpe' href='#section-22'>#</a>
       </div>
       
     </div>
@@ -374,10 +418,10 @@ because we named our model &lsquo;Model&rsquo;</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-21'>
+  <div class='section' id='section-23'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-21'>#</a>
+        <a class='octothorpe' href='#section-23'>#</a>
       </div>
       
     </div>
