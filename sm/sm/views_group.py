@@ -41,7 +41,6 @@ class GroupMemberListView(LoginRequiredMixin, GroupOwnerRequiredMixin, ListView)
             .prefetch_related("user_set", "profile")
             .distinct()
         )
-        )
 
 
 class AddGroupMemberForm(forms.Form):
@@ -66,6 +65,8 @@ class CreateGroupForm(forms.Form):
         max_value=100,
         help_text=_("Maximum number of users in this group"),
     )
+
+
 class AddGroupMemberView(LoginRequiredMixin, GroupOwnerRequiredMixin, FormView):
     form_class = AddGroupMemberForm
     template_name = "group/add_member.html"
