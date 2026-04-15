@@ -31,7 +31,6 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">django.core.exceptions</span><span class="w"> </span><span class="kn">import</span> <span class="n">ObjectDoesNotExist</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">django.apps</span><span class="w"> </span><span class="kn">import</span> <span class="n">apps</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">django.http</span><span class="w"> </span><span class="kn">import</span> <span class="n">Http404</span><span class="p">,</span> <span class="n">HttpResponseRedirect</span><span class="p">,</span> <span class="n">JsonResponse</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">django.db</span><span class="w"> </span><span class="kn">import</span> <span class="n">connections</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">django.conf</span><span class="w"> </span><span class="kn">import</span> <span class="n">settings</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">django.db.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">ProtectedError</span>
@@ -670,8 +669,9 @@ OS Distribution</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre>        <span class="k">try</span><span class="p">:</span>
-            <span class="n">db_conn</span> <span class="o">=</span> <span class="n">connections</span><span class="p">[</span><span class="s2">&quot;default&quot;</span><span class="p">]</span>
-            <span class="n">db_conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+            <span class="kn">from</span><span class="w"> </span><span class="nn">django.db</span><span class="w"> </span><span class="kn">import</span> <span class="n">connection</span>
+
+            <span class="n">connection</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
             <span class="n">health</span><span class="p">[</span><span class="s2">&quot;checks&quot;</span><span class="p">][</span><span class="s2">&quot;database&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;ok&quot;</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="n">health</span><span class="p">[</span><span class="s2">&quot;status&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;unhealthy&quot;</span>

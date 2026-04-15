@@ -69,28 +69,31 @@
       <p>Version information</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre><span class="n">APP_VERSION</span> <span class="o">=</span> <span class="n">config</span><span class="p">(</span><span class="s2">&quot;APP_VERSION&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
-<span class="n">APP_MODIFICATION_DATE</span> <span class="o">=</span> <span class="n">config</span><span class="p">(</span><span class="s2">&quot;APP_MODIFICATION_DATE&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+      <div class="highlight"><pre><span class="n">APP_VERSION</span> <span class="o">=</span> <span class="n">config</span><span class="p">(</span><span class="s2">&quot;APP_VERSION&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;unknown&quot;</span><span class="p">)</span>
+<span class="n">APP_MODIFICATION_DATE</span> <span class="o">=</span> <span class="n">config</span><span class="p">(</span><span class="s2">&quot;APP_MODIFICATION_DATE&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;unknown&quot;</span><span class="p">)</span>
 
-<span class="k">if</span> <span class="ow">not</span> <span class="n">APP_VERSION</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">APP_MODIFICATION_DATE</span><span class="p">:</span>
+<span class="k">if</span> <span class="n">APP_VERSION</span> <span class="o">==</span> <span class="s2">&quot;unknown&quot;</span> <span class="ow">or</span> <span class="n">APP_MODIFICATION_DATE</span> <span class="o">==</span> <span class="s2">&quot;unknown&quot;</span><span class="p">:</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="kn">import</span><span class="w"> </span><span class="nn">subprocess</span>
 
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">APP_VERSION</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">APP_VERSION</span> <span class="o">==</span> <span class="s2">&quot;unknown&quot;</span><span class="p">:</span>
             <span class="n">APP_VERSION</span> <span class="o">=</span> <span class="p">(</span>
-                <span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">([</span><span class="s2">&quot;git&quot;</span><span class="p">,</span> <span class="s2">&quot;rev-parse&quot;</span><span class="p">,</span> <span class="s2">&quot;--short&quot;</span><span class="p">,</span> <span class="s2">&quot;HEAD&quot;</span><span class="p">])</span>
+                <span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">(</span>
+                    <span class="p">[</span><span class="s2">&quot;git&quot;</span><span class="p">,</span> <span class="s2">&quot;rev-parse&quot;</span><span class="p">,</span> <span class="s2">&quot;--short&quot;</span><span class="p">,</span> <span class="s2">&quot;HEAD&quot;</span><span class="p">],</span> <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">DEVNULL</span>
+                <span class="p">)</span>
                 <span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
                 <span class="o">.</span><span class="n">strip</span><span class="p">()</span>
             <span class="p">)</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">APP_MODIFICATION_DATE</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">APP_MODIFICATION_DATE</span> <span class="o">==</span> <span class="s2">&quot;unknown&quot;</span><span class="p">:</span>
             <span class="n">APP_MODIFICATION_DATE</span> <span class="o">=</span> <span class="p">(</span>
-                <span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">([</span><span class="s2">&quot;git&quot;</span><span class="p">,</span> <span class="s2">&quot;log&quot;</span><span class="p">,</span> <span class="s2">&quot;-1&quot;</span><span class="p">,</span> <span class="s2">&quot;--format=</span><span class="si">%c</span><span class="s2">d&quot;</span><span class="p">])</span>
+                <span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">(</span>
+                    <span class="p">[</span><span class="s2">&quot;git&quot;</span><span class="p">,</span> <span class="s2">&quot;log&quot;</span><span class="p">,</span> <span class="s2">&quot;-1&quot;</span><span class="p">,</span> <span class="s2">&quot;--format=</span><span class="si">%c</span><span class="s2">d&quot;</span><span class="p">],</span> <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">DEVNULL</span>
+                <span class="p">)</span>
                 <span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
                 <span class="o">.</span><span class="n">strip</span><span class="p">()</span>
             <span class="p">)</span>
     <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-        <span class="n">APP_VERSION</span> <span class="o">=</span> <span class="n">APP_VERSION</span> <span class="ow">or</span> <span class="s2">&quot;unknown&quot;</span>
-        <span class="n">APP_MODIFICATION_DATE</span> <span class="o">=</span> <span class="n">APP_MODIFICATION_DATE</span> <span class="ow">or</span> <span class="s2">&quot;unknown&quot;</span>
+        <span class="k">pass</span>
 
 <span class="n">DISABLE_SOCIAL_AUTH</span> <span class="o">=</span> <span class="n">config</span><span class="p">(</span><span class="s2">&quot;DISABLE_SOCIAL_AUTH&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">cast</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span></pre></div>
     </div>
