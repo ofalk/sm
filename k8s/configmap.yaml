@@ -5,7 +5,8 @@ metadata:
   namespace: localghost
 data:
   DEBUG: "False"
-  ALLOWED_HOSTS: "sm.localghost.com"
+  ALLOWED_HOSTS: sm.localghost.com,localhost,127.0.0.1
+
   EMAIL_BACKEND: "django.core.mail.backends.console.EmailBackend"
   THEME_CONTACT_EMAIL: "oliver@linux-kernel.at"
   THEME_GITHUB_URL: "https://github.com/ofalk/sm"
