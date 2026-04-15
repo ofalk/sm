@@ -72,14 +72,14 @@ spec:
             httpGet:
               path: /health/
               port: 8000
-            initialDelaySeconds: 30
-            periodSeconds: 10
+            initialDelaySeconds: 60
+            periodSeconds: 15
           readinessProbe:
             httpGet:
               path: /health/
               port: 8000
-            initialDelaySeconds: 10
-            periodSeconds: 5
+            initialDelaySeconds: 30
+            periodSeconds: 10
           volumeMounts:
             - name: static-assets
               mountPath: /app/sm/static
