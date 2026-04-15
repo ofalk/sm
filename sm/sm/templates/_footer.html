@@ -8,4 +8,15 @@
         <a href="{% url 'impressum' %}" class="text-muted mx-2">{% trans "Impressum" %}</a>
         <a href="{{ THEME_GITHUB_URL }}" class="text-muted mx-2" target="_blank" rel="noopener"><i class="fa-brands fa-github mr-1"></i> GitHub</a>
     </p>
-</div>
+    {% if APP_VERSION != "unknown" %}
+    <p class="small text-muted mb-0">
+        {% trans "Version" %}:
+        <a href="{{ THEME_GITHUB_URL }}/commit/{{ APP_VERSION }}" target="_blank" rel="noopener" class="text-muted">
+            <code>{{ APP_VERSION }}</code>
+        </a>
+        {% if APP_MODIFICATION_DATE != "unknown" %}
+            <span class="mx-1">&bull;</span> {{ APP_MODIFICATION_DATE }}
+        {% endif %}
+    </p>
+    {% endif %}
+    </div>

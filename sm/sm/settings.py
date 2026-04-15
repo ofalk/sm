@@ -19,6 +19,30 @@ EMAIL_BACKEND = config(
 THEME_CONTACT_EMAIL = config("THEME_CONTACT_EMAIL", default="oliver@linux-kernel.at")
 THEME_GITHUB_URL = config("THEME_GITHUB_URL", default="https://github.com/ofalk/sm")
 
+# Version information
+APP_VERSION = config("APP_VERSION", default=None)
+APP_MODIFICATION_DATE = config("APP_MODIFICATION_DATE", default=None)
+
+if not APP_VERSION or not APP_MODIFICATION_DATE:
+    try:
+        import subprocess
+
+        if not APP_VERSION:
+            APP_VERSION = (
+                subprocess.check_output(["git", "rev-parse", "--short", "HEAD"])
+                .decode("utf-8")
+                .strip()
+            )
+        if not APP_MODIFICATION_DATE:
+            APP_MODIFICATION_DATE = (
+                subprocess.check_output(["git", "log", "-1", "--format=%cd"])
+                .decode("utf-8")
+                .strip()
+            )
+    except Exception:
+        APP_VERSION = APP_VERSION or "unknown"
+        APP_MODIFICATION_DATE = APP_MODIFICATION_DATE or "unknown"
+
 DISABLE_SOCIAL_AUTH = config("DISABLE_SOCIAL_AUTH", default=False, cast=bool)
 
 # Application definition

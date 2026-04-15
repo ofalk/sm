@@ -9,6 +9,11 @@ ENV SECRET_KEY="docker-insecure-key-for-quick-test"
 ENV DEBUG=True
 ENV ALLOWED_HOSTS="*"
 
+ARG APP_VERSION=unknown
+ARG APP_MODIFICATION_DATE=unknown
+ENV APP_VERSION=$APP_VERSION
+ENV APP_MODIFICATION_DATE=$APP_MODIFICATION_DATE
+
 WORKDIR /app
 
 RUN apt-get update && apt-get install -y --no-install-recommends \

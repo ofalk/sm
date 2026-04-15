@@ -19,6 +19,7 @@ from .views import (
     TermsView,
     PrivacyView,
     ImpressumView,
+    HealthView,
 )
 from .views_admin import UserListView, GroupProfileUpdateView
 from .views_group import (
@@ -95,6 +96,7 @@ urlpatterns = [
     path("terms/", TermsView.as_view(), name="terms"),
     path("privacy/", PrivacyView.as_view(), name="privacy"),
     path("impressum/", ImpressumView.as_view(), name="impressum"),
+    path("health/", HealthView.as_view(), name="health"),
     # User Management (Staff)
     path("admin/users/", UserListView.as_view(), name="user_management_list"),
     path(

@@ -8,7 +8,9 @@ from operatingsystem.models import Model as OS
 from django.db.models import Count, Q
 from django.core.exceptions import ObjectDoesNotExist
 from django.apps import apps
-from django.http import Http404, HttpResponseRedirect
+from django.http import Http404, HttpResponseRedirect, JsonResponse
+from django.db import connections
+from django.conf import settings
 
 from django.db.models import ProtectedError
 from django.utils.translation import gettext as _
@@ -299,3 +301,25 @@ class PrivacyView(TemplateView):
 
 class ImpressumView(TemplateView):
     template_name = "legal/impressum.html"
+
+
+class HealthView(View):
+    def get(self, request: Any, *args: Any, **kwargs: Any) -> JsonResponse:
+        health = {
+            "status": "healthy",
+            "version": getattr(settings, "APP_VERSION", "unknown"),
+            "last_modification": getattr(settings, "APP_MODIFICATION_DATE", "unknown"),
+            "checks": {},
+        }
+
+        # Check database connection
+        try:
+            db_conn = connections["default"]
+            db_conn.cursor()
+            health["checks"]["database"] = "ok"
+        except Exception as e:
+            health["status"] = "unhealthy"
+            health["checks"]["database"] = f"error: {str(e)}"
+
+        status_code = 200 if health["status"] == "healthy" else 503
+        return JsonResponse(health, status=status_code)
