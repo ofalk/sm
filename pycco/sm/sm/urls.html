@@ -41,6 +41,7 @@
     <span class="n">TermsView</span><span class="p">,</span>
     <span class="n">PrivacyView</span><span class="p">,</span>
     <span class="n">ImpressumView</span><span class="p">,</span>
+    <span class="n">HealthView</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.views_admin</span><span class="w"> </span><span class="kn">import</span> <span class="n">UserListView</span><span class="p">,</span> <span class="n">GroupProfileUpdateView</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.views_group</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
@@ -166,7 +167,8 @@
     <div class='code'>
       <div class="highlight"><pre>    <span class="n">path</span><span class="p">(</span><span class="s2">&quot;terms/&quot;</span><span class="p">,</span> <span class="n">TermsView</span><span class="o">.</span><span class="n">as_view</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;terms&quot;</span><span class="p">),</span>
     <span class="n">path</span><span class="p">(</span><span class="s2">&quot;privacy/&quot;</span><span class="p">,</span> <span class="n">PrivacyView</span><span class="o">.</span><span class="n">as_view</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;privacy&quot;</span><span class="p">),</span>
-    <span class="n">path</span><span class="p">(</span><span class="s2">&quot;impressum/&quot;</span><span class="p">,</span> <span class="n">ImpressumView</span><span class="o">.</span><span class="n">as_view</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;impressum&quot;</span><span class="p">),</span></pre></div>
+    <span class="n">path</span><span class="p">(</span><span class="s2">&quot;impressum/&quot;</span><span class="p">,</span> <span class="n">ImpressumView</span><span class="o">.</span><span class="n">as_view</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;impressum&quot;</span><span class="p">),</span>
+    <span class="n">path</span><span class="p">(</span><span class="s2">&quot;health/&quot;</span><span class="p">,</span> <span class="n">HealthView</span><span class="o">.</span><span class="n">as_view</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;health&quot;</span><span class="p">),</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>

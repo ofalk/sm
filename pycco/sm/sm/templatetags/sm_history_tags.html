@@ -21,6 +21,7 @@
     </div>
     <div class='code'>
       <div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">django</span><span class="w"> </span><span class="kn">import</span> <span class="n">template</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.db</span><span class="w"> </span><span class="kn">import</span> <span class="n">models</span>
 
 <span class="n">register</span> <span class="o">=</span> <span class="n">template</span><span class="o">.</span><span class="n">Library</span><span class="p">()</span></pre></div>
     </div>
@@ -31,7 +32,8 @@
       <div class='octowrap'>
         <a class='octothorpe' href='#section-1'>#</a>
       </div>
-      <p>Returns the changes between this record and its predecessor.</p>
+      <p>Returns the changes between this record and its predecessor.
+If the field is a foreign key, resolve the ID to a string representation.</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre><span class="nd">@register</span><span class="o">.</span><span class="n">filter</span>
@@ -65,7 +67,79 @@ first record created after history was enabled.</p>
         <span class="k">return</span> <span class="kc">None</span>
 
     <span class="n">diff</span> <span class="o">=</span> <span class="n">record</span><span class="o">.</span><span class="n">diff_against</span><span class="p">(</span><span class="n">record</span><span class="o">.</span><span class="n">prev_record</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">diff</span><span class="o">.</span><span class="n">changes</span>
+    <span class="n">model_class</span> <span class="o">=</span> <span class="n">record</span><span class="o">.</span><span class="n">instance</span><span class="o">.</span><span class="vm">__class__</span>
+    <span class="n">enhanced_changes</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">change</span> <span class="ow">in</span> <span class="n">diff</span><span class="o">.</span><span class="n">changes</span><span class="p">:</span>
+        <span class="n">field_name</span> <span class="o">=</span> <span class="n">change</span><span class="o">.</span><span class="n">field</span>
+        <span class="n">old_val</span> <span class="o">=</span> <span class="n">change</span><span class="o">.</span><span class="n">old</span>
+        <span class="n">new_val</span> <span class="o">=</span> <span class="n">change</span><span class="o">.</span><span class="n">new</span>
+
+        <span class="k">try</span><span class="p">:</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-4'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-4'>#</a>
+      </div>
+      <p>Check if this field is a ForeignKey in the original model</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>            <span class="n">field</span> <span class="o">=</span> <span class="n">model_class</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">get_field</span><span class="p">(</span><span class="n">field_name</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">):</span>
+                <span class="n">related_model</span> <span class="o">=</span> <span class="n">field</span><span class="o">.</span><span class="n">remote_field</span><span class="o">.</span><span class="n">model</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-5'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-5'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>                <span class="k">def</span><span class="w"> </span><span class="nf">resolve_fk</span><span class="p">(</span><span class="n">val</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="n">val</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">val</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+                        <span class="k">return</span> <span class="kc">None</span>
+                    <span class="k">try</span><span class="p">:</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-6'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-6'>#</a>
+      </div>
+      <p>Try to get the object to use its string representation</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>                        <span class="n">obj</span> <span class="o">=</span> <span class="n">related_model</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="n">val</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+                    <span class="k">except</span> <span class="n">related_model</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
+                        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;ID </span><span class="si">{</span><span class="n">val</span><span class="si">}</span><span class="s2"> (deleted)&quot;</span>
+
+                <span class="n">old_val</span> <span class="o">=</span> <span class="n">resolve_fk</span><span class="p">(</span><span class="n">old_val</span><span class="p">)</span>
+                <span class="n">new_val</span> <span class="o">=</span> <span class="n">resolve_fk</span><span class="p">(</span><span class="n">new_val</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-7'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-7'>#</a>
+      </div>
+      <p>If any error occurs (e.g. field not found), keep the original values</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>            <span class="k">pass</span>
+
+        <span class="n">enhanced_changes</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;field&quot;</span><span class="p">:</span> <span class="n">field_name</span><span class="p">,</span> <span class="s2">&quot;old&quot;</span><span class="p">:</span> <span class="n">old_val</span><span class="p">,</span> <span class="s2">&quot;new&quot;</span><span class="p">:</span> <span class="n">new_val</span><span class="p">})</span>
+
+    <span class="k">return</span> <span class="n">enhanced_changes</span>
 
 </pre></div>
     </div>
