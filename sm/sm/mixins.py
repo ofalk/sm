@@ -75,6 +75,30 @@ class MultiTenantMixin:
 
         return queryset.filter(Q(group__in=user_groups) | Q(group__isnull=True))
 
+    def get_context_data(self, **kwargs: Any) -> Any:
+        context = super().get_context_data(**kwargs)  # type: ignore
+        model = getattr(self, "model", None)
+        # Only add history to context for ListViews that have it configured
+        if model and hasattr(model, "history") and hasattr(self, "object_list"):
+            history_qs = model.history.all()
+
+            if not self.request.user.is_superuser:
+                selected_groups = self.request.session.get("selected_groups", [])
+                user_groups = self.request.user.groups.all()
+
+                if selected_groups:
+                    group_ids = [int(g) for g in selected_groups if g.isdigit()]
+                    history_qs = history_qs.filter(
+                        Q(group_id__in=group_ids) | Q(group_id__isnull=True)
+                    )
+                else:
+                    history_qs = history_qs.filter(
+                        Q(group_id__in=user_groups) | Q(group_id__isnull=True)
+                    )
+
+            context["recent_history"] = history_qs.order_by("-history_date")[:10]
+        return context
+
     def check_quota(self, group: Optional[Group]) -> bool:
         if not group or not hasattr(group, "profile"):
             return True

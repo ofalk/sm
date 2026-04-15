@@ -1,0 +1,76 @@
+{% load i18n %}
+{% load sm_history_tags %}
+{% load history_url_tags %}
+
+{% if recent_history %}
+<div class="mb-3">
+    <button class="btn btn-sm btn-outline-secondary pill shadow-none" type="button" data-toggle="collapse" data-target="#listHistoryCollapse" aria-expanded="false" aria-controls="listHistoryCollapse">
+        <i class="fa-solid fa-clock-rotate-left mr-1"></i> {% trans "Toggle Recent Changes" %}
+    </button>
+</div>
+
+<div class="collapse mb-4" id="listHistoryCollapse">
+    <div class="card shadow-sm border-info">
+        <div class="card-header bg-info text-white d-flex justify-content-between align-items-center py-2">
+            <h6 class="mb-0 small font-weight-bold">{% trans "Recent Global Changes" %}</h6>
+            <span class="badge badge-light badge-pill border-0 text-info small">{% trans "Last 10 entries" %}</span>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-sm table-hover mb-0" style="font-size: 0.85rem;">
+                    <thead class="bg-light text-muted">
+                        <tr>
+                            <th class="pl-3">{% trans "Date" %}</th>
+                            <th>{% trans "Object" %}</th>
+                            <th>{% trans "User" %}</th>
+                            <th>{% trans "Type" %}</th>
+                            <th class="pr-3">{% trans "Summary" %}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for record in recent_history %}
+                        <tr>
+                            <td class="text-nowrap pl-3">
+                                <a href="{% get_history_diff_url record %}" class="text-info font-weight-bold">{{ record.history_date|date:"Y-m-d H:i" }}</a>
+                            </td>
+                            <td>
+                                <a href="{{ record.instance.get_absolute_url }}">{{ record.instance|default:record.name }}</a>
+                            </td>
+                            <td>
+                                {% if record.history_user %}
+                                    <span class="text-dark">{{ record.history_user.username }}</span>
+                                {% else %}
+                                    <span class="text-muted small italic">{% trans "System" %}</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if record.history_type == "+" %}
+                                    <span class="badge badge-success px-2" style="border-radius: 10px;">{% trans "New" %}</span>
+                                {% elif record.history_type == "~" %}
+                                    <span class="badge badge-info px-2" style="border-radius: 10px;">{% trans "Change" %}</span>
+                                {% else %}
+                                    <span class="badge badge-danger px-2" style="border-radius: 10px;">{% trans "Delete" %}</span>
+                                {% endif %}
+                            </td>
+                            <td class="text-muted pr-3">
+                                {% with changes=record|get_history_diff %}
+                                    {% if changes %}
+                                        {% for change in changes %}
+                                            <span class="d-inline-block"><strong>{{ change.field }}</strong>: {{ change.old|default:"-" }} &rarr; {{ change.new|default:"-" }}{% if not forloop.last %}, {% endif %}</span>
+                                        {% endfor %}
+                                    {% elif record.history_type == "+" %}
+                                        <span class="font-italic small">{% trans "Initial version" %}</span>
+                                    {% else %}
+                                        <span class="font-italic small">{% trans "No data changes" %}</span>
+                                    {% endif %}
+                                {% endwith %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}

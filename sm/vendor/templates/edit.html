@@ -44,5 +44,9 @@
 {% endbuttons %}
         </div>
     </div>
+
+    {% if object %}
+        {% include "includes/history_table.html" %}
+    {% endif %}
 </div>
 {% endblock %}

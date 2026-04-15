@@ -27,6 +27,9 @@
         {% endif %}
       </div>
     </div>
+    <div class="card-body pb-0">
+        {% include "includes/list_history.html" %}
+    </div>
     {% if not object_list %}
       <div class="card-body"><b>{% trans "No results" %}</b></div>
     {% else %}
