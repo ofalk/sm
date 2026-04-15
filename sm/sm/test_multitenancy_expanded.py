@@ -220,6 +220,9 @@ class MultiTenancyEdgeCasesTest(TestCase):
         user_no_group = User.objects.create_user(
             username="user_no_group", password=self.password
         )
+        # Clear automatically created personal group for this test case
+        user_no_group.groups.clear()
+
         client_no_group = Client()
         client_no_group.login(username="user_no_group", password=self.password)
 

@@ -49,6 +49,16 @@ class MultiTenantMixin:
     """
 
     def get_queryset(self) -> QuerySet:
+        # Check basic view permission for the model
+        model = getattr(self, "model", None)
+        if model and not self.request.user.is_superuser:
+            opts = model._meta
+            codename = f"view_{opts.model_name.lower()}"
+            if not self.request.user.has_perm(f"{opts.app_label}.{codename}"):
+                from django.core.exceptions import PermissionDenied
+
+                raise PermissionDenied
+
         queryset = super().get_queryset()  # type: ignore
         if self.request.user.is_superuser:
             return queryset
@@ -112,6 +122,16 @@ class APIMultiTenantMixin:
     """
 
     def get_queryset(self) -> QuerySet:
+        # Check basic view permission for the model
+        model = getattr(self, "model", None)
+        if model and not self.request.user.is_superuser:
+            opts = model._meta
+            codename = f"view_{opts.model_name.lower()}"
+            if not self.request.user.has_perm(f"{opts.app_label}.{codename}"):
+                from django.core.exceptions import PermissionDenied
+
+                raise PermissionDenied
+
         queryset = super().get_queryset()  # type: ignore
         if self.request.user.is_superuser:
             return queryset

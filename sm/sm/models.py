@@ -42,7 +42,35 @@ def create_group_profile(
         GroupProfile.objects.get_or_create(group=instance)
         from .utils_permissions import sync_group_permissions
 
-        sync_group_permissions(instance)
+        # Default to view-only, GroupCreateView will upgrade this if needed
+        sync_group_permissions(instance, grant_all=False)
+
+
+@receiver(post_save, sender=User)
+def create_personal_group(
+    sender: Any, instance: User, created: bool, **kwargs: Any
+) -> None:
+    """
+    Ensures every new user has their own personal group to start with.
+    """
+    if created:
+        group_name = f"{instance.username}'s Workspace"
+        # Ensure name uniqueness
+        if Group.objects.filter(name=group_name).exists():
+            group_name = f"{instance.username}'s Workspace ({uuid.uuid4().hex[:4]})"
+
+        group = Group.objects.create(name=group_name)
+        # Profile is already created by create_group_profile signal
+        profile = group.profile
+        profile.owner = instance
+        profile.save()
+
+        instance.groups.add(group)
+
+        # Grant full permissions for personal workspace
+        from .utils_permissions import sync_group_permissions
+
+        sync_group_permissions(group, grant_all=True)
 
 
 class Invitation(models.Model):

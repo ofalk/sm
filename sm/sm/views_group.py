@@ -475,17 +475,17 @@ class GroupCreateView(LoginRequiredMixin, FormView):
             return redirect("group_member_list")
 
         group = Group.objects.create(name=name)
-        GroupProfile.objects.create(
-            group=group,
-            owner=self.request.user,
-            max_users=max_users,
-        )
+        # Profile is already created by create_group_profile signal
+        profile = group.profile
+        profile.owner = self.request.user
+        profile.max_users = max_users
+        profile.save()
 
         self.request.user.groups.add(group)
 
         from .utils_permissions import sync_group_permissions
 
-        sync_group_permissions(group)
+        sync_group_permissions(group, grant_all=True)
 
         messages.success(self.request, _("Group '%s' created successfully.") % name)
         return super().form_valid(form)

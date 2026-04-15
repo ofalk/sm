@@ -27,10 +27,11 @@ def assign_group_permissions(group: Group, permissions: List[Permission]) -> Non
     group.permissions.add(*permissions)
 
 
-def sync_group_permissions(group: Group) -> None:
+def sync_group_permissions(group: Group, grant_all: bool = False) -> None:
     """
     Ensures a group has at least basic view permissions for the core models
     so multi-tenancy works as expected.
+    If grant_all is True, also grants add, change, and delete permissions.
     """
     app_models: List[Tuple[str, str]] = [
         ("server", "model"),
@@ -49,9 +50,13 @@ def sync_group_permissions(group: Group) -> None:
 
     for app, model in app_models:
         perms = get_group_permissions_for_model(app, model)
-        # By default, give view permission to every group
-        view_perm = next((p for p in perms if p.codename.startswith("view_")), None)
-        if view_perm:
-            group.permissions.add(view_perm)
+        if grant_all:
+            # Grant all permissions for this model
+            group.permissions.add(*perms)
         else:
-            logger.debug(f"View permission for {app}.{model} not found.")
+            # By default, give view permission to every group
+            view_perm = next((p for p in perms if p.codename.startswith("view_")), None)
+            if view_perm:
+                group.permissions.add(view_perm)
+            else:
+                logger.debug(f"View permission for {app}.{model} not found.")

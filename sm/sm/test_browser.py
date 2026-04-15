@@ -48,6 +48,7 @@ class BrowserIntegrationTest(StaticLiveServerTestCase):
                             "2fa",
                             "social",
                             "server",
+                            "group/filter",
                             "terms",
                             "privacy",
                             "impressum",
