@@ -4,28 +4,49 @@ set -e
 # Build paths
 BASE_DIR="/app/sm"
 
+wait_for_db() {
+    echo "Waiting for database..."
+    cd "$BASE_DIR"
+    for i in {1..30}; do
+        if python3 manage.py check >/dev/null 2>&1; then
+            echo "Database is ready!"
+            return 0
+        fi
+        echo "Database not ready yet (attempt $i)..."
+        sleep 2
+    done
+    echo "Database timed out!"
+    exit 1
+}
+
 # If we're called with 'migrate', 'loaddata', 'collectstatic', or 'ensure_admin'
 # then only run those and exit.
 case "$1" in
 migrate)
+    wait_for_db
     echo "Running migrations..."
-    cd "$BASE_DIR" && python3 manage.py migrate --noinput
+    python3 manage.py migrate --noinput
     exit 0
     ;;
 loaddata)
+    wait_for_db
     echo "Loading default fixtures..."
-    cd "$BASE_DIR" && {
-        python3 manage.py loaddata status/fixtures/01_initial.yaml
-        python3 manage.py loaddata vendor/fixtures/01_initial.yaml
-        python3 manage.py loaddata operatingsystem/fixtures/01_initial.yaml
-        python3 manage.py loaddata patchtime/fixtures/01_initial.yaml
-        python3 manage.py loaddata domain/fixtures/01_initial.yaml
-        python3 manage.py loaddata location/fixtures/01_initial.yaml
-        python3 manage.py loaddata servermodel/fixtures/01_initial.yaml
-        python3 manage.py loaddata clusterpackagetype/fixtures/01_initial.yaml
-        python3 manage.py loaddata sm/fixtures/02_groups.yaml
-        python3 manage.py loaddata clustersoftware/fixtures/01_initial.yaml
-    }
+    fixtures=(
+        "status/fixtures/01_initial.yaml"
+        "vendor/fixtures/01_initial.yaml"
+        "operatingsystem/fixtures/01_initial.yaml"
+        "patchtime/fixtures/01_initial.yaml"
+        "domain/fixtures/01_initial.yaml"
+        "location/fixtures/01_initial.yaml"
+        "servermodel/fixtures/01_initial.yaml"
+        "clusterpackagetype/fixtures/01_initial.yaml"
+        "sm/fixtures/02_groups.yaml"
+        "clustersoftware/fixtures/01_initial.yaml"
+    )
+    for fixture in "${fixtures[@]}"; do
+        echo "Loading $fixture..."
+        python3 manage.py loaddata "$fixture"
+    done
     exit 0
     ;;
 collectstatic)
@@ -34,16 +55,17 @@ collectstatic)
     exit 0
     ;;
 ensure_admin)
+    wait_for_db
     echo "Ensuring admin user exists..."
     # If ADMIN_PASSWORD is provided in ENV, use it. Otherwise generate random.
     if [ -z "$ADMIN_PASSWORD" ]; then
-        ADMIN_PASSWORD=$(python3 -c "import secrets; import string; print(''.join(secrets.choice(string.ascii_letters + string.digits) for i in range(16)))")
+        export ADMIN_PASSWORD=$(python3 -c "import secrets; import string; print(''.join(secrets.choice(string.ascii_letters + string.digits) for i in range(16)))")
         echo "Generated random password: $ADMIN_PASSWORD"
     else
         echo "Using provided ADMIN_PASSWORD from environment"
     fi
 
-    cd "$BASE_DIR" && python3 <<EOF
+    python3 <<'EOF'
 import os
 import django
 django.setup()
@@ -51,7 +73,8 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 username = os.environ.get('ADMIN_USERNAME', 'admin')
 email = os.environ.get('ADMIN_EMAIL', 'admin@example.com')
-password = '$ADMIN_PASSWORD'
+password = os.environ.get('ADMIN_PASSWORD')
+
 if not User.objects.filter(username=username).exists():
     User.objects.create_superuser(username, email, password)
     print(f"Superuser '{username}' created successfully.")
@@ -83,8 +106,6 @@ if google_client_id and google_secret:
             app.save()
         app.sites.add(site)
         print(f"Google SocialApp ensured (created: {created})")
-    except ImportError:
-        print("allauth.socialaccount not installed, skipping SocialApp setup")
     except Exception as e:
         print(f"Error setting up SocialApp: {e}")
 else:
@@ -95,5 +116,6 @@ EOF
 esac
 
 # Default: Start the application server
+wait_for_db
 echo "Starting server..."
 cd "$BASE_DIR" && gunicorn --bind 0.0.0.0:8000 sm.wsgi:application
