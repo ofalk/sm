@@ -9,7 +9,6 @@ from django.db.models import Count, Q
 from django.core.exceptions import ObjectDoesNotExist
 from django.apps import apps
 from django.http import Http404, HttpResponseRedirect, JsonResponse
-from django.db import connections
 from django.conf import settings
 
 from django.db.models import ProtectedError
@@ -314,8 +313,9 @@ class HealthView(View):
 
         # Check database connection
         try:
-            db_conn = connections["default"]
-            db_conn.cursor()
+            from django.db import connection
+
+            connection.cursor()
             health["checks"]["database"] = "ok"
         except Exception as e:
             health["status"] = "unhealthy"

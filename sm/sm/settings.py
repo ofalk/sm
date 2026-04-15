@@ -20,28 +20,31 @@ THEME_CONTACT_EMAIL = config("THEME_CONTACT_EMAIL", default="oliver@linux-kernel
 THEME_GITHUB_URL = config("THEME_GITHUB_URL", default="https://github.com/ofalk/sm")
 
 # Version information
-APP_VERSION = config("APP_VERSION", default=None)
-APP_MODIFICATION_DATE = config("APP_MODIFICATION_DATE", default=None)
+APP_VERSION = config("APP_VERSION", default="unknown")
+APP_MODIFICATION_DATE = config("APP_MODIFICATION_DATE", default="unknown")
 
-if not APP_VERSION or not APP_MODIFICATION_DATE:
+if APP_VERSION == "unknown" or APP_MODIFICATION_DATE == "unknown":
     try:
         import subprocess
 
-        if not APP_VERSION:
+        if APP_VERSION == "unknown":
             APP_VERSION = (
-                subprocess.check_output(["git", "rev-parse", "--short", "HEAD"])
+                subprocess.check_output(
+                    ["git", "rev-parse", "--short", "HEAD"], stderr=subprocess.DEVNULL
+                )
                 .decode("utf-8")
                 .strip()
             )
-        if not APP_MODIFICATION_DATE:
+        if APP_MODIFICATION_DATE == "unknown":
             APP_MODIFICATION_DATE = (
-                subprocess.check_output(["git", "log", "-1", "--format=%cd"])
+                subprocess.check_output(
+                    ["git", "log", "-1", "--format=%cd"], stderr=subprocess.DEVNULL
+                )
                 .decode("utf-8")
                 .strip()
             )
     except Exception:
-        APP_VERSION = APP_VERSION or "unknown"
-        APP_MODIFICATION_DATE = APP_MODIFICATION_DATE or "unknown"
+        pass
 
 DISABLE_SOCIAL_AUTH = config("DISABLE_SOCIAL_AUTH", default=False, cast=bool)
 
