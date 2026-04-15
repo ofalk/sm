@@ -34,7 +34,7 @@
                                 <a href="{% get_history_diff_url record %}" class="text-info font-weight-bold">{{ record.history_date|date:"Y-m-d H:i" }}</a>
                             </td>
                             <td>
-                                <a href="{{ record.instance.get_absolute_url }}">{{ record.instance|default:record.name }}</a>
+                                <a href="{{ record.instance.get_absolute_url }}">{{ record.instance }}</a>
                             </td>
                             <td>
                                 {% if record.history_user %}
