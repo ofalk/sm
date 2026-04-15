@@ -90,10 +90,11 @@
         <a class='octothorpe' href='#section-5'>#</a>
       </div>
       <p>Ensures a group has at least basic view permissions for the core models
-so multi-tenancy works as expected.</p>
+so multi-tenancy works as expected.
+If grant_all is True, also grants add, change, and delete permissions.</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre><span class="k">def</span><span class="w"> </span><span class="nf">sync_group_permissions</span><span class="p">(</span><span class="n">group</span><span class="p">:</span> <span class="n">Group</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span></pre></div>
+      <div class="highlight"><pre><span class="k">def</span><span class="w"> </span><span class="nf">sync_group_permissions</span><span class="p">(</span><span class="n">group</span><span class="p">:</span> <span class="n">Group</span><span class="p">,</span> <span class="n">grant_all</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -121,7 +122,8 @@ so multi-tenancy works as expected.</p>
     <span class="p">]</span>
 
     <span class="k">for</span> <span class="n">app</span><span class="p">,</span> <span class="n">model</span> <span class="ow">in</span> <span class="n">app_models</span><span class="p">:</span>
-        <span class="n">perms</span> <span class="o">=</span> <span class="n">get_group_permissions_for_model</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span></pre></div>
+        <span class="n">perms</span> <span class="o">=</span> <span class="n">get_group_permissions_for_model</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">grant_all</span><span class="p">:</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -130,14 +132,27 @@ so multi-tenancy works as expected.</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-7'>#</a>
       </div>
+      <p>Grant all permissions for this model</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>            <span class="n">group</span><span class="o">.</span><span class="n">permissions</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="o">*</span><span class="n">perms</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-8'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-8'>#</a>
+      </div>
       <p>By default, give view permission to every group</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>        <span class="n">view_perm</span> <span class="o">=</span> <span class="nb">next</span><span class="p">((</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">perms</span> <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">codename</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;view_&quot;</span><span class="p">)),</span> <span class="kc">None</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">view_perm</span><span class="p">:</span>
-            <span class="n">group</span><span class="o">.</span><span class="n">permissions</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">view_perm</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;View permission for </span><span class="si">{</span><span class="n">app</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">model</span><span class="si">}</span><span class="s2"> not found.&quot;</span><span class="p">)</span>
+      <div class="highlight"><pre>            <span class="n">view_perm</span> <span class="o">=</span> <span class="nb">next</span><span class="p">((</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">perms</span> <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">codename</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;view_&quot;</span><span class="p">)),</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">view_perm</span><span class="p">:</span>
+                <span class="n">group</span><span class="o">.</span><span class="n">permissions</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">view_perm</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;View permission for </span><span class="si">{</span><span class="n">app</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">model</span><span class="si">}</span><span class="s2"> not found.&quot;</span><span class="p">)</span>
 
 </pre></div>
     </div>

@@ -607,9 +607,7 @@ The form field name is edit_<app_label></p>
     <div class='code'>
       <div class="highlight"><pre>        <span class="n">user_no_group</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create_user</span><span class="p">(</span>
             <span class="n">username</span><span class="o">=</span><span class="s2">&quot;user_no_group&quot;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">password</span>
-        <span class="p">)</span>
-        <span class="n">client_no_group</span> <span class="o">=</span> <span class="n">Client</span><span class="p">()</span>
-        <span class="n">client_no_group</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s2">&quot;user_no_group&quot;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">password</span><span class="p">)</span></pre></div>
+        <span class="p">)</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -617,6 +615,21 @@ The form field name is edit_<app_label></p>
     <div class='docs'>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-40'>#</a>
+      </div>
+      <p>Clear automatically created personal group for this test case</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="n">user_no_group</span><span class="o">.</span><span class="n">groups</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+
+        <span class="n">client_no_group</span> <span class="o">=</span> <span class="n">Client</span><span class="p">()</span>
+        <span class="n">client_no_group</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s2">&quot;user_no_group&quot;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">password</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-41'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-41'>#</a>
       </div>
       <p>Grant necessary permissions</p>
     </div>
@@ -631,10 +644,10 @@ The form field name is edit_<app_label></p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-41'>
+  <div class='section' id='section-42'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-41'>#</a>
+        <a class='octothorpe' href='#section-42'>#</a>
       </div>
       <p>User should be able to create items but without group assignment</p>
     </div>
@@ -647,10 +660,10 @@ The form field name is edit_<app_label></p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-42'>
+  <div class='section' id='section-43'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-42'>#</a>
+        <a class='octothorpe' href='#section-43'>#</a>
       </div>
       <p>Should succeed and create item without a group</p>
     </div>
@@ -662,10 +675,10 @@ The form field name is edit_<app_label></p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-43'>
+  <div class='section' id='section-44'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-43'>#</a>
+        <a class='octothorpe' href='#section-44'>#</a>
       </div>
       <p>Test that concurrent quota checks are handled properly.</p>
     </div>
@@ -674,10 +687,10 @@ The form field name is edit_<app_label></p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-44'>
+  <div class='section' id='section-45'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-44'>#</a>
+        <a class='octothorpe' href='#section-45'>#</a>
       </div>
       
     </div>
@@ -687,10 +700,10 @@ The form field name is edit_<app_label></p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-45'>
+  <div class='section' id='section-46'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-45'>#</a>
+        <a class='octothorpe' href='#section-46'>#</a>
       </div>
       <p>Grant add permission</p>
     </div>
@@ -702,10 +715,10 @@ The form field name is edit_<app_label></p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-46'>
+  <div class='section' id='section-47'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-46'>#</a>
+        <a class='octothorpe' href='#section-47'>#</a>
       </div>
       <p>Create one vendor to reach the limit</p>
     </div>
@@ -714,10 +727,10 @@ The form field name is edit_<app_label></p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-47'>
+  <div class='section' id='section-48'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-47'>#</a>
+        <a class='octothorpe' href='#section-48'>#</a>
       </div>
       <p>Try to create another vendor (should fail due to quota)</p>
     </div>
@@ -732,10 +745,10 @@ The form field name is edit_<app_label></p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-48'>
+  <div class='section' id='section-49'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-48'>#</a>
+        <a class='octothorpe' href='#section-49'>#</a>
       </div>
       <p>Test that unique constraints work correctly per group.</p>
     </div>
@@ -744,10 +757,10 @@ The form field name is edit_<app_label></p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-49'>
+  <div class='section' id='section-50'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-49'>#</a>
+        <a class='octothorpe' href='#section-50'>#</a>
       </div>
       <p>Both groups should be able to have vendors with the same name</p>
     </div>
@@ -757,10 +770,10 @@ The form field name is edit_<app_label></p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-50'>
+  <div class='section' id='section-51'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-50'>#</a>
+        <a class='octothorpe' href='#section-51'>#</a>
       </div>
       <p>Should have 2 vendors total</p>
     </div>
@@ -769,10 +782,10 @@ The form field name is edit_<app_label></p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-51'>
+  <div class='section' id='section-52'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-51'>#</a>
+        <a class='octothorpe' href='#section-52'>#</a>
       </div>
       <p>But each user should only see their own</p>
     </div>
@@ -782,10 +795,10 @@ The form field name is edit_<app_label></p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-52'>
+  <div class='section' id='section-53'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-52'>#</a>
+        <a class='octothorpe' href='#section-53'>#</a>
       </div>
       <p>Count occurrences in response (this is a simple check)</p>
     </div>
@@ -795,10 +808,10 @@ The form field name is edit_<app_label></p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-53'>
+  <div class='section' id='section-54'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-53'>#</a>
+        <a class='octothorpe' href='#section-54'>#</a>
       </div>
       <p>Test that deleting a group properly handles related items.</p>
     </div>
@@ -807,10 +820,10 @@ The form field name is edit_<app_label></p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-54'>
+  <div class='section' id='section-55'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-54'>#</a>
+        <a class='octothorpe' href='#section-55'>#</a>
       </div>
       <p>Create some items in group A</p>
     </div>
@@ -822,10 +835,10 @@ The form field name is edit_<app_label></p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-55'>
+  <div class='section' id='section-56'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-55'>#</a>
+        <a class='octothorpe' href='#section-56'>#</a>
       </div>
       <p>Delete the group (should be protected by on_delete=models.PROTECT)</p>
     </div>
@@ -835,10 +848,10 @@ The form field name is edit_<app_label></p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-56'>
+  <div class='section' id='section-57'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-56'>#</a>
+        <a class='octothorpe' href='#section-57'>#</a>
       </div>
       <p>Items should still exist</p>
     </div>
@@ -847,10 +860,10 @@ The form field name is edit_<app_label></p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-57'>
+  <div class='section' id='section-58'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-57'>#</a>
+        <a class='octothorpe' href='#section-58'>#</a>
       </div>
       <p>Test that users cannot access items from other groups via direct URLs.</p>
     </div>
@@ -859,10 +872,10 @@ The form field name is edit_<app_label></p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-58'>
+  <div class='section' id='section-59'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-58'>#</a>
+        <a class='octothorpe' href='#section-59'>#</a>
       </div>
       <p>Create an item in group B</p>
     </div>
@@ -871,10 +884,10 @@ The form field name is edit_<app_label></p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-59'>
+  <div class='section' id='section-60'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-59'>#</a>
+        <a class='octothorpe' href='#section-60'>#</a>
       </div>
       <p>User A should not be able to access this item&rsquo;s detail page</p>
     </div>
@@ -883,10 +896,10 @@ The form field name is edit_<app_label></p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-60'>
+  <div class='section' id='section-61'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-60'>#</a>
+        <a class='octothorpe' href='#section-61'>#</a>
       </div>
       <p>Should either return 404 or 403</p>
     </div>
@@ -895,10 +908,10 @@ The form field name is edit_<app_label></p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-61'>
+  <div class='section' id='section-62'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-61'>#</a>
+        <a class='octothorpe' href='#section-62'>#</a>
       </div>
       <p>Test starter pack import when group already has some data.</p>
     </div>
@@ -907,10 +920,10 @@ The form field name is edit_<app_label></p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-62'>
+  <div class='section' id='section-63'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-62'>#</a>
+        <a class='octothorpe' href='#section-63'>#</a>
       </div>
       <p>Create some existing data</p>
     </div>
@@ -919,10 +932,10 @@ The form field name is edit_<app_label></p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-63'>
+  <div class='section' id='section-64'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-63'>#</a>
+        <a class='octothorpe' href='#section-64'>#</a>
       </div>
       <p>Import starter pack</p>
     </div>
@@ -931,10 +944,10 @@ The form field name is edit_<app_label></p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-64'>
+  <div class='section' id='section-65'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-64'>#</a>
+        <a class='octothorpe' href='#section-65'>#</a>
       </div>
       <p>Should still import new vendors but not duplicate existing ones</p>
     </div>
@@ -943,10 +956,10 @@ The form field name is edit_<app_label></p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-65'>
+  <div class='section' id='section-66'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-65'>#</a>
+        <a class='octothorpe' href='#section-66'>#</a>
       </div>
       <p>Existing vendor should still be there</p>
     </div>
@@ -957,10 +970,10 @@ The form field name is edit_<app_label></p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-66'>
+  <div class='section' id='section-67'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-66'>#</a>
+        <a class='octothorpe' href='#section-67'>#</a>
       </div>
       <p>Test that setting quota to zero prevents all item creation.</p>
     </div>
@@ -969,10 +982,10 @@ The form field name is edit_<app_label></p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-67'>
+  <div class='section' id='section-68'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-67'>#</a>
+        <a class='octothorpe' href='#section-68'>#</a>
       </div>
       
     </div>
@@ -982,10 +995,10 @@ The form field name is edit_<app_label></p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-68'>
+  <div class='section' id='section-69'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-68'>#</a>
+        <a class='octothorpe' href='#section-69'>#</a>
       </div>
       <p>Grant add permission</p>
     </div>
@@ -997,10 +1010,10 @@ The form field name is edit_<app_label></p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-69'>
+  <div class='section' id='section-70'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-69'>#</a>
+        <a class='octothorpe' href='#section-70'>#</a>
       </div>
       <p>Try to create an item (should fail)</p>
     </div>
@@ -1015,10 +1028,10 @@ The form field name is edit_<app_label></p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-70'>
+  <div class='section' id='section-71'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-70'>#</a>
+        <a class='octothorpe' href='#section-71'>#</a>
       </div>
       <p>Test GroupProfile auto-creation when new group is created.</p>
     </div>
@@ -1027,10 +1040,10 @@ The form field name is edit_<app_label></p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-71'>
+  <div class='section' id='section-72'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-71'>#</a>
+        <a class='octothorpe' href='#section-72'>#</a>
       </div>
       <p>Create a new group</p>
     </div>
@@ -1039,10 +1052,10 @@ The form field name is edit_<app_label></p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-72'>
+  <div class='section' id='section-73'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-72'>#</a>
+        <a class='octothorpe' href='#section-73'>#</a>
       </div>
       <p>Should have a profile</p>
     </div>
@@ -1052,10 +1065,10 @@ The form field name is edit_<app_label></p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-73'>
+  <div class='section' id='section-74'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-73'>#</a>
+        <a class='octothorpe' href='#section-74'>#</a>
       </div>
       <p>Profile should have default values</p>
     </div>
