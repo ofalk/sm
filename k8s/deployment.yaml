@@ -15,7 +15,7 @@ spec:
     spec:
       initContainers:
         - name: migrate
-          image: ghcr.io/ofalk/sm:12d0f5b2e6af319d451a033cdee2a91997e25c2d
+          image: ghcr.io/ofalk/sm:42b4cc0b07d024818bea544ff546543c013b9d90
           command: ["/app/entrypoint.sh", "migrate"]
           envFrom:
             - secretRef:
@@ -23,7 +23,7 @@ spec:
             - configMapRef:
                 name: sm-config
         - name: loaddata
-          image: ghcr.io/ofalk/sm:12d0f5b2e6af319d451a033cdee2a91997e25c2d
+          image: ghcr.io/ofalk/sm:42b4cc0b07d024818bea544ff546543c013b9d90
           command: ["/app/entrypoint.sh", "loaddata"]
           envFrom:
             - secretRef:
@@ -31,7 +31,7 @@ spec:
             - configMapRef:
                 name: sm-config
         - name: ensure-admin
-          image: ghcr.io/ofalk/sm:12d0f5b2e6af319d451a033cdee2a91997e25c2d
+          image: ghcr.io/ofalk/sm:42b4cc0b07d024818bea544ff546543c013b9d90
           command: ["/app/entrypoint.sh", "ensure_admin"]
           envFrom:
             - secretRef:
@@ -39,7 +39,7 @@ spec:
             - configMapRef:
                 name: sm-config
         - name: collectstatic
-          image: ghcr.io/ofalk/sm:12d0f5b2e6af319d451a033cdee2a91997e25c2d
+          image: ghcr.io/ofalk/sm:42b4cc0b07d024818bea544ff546543c013b9d90
           command: ["/app/entrypoint.sh", "collectstatic"]
           envFrom:
             - secretRef:
@@ -51,7 +51,7 @@ spec:
               mountPath: /app/sm/static
       containers:
         - name: sm
-          image: ghcr.io/ofalk/sm:12d0f5b2e6af319d451a033cdee2a91997e25c2d
+          image: ghcr.io/ofalk/sm:42b4cc0b07d024818bea544ff546543c013b9d90
           imagePullPolicy: Always
           ports:
             - containerPort: 8000
