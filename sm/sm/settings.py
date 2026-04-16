@@ -61,7 +61,6 @@ INSTALLED_APPS = [
     "django.contrib.admindocs",
     "rest_framework",
     "bootstrap4",
-    "debug_toolbar",
     "django_countries",
     "whitenoise.runserver_nostatic",
     "taggit",
@@ -75,9 +74,11 @@ INSTALLED_APPS = [
     "social_django",
 ]
 
+if DEBUG:
+    INSTALLED_APPS += ["debug_toolbar"]
+
 if not DISABLE_SOCIAL_AUTH:
     INSTALLED_APPS += [
-        #        "allauth.socialaccount.providers.facebook",
         "allauth.socialaccount.providers.google",
         "allauth.socialaccount.providers.openid_connect",
     ]
@@ -111,7 +112,6 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "debug_toolbar.middleware.DebugToolbarMiddleware",
     "htmlmin.middleware.HtmlMinifyMiddleware",
     "htmlmin.middleware.MarkRequestMiddleware",
     "django.contrib.sites.middleware.CurrentSiteMiddleware",
@@ -119,6 +119,18 @@ MIDDLEWARE = [
     # Allauth middleware
     "allauth.account.middleware.AccountMiddleware",
 ]
+
+if DEBUG:
+    # Insert DebugToolbarMiddleware after SessionMiddleware but before CommonMiddleware
+    try:
+        session_idx = MIDDLEWARE.index(
+            "django.contrib.sessions.middleware.SessionMiddleware"
+        )
+        MIDDLEWARE.insert(
+            session_idx + 1, "debug_toolbar.middleware.DebugToolbarMiddleware"
+        )
+    except ValueError:
+        MIDDLEWARE.append("debug_toolbar.middleware.DebugToolbarMiddleware")
 
 ROOT_URLCONF = "sm.urls"
 
@@ -255,10 +267,16 @@ if not DISABLE_SOCIAL_AUTH:
     google_secret = config("GOOGLE_SECRET", default=None)
     if google_id and google_secret:
         SOCIALACCOUNT_PROVIDERS["google"] = {
-            "SCOPE": ["profile", "email"],
-            "AUTH_PARAMS": {"access_type": "online"},
-            "AUTH_PKCE_ENABLED": True,
-            "FETCH_USERINFO": True,
+            "APPS": [
+                {
+                    "client_id": google_id,
+                    "secret": google_secret,
+                    "settings": {
+                        "scope": ["profile", "email"],
+                        "auth_params": {"access_type": "online"},
+                    },
+                }
+            ]
         }
 
     # Generic OIDC

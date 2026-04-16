@@ -6,7 +6,7 @@ ENV PIP_NO_CACHE_DIR=1
 ENV PIP_DISABLE_PIP_VERSION_CHECK=1
 ENV DJANGO_SETTINGS_MODULE=sm.settings
 ENV SECRET_KEY="docker-insecure-key-for-quick-test"
-ENV DEBUG=True
+ENV DEBUG=False
 ENV ALLOWED_HOSTS="*"
 
 ARG APP_VERSION=unknown
@@ -31,6 +31,9 @@ COPY . /app/
 RUN chmod +x /app/entrypoint.sh
 
 WORKDIR /app/sm
+
+# Bake static files into the image
+RUN python3 manage.py collectstatic --noinput
 
 EXPOSE 8000
 
