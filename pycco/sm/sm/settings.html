@@ -451,7 +451,7 @@ https://docs.djangoproject.com/en/stable/ref/settings/#default-auto-field</p>
     <span class="n">SOCIALACCOUNT_AUTO_SIGNUP</span> <span class="o">=</span> <span class="kc">True</span>
     <span class="n">SOCIALACCOUNT_ADAPTER</span> <span class="o">=</span> <span class="s2">&quot;sm.adapter.MySocialAccountAdapter&quot;</span>
 
-    <span class="n">SOCIALACCOUNT_PROVIDERS</span> <span class="o">=</span> <span class="p">{</span></pre></div>
+    <span class="n">SOCIALACCOUNT_PROVIDERS</span> <span class="o">=</span> <span class="p">{}</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -460,59 +460,46 @@ https://docs.djangoproject.com/en/stable/ref/settings/#default-auto-field</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-21'>#</a>
       </div>
-      <pre><code>   "facebook": {
-       "METHOD": "oauth2",
-       "SCOPE": ["email", "public_profile"],
-       "AUTH_PARAMS": {"auth_type": "reauthenticate"},
-       "INIT_PARAMS": {"cookie": True},
-       "FIELDS": [
-           "id",
-           "first_name",
-           "last_name",
-           "middle_name",
-           "name",
-           "name_format",
-           "picture",
-           "short_name",
-       ],
-       "EXCHANGE_TOKEN": True,
-       "VERIFIED_EMAIL": False,
-       "VERSION": "v13.0",
-   },
-</code></pre>
+      <p>Google Auth</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>        <span class="s2">&quot;google&quot;</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s2">&quot;SCOPE&quot;</span><span class="p">:</span> <span class="p">[</span>
-                <span class="s2">&quot;profile&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;email&quot;</span><span class="p">,</span>
-            <span class="p">],</span>
-            <span class="s2">&quot;AUTH_PARAMS&quot;</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s2">&quot;access_type&quot;</span><span class="p">:</span> <span class="s2">&quot;online&quot;</span><span class="p">,</span>
-            <span class="p">},</span>
+      <div class="highlight"><pre>    <span class="n">google_id</span> <span class="o">=</span> <span class="n">config</span><span class="p">(</span><span class="s2">&quot;GOOGLE_CLIENT_ID&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+    <span class="n">google_secret</span> <span class="o">=</span> <span class="n">config</span><span class="p">(</span><span class="s2">&quot;GOOGLE_SECRET&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">google_id</span> <span class="ow">and</span> <span class="n">google_secret</span><span class="p">:</span>
+        <span class="n">SOCIALACCOUNT_PROVIDERS</span><span class="p">[</span><span class="s2">&quot;google&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;SCOPE&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;profile&quot;</span><span class="p">,</span> <span class="s2">&quot;email&quot;</span><span class="p">],</span>
+            <span class="s2">&quot;AUTH_PARAMS&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;access_type&quot;</span><span class="p">:</span> <span class="s2">&quot;online&quot;</span><span class="p">},</span>
             <span class="s2">&quot;AUTH_PKCE_ENABLED&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
             <span class="s2">&quot;FETCH_USERINFO&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
-        <span class="p">},</span>
-        <span class="s2">&quot;openid_connect&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="p">}</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-22'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-22'>#</a>
+      </div>
+      <p>Generic OIDC</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">oidc_id</span> <span class="o">=</span> <span class="n">config</span><span class="p">(</span><span class="s2">&quot;OIDC_CLIENT_ID&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+    <span class="n">oidc_secret</span> <span class="o">=</span> <span class="n">config</span><span class="p">(</span><span class="s2">&quot;OIDC_SECRET&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+    <span class="n">oidc_url</span> <span class="o">=</span> <span class="n">config</span><span class="p">(</span><span class="s2">&quot;OIDC_URL&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+    <span class="n">oidc_name</span> <span class="o">=</span> <span class="n">config</span><span class="p">(</span><span class="s2">&quot;OIDC_NAME&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;OIDC&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">oidc_id</span> <span class="ow">and</span> <span class="n">oidc_secret</span> <span class="ow">and</span> <span class="n">oidc_url</span><span class="p">:</span>
+        <span class="n">SOCIALACCOUNT_PROVIDERS</span><span class="p">[</span><span class="s2">&quot;openid_connect&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s2">&quot;APPS&quot;</span><span class="p">:</span> <span class="p">[</span>
                 <span class="p">{</span>
-                    <span class="s2">&quot;provider_id&quot;</span><span class="p">:</span> <span class="s2">&quot;authentik&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Authentik&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;client_id&quot;</span><span class="p">:</span> <span class="n">config</span><span class="p">(</span><span class="s2">&quot;AUTHENTIK_CLIENT_ID&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">),</span>
-                    <span class="s2">&quot;secret&quot;</span><span class="p">:</span> <span class="n">config</span><span class="p">(</span><span class="s2">&quot;AUTHENTIK_SECRET&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">),</span>
-                    <span class="s2">&quot;settings&quot;</span><span class="p">:</span> <span class="p">{</span>
-                        <span class="s2">&quot;server_url&quot;</span><span class="p">:</span> <span class="n">config</span><span class="p">(</span>
-                            <span class="s2">&quot;AUTHENTIK_URL&quot;</span><span class="p">,</span>
-                            <span class="n">default</span><span class="o">=</span><span class="p">(</span>
-                                <span class="s2">&quot;https://auth.localghost.com/application/o/sm/&quot;</span>
-                                <span class="s2">&quot;.well-known/openid-configuration&quot;</span>
-                            <span class="p">),</span>
-                        <span class="p">),</span>
-                    <span class="p">},</span>
+                    <span class="s2">&quot;provider_id&quot;</span><span class="p">:</span> <span class="s2">&quot;oidc&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">oidc_name</span><span class="p">,</span>
+                    <span class="s2">&quot;client_id&quot;</span><span class="p">:</span> <span class="n">oidc_id</span><span class="p">,</span>
+                    <span class="s2">&quot;secret&quot;</span><span class="p">:</span> <span class="n">oidc_secret</span><span class="p">,</span>
+                    <span class="s2">&quot;settings&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;server_url&quot;</span><span class="p">:</span> <span class="n">oidc_url</span><span class="p">},</span>
                 <span class="p">}</span>
             <span class="p">]</span>
-        <span class="p">},</span>
-    <span class="p">}</span>
+        <span class="p">}</span>
 
 <span class="n">INTERNAL_IPS</span> <span class="o">=</span> <span class="p">[</span>
     <span class="s2">&quot;127.0.0.1&quot;</span><span class="p">,</span>
@@ -526,10 +513,10 @@ https://docs.djangoproject.com/en/stable/ref/settings/#default-auto-field</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-22'>
+  <div class='section' id='section-23'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-22'>#</a>
+        <a class='octothorpe' href='#section-23'>#</a>
       </div>
       <p>REST Framework Settings</p>
     </div>
@@ -547,10 +534,10 @@ https://docs.djangoproject.com/en/stable/ref/settings/#default-auto-field</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-23'>
+  <div class='section' id='section-24'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-23'>#</a>
+        <a class='octothorpe' href='#section-24'>#</a>
       </div>
       <p>Bootstrap 4 settings</p>
     </div>
@@ -569,10 +556,10 @@ https://docs.djangoproject.com/en/stable/ref/settings/#default-auto-field</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-24'>
+  <div class='section' id='section-25'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-24'>#</a>
+        <a class='octothorpe' href='#section-25'>#</a>
       </div>
       <p>Redefine to ensure no social_core backends survive in quick test mode</p>
     </div>
