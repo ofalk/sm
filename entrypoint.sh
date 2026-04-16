@@ -87,7 +87,7 @@ else:
 # Ensure Google SocialApp
 google_client_id = os.environ.get('GOOGLE_CLIENT_ID')
 google_secret = os.environ.get('GOOGLE_SECRET')
-if google_client_id and google_secret:
+if google_client_id and google_secret and google_client_id != 'CHANGE_ME' and google_secret != 'CHANGE_ME':
     from django.contrib.sites.models import Site
     try:
         from allauth.socialaccount.models import SocialApp
@@ -101,15 +101,21 @@ if google_client_id and google_secret:
             }
         )
         if not created:
-            app.client_id = google_client_id
-            app.secret = google_secret
-            app.save()
+            # Update only if values changed and are not placeholders
+            if app.client_id != google_client_id or app.secret != google_secret:
+                app.client_id = google_client_id
+                app.secret = google_secret
+                app.save()
+                print(f"Google SocialApp updated with new credentials.")
+            else:
+                print("Google SocialApp credentials already up to date.")
+        else:
+            print("Google SocialApp created.")
         app.sites.add(site)
-        print(f"Google SocialApp ensured (created: {created})")
     except Exception as e:
         print(f"Error setting up SocialApp: {e}")
 else:
-    print("GOOGLE_CLIENT_ID or GOOGLE_SECRET not provided, skipping SocialApp setup")
+    print("Google SocialApp credentials not provided or are placeholders, skipping setup")
 EOF
     exit 0
     ;;
