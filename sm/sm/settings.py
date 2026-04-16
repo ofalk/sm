@@ -248,57 +248,37 @@ if not DISABLE_SOCIAL_AUTH:
     SOCIALACCOUNT_AUTO_SIGNUP = True
     SOCIALACCOUNT_ADAPTER = "sm.adapter.MySocialAccountAdapter"
 
-    SOCIALACCOUNT_PROVIDERS = {
-        #        "facebook": {
-        #            "METHOD": "oauth2",
-        #            "SCOPE": ["email", "public_profile"],
-        #            "AUTH_PARAMS": {"auth_type": "reauthenticate"},
-        #            "INIT_PARAMS": {"cookie": True},
-        #            "FIELDS": [
-        #                "id",
-        #                "first_name",
-        #                "last_name",
-        #                "middle_name",
-        #                "name",
-        #                "name_format",
-        #                "picture",
-        #                "short_name",
-        #            ],
-        #            "EXCHANGE_TOKEN": True,
-        #            "VERIFIED_EMAIL": False,
-        #            "VERSION": "v13.0",
-        #        },
-        "google": {
-            "SCOPE": [
-                "profile",
-                "email",
-            ],
-            "AUTH_PARAMS": {
-                "access_type": "online",
-            },
+    SOCIALACCOUNT_PROVIDERS = {}
+
+    # Google Auth
+    google_id = config("GOOGLE_CLIENT_ID", default=None)
+    google_secret = config("GOOGLE_SECRET", default=None)
+    if google_id and google_secret:
+        SOCIALACCOUNT_PROVIDERS["google"] = {
+            "SCOPE": ["profile", "email"],
+            "AUTH_PARAMS": {"access_type": "online"},
             "AUTH_PKCE_ENABLED": True,
             "FETCH_USERINFO": True,
-        },
-        "openid_connect": {
+        }
+
+    # Generic OIDC
+    oidc_id = config("OIDC_CLIENT_ID", default=None)
+    oidc_secret = config("OIDC_SECRET", default=None)
+    oidc_url = config("OIDC_URL", default=None)
+    oidc_name = config("OIDC_NAME", default="OIDC")
+
+    if oidc_id and oidc_secret and oidc_url:
+        SOCIALACCOUNT_PROVIDERS["openid_connect"] = {
             "APPS": [
                 {
-                    "provider_id": "authentik",
-                    "name": "Authentik",
-                    "client_id": config("AUTHENTIK_CLIENT_ID", default=""),
-                    "secret": config("AUTHENTIK_SECRET", default=""),
-                    "settings": {
-                        "server_url": config(
-                            "AUTHENTIK_URL",
-                            default=(
-                                "https://auth.localghost.com/application/o/sm/"
-                                ".well-known/openid-configuration"
-                            ),
-                        ),
-                    },
+                    "provider_id": "oidc",
+                    "name": oidc_name,
+                    "client_id": oidc_id,
+                    "secret": oidc_secret,
+                    "settings": {"server_url": oidc_url},
                 }
             ]
-        },
-    }
+        }
 
 INTERNAL_IPS = [
     "127.0.0.1",

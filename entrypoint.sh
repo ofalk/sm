@@ -125,35 +125,37 @@ if google_client_id and google_secret and google_client_id not in ['REPLACE_WITH
     except Exception as e:
         print(f"Error setting up Google SocialApp: {e}")
 
-# Ensure Authentik SocialApp
-authentik_client_id = os.environ.get('AUTHENTIK_CLIENT_ID')
-authentik_secret = os.environ.get('AUTHENTIK_SECRET')
-authentik_url = os.environ.get('AUTHENTIK_URL', 'https://auth.localghost.com/application/o/sm/.well-known/openid-configuration')
+# Ensure OIDC SocialApp
+oidc_client_id = os.environ.get('OIDC_CLIENT_ID')
+oidc_secret = os.environ.get('OIDC_SECRET')
+oidc_url = os.environ.get('OIDC_URL')
+oidc_name = os.environ.get('OIDC_NAME', 'OIDC')
 
-if authentik_client_id and authentik_secret and authentik_client_id not in ['REPLACE_WITH_REAL_AUTHENTIK_ID', 'CHANGE_ME']:
+if oidc_client_id and oidc_secret and oidc_url and oidc_client_id not in ['REPLACE_WITH_REAL_OIDC_ID', 'CHANGE_ME']:
     try:
         app, created = SocialApp.objects.get_or_create(
             provider='openid_connect',
-            provider_id='authentik',
+            provider_id='oidc',
             defaults={
-                'name': 'Authentik',
-                'client_id': authentik_client_id,
-                'secret': authentik_secret,
-                'settings': {'server_url': authentik_url}
+                'name': oidc_name,
+                'client_id': oidc_client_id,
+                'secret': oidc_secret,
+                'settings': {'server_url': oidc_url}
             }
         )
         if not created:
-            if app.client_id != authentik_client_id or app.secret != authentik_secret or app.settings.get('server_url') != authentik_url:
-                app.client_id = authentik_client_id
-                app.secret = authentik_secret
-                app.settings = {'server_url': authentik_url}
+            if app.client_id != oidc_client_id or app.secret != oidc_secret or app.settings.get('server_url') != oidc_url or app.name != oidc_name:
+                app.client_id = oidc_client_id
+                app.secret = oidc_secret
+                app.settings = {'server_url': oidc_url}
+                app.name = oidc_name
                 app.save()
-                print("Authentik SocialApp updated.")
+                print(f"OIDC SocialApp '{oidc_name}' updated.")
         else:
-            print("Authentik SocialApp created.")
+            print(f"OIDC SocialApp '{oidc_name}' created.")
         app.sites.add(site)
     except Exception as e:
-        print(f"Error setting up Authentik SocialApp: {e}")
+        print(f"Error setting up OIDC SocialApp: {e}")
 EOF
     exit 0
     ;;
