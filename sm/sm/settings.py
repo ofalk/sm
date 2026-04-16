@@ -79,6 +79,7 @@ if not DISABLE_SOCIAL_AUTH:
     INSTALLED_APPS += [
         #        "allauth.socialaccount.providers.facebook",
         "allauth.socialaccount.providers.google",
+        "allauth.socialaccount.providers.openid_connect",
     ]
     SOCIALACCOUNT_ENABLED = True
 else:
@@ -277,7 +278,26 @@ if not DISABLE_SOCIAL_AUTH:
             },
             "AUTH_PKCE_ENABLED": True,
             "FETCH_USERINFO": True,
-        }
+        },
+        "openid_connect": {
+            "APPS": [
+                {
+                    "provider_id": "authentik",
+                    "name": "Authentik",
+                    "client_id": config("AUTHENTIK_CLIENT_ID", default=""),
+                    "secret": config("AUTHENTIK_SECRET", default=""),
+                    "settings": {
+                        "server_url": config(
+                            "AUTHENTIK_URL",
+                            default=(
+                                "https://auth.localghost.com/application/o/sm/"
+                                ".well-known/openid-configuration"
+                            ),
+                        ),
+                    },
+                }
+            ]
+        },
     }
 
 INTERNAL_IPS = [

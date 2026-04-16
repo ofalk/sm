@@ -10,6 +10,7 @@ data:
   EMAIL_BACKEND: "django.core.mail.backends.console.EmailBackend"
   THEME_CONTACT_EMAIL: "oliver@linux-kernel.at"
   THEME_GITHUB_URL: "https://github.com/ofalk/sm"
+  AUTHENTIK_URL: "https://auth.localghost.com/application/o/sm/.well-known/openid-configuration"
 ---
 apiVersion: v1
 kind: ConfigMap
