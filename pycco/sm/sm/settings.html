@@ -157,6 +157,7 @@
     </div>
     <div class='code'>
       <div class="highlight"><pre>        <span class="s2">&quot;allauth.socialaccount.providers.google&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;allauth.socialaccount.providers.openid_connect&quot;</span><span class="p">,</span>
     <span class="p">]</span>
     <span class="n">SOCIALACCOUNT_ENABLED</span> <span class="o">=</span> <span class="kc">True</span>
 <span class="k">else</span><span class="p">:</span>
@@ -491,7 +492,26 @@ https://docs.djangoproject.com/en/stable/ref/settings/#default-auto-field</p>
             <span class="p">},</span>
             <span class="s2">&quot;AUTH_PKCE_ENABLED&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
             <span class="s2">&quot;FETCH_USERINFO&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
-        <span class="p">}</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;openid_connect&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;APPS&quot;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="p">{</span>
+                    <span class="s2">&quot;provider_id&quot;</span><span class="p">:</span> <span class="s2">&quot;authentik&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Authentik&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;client_id&quot;</span><span class="p">:</span> <span class="n">config</span><span class="p">(</span><span class="s2">&quot;AUTHENTIK_CLIENT_ID&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">),</span>
+                    <span class="s2">&quot;secret&quot;</span><span class="p">:</span> <span class="n">config</span><span class="p">(</span><span class="s2">&quot;AUTHENTIK_SECRET&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">),</span>
+                    <span class="s2">&quot;settings&quot;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="s2">&quot;server_url&quot;</span><span class="p">:</span> <span class="n">config</span><span class="p">(</span>
+                            <span class="s2">&quot;AUTHENTIK_URL&quot;</span><span class="p">,</span>
+                            <span class="n">default</span><span class="o">=</span><span class="p">(</span>
+                                <span class="s2">&quot;https://auth.localghost.com/application/o/sm/&quot;</span>
+                                <span class="s2">&quot;.well-known/openid-configuration&quot;</span>
+                            <span class="p">),</span>
+                        <span class="p">),</span>
+                    <span class="p">},</span>
+                <span class="p">}</span>
+            <span class="p">]</span>
+        <span class="p">},</span>
     <span class="p">}</span>
 
 <span class="n">INTERNAL_IPS</span> <span class="o">=</span> <span class="p">[</span>
