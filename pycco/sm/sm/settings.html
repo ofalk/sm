@@ -118,7 +118,6 @@
     <span class="s2">&quot;django.contrib.admindocs&quot;</span><span class="p">,</span>
     <span class="s2">&quot;rest_framework&quot;</span><span class="p">,</span>
     <span class="s2">&quot;bootstrap4&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;debug_toolbar&quot;</span><span class="p">,</span>
     <span class="s2">&quot;django_countries&quot;</span><span class="p">,</span>
     <span class="s2">&quot;whitenoise.runserver_nostatic&quot;</span><span class="p">,</span>
     <span class="s2">&quot;taggit&quot;</span><span class="p">,</span>
@@ -142,21 +141,12 @@
     <span class="s2">&quot;social_django&quot;</span><span class="p">,</span>
 <span class="p">]</span>
 
+<span class="k">if</span> <span class="n">DEBUG</span><span class="p">:</span>
+    <span class="n">INSTALLED_APPS</span> <span class="o">+=</span> <span class="p">[</span><span class="s2">&quot;debug_toolbar&quot;</span><span class="p">]</span>
+
 <span class="k">if</span> <span class="ow">not</span> <span class="n">DISABLE_SOCIAL_AUTH</span><span class="p">:</span>
-    <span class="n">INSTALLED_APPS</span> <span class="o">+=</span> <span class="p">[</span></pre></div>
-    </div>
-  </div>
-  <div class='clearall'></div>
-  <div class='section' id='section-6'>
-    <div class='docs'>
-      <div class='octowrap'>
-        <a class='octothorpe' href='#section-6'>#</a>
-      </div>
-      <pre><code>   "allauth.socialaccount.providers.facebook",
-</code></pre>
-    </div>
-    <div class='code'>
-      <div class="highlight"><pre>        <span class="s2">&quot;allauth.socialaccount.providers.google&quot;</span><span class="p">,</span>
+    <span class="n">INSTALLED_APPS</span> <span class="o">+=</span> <span class="p">[</span>
+        <span class="s2">&quot;allauth.socialaccount.providers.google&quot;</span><span class="p">,</span>
         <span class="s2">&quot;allauth.socialaccount.providers.openid_connect&quot;</span><span class="p">,</span>
     <span class="p">]</span>
     <span class="n">SOCIALACCOUNT_ENABLED</span> <span class="o">=</span> <span class="kc">True</span>
@@ -167,10 +157,10 @@
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-7'>
+  <div class='section' id='section-6'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-7'>#</a>
+        <a class='octothorpe' href='#section-6'>#</a>
       </div>
       <p>Project Apps</p>
     </div>
@@ -199,11 +189,25 @@
     <span class="s2">&quot;django.contrib.auth.middleware.AuthenticationMiddleware&quot;</span><span class="p">,</span>
     <span class="s2">&quot;django.contrib.messages.middleware.MessageMiddleware&quot;</span><span class="p">,</span>
     <span class="s2">&quot;django.middleware.clickjacking.XFrameOptionsMiddleware&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;debug_toolbar.middleware.DebugToolbarMiddleware&quot;</span><span class="p">,</span>
     <span class="s2">&quot;htmlmin.middleware.HtmlMinifyMiddleware&quot;</span><span class="p">,</span>
     <span class="s2">&quot;htmlmin.middleware.MarkRequestMiddleware&quot;</span><span class="p">,</span>
     <span class="s2">&quot;django.contrib.sites.middleware.CurrentSiteMiddleware&quot;</span><span class="p">,</span>
     <span class="s2">&quot;simple_history.middleware.HistoryRequestMiddleware&quot;</span><span class="p">,</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-7'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-7'>#</a>
+      </div>
+      <p>Allauth middleware</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="s2">&quot;allauth.account.middleware.AccountMiddleware&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+
+<span class="k">if</span> <span class="n">DEBUG</span><span class="p">:</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -212,11 +216,18 @@
       <div class='octowrap'>
         <a class='octothorpe' href='#section-8'>#</a>
       </div>
-      <p>Allauth middleware</p>
+      <p>Insert DebugToolbarMiddleware after SessionMiddleware but before CommonMiddleware</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="s2">&quot;allauth.account.middleware.AccountMiddleware&quot;</span><span class="p">,</span>
-<span class="p">]</span>
+      <div class="highlight"><pre>    <span class="k">try</span><span class="p">:</span>
+        <span class="n">session_idx</span> <span class="o">=</span> <span class="n">MIDDLEWARE</span><span class="o">.</span><span class="n">index</span><span class="p">(</span>
+            <span class="s2">&quot;django.contrib.sessions.middleware.SessionMiddleware&quot;</span>
+        <span class="p">)</span>
+        <span class="n">MIDDLEWARE</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span>
+            <span class="n">session_idx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;debug_toolbar.middleware.DebugToolbarMiddleware&quot;</span>
+        <span class="p">)</span>
+    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+        <span class="n">MIDDLEWARE</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;debug_toolbar.middleware.DebugToolbarMiddleware&quot;</span><span class="p">)</span>
 
 <span class="n">ROOT_URLCONF</span> <span class="o">=</span> <span class="s2">&quot;sm.urls&quot;</span>
 
@@ -467,10 +478,16 @@ https://docs.djangoproject.com/en/stable/ref/settings/#default-auto-field</p>
     <span class="n">google_secret</span> <span class="o">=</span> <span class="n">config</span><span class="p">(</span><span class="s2">&quot;GOOGLE_SECRET&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">google_id</span> <span class="ow">and</span> <span class="n">google_secret</span><span class="p">:</span>
         <span class="n">SOCIALACCOUNT_PROVIDERS</span><span class="p">[</span><span class="s2">&quot;google&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;SCOPE&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;profile&quot;</span><span class="p">,</span> <span class="s2">&quot;email&quot;</span><span class="p">],</span>
-            <span class="s2">&quot;AUTH_PARAMS&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;access_type&quot;</span><span class="p">:</span> <span class="s2">&quot;online&quot;</span><span class="p">},</span>
-            <span class="s2">&quot;AUTH_PKCE_ENABLED&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
-            <span class="s2">&quot;FETCH_USERINFO&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;APPS&quot;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="p">{</span>
+                    <span class="s2">&quot;client_id&quot;</span><span class="p">:</span> <span class="n">google_id</span><span class="p">,</span>
+                    <span class="s2">&quot;secret&quot;</span><span class="p">:</span> <span class="n">google_secret</span><span class="p">,</span>
+                    <span class="s2">&quot;settings&quot;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="s2">&quot;scope&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;profile&quot;</span><span class="p">,</span> <span class="s2">&quot;email&quot;</span><span class="p">],</span>
+                        <span class="s2">&quot;auth_params&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;access_type&quot;</span><span class="p">:</span> <span class="s2">&quot;online&quot;</span><span class="p">},</span>
+                    <span class="p">},</span>
+                <span class="p">}</span>
+            <span class="p">]</span>
         <span class="p">}</span></pre></div>
     </div>
   </div>
