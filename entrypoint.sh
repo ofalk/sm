@@ -125,11 +125,11 @@ if google_client_id and google_secret and google_client_id not in ['REPLACE_WITH
     except Exception as e:
         print(f"Error setting up Google SocialApp: {e}")
 
-# Ensure OIDC SocialApp
+# Ensure Localghost SSO SocialApp
 oidc_client_id = os.environ.get('OIDC_CLIENT_ID')
 oidc_secret = os.environ.get('OIDC_SECRET')
 oidc_url = os.environ.get('OIDC_URL')
-oidc_name = os.environ.get('OIDC_NAME', 'OIDC')
+oidc_name = os.environ.get('OIDC_NAME', 'Localghost SSO')
 
 if oidc_client_id and oidc_secret and oidc_url and oidc_client_id not in ['REPLACE_WITH_REAL_OIDC_ID', 'CHANGE_ME']:
     try:
@@ -150,12 +150,12 @@ if oidc_client_id and oidc_secret and oidc_url and oidc_client_id not in ['REPLA
                 app.settings = {'server_url': oidc_url}
                 app.name = oidc_name
                 app.save()
-                print(f"OIDC SocialApp '{oidc_name}' updated.")
+                print(f"Localghost SSO SocialApp '{oidc_name}' updated.")
         else:
-            print(f"OIDC SocialApp '{oidc_name}' created.")
+            print(f"Localghost SSO SocialApp '{oidc_name}' created.")
         app.sites.add(site)
     except Exception as e:
-        print(f"Error setting up OIDC SocialApp: {e}")
+        print(f"Error setting up Localghost SSO SocialApp: {e}")
 EOF
     exit 0
     ;;

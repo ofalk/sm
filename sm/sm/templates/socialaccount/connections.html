@@ -25,8 +25,8 @@
                 <table class="table table-hover align-middle">
                     <thead class="bg-light">
                         <tr>
-                            <th>{% trans "Provider" %}</th>
                             <th>{% trans "Account" %}</th>
+                            <th>{% trans "Provider" %}</th>
                             <th class="text-right">{% trans "Action" %}</th>
                         </tr>
                     </thead>
@@ -35,14 +35,16 @@
                             {% with base_account.get_provider_account as account %}
                                 <tr>
                                     <td>
-                                        <i class="{{ account.get_provider.id|provider_icon_class }} fa-fw mr-2"></i>
-                                        {{ account.get_provider.name }}
+                                        <div class="custom-control custom-radio">
+                                            <input id="id_account_{{ base_account.id }}" type="radio" name="account" value="{{ base_account.id }}" class="custom-control-input"/>
+                                            <label class="custom-control-label font-weight-bold" for="id_account_{{ base_account.id }}">
+                                                {{ account }}
+                                            </label>
+                                        </div>
                                     </td>
                                     <td>
-                                        <input id="id_account_{{ base_account.id }}" type="radio" name="account" value="{{ base_account.id }}"/>
-                                        <label for="id_account_{{ base_account.id }}">
-                                            {{ account }}
-                                        </label>
+                                        <i class="{{ account.get_provider.id|provider_icon_class }} fa-fw mr-2 text-muted"></i>
+                                        {{ account.get_provider.name }}
                                     </td>
                                     <td class="text-right">
                                         <span class="badge badge-success">{% trans "Connected" %}</span>

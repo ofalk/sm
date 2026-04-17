@@ -52,4 +52,6 @@ def provider_icon_class(provider_id):
     p_id = provider_id.lower()
     if p_id in brands:
         return f"fa-brands fa-{p_id}"
+    if p_id == "oidc":
+        return "fa-solid fa-id-card-clip"
     return "fa-solid fa-share-alt"  # Fallback

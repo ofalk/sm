@@ -63,35 +63,35 @@ a.google-btn:hover {
 }
 .wide-container {
   width: 100%;
-  padding-right: 1.5rem;
-  padding-left: 1.5rem;
+  padding-right: 2rem;
+  padding-left: 2rem;
   margin-right: auto;
   margin-left: auto;
 }
 
 @media (min-width: 992px) {
   .wide-container {
-    max-width: 95%;
+    max-width: 98%;
   }
 }
 
 @media (min-width: 1400px) {
   .wide-container {
-    max-width: 85%; /* Don't let it get too wide on ultrawide screens */
+    max-width: 92%; /* Don't let it get too wide on ultrawide screens */
   }
 }
 
 @media (max-width: 576px) {
   .wide-container {
-    padding-right: 0.75rem;
-    padding-left: 0.75rem;
+    padding-right: 1.25rem;
+    padding-left: 1.25rem;
   }
 }
 
 .card {
-  border: none;
+  border: 1px solid rgba(0, 0, 0, 0.08);
   border-radius: 0.5rem;
-  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.05);
   margin-bottom: 1.5rem;
   transition: all 0.2s ease-in-out;
 }

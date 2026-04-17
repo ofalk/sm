@@ -221,6 +221,9 @@ USE_TZ = True
 
 STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "static"
+STATICFILES_DIRS = [
+    BASE_DIR / "sm" / "static",
+]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/stable/ref/settings/#default-auto-field
@@ -283,7 +286,7 @@ if not DISABLE_SOCIAL_AUTH:
     oidc_id = config("OIDC_CLIENT_ID", default=None)
     oidc_secret = config("OIDC_SECRET", default=None)
     oidc_url = config("OIDC_URL", default=None)
-    oidc_name = config("OIDC_NAME", default="OIDC")
+    oidc_name = config("OIDC_NAME", default="Localghost SSO")
 
     if oidc_id and oidc_secret and oidc_url:
         SOCIALACCOUNT_PROVIDERS["openid_connect"] = {
