@@ -9,8 +9,6 @@ from drf_spectacular.views import (
     SpectacularSwaggerView,
 )
 
-import debug_toolbar
-
 from .views import (
     DashboardView,
     SearchView,
@@ -59,7 +57,6 @@ router.register(
 )
 
 urlpatterns = [
-    path("__debug__/", include(debug_toolbar.urls)),
     path("admin/doc/", include("django.contrib.admindocs.urls")),
     path("admin/", admin.site.urls),
     # API
@@ -156,5 +153,10 @@ urlpatterns = [
     path("clusterpackagetype/", include("clusterpackagetype.urls")),
     path("vendor/", include("vendor.urls")),
 ]
+
+if "debug_toolbar" in settings.INSTALLED_APPS:
+    import debug_toolbar
+
+    urlpatterns = [path("__debug__/", include(debug_toolbar.urls))] + urlpatterns
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
