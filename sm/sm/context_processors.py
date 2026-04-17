@@ -12,4 +12,9 @@ def theme_settings(request):
         "SOCIALACCOUNT_ENABLED": getattr(settings, "SOCIALACCOUNT_ENABLED", False),
         "APP_VERSION": getattr(settings, "APP_VERSION", "unknown"),
         "APP_MODIFICATION_DATE": getattr(settings, "APP_MODIFICATION_DATE", "unknown"),
+        "ANALYTICS_ENABLED": getattr(settings, "ANALYTICS_ENABLED", False),
+        "ANALYTICS_ID": getattr(settings, "ANALYTICS_ID", None),
+        "ANALYTICS_BASE_URL": getattr(
+            settings, "ANALYTICS_BASE_URL", "https://api.swetrix.com"
+        ),
     }

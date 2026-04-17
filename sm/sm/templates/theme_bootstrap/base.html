@@ -31,8 +31,29 @@
             <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js"></script>
             <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.2/js/bootstrap.min.js"></script>
         {% endblock %}
+
+        {% if ANALYTICS_ENABLED %}
+            <script src="https://swetrix.org/swetrix.js" defer></script>
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    swetrix.init('{{ ANALYTICS_ID }}', {
+                        apiURL: '{{ ANALYTICS_BASE_URL }}{% if not ANALYTICS_BASE_URL|slice:"-1:" == "/" %}/{% endif %}v1/log',
+                    })
+                    swetrix.trackViews()
+                })
+            </script>
+        {% endif %}
     </head>
     <body id="{% block body_id %}{% endblock %}" class="{% block body_class %}{% endblock %}">
+        {% if ANALYTICS_ENABLED %}
+            <noscript>
+                <img
+                    src="{{ ANALYTICS_BASE_URL }}{% if not ANALYTICS_BASE_URL|slice:"-1:" == "/" %}/{% endif %}log/noscript?pid={{ ANALYTICS_ID }}"
+                    alt=""
+                    referrerpolicy="no-referrer-when-downgrade"
+                />
+            </noscript>
+        {% endif %}
         <div class="{% block body_container_class %}{% endblock %}">
             {% block topbar_base %}
                 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">

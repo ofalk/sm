@@ -48,6 +48,11 @@ if APP_VERSION == "unknown" or APP_MODIFICATION_DATE == "unknown":
 
 DISABLE_SOCIAL_AUTH = config("DISABLE_SOCIAL_AUTH", default=False, cast=bool)
 
+# Analytics settings
+ANALYTICS_ENABLED = config("ANALYTICS_ENABLED", default=False, cast=bool)
+ANALYTICS_ID = config("ANALYTICS_ID", default=None)
+ANALYTICS_BASE_URL = config("ANALYTICS_BASE_URL", default="https://api.swetrix.com")
+
 # Application definition
 
 INSTALLED_APPS = [
