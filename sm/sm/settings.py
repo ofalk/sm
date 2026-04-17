@@ -51,6 +51,7 @@ DISABLE_SOCIAL_AUTH = config("DISABLE_SOCIAL_AUTH", default=False, cast=bool)
 # Application definition
 
 INSTALLED_APPS = [
+    "whitenoise.runserver_nostatic",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -62,7 +63,6 @@ INSTALLED_APPS = [
     "rest_framework",
     "bootstrap4",
     "django_countries",
-    "whitenoise.runserver_nostatic",
     "taggit",
     "simple_history",
     "drf_spectacular",
