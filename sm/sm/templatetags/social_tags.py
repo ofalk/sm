@@ -39,19 +39,35 @@ def provider_icon_class(provider_id):
     """
     Returns the correct FontAwesome class for a provider.
     """
-    brands = [
-        "facebook",
-        "google",
-        "github",
-        "twitter",
-        "linkedin",
-        "apple",
-        "microsoft",
-        "slack",
-    ]
+    # Mapping of provider IDs to FontAwesome classes
+    provider_map = {
+        "facebook": "fa-brands fa-facebook",
+        "google": "fa-brands fa-google",
+        "github": "fa-brands fa-github",
+        "gitlab": "fa-brands fa-gitlab",
+        "twitter": "fa-brands fa-twitter",
+        "linkedin": "fa-brands fa-linkedin",
+        "apple": "fa-brands fa-apple",
+        "microsoft": "fa-brands fa-microsoft",
+        "slack": "fa-brands fa-slack",
+        "oidc": "fa-solid fa-id-card-clip",
+        "openid": "fa-solid fa-openid",
+        "saml": "fa-solid fa-shield-halved",
+        "okta": "fa-solid fa-id-card-clip",
+        "keycloak": "fa-solid fa-key",
+        "auth0": "fa-solid fa-shield-halved",
+        "sso": "fa-solid fa-id-card-clip",
+    }
+
     p_id = provider_id.lower()
-    if p_id in brands:
-        return f"fa-brands fa-{p_id}"
-    if p_id == "oidc":
-        return "fa-solid fa-id-card-clip"
-    return "fa-solid fa-share-alt"  # Fallback
+
+    # Check for direct matches
+    if p_id in provider_map:
+        return provider_map[p_id]
+
+    # Check for partial matches (e.g., 'google-oauth2' or 'google_custom')
+    for key, value in provider_map.items():
+        if key in p_id:
+            return value
+
+    return "fa-solid fa-share-nodes"  # Modern FA6 fallback icon
