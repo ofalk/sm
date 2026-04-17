@@ -359,7 +359,10 @@ https://docs.djangoproject.com/en/stable/howto/static-files/</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre><span class="n">STATIC_URL</span> <span class="o">=</span> <span class="s2">&quot;/static/&quot;</span>
-<span class="n">STATIC_ROOT</span> <span class="o">=</span> <span class="n">BASE_DIR</span> <span class="o">/</span> <span class="s2">&quot;static&quot;</span></pre></div>
+<span class="n">STATIC_ROOT</span> <span class="o">=</span> <span class="n">BASE_DIR</span> <span class="o">/</span> <span class="s2">&quot;static&quot;</span>
+<span class="n">STATICFILES_DIRS</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">BASE_DIR</span> <span class="o">/</span> <span class="s2">&quot;sm&quot;</span> <span class="o">/</span> <span class="s2">&quot;static&quot;</span><span class="p">,</span>
+<span class="p">]</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -503,7 +506,7 @@ https://docs.djangoproject.com/en/stable/ref/settings/#default-auto-field</p>
       <div class="highlight"><pre>    <span class="n">oidc_id</span> <span class="o">=</span> <span class="n">config</span><span class="p">(</span><span class="s2">&quot;OIDC_CLIENT_ID&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
     <span class="n">oidc_secret</span> <span class="o">=</span> <span class="n">config</span><span class="p">(</span><span class="s2">&quot;OIDC_SECRET&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
     <span class="n">oidc_url</span> <span class="o">=</span> <span class="n">config</span><span class="p">(</span><span class="s2">&quot;OIDC_URL&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
-    <span class="n">oidc_name</span> <span class="o">=</span> <span class="n">config</span><span class="p">(</span><span class="s2">&quot;OIDC_NAME&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;OIDC&quot;</span><span class="p">)</span>
+    <span class="n">oidc_name</span> <span class="o">=</span> <span class="n">config</span><span class="p">(</span><span class="s2">&quot;OIDC_NAME&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;Localghost SSO&quot;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">oidc_id</span> <span class="ow">and</span> <span class="n">oidc_secret</span> <span class="ow">and</span> <span class="n">oidc_url</span><span class="p">:</span>
         <span class="n">SOCIALACCOUNT_PROVIDERS</span><span class="p">[</span><span class="s2">&quot;openid_connect&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>

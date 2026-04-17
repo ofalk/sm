@@ -108,6 +108,8 @@ or if allauth.socialaccount is not in INSTALLED_APPS.</p>
     <span class="n">p_id</span> <span class="o">=</span> <span class="n">provider_id</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
     <span class="k">if</span> <span class="n">p_id</span> <span class="ow">in</span> <span class="n">brands</span><span class="p">:</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;fa-brands fa-</span><span class="si">{</span><span class="n">p_id</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="k">if</span> <span class="n">p_id</span> <span class="o">==</span> <span class="s2">&quot;oidc&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;fa-solid fa-id-card-clip&quot;</span>
     <span class="k">return</span> <span class="s2">&quot;fa-solid fa-share-alt&quot;</span>  <span class="c1"># Fallback</span>
 
 </pre></div>
