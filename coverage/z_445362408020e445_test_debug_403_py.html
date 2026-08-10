@@ -64,8 +64,8 @@
             <a id="indexLink" class="nav" href="index.html">&Hat; index</a> &nbsp; &nbsp;
             <a id="nextFileLink" class="nav" href="z_445362408020e445_test_debug_403_non_superuser_py.html">&#xbb; next</a>
             &nbsp; &nbsp; &nbsp;
-            <a class="nav" href="https://coverage.readthedocs.io/en/7.15.2">coverage.py v7.15.2</a>,
-            created at 2026-08-01 19:14 +0000
+            <a class="nav" href="https://coverage.readthedocs.io/en/7.15.4">coverage.py v7.15.4</a>,
+            created at 2026-08-10 19:17 +0000
         </p>
         <aside class="hidden">
             <button type="button" class="button_next_chunk" data-shortcut="j"></button>
@@ -89,13 +89,13 @@
     <p class="mis show_mis"><span class="n"><a id="t7" href="#t7">7</a></span><span class="t">    <span class="key">def</span> <span class="nam">setUp</span><span class="op">(</span><span class="nam">self</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p class="mis show_mis"><span class="n"><a id="t8" href="#t8">8</a></span><span class="t">        <span class="nam">self</span><span class="op">.</span><span class="nam">client</span> <span class="op">=</span> <span class="nam">Client</span><span class="op">(</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p class="mis show_mis"><span class="n"><a id="t9" href="#t9">9</a></span><span class="t">        <span class="nam">self</span><span class="op">.</span><span class="nam">user</span> <span class="op">=</span> <span class="nam">User</span><span class="op">.</span><span class="nam">objects</span><span class="op">.</span><span class="nam">create_superuser</span><span class="op">(</span>&nbsp;</span><span class="r"></span></p>
-    <p class="mis mis2 show_mis"><span class="n"><a id="t10" href="#t10">10</a></span><span class="t">            <span class="nam">username</span><span class="op">=</span><span class="str">"admin"</span><span class="op">,</span> <span class="nam">email</span><span class="op">=</span><span class="str">"admin@linux-kernel.at"</span><span class="op">,</span> <span class="nam">password</span><span class="op">=</span><span class="str">"password"</span>&nbsp;</span><span class="r"></span></p>
+    <p class="mis mis2 show_mis"><span class="n"><a id="t10" href="#t10">10</a></span><span class="t">            <span class="nam">username</span><span class="op">=</span><span class="str">&quot;admin&quot;</span><span class="op">,</span> <span class="nam">email</span><span class="op">=</span><span class="str">&quot;admin@linux-kernel.at&quot;</span><span class="op">,</span> <span class="nam">password</span><span class="op">=</span><span class="str">&quot;password&quot;</span>&nbsp;</span><span class="r"></span></p>
     <p class="mis mis2 show_mis"><span class="n"><a id="t11" href="#t11">11</a></span><span class="t">        <span class="op">)</span>&nbsp;</span><span class="r"></span></p>
-    <p class="mis show_mis"><span class="n"><a id="t12" href="#t12">12</a></span><span class="t">        <span class="nam">self</span><span class="op">.</span><span class="nam">client</span><span class="op">.</span><span class="nam">login</span><span class="op">(</span><span class="nam">username</span><span class="op">=</span><span class="str">"admin"</span><span class="op">,</span> <span class="nam">password</span><span class="op">=</span><span class="str">"password"</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p class="mis show_mis"><span class="n"><a id="t12" href="#t12">12</a></span><span class="t">        <span class="nam">self</span><span class="op">.</span><span class="nam">client</span><span class="op">.</span><span class="nam">login</span><span class="op">(</span><span class="nam">username</span><span class="op">=</span><span class="str">&quot;admin&quot;</span><span class="op">,</span> <span class="nam">password</span><span class="op">=</span><span class="str">&quot;password&quot;</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t13" href="#t13">13</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p class="mis show_mis"><span class="n"><a id="t14" href="#t14">14</a></span><span class="t">    <span class="key">def</span> <span class="nam">test_server_list_access</span><span class="op">(</span><span class="nam">self</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
-    <p class="mis show_mis"><span class="n"><a id="t15" href="#t15">15</a></span><span class="t">        <span class="nam">response</span> <span class="op">=</span> <span class="nam">self</span><span class="op">.</span><span class="nam">client</span><span class="op">.</span><span class="nam">get</span><span class="op">(</span><span class="nam">reverse</span><span class="op">(</span><span class="str">"server:index"</span><span class="op">)</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
-    <p class="mis show_mis"><span class="n"><a id="t16" href="#t16">16</a></span><span class="t">        <span class="nam">print</span><span class="op">(</span><span class="fst">f"</span><span class="fst">Status Code: </span><span class="op">{</span><span class="nam">response</span><span class="op">.</span><span class="nam">status_code</span><span class="op">}</span><span class="fst">"</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p class="mis show_mis"><span class="n"><a id="t15" href="#t15">15</a></span><span class="t">        <span class="nam">response</span> <span class="op">=</span> <span class="nam">self</span><span class="op">.</span><span class="nam">client</span><span class="op">.</span><span class="nam">get</span><span class="op">(</span><span class="nam">reverse</span><span class="op">(</span><span class="str">&quot;server:index&quot;</span><span class="op">)</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p class="mis show_mis"><span class="n"><a id="t16" href="#t16">16</a></span><span class="t">        <span class="nam">print</span><span class="op">(</span><span class="fst">f&quot;</span><span class="fst">Status Code: </span><span class="op">{</span><span class="nam">response</span><span class="op">.</span><span class="nam">status_code</span><span class="op">}</span><span class="fst">&quot;</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p class="mis show_mis"><span class="n"><a id="t17" href="#t17">17</a></span><span class="t">        <span class="nam">self</span><span class="op">.</span><span class="nam">assertEqual</span><span class="op">(</span><span class="nam">response</span><span class="op">.</span><span class="nam">status_code</span><span class="op">,</span> <span class="num">200</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
 </main>
 <footer>
@@ -105,8 +105,8 @@
             <a class="nav" href="index.html">&Hat; index</a> &nbsp; &nbsp;
             <a class="nav" href="z_445362408020e445_test_debug_403_non_superuser_py.html">&#xbb; next</a>
             &nbsp; &nbsp; &nbsp;
-            <a class="nav" href="https://coverage.readthedocs.io/en/7.15.2">coverage.py v7.15.2</a>,
-            created at 2026-08-01 19:14 +0000
+            <a class="nav" href="https://coverage.readthedocs.io/en/7.15.4">coverage.py v7.15.4</a>,
+            created at 2026-08-10 19:17 +0000
         </p>
     </div>
 </footer>

@@ -64,8 +64,8 @@
             <a id="indexLink" class="nav" href="index.html">&Hat; index</a> &nbsp; &nbsp;
             <a id="nextFileLink" class="nav" href="z_1f76a6c93e978a01_social_tags_py.html">&#xbb; next</a>
             &nbsp; &nbsp; &nbsp;
-            <a class="nav" href="https://coverage.readthedocs.io/en/7.15.2">coverage.py v7.15.2</a>,
-            created at 2026-08-01 19:14 +0000
+            <a class="nav" href="https://coverage.readthedocs.io/en/7.15.4">coverage.py v7.15.4</a>,
+            created at 2026-08-10 19:17 +0000
         </p>
         <aside class="hidden">
             <button type="button" class="button_next_chunk" data-shortcut="j"></button>
@@ -91,32 +91,32 @@
     <p class="pln"><span class="n"><a id="t9" href="#t9">9</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t10" href="#t10">10</a></span><span class="t"><span class="op">@</span><span class="nam">register</span><span class="op">.</span><span class="nam">simple_tag</span><span class="op">(</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t11" href="#t11">11</a></span><span class="t"><span class="key">def</span> <span class="nam">get_message_tags</span><span class="op">(</span><span class="nam">message</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
-    <p class="pln"><span class="n"><a id="t12" href="#t12">12</a></span><span class="t">    <span class="str">"""</span>&nbsp;</span><span class="r"></span></p>
-    <p class="pln"><span class="n"><a id="t13" href="#t13">13</a></span><span class="t"><span class="str">    Returns the message's level_tag prefixed with Bootstrap's "alert-" prefix</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t12" href="#t12">12</a></span><span class="t">    <span class="str">&quot;&quot;&quot;</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t13" href="#t13">13</a></span><span class="t"><span class="str">    Returns the message&#x27;s level_tag prefixed with Bootstrap&#x27;s &quot;alert-&quot; prefix</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t14" href="#t14">14</a></span><span class="t"><span class="str">    along with any tags included in message.extra_tags</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t15" href="#t15">15</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p class="pln"><span class="n"><a id="t16" href="#t16">16</a></span><span class="t"><span class="str">    Messages in Django >= 1.7 have a message.level_tag attr</span>&nbsp;</span><span class="r"></span></p>
-    <p class="pln"><span class="n"><a id="t17" href="#t17">17</a></span><span class="t"><span class="str">    """</span>&nbsp;</span><span class="r"></span></p>
-    <p class="mis show_mis"><span class="n"><a id="t18" href="#t18">18</a></span><span class="t">    <span class="nam">level_tag</span> <span class="op">=</span> <span class="nam">force_text</span><span class="op">(</span><span class="nam">LEVEL_TAGS</span><span class="op">.</span><span class="nam">get</span><span class="op">(</span><span class="nam">message</span><span class="op">.</span><span class="nam">level</span><span class="op">,</span> <span class="str">""</span><span class="op">)</span><span class="op">,</span> <span class="nam">strings_only</span><span class="op">=</span><span class="key">True</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
-    <p class="mis show_mis"><span class="n"><a id="t19" href="#t19">19</a></span><span class="t">    <span class="key">if</span> <span class="nam">level_tag</span> <span class="op">==</span> <span class="str">"error"</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t16" href="#t16">16</a></span><span class="t"><span class="str">    Messages in Django &gt;= 1.7 have a message.level_tag attr</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t17" href="#t17">17</a></span><span class="t"><span class="str">    &quot;&quot;&quot;</span>&nbsp;</span><span class="r"></span></p>
+    <p class="mis show_mis"><span class="n"><a id="t18" href="#t18">18</a></span><span class="t">    <span class="nam">level_tag</span> <span class="op">=</span> <span class="nam">force_text</span><span class="op">(</span><span class="nam">LEVEL_TAGS</span><span class="op">.</span><span class="nam">get</span><span class="op">(</span><span class="nam">message</span><span class="op">.</span><span class="nam">level</span><span class="op">,</span> <span class="str">&quot;&quot;</span><span class="op">)</span><span class="op">,</span> <span class="nam">strings_only</span><span class="op">=</span><span class="key">True</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p class="mis show_mis"><span class="n"><a id="t19" href="#t19">19</a></span><span class="t">    <span class="key">if</span> <span class="nam">level_tag</span> <span class="op">==</span> <span class="str">&quot;error&quot;</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t20" href="#t20">20</a></span><span class="t">        <span class="com"># Alias the error tag as danger, since .alert-error no longer exists</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t21" href="#t21">21</a></span><span class="t">        <span class="com"># in Bootstrap 3</span>&nbsp;</span><span class="r"></span></p>
-    <p class="mis show_mis"><span class="n"><a id="t22" href="#t22">22</a></span><span class="t">        <span class="nam">level_tag</span> <span class="op">=</span> <span class="str">"danger"</span>&nbsp;</span><span class="r"></span></p>
+    <p class="mis show_mis"><span class="n"><a id="t22" href="#t22">22</a></span><span class="t">        <span class="nam">level_tag</span> <span class="op">=</span> <span class="str">&quot;danger&quot;</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t23" href="#t23">23</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p class="mis show_mis"><span class="n"><a id="t24" href="#t24">24</a></span><span class="t">    <span class="key">if</span> <span class="nam">level_tag</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
-    <p class="mis show_mis"><span class="n"><a id="t25" href="#t25">25</a></span><span class="t">        <span class="nam">alert_level_tag</span> <span class="op">=</span> <span class="str">"alert-{tag}"</span><span class="op">.</span><span class="nam">format</span><span class="op">(</span><span class="nam">tag</span><span class="op">=</span><span class="nam">level_tag</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p class="mis show_mis"><span class="n"><a id="t25" href="#t25">25</a></span><span class="t">        <span class="nam">alert_level_tag</span> <span class="op">=</span> <span class="str">&quot;alert-{tag}&quot;</span><span class="op">.</span><span class="nam">format</span><span class="op">(</span><span class="nam">tag</span><span class="op">=</span><span class="nam">level_tag</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t26" href="#t26">26</a></span><span class="t">    <span class="key">else</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p class="mis show_mis"><span class="n"><a id="t27" href="#t27">27</a></span><span class="t">        <span class="nam">alert_level_tag</span> <span class="op">=</span> <span class="key">None</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t28" href="#t28">28</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p class="mis show_mis"><span class="n"><a id="t29" href="#t29">29</a></span><span class="t">    <span class="nam">extra_tags</span> <span class="op">=</span> <span class="nam">force_text</span><span class="op">(</span><span class="nam">message</span><span class="op">.</span><span class="nam">extra_tags</span><span class="op">,</span> <span class="nam">strings_only</span><span class="op">=</span><span class="key">True</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t30" href="#t30">30</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p class="mis show_mis"><span class="n"><a id="t31" href="#t31">31</a></span><span class="t">    <span class="key">if</span> <span class="nam">extra_tags</span> <span class="key">and</span> <span class="nam">alert_level_tag</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
-    <p class="mis show_mis"><span class="n"><a id="t32" href="#t32">32</a></span><span class="t">        <span class="key">return</span> <span class="str">" "</span><span class="op">.</span><span class="nam">join</span><span class="op">(</span><span class="op">[</span><span class="nam">extra_tags</span><span class="op">,</span> <span class="nam">alert_level_tag</span><span class="op">]</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p class="mis show_mis"><span class="n"><a id="t32" href="#t32">32</a></span><span class="t">        <span class="key">return</span> <span class="str">&quot; &quot;</span><span class="op">.</span><span class="nam">join</span><span class="op">(</span><span class="op">[</span><span class="nam">extra_tags</span><span class="op">,</span> <span class="nam">alert_level_tag</span><span class="op">]</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p class="mis show_mis"><span class="n"><a id="t33" href="#t33">33</a></span><span class="t">    <span class="key">elif</span> <span class="nam">extra_tags</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p class="mis show_mis"><span class="n"><a id="t34" href="#t34">34</a></span><span class="t">        <span class="key">return</span> <span class="nam">extra_tags</span>&nbsp;</span><span class="r"></span></p>
     <p class="mis show_mis"><span class="n"><a id="t35" href="#t35">35</a></span><span class="t">    <span class="key">elif</span> <span class="nam">alert_level_tag</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p class="mis show_mis"><span class="n"><a id="t36" href="#t36">36</a></span><span class="t">        <span class="key">return</span> <span class="nam">alert_level_tag</span>&nbsp;</span><span class="r"></span></p>
-    <p class="mis show_mis"><span class="n"><a id="t37" href="#t37">37</a></span><span class="t">    <span class="key">return</span> <span class="str">""</span>&nbsp;</span><span class="r"></span></p>
+    <p class="mis show_mis"><span class="n"><a id="t37" href="#t37">37</a></span><span class="t">    <span class="key">return</span> <span class="str">&quot;&quot;</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t38" href="#t38">38</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t39" href="#t39">39</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t40" href="#t40">40</a></span><span class="t"><span class="op">@</span><span class="nam">register</span><span class="op">.</span><span class="nam">filter</span>&nbsp;</span><span class="r"></span></p>
@@ -130,8 +130,8 @@
             <a class="nav" href="index.html">&Hat; index</a> &nbsp; &nbsp;
             <a class="nav" href="z_1f76a6c93e978a01_social_tags_py.html">&#xbb; next</a>
             &nbsp; &nbsp; &nbsp;
-            <a class="nav" href="https://coverage.readthedocs.io/en/7.15.2">coverage.py v7.15.2</a>,
-            created at 2026-08-01 19:14 +0000
+            <a class="nav" href="https://coverage.readthedocs.io/en/7.15.4">coverage.py v7.15.4</a>,
+            created at 2026-08-10 19:17 +0000
         </p>
     </div>
 </footer>

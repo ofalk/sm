@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <title>permissions.py</title>
+  <link rel="stylesheet" href="../../../pycco.css">
+</head>
+<body>
+<div id='container'>
+  <div id="background"></div>
+  <div class='section'>
+    <div class='docs'><h1>permissions.py</h1></div>
+  </div>
+  <div class='clearall'>
+  <div class='section' id='section-0'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-0'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">rest_framework</span><span class="w"> </span><span class="kn">import</span> <span class="n">permissions</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-1'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-1'>#</a>
+      </div>
+      <p>DjangoModelPermissions that also requires the <code>view_</code> permission for
+read-only requests, so API access mirrors the web UI&rsquo;s permission model.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">SmModelPermissions</span><span class="p">(</span><span class="n">permissions</span><span class="o">.</span><span class="n">DjangoModelPermissions</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-2'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-2'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">perms_map</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;GET&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;</span><span class="si">%(app_label)s</span><span class="s2">.view_</span><span class="si">%(model_name)s</span><span class="s2">&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;OPTIONS&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;</span><span class="si">%(app_label)s</span><span class="s2">.view_</span><span class="si">%(model_name)s</span><span class="s2">&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;HEAD&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;</span><span class="si">%(app_label)s</span><span class="s2">.view_</span><span class="si">%(model_name)s</span><span class="s2">&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;POST&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;</span><span class="si">%(app_label)s</span><span class="s2">.add_</span><span class="si">%(model_name)s</span><span class="s2">&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;PUT&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;</span><span class="si">%(app_label)s</span><span class="s2">.change_</span><span class="si">%(model_name)s</span><span class="s2">&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;PATCH&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;</span><span class="si">%(app_label)s</span><span class="s2">.change_</span><span class="si">%(model_name)s</span><span class="s2">&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;DELETE&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;</span><span class="si">%(app_label)s</span><span class="s2">.delete_</span><span class="si">%(model_name)s</span><span class="s2">&quot;</span><span class="p">],</span>
+    <span class="p">}</span>
+
+</pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+</div>
+</body>

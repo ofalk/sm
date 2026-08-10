@@ -110,6 +110,7 @@
                             <span class="s2">&quot;social&quot;</span><span class="p">,</span>
                             <span class="s2">&quot;server&quot;</span><span class="p">,</span>
                             <span class="s2">&quot;group/filter&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;starter-pack&quot;</span><span class="p">,</span>
                             <span class="s2">&quot;terms&quot;</span><span class="p">,</span>
                             <span class="s2">&quot;privacy&quot;</span><span class="p">,</span>
                             <span class="s2">&quot;impressum&quot;</span><span class="p">,</span>
@@ -266,7 +267,7 @@ OK.</p>
                     <span class="k">await</span> <span class="n">page</span><span class="o">.</span><span class="n">goto</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">live_server_url</span><span class="si">}</span><span class="s2">/accounts/login/&quot;</span><span class="p">)</span>
                     <span class="k">await</span> <span class="n">page</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span><span class="s1">&#39;input[name=&quot;login&quot;]&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">username</span><span class="p">)</span>
                     <span class="k">await</span> <span class="n">page</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span><span class="s1">&#39;input[name=&quot;password&quot;]&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">password</span><span class="p">)</span>
-                    <span class="k">await</span> <span class="n">page</span><span class="o">.</span><span class="n">click</span><span class="p">(</span><span class="s1">&#39;button[type=&quot;submit&quot;]&#39;</span><span class="p">)</span>
+                    <span class="k">await</span> <span class="n">page</span><span class="o">.</span><span class="n">click</span><span class="p">(</span><span class="s2">&quot;form.login button[type=&#39;submit&#39;]&quot;</span><span class="p">)</span>
                     <span class="k">await</span> <span class="n">page</span><span class="o">.</span><span class="n">wait_for_load_state</span><span class="p">(</span><span class="s2">&quot;networkidle&quot;</span><span class="p">)</span>
                     <span class="k">await</span> <span class="n">page</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 

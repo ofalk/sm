@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <title>authentication.py</title>
+  <link rel="stylesheet" href="../../../pycco.css">
+</head>
+<body>
+<div id='container'>
+  <div id="background"></div>
+  <div class='section'>
+    <div class='docs'><h1>authentication.py</h1></div>
+  </div>
+  <div class='clearall'>
+  <div class='section' id='section-0'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-0'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">timedelta</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.contrib.auth.hashers</span><span class="w"> </span><span class="kn">import</span> <span class="n">check_password</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">timezone</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">drf_spectacular.extensions</span><span class="w"> </span><span class="kn">import</span> <span class="n">OpenApiAuthenticationExtension</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">rest_framework.authentication</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseAuthentication</span><span class="p">,</span> <span class="n">get_authorization_header</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">rest_framework.exceptions</span><span class="w"> </span><span class="kn">import</span> <span class="n">AuthenticationFailed</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">sm.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">ApiKey</span>
+
+<span class="n">MALFORMED_MESSAGE</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="s2">&quot;Invalid Authorization header. Expected format: &quot;</span> <span class="s2">&quot;ApiKey &lt;client_id&gt;:&lt;secret&gt;&quot;</span>
+<span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-1'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-1'>#</a>
+      </div>
+      <p>Authenticates requests using a client_id/secret API key pair.</p>
+<p>The credentials are supplied in the Authorization header:</p>
+<pre><code>Authorization: ApiKey &lt;client_id&gt;:&lt;secret&gt;
+</code></pre>
+<p>A successful authentication returns the user the key belongs to, so all
+further permission and multi-tenancy checks behave exactly as they would
+for that user.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">ApiKeyAuthentication</span><span class="p">(</span><span class="n">BaseAuthentication</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-2'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-2'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">keyword</span> <span class="o">=</span> <span class="s2">&quot;ApiKey&quot;</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-3'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-3'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">authenticate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span>
+        <span class="n">auth</span> <span class="o">=</span> <span class="n">get_authorization_header</span><span class="p">(</span><span class="n">request</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">auth</span> <span class="ow">or</span> <span class="n">auth</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">keyword</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">encode</span><span class="p">():</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">auth</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">AuthenticationFailed</span><span class="p">(</span><span class="n">MALFORMED_MESSAGE</span><span class="p">)</span>
+
+        <span class="n">token</span> <span class="o">=</span> <span class="n">auth</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s2">&quot;:&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">token</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">AuthenticationFailed</span><span class="p">(</span><span class="n">MALFORMED_MESSAGE</span><span class="p">)</span>
+
+        <span class="n">client_id</span><span class="p">,</span> <span class="n">secret</span> <span class="o">=</span> <span class="n">token</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+        <span class="n">key</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">ApiKey</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">select_related</span><span class="p">(</span><span class="s2">&quot;user&quot;</span><span class="p">)</span>
+            <span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">client_id</span><span class="o">=</span><span class="n">client_id</span><span class="p">,</span> <span class="n">is_active</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="o">.</span><span class="n">first</span><span class="p">()</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">check_password</span><span class="p">(</span><span class="n">secret</span><span class="p">,</span> <span class="n">key</span><span class="o">.</span><span class="n">secret_hash</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">AuthenticationFailed</span><span class="p">(</span><span class="s2">&quot;Invalid API key credentials.&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">key</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_active</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">AuthenticationFailed</span><span class="p">(</span><span class="s2">&quot;User account is disabled.&quot;</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-4'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-4'>#</a>
+      </div>
+      <p>Only write on a change to avoid a DB update on every single request.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="k">if</span> <span class="ow">not</span> <span class="n">key</span><span class="o">.</span><span class="n">last_used_at</span> <span class="ow">or</span> <span class="n">timezone</span><span class="o">.</span><span class="n">now</span><span class="p">()</span> <span class="o">-</span> <span class="n">key</span><span class="o">.</span><span class="n">last_used_at</span> <span class="o">&gt;</span> <span class="n">timedelta</span><span class="p">(</span>
+            <span class="n">minutes</span><span class="o">=</span><span class="mi">5</span>
+        <span class="p">):</span>
+            <span class="n">ApiKey</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="n">key</span><span class="o">.</span><span class="n">pk</span><span class="p">)</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">last_used_at</span><span class="o">=</span><span class="n">timezone</span><span class="o">.</span><span class="n">now</span><span class="p">())</span>
+
+        <span class="k">return</span> <span class="p">(</span><span class="n">key</span><span class="o">.</span><span class="n">user</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-5'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-5'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">authenticate_header</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">keyword</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-6'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-6'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">ApiKeyAuthenticationScheme</span><span class="p">(</span><span class="n">OpenApiAuthenticationExtension</span><span class="p">):</span>
+    <span class="n">target_class</span> <span class="o">=</span> <span class="n">ApiKeyAuthentication</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;ApiKeyAuth&quot;</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-7'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-7'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">get_security_requirement</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">auto_schema</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="p">[]}</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-8'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-8'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">get_security_definition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">auto_schema</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;apiKey&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;in&quot;</span><span class="p">:</span> <span class="s2">&quot;header&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Authorization&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="p">(</span>
+                <span class="s2">&quot;Client ID/secret pair. Send the credentials as &quot;</span>
+                <span class="s2">&quot;`ApiKey &lt;client_id&gt;:&lt;secret&gt;` in the Authorization header.&quot;</span>
+            <span class="p">),</span>
+        <span class="p">}</span>
+
+</pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+</div>
+</body>

@@ -21,6 +21,7 @@
     </div>
     <div class='code'>
       <div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">rest_framework</span><span class="w"> </span><span class="kn">import</span> <span class="n">serializers</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">vendor.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">Model</span> <span class="k">as</span> <span class="n">Vendor</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">status.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">Model</span> <span class="k">as</span> <span class="n">Status</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">location.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">Model</span> <span class="k">as</span> <span class="n">Location</span>
@@ -30,7 +31,9 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">servermodel.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">Model</span> <span class="k">as</span> <span class="n">ServerModel</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">server.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">Model</span> <span class="k">as</span> <span class="n">Server</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">cluster.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">Model</span> <span class="k">as</span> <span class="n">Cluster</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">clusterpackage.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">Model</span> <span class="k">as</span> <span class="n">ClusterPackage</span></pre></div>
+<span class="kn">from</span><span class="w"> </span><span class="nn">clusterpackage.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">Model</span> <span class="k">as</span> <span class="n">ClusterPackage</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">clustersoftware.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">Model</span> <span class="k">as</span> <span class="n">ClusterSoftware</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">clusterpackagetype.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">Model</span> <span class="k">as</span> <span class="n">ClusterPackageType</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -149,6 +152,46 @@
       <div class='octowrap'>
         <a class='octothorpe' href='#section-9'>#</a>
       </div>
+      <p>Date field that tolerates datetime values. The server model stores
+<code>default=timezone.now</code> for its DateFields, which can yield datetimes.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">CoercingDateField</span><span class="p">(</span><span class="n">serializers</span><span class="o">.</span><span class="n">DateField</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-10'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-10'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-11'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-11'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">to_representation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">datetime</span><span class="p">):</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">date</span><span class="p">()</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">to_representation</span><span class="p">(</span><span class="n">value</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-12'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-12'>#</a>
+      </div>
       
     </div>
     <div class='code'>
@@ -160,20 +203,28 @@
         <span class="n">slug_field</span><span class="o">=</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="n">queryset</span><span class="o">=</span><span class="n">Domain</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
     <span class="p">)</span>
     <span class="n">location</span> <span class="o">=</span> <span class="n">serializers</span><span class="o">.</span><span class="n">SlugRelatedField</span><span class="p">(</span>
-        <span class="n">slug_field</span><span class="o">=</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="n">queryset</span><span class="o">=</span><span class="n">Location</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+        <span class="n">slug_field</span><span class="o">=</span><span class="s2">&quot;name&quot;</span><span class="p">,</span>
+        <span class="n">queryset</span><span class="o">=</span><span class="n">Location</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">(),</span>
+        <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">allow_null</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">patchtime</span> <span class="o">=</span> <span class="n">serializers</span><span class="o">.</span><span class="n">SlugRelatedField</span><span class="p">(</span>
-        <span class="n">slug_field</span><span class="o">=</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="n">queryset</span><span class="o">=</span><span class="n">Patchtime</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+        <span class="n">slug_field</span><span class="o">=</span><span class="s2">&quot;name&quot;</span><span class="p">,</span>
+        <span class="n">queryset</span><span class="o">=</span><span class="n">Patchtime</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">(),</span>
+        <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">allow_null</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">operatingsystem</span> <span class="o">=</span> <span class="n">OSSerializer</span><span class="p">(</span><span class="n">read_only</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">servermodel</span> <span class="o">=</span> <span class="n">ServerModelSerializer</span><span class="p">(</span><span class="n">read_only</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></pre></div>
+    <span class="n">servermodel</span> <span class="o">=</span> <span class="n">ServerModelSerializer</span><span class="p">(</span><span class="n">read_only</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">delivery_date</span> <span class="o">=</span> <span class="n">CoercingDateField</span><span class="p">(</span><span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">install_date</span> <span class="o">=</span> <span class="n">CoercingDateField</span><span class="p">(</span><span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-10'>
+  <div class='section' id='section-13'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-10'>#</a>
+        <a class='octothorpe' href='#section-13'>#</a>
       </div>
       
     </div>
@@ -197,44 +248,6 @@
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-11'>
-    <div class='docs'>
-      <div class='octowrap'>
-        <a class='octothorpe' href='#section-11'>#</a>
-      </div>
-      
-    </div>
-    <div class='code'>
-      <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">LocationSerializer</span><span class="p">(</span><span class="n">serializers</span><span class="o">.</span><span class="n">ModelSerializer</span><span class="p">):</span></pre></div>
-    </div>
-  </div>
-  <div class='clearall'></div>
-  <div class='section' id='section-12'>
-    <div class='docs'>
-      <div class='octowrap'>
-        <a class='octothorpe' href='#section-12'>#</a>
-      </div>
-      
-    </div>
-    <div class='code'>
-      <div class="highlight"><pre>    <span class="k">class</span><span class="w"> </span><span class="nc">Meta</span><span class="p">:</span>
-        <span class="n">model</span> <span class="o">=</span> <span class="n">Location</span>
-        <span class="n">fields</span> <span class="o">=</span> <span class="s2">&quot;__all__&quot;</span></pre></div>
-    </div>
-  </div>
-  <div class='clearall'></div>
-  <div class='section' id='section-13'>
-    <div class='docs'>
-      <div class='octowrap'>
-        <a class='octothorpe' href='#section-13'>#</a>
-      </div>
-      
-    </div>
-    <div class='code'>
-      <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">DomainSerializer</span><span class="p">(</span><span class="n">serializers</span><span class="o">.</span><span class="n">ModelSerializer</span><span class="p">):</span></pre></div>
-    </div>
-  </div>
-  <div class='clearall'></div>
   <div class='section' id='section-14'>
     <div class='docs'>
       <div class='octowrap'>
@@ -243,9 +256,7 @@
       
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="k">class</span><span class="w"> </span><span class="nc">Meta</span><span class="p">:</span>
-        <span class="n">model</span> <span class="o">=</span> <span class="n">Domain</span>
-        <span class="n">fields</span> <span class="o">=</span> <span class="s2">&quot;__all__&quot;</span></pre></div>
+      <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">LocationSerializer</span><span class="p">(</span><span class="n">serializers</span><span class="o">.</span><span class="n">ModelSerializer</span><span class="p">):</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -257,7 +268,9 @@
       
     </div>
     <div class='code'>
-      <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">PatchtimeSerializer</span><span class="p">(</span><span class="n">serializers</span><span class="o">.</span><span class="n">ModelSerializer</span><span class="p">):</span></pre></div>
+      <div class="highlight"><pre>    <span class="k">class</span><span class="w"> </span><span class="nc">Meta</span><span class="p">:</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">Location</span>
+        <span class="n">fields</span> <span class="o">=</span> <span class="s2">&quot;__all__&quot;</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -269,9 +282,7 @@
       
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="k">class</span><span class="w"> </span><span class="nc">Meta</span><span class="p">:</span>
-        <span class="n">model</span> <span class="o">=</span> <span class="n">Patchtime</span>
-        <span class="n">fields</span> <span class="o">=</span> <span class="s2">&quot;__all__&quot;</span></pre></div>
+      <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">DomainSerializer</span><span class="p">(</span><span class="n">serializers</span><span class="o">.</span><span class="n">ModelSerializer</span><span class="p">):</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -283,7 +294,9 @@
       
     </div>
     <div class='code'>
-      <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">ClusterSerializer</span><span class="p">(</span><span class="n">serializers</span><span class="o">.</span><span class="n">ModelSerializer</span><span class="p">):</span></pre></div>
+      <div class="highlight"><pre>    <span class="k">class</span><span class="w"> </span><span class="nc">Meta</span><span class="p">:</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">Domain</span>
+        <span class="n">fields</span> <span class="o">=</span> <span class="s2">&quot;__all__&quot;</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -295,9 +308,7 @@
       
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="k">class</span><span class="w"> </span><span class="nc">Meta</span><span class="p">:</span>
-        <span class="n">model</span> <span class="o">=</span> <span class="n">Cluster</span>
-        <span class="n">fields</span> <span class="o">=</span> <span class="s2">&quot;__all__&quot;</span></pre></div>
+      <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">PatchtimeSerializer</span><span class="p">(</span><span class="n">serializers</span><span class="o">.</span><span class="n">ModelSerializer</span><span class="p">):</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -309,7 +320,9 @@
       
     </div>
     <div class='code'>
-      <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">ClusterPackageSerializer</span><span class="p">(</span><span class="n">serializers</span><span class="o">.</span><span class="n">ModelSerializer</span><span class="p">):</span></pre></div>
+      <div class="highlight"><pre>    <span class="k">class</span><span class="w"> </span><span class="nc">Meta</span><span class="p">:</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">Patchtime</span>
+        <span class="n">fields</span> <span class="o">=</span> <span class="s2">&quot;__all__&quot;</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -321,9 +334,102 @@
       
     </div>
     <div class='code'>
+      <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">ClusterSerializer</span><span class="p">(</span><span class="n">serializers</span><span class="o">.</span><span class="n">ModelSerializer</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-21'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-21'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">class</span><span class="w"> </span><span class="nc">Meta</span><span class="p">:</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">Cluster</span>
+        <span class="n">fields</span> <span class="o">=</span> <span class="s2">&quot;__all__&quot;</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-22'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-22'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">ClusterPackageSerializer</span><span class="p">(</span><span class="n">serializers</span><span class="o">.</span><span class="n">ModelSerializer</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-23'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-23'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
       <div class="highlight"><pre>    <span class="k">class</span><span class="w"> </span><span class="nc">Meta</span><span class="p">:</span>
         <span class="n">model</span> <span class="o">=</span> <span class="n">ClusterPackage</span>
-        <span class="n">fields</span> <span class="o">=</span> <span class="s2">&quot;__all__&quot;</span>
+        <span class="n">fields</span> <span class="o">=</span> <span class="s2">&quot;__all__&quot;</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-24'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-24'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">ClusterSoftwareSerializer</span><span class="p">(</span><span class="n">serializers</span><span class="o">.</span><span class="n">ModelSerializer</span><span class="p">):</span>
+    <span class="n">vendor</span> <span class="o">=</span> <span class="n">serializers</span><span class="o">.</span><span class="n">SlugRelatedField</span><span class="p">(</span>
+        <span class="n">slug_field</span><span class="o">=</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="n">queryset</span><span class="o">=</span><span class="n">Vendor</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+    <span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-25'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-25'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">class</span><span class="w"> </span><span class="nc">Meta</span><span class="p">:</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">ClusterSoftware</span>
+        <span class="n">fields</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;version&quot;</span><span class="p">,</span> <span class="s2">&quot;vendor&quot;</span><span class="p">]</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-26'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-26'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">ClusterPackageTypeSerializer</span><span class="p">(</span><span class="n">serializers</span><span class="o">.</span><span class="n">ModelSerializer</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-27'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-27'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">class</span><span class="w"> </span><span class="nc">Meta</span><span class="p">:</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">ClusterPackageType</span>
+        <span class="n">fields</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">]</span>
 
 </pre></div>
     </div>

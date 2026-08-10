@@ -54,6 +54,7 @@
     <span class="n">GroupCreateView</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.views_avatars</span><span class="w"> </span><span class="kn">import</span> <span class="n">avatar_proxy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.views_api_keys</span><span class="w"> </span><span class="kn">import</span> <span class="n">ApiKeyListView</span><span class="p">,</span> <span class="n">RevokeApiKeyView</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.api.views</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">ServerViewSet</span><span class="p">,</span>
     <span class="n">VendorViewSet</span><span class="p">,</span>
@@ -61,8 +62,12 @@
     <span class="n">LocationViewSet</span><span class="p">,</span>
     <span class="n">DomainViewSet</span><span class="p">,</span>
     <span class="n">PatchtimeViewSet</span><span class="p">,</span>
+    <span class="n">OSViewSet</span><span class="p">,</span>
+    <span class="n">ServerModelViewSet</span><span class="p">,</span>
     <span class="n">ClusterViewSet</span><span class="p">,</span>
     <span class="n">ClusterPackageViewSet</span><span class="p">,</span>
+    <span class="n">ClusterSoftwareViewSet</span><span class="p">,</span>
+    <span class="n">ClusterPackageTypeViewSet</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">rest_framework</span><span class="w"> </span><span class="kn">import</span> <span class="n">routers</span>
 
@@ -73,9 +78,19 @@
 <span class="n">router</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;locations&quot;</span><span class="p">,</span> <span class="n">LocationViewSet</span><span class="p">,</span> <span class="n">basename</span><span class="o">=</span><span class="s2">&quot;api-location&quot;</span><span class="p">)</span>
 <span class="n">router</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;domains&quot;</span><span class="p">,</span> <span class="n">DomainViewSet</span><span class="p">,</span> <span class="n">basename</span><span class="o">=</span><span class="s2">&quot;api-domain&quot;</span><span class="p">)</span>
 <span class="n">router</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;patchtimes&quot;</span><span class="p">,</span> <span class="n">PatchtimeViewSet</span><span class="p">,</span> <span class="n">basename</span><span class="o">=</span><span class="s2">&quot;api-patchtime&quot;</span><span class="p">)</span>
+<span class="n">router</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;operatingsystems&quot;</span><span class="p">,</span> <span class="n">OSViewSet</span><span class="p">,</span> <span class="n">basename</span><span class="o">=</span><span class="s2">&quot;api-operatingsystem&quot;</span><span class="p">)</span>
+<span class="n">router</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;servermodels&quot;</span><span class="p">,</span> <span class="n">ServerModelViewSet</span><span class="p">,</span> <span class="n">basename</span><span class="o">=</span><span class="s2">&quot;api-servermodel&quot;</span><span class="p">)</span>
 <span class="n">router</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;clusters&quot;</span><span class="p">,</span> <span class="n">ClusterViewSet</span><span class="p">,</span> <span class="n">basename</span><span class="o">=</span><span class="s2">&quot;api-cluster&quot;</span><span class="p">)</span>
 <span class="n">router</span><span class="o">.</span><span class="n">register</span><span class="p">(</span>
     <span class="sa">r</span><span class="s2">&quot;clusterpackages&quot;</span><span class="p">,</span> <span class="n">ClusterPackageViewSet</span><span class="p">,</span> <span class="n">basename</span><span class="o">=</span><span class="s2">&quot;api-clusterpackage&quot;</span>
+<span class="p">)</span>
+<span class="n">router</span><span class="o">.</span><span class="n">register</span><span class="p">(</span>
+    <span class="sa">r</span><span class="s2">&quot;clustersoftware&quot;</span><span class="p">,</span> <span class="n">ClusterSoftwareViewSet</span><span class="p">,</span> <span class="n">basename</span><span class="o">=</span><span class="s2">&quot;api-clustersoftware&quot;</span>
+<span class="p">)</span>
+<span class="n">router</span><span class="o">.</span><span class="n">register</span><span class="p">(</span>
+    <span class="sa">r</span><span class="s2">&quot;clusterpackagetypes&quot;</span><span class="p">,</span>
+    <span class="n">ClusterPackageTypeViewSet</span><span class="p">,</span>
+    <span class="n">basename</span><span class="o">=</span><span class="s2">&quot;api-clusterpackagetype&quot;</span><span class="p">,</span>
 <span class="p">)</span>
 
 <span class="n">urlpatterns</span> <span class="o">=</span> <span class="p">[</span>
@@ -123,10 +138,15 @@
       <div class='octowrap'>
         <a class='octothorpe' href='#section-3'>#</a>
       </div>
-      <p>Allauth URLs</p>
+      <p>API Key Management</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="n">path</span><span class="p">(</span><span class="s2">&quot;accounts/&quot;</span><span class="p">,</span> <span class="n">include</span><span class="p">(</span><span class="s2">&quot;allauth.urls&quot;</span><span class="p">)),</span></pre></div>
+      <div class="highlight"><pre>    <span class="n">path</span><span class="p">(</span><span class="s2">&quot;account/api-keys/&quot;</span><span class="p">,</span> <span class="n">ApiKeyListView</span><span class="o">.</span><span class="n">as_view</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;api_keys&quot;</span><span class="p">),</span>
+    <span class="n">path</span><span class="p">(</span>
+        <span class="s2">&quot;account/api-keys/revoke/&lt;int:pk&gt;/&quot;</span><span class="p">,</span>
+        <span class="n">RevokeApiKeyView</span><span class="o">.</span><span class="n">as_view</span><span class="p">(),</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;api_key_revoke&quot;</span><span class="p">,</span>
+    <span class="p">),</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -134,6 +154,18 @@
     <div class='docs'>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-4'>#</a>
+      </div>
+      <p>Allauth URLs</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">path</span><span class="p">(</span><span class="s2">&quot;accounts/&quot;</span><span class="p">,</span> <span class="n">include</span><span class="p">(</span><span class="s2">&quot;allauth.urls&quot;</span><span class="p">)),</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-5'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-5'>#</a>
       </div>
       <p>Dashboard &amp; Search</p>
     </div>
@@ -154,10 +186,10 @@
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-5'>
+  <div class='section' id='section-6'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-5'>#</a>
+        <a class='octothorpe' href='#section-6'>#</a>
       </div>
       <p>Legal Pages</p>
     </div>
@@ -169,10 +201,10 @@
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-6'>
+  <div class='section' id='section-7'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-6'>#</a>
+        <a class='octothorpe' href='#section-7'>#</a>
       </div>
       <p>User Management (Staff)</p>
     </div>
@@ -186,10 +218,10 @@
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-7'>
+  <div class='section' id='section-8'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-7'>#</a>
+        <a class='octothorpe' href='#section-8'>#</a>
       </div>
       <p>Group Management (Owner)</p>
     </div>
@@ -234,10 +266,10 @@
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-8'>
+  <div class='section' id='section-9'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-8'>#</a>
+        <a class='octothorpe' href='#section-9'>#</a>
       </div>
       <p>Project Apps</p>
     </div>
