@@ -2,7 +2,7 @@
 
 
 {% load i18n %}
-{% load bootstrap4 %}
+{% load django_bootstrap5 %}
 
 {% block head_title %}{% trans "Operatingsystem" %} :: {% if object %}{{ object.name }}{% endif %}{% endblock %}
 
@@ -23,9 +23,9 @@
 
 {% csrf_token %}
 {% bootstrap_form form %}
-{% buttons %}
+<div class="form-actions">
 {% bootstrap_button "Save" button_type="submit" button_class="btn-sm btn-primary pill" %}
-{% endbuttons %}
+</div>
         </div>
     </div>
     {% if object %}{% include "includes/history_table.html" %}{% endif %}

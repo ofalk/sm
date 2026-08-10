@@ -31,7 +31,7 @@
                         <td>{{ group.profile.max_users }}</td>
                         <td>
                             <a href="{% url 'group_profile_edit' group.profile.pk %}" class="btn btn-sm btn-outline-primary pill">
-                                <i class="fa-solid fa-edit mr-1"></i> {% trans "Edit Quotas" %}
+                                <i class="fa-solid fa-edit me-1"></i> {% trans "Edit Quotas" %}
                             </a>
                         </td>
                     </tr>
@@ -62,18 +62,18 @@
                         <td>{{ user.email }}</td>
                         <td>
                             {% for g in user.groups.all %}
-                            <span class="badge badge-secondary">{{ g.name }}</span>
+                            <span class="badge text-bg-secondary">{{ g.name }}</span>
                             {% empty %}
                             <span class="text-muted small">{% trans "No groups" %}</span>
                             {% endfor %}
                         </td>
                         <td>
                             {% if user.is_superuser %}
-                            <span class="badge badge-danger">{% trans "Superuser" %}</span>
+                            <span class="badge text-bg-danger">{% trans "Superuser" %}</span>
                             {% elif user.is_staff %}
-                            <span class="badge badge-warning">{% trans "Staff" %}</span>
+                            <span class="badge text-bg-warning">{% trans "Staff" %}</span>
                             {% else %}
-                            <span class="badge badge-info">{% trans "User" %}</span>
+                            <span class="badge text-bg-info">{% trans "User" %}</span>
                             {% endif %}
                         </td>
                     </tr>

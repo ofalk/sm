@@ -4,8 +4,8 @@ This document provides context for AI agents working on the modernization of thi
 
 ## Current Environment
 
-- **Core:** Python 3.14, Django 6.0.3
-- **Frontend:** Bootstrap 4.6.2, Bootswatch Cosmo, Font Awesome 4.7.0, jQuery 3.5.1
+- **Core:** Python 3.14, Django 6.1 (latest stable; 6.0 reached end of mainstream support Aug 2026)
+- **Frontend:** Bootstrap 5.3.3, Bootswatch Cosmo 5, Font Awesome 6.7.2, jQuery 3.7.1, Chart.js 4.4.7 (Popper 2 is bundled in `bootstrap.bundle.min.js`)
 - **Auth:** django-allauth (replaced legacy django-user-accounts/urlauth)
 - **Serialization:** Native Django Natural Keys (migrated from django-natural-keys)
 - **Configuration:** python-decouple with `.env` support and dj-database-url
@@ -14,7 +14,7 @@ This document provides context for AI agents working on the modernization of thi
 
 ## Major Achievements
 
-1.  **Framework Upgrade:** Successfully migrated from a Django 1.11/3.1 codebase to Django 6.0.3.
+1.  **Framework Upgrade:** Successfully migrated from a Django 1.11/3.1 codebase to Django 6.1.
 2.  **CI/CD Modernization:**
     - Migrated from GitLab CI to **GitHub Actions**, targeting the `main` branch.
     - Implemented a **PostgreSQL sidecar container** in the CI pipeline for more realistic test environments.
@@ -35,7 +35,10 @@ This document provides context for AI agents working on the modernization of thi
     - **Clean Models:** Removed redundant `app_label` and `managed` attributes from all model `Meta` classes.
     - **Native Natural Keys:** Completely removed the `django-natural-keys` dependency in favor of native Django `natural_key` and `get_by_natural_key` implementations.
     - **Robust Serialization:** Formalized critical serialization patches in `sm/sm/patches.py` to handle fixture loading edge cases.
-6.  **Test Suite:** All **186 tests** are passing. Test logic has been modernized to use `follow=True` for POST requests and direct message verification.
+6.  **Test Suite:** All **260 tests** are passing, including Playwright browser tests (Chromium + Firefox) that scan every page for JS/console/network/HTTP errors. Test logic has been modernized to use `follow=True` for POST requests and direct message verification.
+7.  **REST API:** The full data model is exposed via Django REST Framework ViewSets (`/api/`), with OpenAPI docs at `/api/schema/`. All ViewSets apply group-based multi-tenancy filtering and enforce model permissions (including `view_` for reads).
+8.  **API Keys:** Users can generate `client_id`/secret credential pairs from *API Keys* in their account menu (`/account/api-keys/`). Keys authenticate via `Authorization: ApiKey <client_id>:<secret>` and grant exactly the access of the owning user (group permissions included). Secrets are stored hashed and shown only once.
+9.  **Bootstrap 5 Migration:** Migrated from EOL Bootstrap 4.6.2/`django-bootstrap4` to **Bootstrap 5.3.3** + **`django-bootstrap5`**. This included updating the CDN assets (Bootswatch Cosmo 5, bundled Popper), renaming template tags (`{% load bootstrap4 %}` → `{% load django_bootstrap5 %}`), replacing removed tags (`{% buttons %}`), and migrating markup (`data-*` → `data-bs-*`, `mr-*`/`ml-*`/`pr-*`/`pl-*` → `me-*`/`ms-*`/`pe-*`/`ps-*`, `form-group` → `mb-3`, custom form controls → `form-check`/`form-switch`, input-group wrappers, `badge-*` → `text-bg-*`, `btn-block` → `d-block w-100`, `.close` → `.btn-close`, `jumbotron`). The command palette modal now uses the Bootstrap 5 JS API instead of the removed jQuery plugin.
 
 ## Architectural Patterns to Maintain
 
@@ -47,10 +50,10 @@ This document provides context for AI agents working on the modernization of thi
 ## Immediate Next Steps
 
 1.  **Production Social Auth:** Configure real `SocialApp` credentials in the production database.
-2.  **API Audit:** Review `djangorestframework` serializers and views to ensure they align with the new natural key logic and metadata structure.
-3.  **Search Refinement:** Implement or polish global search functionality now that the UI is standardized.
+2.  **Search Refinement:** Implement or polish global search functionality now that the UI is standardized.
 
 ## Known Quirks
 
 - The `DeleteView` must use `form_valid` (Django 4.0+ style) to ensure the `object` is still available for the success message template string before it is deleted.
 - Local development uses the `console` email backend via `.env` to prevent mail delivery errors.
+- The `server.Model` model declares `default=timezone.now` on its `DateField`s (which yields datetimes); the REST API serializers tolerate this via a custom `CoercingDateField`.

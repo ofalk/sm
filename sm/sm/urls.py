@@ -32,6 +32,7 @@ from .views_group import (
     GroupCreateView,
 )
 from .views_avatars import avatar_proxy
+from .views_api_keys import ApiKeyListView, RevokeApiKeyView
 from .api.views import (
     ServerViewSet,
     VendorViewSet,
@@ -39,8 +40,12 @@ from .api.views import (
     LocationViewSet,
     DomainViewSet,
     PatchtimeViewSet,
+    OSViewSet,
+    ServerModelViewSet,
     ClusterViewSet,
     ClusterPackageViewSet,
+    ClusterSoftwareViewSet,
+    ClusterPackageTypeViewSet,
 )
 from rest_framework import routers
 
@@ -51,9 +56,19 @@ router.register(r"statuses", StatusViewSet, basename="api-status")
 router.register(r"locations", LocationViewSet, basename="api-location")
 router.register(r"domains", DomainViewSet, basename="api-domain")
 router.register(r"patchtimes", PatchtimeViewSet, basename="api-patchtime")
+router.register(r"operatingsystems", OSViewSet, basename="api-operatingsystem")
+router.register(r"servermodels", ServerModelViewSet, basename="api-servermodel")
 router.register(r"clusters", ClusterViewSet, basename="api-cluster")
 router.register(
     r"clusterpackages", ClusterPackageViewSet, basename="api-clusterpackage"
+)
+router.register(
+    r"clustersoftware", ClusterSoftwareViewSet, basename="api-clustersoftware"
+)
+router.register(
+    r"clusterpackagetypes",
+    ClusterPackageTypeViewSet,
+    basename="api-clusterpackagetype",
 )
 
 urlpatterns = [
@@ -72,6 +87,13 @@ urlpatterns = [
         "api/schema/redoc/",
         SpectacularRedocView.as_view(url_name="schema"),
         name="redoc",
+    ),
+    # API Key Management
+    path("account/api-keys/", ApiKeyListView.as_view(), name="api_keys"),
+    path(
+        "account/api-keys/revoke/<int:pk>/",
+        RevokeApiKeyView.as_view(),
+        name="api_key_revoke",
     ),
     # Allauth URLs
     path("accounts/", include("allauth.urls")),

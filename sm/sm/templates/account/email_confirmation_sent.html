@@ -17,13 +17,13 @@
                         {% blocktrans %}We have sent you an email to <strong>{{ email }}</strong> for verification. Follow the link provided to finalize the signup process.{% endblocktrans %}
                     </p>
 
-                    <div class="alert alert-info small text-left mb-4">
-                        <i class="fa-solid fa-info-circle mr-2"></i>
+                    <div class="alert alert-info small text-start mb-4">
+                        <i class="fa-solid fa-info-circle me-2"></i>
                         {% blocktrans %}If you do not receive it within a few minutes, contact us at <a href="mailto:{{ THEME_CONTACT_EMAIL }}">{{ THEME_CONTACT_EMAIL }}</a>.{% endblocktrans %}
                     </div>
 
                     <a href="{{ success_url }}" class="btn btn-outline-primary btn-sm">
-                        <i class="fa-solid fa-arrow-left mr-1"></i> {% trans "Go back" %}
+                        <i class="fa-solid fa-arrow-left me-1"></i> {% trans "Go back" %}
                     </a>
                 </div>
             </div>

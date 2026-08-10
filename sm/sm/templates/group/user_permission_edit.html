@@ -1,6 +1,6 @@
 {% extends "site_base.html" %}
 {% load i18n %}
-{% load bootstrap4 %}
+{% load django_bootstrap5 %}
 
 {% block head_title %}{% trans "Edit User Permissions" %}{% endblock %}
 
@@ -20,9 +20,9 @@
                     <form method="post" class="form">
                         {% csrf_token %}
                         {% bootstrap_form form %}
-                        <div class="form-group mt-4">
-                            <button type="submit" class="btn btn-primary pill btn-block btn-lg pill">
-                                <i class="fa-solid fa-save mr-1"></i> {% trans "Save Permissions" %}
+                        <div class="mb-3 mt-4">
+                            <button type="submit" class="btn btn-primary pill d-block w-100 btn-lg pill">
+                                <i class="fa-solid fa-save me-1"></i> {% trans "Save Permissions" %}
                             </button>
                         </div>
                         <div class="text-center">

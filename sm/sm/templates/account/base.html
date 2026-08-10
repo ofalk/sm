@@ -13,14 +13,14 @@
                 </div>
                 <div class="list-group list-group-flush">
                     <a class="list-group-item list-group-item-action account-email" href="{% url "account_email" %}">
-                        <i class="fa-regular fa-envelope fa-fw mr-2 text-muted"></i> {% trans "Email addresses" %}
+                        <i class="fa-regular fa-envelope fa-fw me-2 text-muted"></i> {% trans "Email addresses" %}
                     </a>
                     <a class="list-group-item list-group-item-action account-password-change" href="{% url "account_change_password" %}">
-                        <i class="fa-solid fa-key fa-fw mr-2 text-muted"></i> {% trans "Change password" %}
+                        <i class="fa-solid fa-key fa-fw me-2 text-muted"></i> {% trans "Change password" %}
                     </a>
                     {% if SOCIALACCOUNT_ENABLED %}
                     <a class="list-group-item list-group-item-action account-social" href="{% url "socialaccount_connections" %}">
-                        <i class="fa-solid fa-id-card fa-fw mr-2 text-muted"></i> {% trans "Social accounts" %}
+                        <i class="fa-solid fa-id-card fa-fw me-2 text-muted"></i> {% trans "Social accounts" %}
                     </a>
                     {% endif %}
                 </div>

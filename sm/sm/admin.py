@@ -9,10 +9,11 @@ from location.models import Model as LocationModel
 from vendor.models import Model as VendorModel
 from operatingsystem.models import Model as OperatingsystemModel
 from cluster.models import Model as ClusterModel
-from .models import GroupProfile, Invitation
+from .models import GroupProfile, Invitation, ApiKey
 
 admin.site.register(GroupProfile)
 admin.site.register(Invitation)
+admin.site.register(ApiKey)
 admin.site.register(PatchtimeModel)
 admin.site.register(ServerModel)
 admin.site.register(ServermodelModel)

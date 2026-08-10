@@ -1,7 +1,7 @@
 {% extends "site_base.html" %}
 
 {% load i18n %}
-{% load bootstrap4 %}
+{% load django_bootstrap5 %}
 
 {% block head_title %}{% trans "Sign up" %}{% endblock %}
 
@@ -20,14 +20,14 @@
                         {% if redirect_field_value %}
                             <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
                         {% endif %}
-                        <div class="form-group mt-4">
-                            <button class="btn btn-primary pill btn-block btn-lg" type="submit">{% trans "Sign up" %}</button>
+                        <div class="mb-3 mt-4">
+                            <button class="btn btn-primary pill d-block w-100 btn-lg" type="submit">{% trans "Sign up" %}</button>
                         </div>
                     </form>
                 </div>
                 <div class="card-footer bg-light text-center py-3">
                     <span class="text-muted">{% trans "Already have an account?" %}</span>
-                    <a href="{% url 'account_login' %}" class="font-weight-bold ml-1">{% trans "Log in" %}</a>
+                    <a href="{% url 'account_login' %}" class="fw-bold ms-1">{% trans "Log in" %}</a>
                 </div>
             </div>
         </div>

@@ -2,7 +2,7 @@
 
 
 {% load i18n %}
-{% load bootstrap4 %}
+{% load django_bootstrap5 %}
 
 {% block head_title %}{% trans "Vendor" %}{% endblock %}
 
@@ -14,15 +14,15 @@
     <div class="card-header bg-white d-flex justify-content-between align-items-center">
       <h4 class="mb-0">{% trans "Vendor" %}</h4>
       <div class="d-flex">
-        <form method="post" action="{% url 'starter_pack_import' %}" class="mr-2">
+        <form method="post" action="{% url 'starter_pack_import' %}" class="me-2">
           {% csrf_token %}
           <button type="submit" class="btn btn-sm btn-outline-info pill">
-            <i class="fa-solid fa-download mr-1"></i> {% trans "Import Starter Pack" %}
+            <i class="fa-solid fa-download me-1"></i> {% trans "Import Starter Pack" %}
           </button>
         </form>
         {% if perms.vendor.add_model %}
         <a href="{% url 'vendor:create' %}" class="btn btn-sm btn-primary pill">
-          <i class="fa-solid fa-plus-circle mr-1"></i> {% trans "Add New" %}
+          <i class="fa-solid fa-plus-circle me-1"></i> {% trans "Add New" %}
         </a>
         {% endif %}
       </div>
@@ -39,10 +39,10 @@
           <th>{% trans "Name" %}</th>
           <th class="text-center" style="white-space: nowrap;">
             <span class="d-inline-block text-center" style="width: 25px;">
-              <i class="fa-solid fa-microchip" title="{% trans '(virtual) Hardware Vendor' %}" data-toggle="tooltip"></i>
+              <i class="fa-solid fa-microchip" title="{% trans '(virtual) Hardware Vendor' %}" data-bs-toggle="tooltip"></i>
             </span>
             <span class="d-inline-block text-center" style="width: 25px;">
-              <i class="fa-solid fa-code" title="{% trans 'Software Vendor' %}" data-toggle="tooltip"></i>
+              <i class="fa-solid fa-code" title="{% trans 'Software Vendor' %}" data-bs-toggle="tooltip"></i>
             </span>
           </th>
           <th>{% trans "Actions" %}</th>
@@ -59,12 +59,12 @@
             <td class="text-center" style="white-space: nowrap;">
               <span class="d-inline-block text-center" style="width: 25px;">
                 {% if object.is_hardware %}
-                  <i class="fa-solid fa-microchip text-muted" title="{% trans '(virtual) Hardware Vendor' %}" data-toggle="tooltip"></i>
+                  <i class="fa-solid fa-microchip text-muted" title="{% trans '(virtual) Hardware Vendor' %}" data-bs-toggle="tooltip"></i>
                 {% endif %}
               </span>
               <span class="d-inline-block text-center" style="width: 25px;">
                 {% if object.is_software %}
-                  <i class="fa-solid fa-code text-muted" title="{% trans 'Software Vendor' %}" data-toggle="tooltip"></i>
+                  <i class="fa-solid fa-code text-muted" title="{% trans 'Software Vendor' %}" data-bs-toggle="tooltip"></i>
                 {% endif %}
               </span>
             </td>

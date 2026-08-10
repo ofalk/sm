@@ -113,10 +113,10 @@
                         {% for server in recent_servers %}
                         <li class="list-group-item d-flex justify-content-between align-items-center py-3">
                             <div>
-                                <a href="{{ server.get_absolute_url }}" class="font-weight-bold">{{ server.hostname }}</a>
+                                <a href="{{ server.get_absolute_url }}" class="fw-bold">{{ server.hostname }}</a>
                                 <div class="small text-muted">{{ server.operatingsystem }}</div>
                             </div>
-                            <span class="badge badge-light border">{{ server.status }}</span>
+                            <span class="badge text-bg-light border">{{ server.status }}</span>
                         </li>
                         {% empty %}
                         <li class="list-group-item text-center text-muted py-4">
@@ -126,8 +126,8 @@
                     </ul>
                 </div>
                 <div class="card-footer bg-white text-center">
-                    <a href="{% url 'server:index' %}" class="btn btn-sm btn-link text-primary font-weight-bold">
-                        {% trans "View All Servers" %} <i class="fa-solid fa-arrow-right ml-1"></i>
+                    <a href="{% url 'server:index' %}" class="btn btn-sm btn-link text-primary fw-bold">
+                        {% trans "View All Servers" %} <i class="fa-solid fa-arrow-right ms-1"></i>
                     </a>
                 </div>
             </div>

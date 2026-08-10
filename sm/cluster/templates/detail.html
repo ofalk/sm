@@ -2,7 +2,7 @@
 
 
 {% load i18n %}
-{% load bootstrap4 %}
+{% load django_bootstrap5 %}
 {% load sm_history_tags %}
 {% load history_url_tags %}
 
@@ -25,26 +25,26 @@
 
             {% csrf_token %}
             {% bootstrap_form form %}
-            {% buttons %}
+            <div class="form-actions">
             {% if request.path == object.get_update_url %}
                 <button type="submit" class="btn btn-sm btn-primary pill">
-                    <i class="fa-solid fa-save mr-1"></i> {% trans "Save" %}
+                    <i class="fa-solid fa-save me-1"></i> {% trans "Save" %}
                 </button>
             {% else %}
                 {% if object.group in user.groups.all or user.is_superuser %}
                     {% if perms.cluster.change_model %}
                     <a class="btn btn-sm btn-primary pill" role="button" href="{% url 'cluster:update' object.pk %}">
-                        <i class="fa-solid fa-pen mr-1"></i> {% trans 'Edit' %}
+                        <i class="fa-solid fa-pen me-1"></i> {% trans 'Edit' %}
                     </a>
                     {% endif %}
                     {% if perms.cluster.delete_model %}
                     <a class="btn btn-sm btn-danger" role="button" href="{% url 'cluster:delete' object.pk %}">
-                        <i class="fa-solid fa-trash mr-1"></i> {% trans 'Delete' %}
+                        <i class="fa-solid fa-trash me-1"></i> {% trans 'Delete' %}
                     </a>
                     {% endif %}
                 {% endif %}
             {% endif %}
-            {% endbuttons %}
+            </div>
             </form>
         </div>
     </div>
@@ -54,7 +54,7 @@
         <div class="card-header bg-white d-flex justify-content-between align-items-center">
             <h5 class="mb-0">{% trans 'Servers in this Cluster' %}</h5>
             {% if object.server_set.all %}
-                <span class="badge badge-primary">{{ object.server_set.count }}</span>
+                <span class="badge text-bg-primary">{{ object.server_set.count }}</span>
             {% endif %}
         </div>
         <div class="card-body p-0">

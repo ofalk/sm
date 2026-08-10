@@ -2,7 +2,7 @@
 
 
 {% load i18n %}
-{% load bootstrap4 %}
+{% load django_bootstrap5 %}
 {% load sm_history_tags %}
 {% load history_url_tags %}
 
@@ -25,14 +25,14 @@
 
             {% csrf_token %}
             {% bootstrap_form form %}
-            {% buttons %}
+            <div class="form-actions">
             {% if request.path == object.get_update_url %}
             {% bootstrap_button "Save" button_type="submit" button_class="btn-sm btn-primary pill" %}
             {% else %}
             <a class="btn btn-primary pill" role="button" href="{% url 'vendor:update' object.pk %}">{% trans 'Edit' %}</a>
             <a class="btn btn-danger" role="button" href="{% url 'vendor:delete' object.pk %}">{% trans 'Delete' %}</a>
             {% endif %}
-            {% endbuttons %}
+            </div>
             </form>
         </div>
     </div>
@@ -46,7 +46,7 @@
               <table class="table table-hover mb-0" id="servermodel_list">
                 <tbody>
                     <tr>
-                      <td class="font-weight-bold" style="width: 200px;">{% trans 'Models' %}</td>
+                      <td class="fw-bold" style="width: 200px;">{% trans 'Models' %}</td>
                       <td>
                         {% for servermodel in object.servermodel_set.all %}
                           <a href="{% url 'servermodel:detail' servermodel.pk %}" title="{{ servermodel.name }}">
@@ -69,7 +69,7 @@
               <table class="table table-hover mb-0" id="operatingsystem_list">
                 <tbody>
                     <tr>
-                      <td class="font-weight-bold" style="width: 200px;"><b>{% trans 'Versions' %}</b></td>
+                      <td class="fw-bold" style="width: 200px;"><b>{% trans 'Versions' %}</b></td>
                       <td>
                         {% for operatingsystem in object.operatingsystem_set.all %}
                           <a href="{% url 'operatingsystem:detail' operatingsystem.pk %}" title="{{ operatingsystem.version }}">

@@ -1,4 +1,5 @@
 import os
+import tempfile
 import dj_database_url
 from pathlib import Path
 from sys import platform, argv
@@ -66,7 +67,7 @@ INSTALLED_APPS = [
     "django.contrib.sites",
     "django.contrib.admindocs",
     "rest_framework",
-    "bootstrap4",
+    "django_bootstrap5",
     "django_countries",
     "taggit",
     "simple_history",
@@ -176,10 +177,13 @@ if DATABASE_URL:
         "default": dj_database_url.config(default=DATABASE_URL, conn_max_age=600)
     }
 elif "test" in argv:
+    # Use a file-based test database instead of in-memory SQLite to avoid
+    # "database is locked"/transient 500s when the threaded live server
+    # (StaticLiveServerTestCase) and Playwright hit the DB concurrently.
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.sqlite3",
-            "NAME": ":memory:",
+            "NAME": os.path.join(tempfile.gettempdir(), "sm_test.sqlite3"),
         }
     }
 elif platform == "darwin":
@@ -328,6 +332,10 @@ TAGGIT_CASE_INSENSITIVE = True
 # REST Framework Settings
 REST_FRAMEWORK = {
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "sm.api.authentication.ApiKeyAuthentication",
+        "rest_framework.authentication.SessionAuthentication",
+    ],
 }
 
 SPECTACULAR_SETTINGS = {
@@ -337,12 +345,12 @@ SPECTACULAR_SETTINGS = {
     "SERVE_INCLUDE_SCHEMA": False,
 }
 
-# Bootstrap 4 settings
-BOOTSTRAP4 = {
-    "error_css_class": "bootstrap4-error",
-    "required_css_class": "bootstrap4-required",
+# Bootstrap 5 settings
+BOOTSTRAP5 = {
+    "error_css_class": "bootstrap5-error",
+    "required_css_class": "bootstrap5-required",
     "javascript_in_head": True,
-    "success_css_class": "bootstrap4-bound",
+    "success_css_class": "bootstrap5-bound",
 }
 
 HTML_MINIFY = True

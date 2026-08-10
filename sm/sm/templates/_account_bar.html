@@ -4,21 +4,22 @@
 <ul class="navbar-nav">
     {% if request.user.is_authenticated %}
         <li class="nav-item dropdown">
-            <a href="#" class="nav-link dropdown-toggle d-flex align-items-center" data-toggle="dropdown" id="userDropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                <img src="{% user_avatar_url request.user size=24 %}" class="rounded-circle mr-2" width="24" height="24" alt="{{ request.user.username }}">
+            <a href="#" class="nav-link dropdown-toggle d-flex align-items-center" data-bs-toggle="dropdown" id="userDropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                <img src="{% user_avatar_url request.user size=24 %}" class="rounded-circle me-2" width="24" height="24" alt="{{ request.user.username }}">
                 {{ request.user.username }}
             </a>
-            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
-                <a class="dropdown-item" href="/accounts/password/change/"><i class="fa-solid fa-key fa-fw mr-2"></i> {% trans "Change Password" %}</a>
+            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                <a class="dropdown-item" href="/accounts/password/change/"><i class="fa-solid fa-key fa-fw me-2"></i> {% trans "Change Password" %}</a>
+                <a class="dropdown-item" href="{% url 'api_keys' %}"><i class="fa-solid fa-laptop-code fa-fw me-2"></i> {% trans "API Keys" %}</a>
                 {% if SOCIALACCOUNT_ENABLED %}
-                <a class="dropdown-item" href="/accounts/3rdparty/"><i class="fa-solid fa-arrow-up-right-from-square fa-fw mr-2"></i> {% trans "Account Connections" %}</a>
+                <a class="dropdown-item" href="/accounts/3rdparty/"><i class="fa-solid fa-arrow-up-right-from-square fa-fw me-2"></i> {% trans "Account Connections" %}</a>
                 {% endif %}
 
                 <div class="dropdown-divider"></div>
                 {% if request.user.is_staff %}
                 <h6 class="dropdown-header">{% trans "Administration" %}</h6>
                 <a class="dropdown-item" href="/admin/">
-                    <i class="fa-solid fa-lock fa-fw mr-2"></i> {% trans "Django Admin" %}
+                    <i class="fa-solid fa-lock fa-fw me-2"></i> {% trans "Django Admin" %}
                 </a>
                 <div class="dropdown-divider"></div>
                 {% endif %}
@@ -26,7 +27,7 @@
                 {% if request.user.groups.exists or request.user.is_superuser %}
                 <h6 class="dropdown-header">{% trans "My Groups" %}</h6>
                 <a class="dropdown-item" href="{% url 'group_member_list' %}">
-                    <i class="fa-solid fa-users fa-fw mr-2"></i> {% trans "Group Members" %}
+                    <i class="fa-solid fa-users fa-fw me-2"></i> {% trans "Group Members" %}
                 </a>
                 <div class="dropdown-divider"></div>
                 {% endif %}
@@ -35,13 +36,13 @@
                     {% csrf_token %}
                 </form>
                 <a class="dropdown-item text-danger" href="javascript:document.getElementById('logout-form').submit();">
-                    <i class="fa-solid fa-right-from-bracket fa-fw mr-2"></i> {% trans "Log out" %}
+                    <i class="fa-solid fa-right-from-bracket fa-fw me-2"></i> {% trans "Log out" %}
                 </a>
             </div>
         </li>
     {% else %}
         <li class="nav-item">
-            <a class="nav-link" href="{% url 'account_login' %}"><i class="fa-solid fa-right-to-bracket mr-1"></i> {% trans "Log in" %}</a>
+            <a class="nav-link" href="{% url 'account_login' %}"><i class="fa-solid fa-right-to-bracket me-1"></i> {% trans "Log in" %}</a>
         </li>
         {% if SOCIALACCOUNT_ENABLED %}
             {% include "socialaccount/snippets/provider_list_navbar.html" %}

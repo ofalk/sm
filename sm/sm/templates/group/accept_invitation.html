@@ -1,6 +1,6 @@
 {% extends "site_base.html" %}
 {% load i18n %}
-{% load bootstrap4 %}
+{% load django_bootstrap5 %}
 
 {% block head_title %}{% trans "Accept Invitation" %}{% endblock %}
 
@@ -10,7 +10,7 @@
         <div class="col-md-8 col-lg-6">
             {% if error %}
             <div class="alert alert-danger" role="alert">
-                <i class="fa-solid fa-exclamation-circle mr-2"></i>
+                <i class="fa-solid fa-exclamation-circle me-2"></i>
                 {{ error }}
             </div>
             <a href="{% url 'account_login' %}" class="btn btn-primary">{% trans "Go to Login" %}</a>
@@ -28,25 +28,25 @@
                     </p>
                     <form method="post" class="form">
                         {% csrf_token %}
-                        <div class="form-group">
+                        <div class="mb-3">
                             <label for="username">{% trans "Username" %}</label>
                             <input type="text" name="username" id="username" class="form-control" required>
                         </div>
-                        <div class="form-group">
+                        <div class="mb-3">
                             <label for="email">{% trans "Email" %}</label>
                             <input type="email" name="email" id="email" class="form-control" value="{{ invitation.email }}" readonly>
                         </div>
-                        <div class="form-group">
+                        <div class="mb-3">
                             <label for="password">{% trans "Password" %}</label>
                             <input type="password" name="password" id="password" class="form-control" required>
                         </div>
-                        <div class="form-group">
+                        <div class="mb-3">
                             <label for="password_confirm">{% trans "Confirm Password" %}</label>
                             <input type="password" name="password_confirm" id="password_confirm" class="form-control" required>
                         </div>
-                        <div class="form-group mt-4">
+                        <div class="mb-3 mt-4">
                             <button type="submit" class="btn btn-primary pill">
-                                <i class="fa-solid fa-user-plus mr-1"></i> {% trans "Create Account & Join" %}
+                                <i class="fa-solid fa-user-plus me-1"></i> {% trans "Create Account & Join" %}
                             </button>
                             <a href="{% url 'account_login' %}" class="btn btn-link text-muted">
                                 {% trans "Already have an account? Log in" %}

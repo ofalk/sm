@@ -49,6 +49,7 @@ class BrowserIntegrationTest(StaticLiveServerTestCase):
                             "social",
                             "server",
                             "group/filter",
+                            "starter-pack",
                             "terms",
                             "privacy",
                             "impressum",
@@ -140,7 +141,7 @@ class BrowserIntegrationTest(StaticLiveServerTestCase):
                     await page.goto(f"{self.live_server_url}/accounts/login/")
                     await page.fill('input[name="login"]', self.username)
                     await page.fill('input[name="password"]', self.password)
-                    await page.click('button[type="submit"]')
+                    await page.click("form.login button[type='submit']")
                     await page.wait_for_load_state("networkidle")
                     await page.close()
 

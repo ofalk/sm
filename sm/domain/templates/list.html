@@ -2,7 +2,7 @@
 
 
 {% load i18n %}
-{% load bootstrap4 %}
+{% load django_bootstrap5 %}
 
 {% block head_title %}{% trans "Domain" %}{% endblock %}
 
@@ -15,7 +15,7 @@
       <h4 class="mb-0">{% trans "Domain" %}</h4>
       {% if perms.domain.add_model %}
       <a href="{% url 'domain:create' %}" class="btn btn-sm btn-primary pill">
-        <i class="fa-solid fa-plus-circle mr-1"></i> {% trans "Add New" %}
+        <i class="fa-solid fa-plus-circle me-1"></i> {% trans "Add New" %}
       </a>
       {% endif %}
     </div>

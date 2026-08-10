@@ -3,7 +3,7 @@ coverage
 dj-database-url
 django>=6.0,<7.0
 django-allauth
-django-bootstrap4
+django-bootstrap5
 django-countries
 django-debug-toolbar
 django-extensions

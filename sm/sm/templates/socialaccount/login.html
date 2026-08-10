@@ -1,7 +1,7 @@
 {% extends "site_base.html" %}
 
 {% load i18n %}
-{% load bootstrap4 %}
+{% load django_bootstrap5 %}
 {% load social_tags %}
 
 {% block head_title %}{% trans "Sign In" %}{% endblock %}
@@ -31,8 +31,8 @@
 
                     <form method="post">
                         {% csrf_token %}
-                        <button type="submit" class="btn btn-{{ provider.id }} btn-block">
-                            <i class="{{ provider.id|provider_icon_class }} mr-1"></i> {% trans "Continue" %}
+                        <button type="submit" class="btn btn-{{ provider.id }} d-block w-100">
+                            <i class="{{ provider.id|provider_icon_class }} me-1"></i> {% trans "Continue" %}
                         </button>
                     </form>
                 </div>

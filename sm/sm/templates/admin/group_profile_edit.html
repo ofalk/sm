@@ -1,6 +1,6 @@
 {% extends "site_base.html" %}
 {% load i18n %}
-{% load bootstrap4 %}
+{% load django_bootstrap5 %}
 
 {% block head_title %}{% trans "Edit Group Quotas" %}{% endblock %}
 
@@ -16,9 +16,9 @@
                     <form method="post" class="form">
                         {% csrf_token %}
                         {% bootstrap_form form %}
-                        <div class="form-group mt-4">
+                        <div class="mb-3 mt-4">
                             <button type="submit" class="btn btn-primary pill">
-                                <i class="fa-solid fa-save mr-1"></i> {% trans "Save Changes" %}
+                                <i class="fa-solid fa-save me-1"></i> {% trans "Save Changes" %}
                             </button>
                             <a href="{% url 'user_management_list' %}" class="btn btn-link text-muted">
                                 {% trans "Cancel" %}

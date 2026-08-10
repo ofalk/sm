@@ -15,14 +15,14 @@
             <div class="col-md-12 mb-4">
                 <div class="card shadow-sm">
                     <div class="card-header bg-white">
-                        <h5 class="mb-0"><i class="fa-solid fa-rocket mr-2"></i> {% trans "Quick Jumps" %}</h5>
+                        <h5 class="mb-0"><i class="fa-solid fa-rocket me-2"></i> {% trans "Quick Jumps" %}</h5>
                     </div>
                     <div class="card-body p-0">
                         <ul class="list-group list-group-flush">
                             {% for nav in nav_results %}
                             <li class="list-group-item py-3">
-                                <a href="{{ nav.url }}" class="font-weight-bold">
-                                    <i class="fa-solid {{ nav.icon }} mr-2 text-muted"></i>
+                                <a href="{{ nav.url }}" class="fw-bold">
+                                    <i class="fa-solid {{ nav.icon }} me-2 text-muted"></i>
                                     {{ nav.name }}
                                 </a>
                             </li>
@@ -37,17 +37,17 @@
             <div class="col-md-12 mb-4">
                 <div class="card shadow-sm">
                     <div class="card-header bg-white">
-                        <h5 class="mb-0"><i class="fa-solid fa-server mr-2"></i> {% trans "Servers" %}</h5>
+                        <h5 class="mb-0"><i class="fa-solid fa-server me-2"></i> {% trans "Servers" %}</h5>
                     </div>
                     <div class="card-body p-0">
                         <ul class="list-group list-group-flush">
                             {% for server in servers %}
                             <li class="list-group-item d-flex justify-content-between align-items-center py-3">
                                 <div>
-                                    <a href="{{ server.get_absolute_url }}" class="font-weight-bold">{{ server.hostname }}</a>
+                                    <a href="{{ server.get_absolute_url }}" class="fw-bold">{{ server.hostname }}</a>
                                     <div class="small text-muted">{{ server.operatingsystem }} | {{ server.location }}</div>
                                 </div>
-                                <span class="badge badge-light border">{{ server.status }}</span>
+                                <span class="badge text-bg-light border">{{ server.status }}</span>
                             </li>
                             {% endfor %}
                         </ul>
@@ -60,13 +60,13 @@
             <div class="col-md-6 mb-4">
                 <div class="card shadow-sm">
                     <div class="card-header bg-white">
-                        <h5 class="mb-0"><i class="fa-solid fa-industry mr-2"></i> {% trans "Vendors" %}</h5>
+                        <h5 class="mb-0"><i class="fa-solid fa-industry me-2"></i> {% trans "Vendors" %}</h5>
                     </div>
                     <div class="card-body p-0">
                         <ul class="list-group list-group-flush">
                             {% for vendor in vendors %}
                             <li class="list-group-item py-3">
-                                <a href="{{ vendor.get_absolute_url }}" class="font-weight-bold">{{ vendor.name }}</a>
+                                <a href="{{ vendor.get_absolute_url }}" class="fw-bold">{{ vendor.name }}</a>
                             </li>
                             {% endfor %}
                         </ul>
@@ -79,13 +79,13 @@
             <div class="col-md-6 mb-4">
                 <div class="card shadow-sm">
                     <div class="card-header bg-white">
-                        <h5 class="mb-0"><i class="fa-solid fa-th-large mr-2"></i> {% trans "Clusters" %}</h5>
+                        <h5 class="mb-0"><i class="fa-solid fa-th-large me-2"></i> {% trans "Clusters" %}</h5>
                     </div>
                     <div class="card-body p-0">
                         <ul class="list-group list-group-flush">
                             {% for cluster in clusters %}
                             <li class="list-group-item py-3">
-                                <a href="{{ cluster.get_absolute_url }}" class="font-weight-bold">{{ cluster.name }}</a>
+                                <a href="{{ cluster.get_absolute_url }}" class="fw-bold">{{ cluster.name }}</a>
                             </li>
                             {% endfor %}
                         </ul>

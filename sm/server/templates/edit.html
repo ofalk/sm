@@ -2,7 +2,7 @@
 
 
 {% load i18n %}
-{% load bootstrap4 %}
+{% load django_bootstrap5 %}
 
 {% block additionalstyles %}{% include "_additionalstyles.html" %}{% endblock %}
 {% block additionalscripts %}{% include "_additionalscripts.html" %}{% endblock %}
@@ -26,9 +26,9 @@
 
 {% csrf_token %}
 {% bootstrap_form form %}
-{% buttons %}
+<div class="form-actions">
 {% bootstrap_button "Save" button_type="submit" button_class="btn-sm btn-primary pill" %}
-{% endbuttons %}
+</div>
         </div>
     </div>
 

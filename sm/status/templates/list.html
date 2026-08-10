@@ -2,7 +2,7 @@
 
 
 {% load i18n %}
-{% load bootstrap4 %}
+{% load django_bootstrap5 %}
 
 {% block head_title %}{% trans "Status" %}{% endblock %}
 
@@ -14,7 +14,7 @@
     <div class="card-header bg-white d-flex justify-content-between align-items-center">
       <h4 class="mb-0">{% trans "Status" %}</h4>
       <a href="{% url 'status:create' %}" class="btn btn-sm btn-primary pill">
-        <i class="fa-solid fa-plus-circle mr-1"></i> {% trans "Add New" %}
+        <i class="fa-solid fa-plus-circle me-1"></i> {% trans "Add New" %}
       </a>
     </div>
     <div class="card-body pb-0">

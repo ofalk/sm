@@ -2,7 +2,7 @@
 
 
 {% load i18n %}
-{% load bootstrap4 %}
+{% load django_bootstrap5 %}
 
 {% block head_title %}{% trans "Operatingsystem" %}{% endblock %}
 
@@ -14,19 +14,19 @@
     <div class="card-header bg-white d-flex justify-content-between align-items-center">
       <h4 class="mb-0">{% trans "Operating Systems" %}</h4>
       <div class="d-flex align-items-center">
-        <form method="post" action="{% url 'starter_pack_import' %}" class="mr-3">
+        <form method="post" action="{% url 'starter_pack_import' %}" class="me-3">
           {% csrf_token %}
           <button type="submit" class="btn btn-sm btn-outline-info pill">
-            <i class="fa-solid fa-download mr-1"></i> {% trans "Import Starter Pack" %}
+            <i class="fa-solid fa-download me-1"></i> {% trans "Import Starter Pack" %}
           </button>
         </form>
-        <div class="custom-control custom-switch mr-3">
-          <input type="checkbox" class="custom-control-input cookie-sync" id="show_empty" checked>
-          <label class="custom-control-label" for="show_empty">{% trans 'Show empty' %}</label>
+        <div class="form-check form-switch me-3">
+          <input type="checkbox" class="form-check-input cookie-sync" id="show_empty" checked>
+          <label class="form-check-label" for="show_empty">{% trans 'Show empty' %}</label>
         </div>
         {% if perms.operatingsystem.add_model %}
         <a href="{% url 'operatingsystem:create' %}" class="btn btn-sm btn-primary pill">
-          <i class="fa-solid fa-plus-circle mr-1"></i> {% trans "Add New" %}
+          <i class="fa-solid fa-plus-circle me-1"></i> {% trans "Add New" %}
         </a>
         {% endif %}
       </div>

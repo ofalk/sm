@@ -83,7 +83,9 @@ $(function () {
       if (e.key.toLowerCase() === "k" && (e.ctrlKey || e.metaKey)) {
         e.preventDefault();
         e.stopPropagation();
-        $("#commandPalette").modal("show");
+        bootstrap.Modal.getOrCreateInstance(
+          document.getElementById("commandPalette"),
+        ).show();
       }
     });
 

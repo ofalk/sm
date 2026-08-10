@@ -1,7 +1,7 @@
 {% extends "account/base.html" %}
 
 {% load i18n %}
-{% load bootstrap4 %}
+{% load django_bootstrap5 %}
 
 {% block body_class %}account account-delete{% endblock %}
 
@@ -20,9 +20,9 @@
 
     <form method="post" action="{% url "account_delete" %}" autocapitalize="off" class="form">
         {% csrf_token %}
-        {% buttons %}
+        <div class="form-actions">
             <button type="submit" class="btn btn-danger">{% trans "Delete My Account" %}</button>
-        {% endbuttons %}
+        </div>
     </form>
         </div>
     </div>

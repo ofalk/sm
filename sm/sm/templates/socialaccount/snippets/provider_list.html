@@ -4,12 +4,12 @@
 {% get_providers as socialaccount_providers %}
 
 {% for provider in socialaccount_providers %}
-<li class="list-inline-item mb-2 mr-2">
+<li class="list-inline-item mb-2 me-2">
     {% if provider.id == "google" %}
     <a title="{{ provider.name }}"
        class="btn google-btn socialaccount_provider {{ provider.id }}"
        href="{% provider_login_url provider.id process=process %}">
-       <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" width="18" height="18" class="mr-2">
+       <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" width="18" height="18" class="me-2">
        Sign in with Google
     </a>
     {% elif provider.id == "openid" %}
@@ -23,7 +23,7 @@
     <a title="{{ provider.name }}"
        class="btn btn-outline-primary btn-outline-{{ provider.id }} socialaccount_provider {{ provider.id }}"
        href="{% provider_login_url provider.id process=process %}">
-       <i class="{{ provider.id|provider_icon_class }} mr-1"></i> {{ provider.name }}
+       <i class="{{ provider.id|provider_icon_class }} me-1"></i> {{ provider.name }}
     </a>
     {% endif %}
 

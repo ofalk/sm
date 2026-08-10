@@ -9,8 +9,8 @@
 
     {% if request.user.owned_groups.count < 5 %}
     <div class="mb-4">
-        <button class="btn btn-primary pill" data-toggle="modal" data-target="#createGroupModal">
-            <i class="fa-solid fa-plus mr-1"></i> {% trans "Create New Group" %}
+        <button class="btn btn-primary pill" data-bs-toggle="modal" data-bs-target="#createGroupModal">
+            <i class="fa-solid fa-plus me-1"></i> {% trans "Create New Group" %}
         </button>
     </div>
     {% endif %}
@@ -20,25 +20,23 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">{% trans "Create New Group" %}</h5>
-                    <button type="button" class="close" data-dismiss="modal">
-                        <span>&times;</span>
-                    </button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <form method="post" action="{% url 'group_create' %}">
                     {% csrf_token %}
                     <div class="modal-body">
-                        <div class="form-group">
+                        <div class="mb-3">
                             <label for="groupName">{% trans "Group Name" %}</label>
                             <input type="text" class="form-control" id="groupName" name="name" required>
                         </div>
-                        <div class="form-group">
+                        <div class="mb-3">
                             <label for="maxUsers">{% trans "Max Users" %}</label>
                             <input type="number" class="form-control" id="maxUsers" name="max_users" value="10" min="2" max="100">
                             <small class="text-muted">{% trans "Maximum number of users in this group" %}</small>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">{% trans "Cancel" %}</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% trans "Cancel" %}</button>
                         <button type="submit" class="btn btn-primary">{% trans "Create Group" %}</button>
                     </div>
                 </form>
@@ -51,22 +49,22 @@
         <div class="card-header bg-white d-flex justify-content-between align-items-center">
             <h4 class="mb-0">{{ group.name }}</h4>
             <div>
-                <span class="badge badge-info mr-2">
+                <span class="badge text-bg-info me-2">
                     {% trans "Users:" %} {{ group.user_set.count }} / {{ group.profile.max_users }}
                 </span>
-                <a href="{% url 'group_permission_edit' group.id %}" class="btn btn-sm btn-outline-secondary pill mr-2">
-                    <i class="fa-solid fa-lock mr-1"></i> {% trans "Group Permissions" %}
+                <a href="{% url 'group_permission_edit' group.id %}" class="btn btn-sm btn-outline-secondary pill me-2">
+                    <i class="fa-solid fa-lock me-1"></i> {% trans "Group Permissions" %}
                 </a>
                 <div class="btn-group">
-                    <button type="button" class="btn btn-sm btn-primary pill dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="fa-solid fa-user-plus mr-1"></i> {% trans "Add Member" %}
+                    <button type="button" class="btn btn-sm btn-primary pill dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fa-solid fa-user-plus me-1"></i> {% trans "Add Member" %}
                     </button>
-                    <div class="dropdown-menu dropdown-menu-right">
+                    <div class="dropdown-menu dropdown-menu-end">
                         <a class="dropdown-item" href="{% url 'group_member_add' group.id %}">
-                            <i class="fa-solid fa-user mr-2"></i>{% trans "Add existing user" %}
+                            <i class="fa-solid fa-user me-2"></i>{% trans "Add existing user" %}
                         </a>
                         <a class="dropdown-item" href="{% url 'group_member_invite' group.id %}">
-                            <i class="fa-solid fa-envelope mr-2"></i>{% trans "Invite via email" %}
+                            <i class="fa-solid fa-envelope me-2"></i>{% trans "Invite via email" %}
                         </a>
                     </div>
                 </div>
@@ -89,22 +87,22 @@
                         <td>{{ user.email }}</td>
                         <td>
                             {% if user == group.profile.owner %}
-                            <span class="badge badge-primary">{% trans "Owner" %}</span>
+                            <span class="badge text-bg-primary">{% trans "Owner" %}</span>
                             {% else %}
-                            <span class="badge badge-secondary">{% trans "Member" %}</span>
+                            <span class="badge text-bg-secondary">{% trans "Member" %}</span>
                             {% endif %}
                         </td>
                         <td>
                             {% if user != group.profile.owner %}
-                            <a href="{% url 'group_user_permission_edit' group.id user.id %}" class="btn btn-sm btn-outline-secondary pill mr-1">
-                                <i class="fa-solid fa-user-shield mr-1"></i> {% trans "Permissions" %}
+                            <a href="{% url 'group_user_permission_edit' group.id user.id %}" class="btn btn-sm btn-outline-secondary pill me-1">
+                                <i class="fa-solid fa-user-shield me-1"></i> {% trans "Permissions" %}
                             </a>
                             {% endif %}
                             {% if user != request.user and user != group.profile.owner %}
                             <form method="post" action="{% url 'group_member_remove' group.id user.id %}" class="d-inline" onsubmit="return confirm('{% trans "Are you sure you want to remove this user from the group?" %}');">
                                 {% csrf_token %}
                                 <button type="submit" class="btn btn-sm btn-outline-danger pill">
-                                    <i class="fa-solid fa-user-minus mr-1"></i> {% trans "Remove" %}
+                                    <i class="fa-solid fa-user-minus me-1"></i> {% trans "Remove" %}
                                 </button>
                             </form>
                             {% endif %}

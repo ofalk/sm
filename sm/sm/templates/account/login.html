@@ -1,7 +1,7 @@
 {% extends "site_base.html" %}
 
 {% load i18n %}
-{% load bootstrap4 %}
+{% load django_bootstrap5 %}
 {% load socialaccount %}
 
 {% block head_title %}{% trans "Log in" %}{% endblock %}
@@ -21,8 +21,8 @@
                         {% if redirect_field_value %}
                             <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
                         {% endif %}
-                        <div class="form-group mt-4">
-                            <button class="btn btn-primary pill btn-block btn-lg" type="submit">{% trans "Log in" %}</button>
+                        <div class="mb-3 mt-4">
+                            <button class="btn btn-primary pill d-block w-100 btn-lg" type="submit">{% trans "Log in" %}</button>
                         </div>
                         {% get_providers as socialaccount_providers %}
                         {% if socialaccount_providers %}
@@ -40,7 +40,7 @@
                 {% if ACCOUNT_OPEN_SIGNUP %}
                 <div class="card-footer bg-light text-center py-3">
                     <span class="text-muted">{% trans "Don't have an account?" %}</span>
-                    <a href="{% url 'account_signup' %}" class="font-weight-bold ml-1">{% trans "Sign up" %}</a>
+                    <a href="{% url 'account_signup' %}" class="fw-bold ms-1">{% trans "Sign up" %}</a>
                 </div>
                 {% endif %}
             </div>

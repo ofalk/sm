@@ -2,7 +2,7 @@
 
 
 {% load i18n %}
-{% load bootstrap4 %}
+{% load django_bootstrap5 %}
 
 {% block head_title %}{% trans "Cluster" %}{% endblock %}
 
@@ -15,7 +15,7 @@
       <h4 class="mb-0">{% trans "Cluster" %}</h4>
       {% if perms.cluster.add_model %}
       <a href="{% url 'cluster:create' %}" class="btn btn-sm btn-primary pill">
-        <i class="fa-solid fa-plus-circle mr-1"></i> {% trans "Add New" %}
+        <i class="fa-solid fa-plus-circle me-1"></i> {% trans "Add New" %}
       </a>
       {% endif %}
     </div>
@@ -64,7 +64,7 @@
                 </a>
                 {% endif %}
               {% else %}
-                <span class="text-muted" title="{% trans 'Shared resource - insufficient permissions' %}" data-toggle="tooltip">
+                <span class="text-muted" title="{% trans 'Shared resource - insufficient permissions' %}" data-bs-toggle="tooltip">
                   {% if perms.cluster.change_model %}<i class="fa-solid fa-pen fa-fw fa-lg opacity-25" aria-hidden="true"></i>{% endif %}
                   {% if perms.cluster.delete_model %}<i class="fa-solid fa-trash fa-fw fa-lg opacity-25" aria-hidden="true"></i>{% endif %}
                 </span>

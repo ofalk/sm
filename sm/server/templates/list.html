@@ -2,7 +2,7 @@
 
 
 {% load i18n %}
-{% load bootstrap4 %}
+{% load django_bootstrap5 %}
 
 {% block head_title %}{% trans "Server" %}{% endblock %}
 
@@ -14,13 +14,13 @@
     <div class="card-header bg-white d-flex justify-content-between align-items-center">
       <h4 class="mb-0">{% trans "Servers" %}</h4>
       <div class="d-flex align-items-center">
-        <div class="custom-control custom-switch mr-3">
-          <input type="checkbox" class="custom-control-input cookie-sync" id="show_disposed" checked>
-          <label class="custom-control-label" for="show_disposed">{% trans 'Show disposed' %}</label>
+        <div class="form-check form-switch me-3">
+          <input type="checkbox" class="form-check-input cookie-sync" id="show_disposed" checked>
+          <label class="form-check-label" for="show_disposed">{% trans 'Show disposed' %}</label>
         </div>
         {% if perms.server.add_model %}
         <a href="{% url 'server:create' %}" class="btn btn-sm btn-primary pill">
-          <i class="fa-solid fa-plus-circle mr-1"></i> {% trans "Add New" %}
+          <i class="fa-solid fa-plus-circle me-1"></i> {% trans "Add New" %}
         </a>
         {% endif %}
       </div>
@@ -38,16 +38,16 @@
     <div id="bulk_toolbar" class="bg-light border-bottom p-2 d-none">
         <div class="d-flex align-items-center justify-content-between px-3">
             <div class="d-flex align-items-center">
-                <span class="badge badge-primary mr-3"><span id="selected_count">0</span> {% trans "selected" %}</span>
-                <div class="form-inline">
+                <span class="badge text-bg-primary me-3"><span id="selected_count">0</span> {% trans "selected" %}</span>
+                <div class="d-flex flex-wrap align-items-center">
                     {{ bulk_form.status }}
                     {% if perms.server.delete_model %}
-                    <div class="custom-control custom-checkbox ml-3 mr-3">
-                        <input type="checkbox" name="delete" class="custom-control-input" id="bulk_delete_check">
-                        <label class="custom-control-label text-danger" for="bulk_delete_check">{% trans "Delete selected" %}</label>
+                    <div class="form-check ms-3 me-3">
+                        <input type="checkbox" name="delete" class="form-check-input" id="bulk_delete_check">
+                        <label class="form-check-label text-danger" for="bulk_delete_check">{% trans "Delete selected" %}</label>
                     </div>
                     {% endif %}
-                    <button type="submit" class="btn btn-sm btn-primary pill ml-2 pill" id="apply_bulk">{% trans "Apply" %}</button>
+                    <button type="submit" class="btn btn-sm btn-primary pill ms-2 pill" id="apply_bulk">{% trans "Apply" %}</button>
                 </div>
             </div>
             <button type="button" class="btn btn-sm btn-link text-muted" id="cancel_bulk">{% trans "Cancel" %}</button>
@@ -58,9 +58,9 @@
       <thead>
         <tr>
           <th style="width: 40px;">
-            <div class="custom-control custom-checkbox">
-                <input type="checkbox" class="custom-control-input" id="select_all">
-                <label class="custom-control-label" for="select_all"></label>
+            <div class="form-check">
+                <input type="checkbox" class="form-check-input" id="select_all">
+                <label class="form-check-label" for="select_all"></label>
             </div>
           </th>
           <th>{% trans 'Hostname' %}</th>
@@ -77,9 +77,9 @@
         {% for object in object_list %}
           <tr>
             <td>
-                <div class="custom-control custom-checkbox">
-                    <input type="checkbox" name="selected_servers" value="{{ object.id }}" class="custom-control-input server-checkbox" id="server_{{ object.id }}">
-                    <label class="custom-control-label" for="server_{{ object.id }}"></label>
+                <div class="form-check">
+                    <input type="checkbox" name="selected_servers" value="{{ object.id }}" class="form-check-input server-checkbox" id="server_{{ object.id }}">
+                    <label class="form-check-label" for="server_{{ object.id }}"></label>
                 </div>
             </td>
             <td>
