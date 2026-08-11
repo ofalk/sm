@@ -110,7 +110,11 @@ class Model(models.Model):
     history = HistoricalRecords()
 
     def __str__(self):
-        return "{} {}".format(self.vendor.name, self.version)
+        try:
+            vendor = self.vendor.name
+        except ObjectDoesNotExist:
+            vendor = "?"
+        return "{} {}".format(vendor, self.version)
 
     def natural_key(self):
         return self.vendor.natural_key() + (self.version,)
