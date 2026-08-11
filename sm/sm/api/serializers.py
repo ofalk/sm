@@ -97,6 +97,9 @@ class ServerSerializer(serializers.ModelSerializer):
             "delivery_date",
             "install_date",
             "description",
+            "monitoring_from_puppet",
+            "management_ip",
+            "management_hostname",
         ]
 
 
@@ -125,6 +128,16 @@ class ClusterSerializer(serializers.ModelSerializer):
 
 
 class ClusterPackageSerializer(serializers.ModelSerializer):
+    status_name = serializers.CharField(source="status.name", read_only=True)
+    package_type_name = serializers.CharField(source="package_type.name", read_only=True)
+    cluster_name = serializers.CharField(source="cluster.name", read_only=True)
+    clustersoftware = serializers.CharField(
+        source="cluster.clustersoftware.name", read_only=True, allow_null=True
+    )
+    clustersoftwareversion = serializers.CharField(
+        source="cluster.clustersoftware.version", read_only=True, allow_null=True
+    )
+
     class Meta:
         model = ClusterPackage
         fields = "__all__"

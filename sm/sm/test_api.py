@@ -421,3 +421,97 @@ class ApiPermissionTest(TestCase):
         )
         self.assertEqual(response.status_code, 400)
         self.assertFalse(Server.objects.filter(hostname="over-quota").exists())
+
+
+@override_settings(PASSWORD_HASHERS=FAST_HASHERS)
+class ApiSerializerFieldsTest(TestCase):
+    """Tests that coshsh-relevant fields are exposed via the API."""
+
+    def setUp(self):
+        self.group = Group.objects.create(name="Group A")
+        self.user = User.objects.create_user("alice", password=PASSWORD)
+        self.user.groups.clear()
+        self.user.groups.add(self.group)
+        for perm in ("view_model", "add_model", "change_model"):
+            self.group.permissions.add(
+                Permission.objects.get(
+                    content_type=ContentType.objects.get(
+                        app_label="server", model="model"
+                    ),
+                    codename=perm,
+                )
+            )
+            self.group.permissions.add(
+                Permission.objects.get(
+                    content_type=ContentType.objects.get(
+                        app_label="vendor", model="model"
+                    ),
+                    codename=perm,
+                )
+            )
+            self.group.permissions.add(
+                Permission.objects.get(
+                    content_type=ContentType.objects.get(
+                        app_label="clusterpackage", model="model"
+                    ),
+                    codename=perm,
+                )
+            )
+        self.key, self.secret = ApiKey.create_for_user(self.user, "serializer test")
+
+    def api(self):
+        client = APIClient()
+        client.credentials(
+            HTTP_AUTHORIZATION=f"ApiKey {self.key.client_id}:{self.secret}"
+        )
+        return client
+
+    def test_server_exposes_coshsh_fields(self):
+        status = Status.objects.create(name="In use")
+        domain = Domain.objects.create(name="localghost.com")
+        Server.objects.create(
+            hostname="test01",
+            domain=domain,
+            status=status,
+            primary_ip="10.0.0.1",
+            management_ip="10.0.1.1",
+            management_hostname="mgmt-test01",
+            monitoring_from_puppet=True,
+            group=self.group,
+        )
+        response = self.api().get("/api/servers/")
+        self.assertEqual(response.status_code, 200)
+        data = {item["hostname"]: item for item in response.json()}
+        server = data["test01"]
+        self.assertEqual(server["management_ip"], "10.0.1.1")
+        self.assertEqual(server["management_hostname"], "mgmt-test01")
+        self.assertIs(server["monitoring_from_puppet"], True)
+
+    def test_clusterpackage_exposes_name_fields(self):
+        from cluster.models import Model as Cluster
+        from clusterpackage.models import Model as ClusterPackage
+        from clusterpackagetype.models import Model as ClusterPackageType
+        from clustersoftware.models import Model as ClusterSoftware
+        from vendor.models import Model as Vendor
+
+        vendor = Vendor.objects.create(name="AlmaLinux")
+        software = ClusterSoftware.objects.create(
+            name="PostgreSQL", version="17", vendor=vendor, group=self.group
+        )
+        cluster = Cluster.objects.create(
+            name="pg01", clustersoftware=software, group=self.group
+        )
+        status = Status.objects.create(name="In use")
+        pkg_type = ClusterPackageType.objects.create(name="PostgreSQL R/W")
+        ClusterPackage.objects.create(
+            name="db", cluster=cluster, package_type=pkg_type, status=status,
+            host="10.0.0.2", description="main db", group=self.group,
+        )
+        response = self.api().get("/api/clusterpackages/")
+        self.assertEqual(response.status_code, 200)
+        data = response.json()[0]
+        self.assertEqual(data["cluster_name"], "pg01")
+        self.assertEqual(data["package_type_name"], "PostgreSQL R/W")
+        self.assertEqual(data["status_name"], "In use")
+        self.assertEqual(data["clustersoftware"], "PostgreSQL")
+        self.assertEqual(data["clustersoftwareversion"], "17")
