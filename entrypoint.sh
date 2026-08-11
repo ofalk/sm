@@ -65,23 +65,15 @@ ensure_admin)
         echo "Using provided ADMIN_PASSWORD from environment"
     fi
 
-    # Ensure SocialApps only if the module is installed
+    # Ensure admin user exists. SocialApp configuration is provided via
+    # settings/SOCIALACCOUNT_PROVIDERS from the environment, so it is not
+    # created in the database here (avoiding duplicates with the settings).
     python3 <<'EOF'
 import os
 import django
-import sys
-from django.apps import apps
+from django.contrib.auth import get_user_model
 
 django.setup()
-
-# Check if socialaccount is installed
-if not apps.is_installed('allauth.socialaccount'):
-    print("allauth.socialaccount not installed, skipping SocialApp setup")
-    sys.exit(0)
-
-from allauth.socialaccount.models import SocialApp
-from django.contrib.sites.models import Site
-from django.contrib.auth import get_user_model
 
 User = get_user_model()
 username = os.environ.get('ADMIN_USERNAME', 'admin')
@@ -97,65 +89,6 @@ if password and password != 'REPLACE_WITH_REAL_ADMIN_PASSWORD':
         user.set_password(password)
         user.save()
         print(f"Password for superuser '{username}' updated.")
-
-site = Site.objects.get_current()
-
-# Ensure Google SocialApp
-google_client_id = os.environ.get('GOOGLE_CLIENT_ID')
-google_secret = os.environ.get('GOOGLE_SECRET')
-if google_client_id and google_secret and google_client_id not in ['REPLACE_WITH_REAL_GOOGLE_ID', 'CHANGE_ME']:
-    try:
-        app, created = SocialApp.objects.get_or_create(
-            provider='google',
-            defaults={
-                'name': 'Google',
-                'client_id': google_client_id,
-                'secret': google_secret
-            }
-        )
-        if not created:
-            if app.client_id != google_client_id or app.secret != google_secret:
-                app.client_id = google_client_id
-                app.secret = google_secret
-                app.save()
-                print("Google SocialApp updated.")
-        else:
-            print("Google SocialApp created.")
-        app.sites.add(site)
-    except Exception as e:
-        print(f"Error setting up Google SocialApp: {e}")
-
-# Ensure Localghost SSO SocialApp
-oidc_client_id = os.environ.get('OIDC_CLIENT_ID')
-oidc_secret = os.environ.get('OIDC_SECRET')
-oidc_url = os.environ.get('OIDC_URL')
-oidc_name = os.environ.get('OIDC_NAME', 'Localghost SSO')
-
-if oidc_client_id and oidc_secret and oidc_url and oidc_client_id not in ['REPLACE_WITH_REAL_OIDC_ID', 'CHANGE_ME']:
-    try:
-        app, created = SocialApp.objects.get_or_create(
-            provider='openid_connect',
-            provider_id='oidc',
-            defaults={
-                'name': oidc_name,
-                'client_id': oidc_client_id,
-                'secret': oidc_secret,
-                'settings': {'server_url': oidc_url}
-            }
-        )
-        if not created:
-            if app.client_id != oidc_client_id or app.secret != oidc_secret or app.settings.get('server_url') != oidc_url or app.name != oidc_name:
-                app.client_id = oidc_client_id
-                app.secret = oidc_secret
-                app.settings = {'server_url': oidc_url}
-                app.name = oidc_name
-                app.save()
-                print(f"Localghost SSO SocialApp '{oidc_name}' updated.")
-        else:
-            print(f"Localghost SSO SocialApp '{oidc_name}' created.")
-        app.sites.add(site)
-    except Exception as e:
-        print(f"Error setting up Localghost SSO SocialApp: {e}")
 EOF
     exit 0
     ;;
