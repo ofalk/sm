@@ -1,4 +1,6 @@
 from rest_framework import serializers
+from rest_framework.exceptions import ValidationError
+from django.utils.translation import gettext_lazy as _
 from datetime import datetime
 from vendor.models import Model as Vendor
 from status.models import Model as Status
@@ -141,6 +143,38 @@ class ClusterPackageSerializer(serializers.ModelSerializer):
     class Meta:
         model = ClusterPackage
         fields = "__all__"
+
+    def validate(self, attrs):
+        attrs = super().validate(attrs)
+        cluster = attrs.get("cluster", getattr(self.instance, "cluster", None))
+        name = attrs.get("name", getattr(self.instance, "name", None))
+        status = attrs.get("status", getattr(self.instance, "status", None))
+        package_type = attrs.get(
+            "package_type", getattr(self.instance, "package_type", None)
+        )
+        if None in (cluster, name, status, package_type):
+            return attrs
+        request = self.context.get("request")
+        group = None
+        if request and request.user and not request.user.is_superuser:
+            group = request.user.groups.first()
+        qs = ClusterPackage.objects.filter(
+            cluster=cluster,
+            name=name,
+            status=status,
+            package_type=package_type,
+            group=group,
+        )
+        if self.instance is not None:
+            qs = qs.exclude(pk=self.instance.pk)
+        if qs.exists():
+            raise ValidationError(
+                _(
+                    "A cluster package with this cluster, name, status and "
+                    "package type already exists."
+                )
+            )
+        return attrs
 
 
 class ClusterSoftwareSerializer(serializers.ModelSerializer):

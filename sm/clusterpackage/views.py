@@ -22,6 +22,13 @@ except Exception:  # pragma: no cover
     from django.urls import reverse_lazy  # pragma: no cover
 
 
+def _get_group_for_user(user):
+    if user.is_superuser:
+        return None
+    groups = user.groups.all()
+    return groups.first() if groups.exists() else None
+
+
 class ListView(LoginRequiredMixin, GenericListView):
     template_name = "%s/list.html" % app_label
     model = Model
@@ -56,8 +63,15 @@ class UpdateView(SuccessMessageMixin, LoginRequiredMixin, GenericUpdateView):
     template_name = "%s/edit.html" % app_label
     model = Model
 
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["user"] = self.request.user
+        return kwargs
+
     def form_valid(self, form):
-        self.object = form.save()
+        self.object = form.save(commit=False)
+        self.object.group = _get_group_for_user(self.request.user)
+        self.object.save()
         messages.success(self.request, self.success_message % self.object.__dict__)
 
         return HttpResponseRedirect(self.get_success_url())
@@ -77,12 +91,19 @@ class CreateView(SuccessMessageMixin, LoginRequiredMixin, GenericCreateView):
     success_message = "%(name)s " + _("was created successfully")
 
     template_name = "%s/edit.html" % app_label
-    fields = "__all__"
+    form_class = Form
     model = Model
     success_url = reverse_lazy("%s:index" % app_label)
 
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["user"] = self.request.user
+        return kwargs
+
     def form_valid(self, form):
-        self.object = form.save()
+        self.object = form.save(commit=False)
+        self.object.group = _get_group_for_user(self.request.user)
+        self.object.save()
         messages.success(self.request, self.success_message % self.object.__dict__)
 
         return HttpResponseRedirect(self.get_success_url())

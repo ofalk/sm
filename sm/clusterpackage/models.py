@@ -12,10 +12,28 @@ from . import app_label
 
 
 class ClusterPackageManager(models.Manager):
-    def get_by_natural_key(self, cluster, name):
+    def get_by_natural_key(
+        self, cluster, name, status=None, package_type=None, group=None
+    ):
         if isinstance(cluster, (list, tuple)):
             cluster = cluster[0]
-        return self.get(cluster__name=cluster, name=name)
+        if isinstance(status, (list, tuple)):
+            status = status[0]
+        if isinstance(package_type, (list, tuple)):
+            package_type = package_type[0]
+        if isinstance(group, (list, tuple)):
+            group = group[0]
+        return self.get(
+            cluster__name=cluster,
+            name=name,
+            status__name=status,
+            package_type__name=package_type,
+            **(
+                {"group__name": group}
+                if group is not None
+                else {"group__isnull": True}
+            ),
+        )
 
 
 class Model(models.Model):
@@ -57,17 +75,40 @@ class Model(models.Model):
         return "{}-{}".format(self.cluster, self.name)
 
     def natural_key(self):
-        return self.cluster.natural_key() + (self.name,)
+        return (
+            self.cluster.natural_key()[0],
+            self.name,
+            self.status.natural_key()[0],
+            self.package_type.natural_key()[0],
+            self.group.name if self.group else None,
+        )
 
-    natural_key.dependencies = ["cluster.Model"]
+    natural_key.dependencies = [
+        "cluster.Model",
+        "status.Model",
+        "clusterpackagetype.Model",
+        "auth.Group",
+    ]
 
     @classmethod
     def get_natural_key_fields(cls):
-        return ["cluster__name", "name"]
+        return [
+            "cluster__name",
+            "name",
+            "status__name",
+            "package_type__name",
+            "group__name",
+        ]
 
     @classmethod
     def get_natural_key_info(cls):
-        return [("cluster", ClusterModel), ("name", None)]
+        return [
+            ("cluster", ClusterModel),
+            ("name", None),
+            ("status", StatusModel),
+            ("package_type", ClusterpackagetypeModel),
+            ("group", Group),
+        ]
 
     def get_absolute_url(self):
 
@@ -77,10 +118,7 @@ class Model(models.Model):
         db_table = "{}_{}".format("sm", app_label)
         constraints = [
             models.UniqueConstraint(
-                fields=["cluster", "name"], name="unique_sm_clusterpackage_cluster_name"
-            ),
-            models.UniqueConstraint(
-                fields=["cluster", "name", "group"],
-                name="unique_sm_clusterpackage_cluster_name_group",
+                fields=["cluster", "name", "status", "package_type", "group"],
+                name="unique_sm_clusterpackage_cluster_name_status_package_type_group",
             ),
         ]

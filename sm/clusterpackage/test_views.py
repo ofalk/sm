@@ -195,3 +195,36 @@ class Tester(TestCase):
         ):
             print(f"FAILED TO FIND MESSAGE IN: {response.content.decode('utf-8')}")
         self.assertContains(response, "%s was created successfully" % data["name"])
+
+    def _create_payload(self, name, status=None):
+        return {
+            "name": name,
+            "cluster": self.cluster.pk,
+            "package_type": self.package_type.pk,
+            "status": (status or self.status).pk,
+            "description": self.testdescription,
+            "host": self.testhost,
+        }
+
+    def test_createview_duplicate_rejected(self):
+        self.login()
+        data = self._create_payload(self.teststring)
+        response = self.client.post(
+            reverse("%s:create" % app_label),
+            data,
+            follow=True,
+        )
+        self.assertEqual(response.status_code, 200, "no status 200?")
+        self.assertEqual(Model.objects.filter(name=self.teststring).count(), 1)
+
+    def test_createview_same_name_different_status_allowed(self):
+        self.login()
+        other_status = StatusModel.objects.create(name="other-status")
+        data = self._create_payload(self.teststring, status=other_status)
+        response = self.client.post(
+            reverse("%s:create" % app_label),
+            data,
+            follow=True,
+        )
+        self.assertRedirects(response, reverse("%s:index" % app_label), status_code=302)
+        self.assertEqual(Model.objects.filter(name=self.teststring).count(), 2)

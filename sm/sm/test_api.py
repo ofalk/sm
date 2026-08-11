@@ -515,3 +515,52 @@ class ApiSerializerFieldsTest(TestCase):
         self.assertEqual(data["status_name"], "In use")
         self.assertEqual(data["clustersoftware"], "PostgreSQL")
         self.assertEqual(data["clustersoftwareversion"], "17")
+
+    def _cluster_package_payload(self):
+        from cluster.models import Model as Cluster
+        from clusterpackagetype.models import Model as ClusterPackageType
+        from clustersoftware.models import Model as ClusterSoftware
+
+        vendor = Vendor.objects.create(name="AlmaLinux", group=self.group)
+        software = ClusterSoftware.objects.create(
+            name="PostgreSQL", version="17", vendor=vendor, group=self.group
+        )
+        cluster = Cluster.objects.create(
+            name="pg01", clustersoftware=software, group=self.group
+        )
+        status = Status.objects.create(name="In use", group=self.group)
+        pkg_type = ClusterPackageType.objects.create(
+            name="PostgreSQL R/W", group=self.group
+        )
+        return cluster, status, pkg_type, {
+            "name": "db",
+            "cluster": cluster.pk,
+            "status": status.pk,
+            "package_type": pkg_type.pk,
+            "host": "10.0.0.2",
+            "description": "main db",
+        }
+
+    def test_clusterpackage_duplicate_create_rejected(self):
+        from clusterpackage.models import Model as ClusterPackage
+
+        _, _, _, payload = self._cluster_package_payload()
+        response = self.api().post("/api/clusterpackages/", payload, format="json")
+        self.assertEqual(response.status_code, 201)
+        response = self.api().post("/api/clusterpackages/", payload, format="json")
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(ClusterPackage.objects.filter(name="db").count(), 1)
+
+    def test_clusterpackage_same_name_different_status_allowed_via_api(self):
+        from clusterpackage.models import Model as ClusterPackage
+        from status.models import Model as status_model
+
+        _, _, _, payload = self._cluster_package_payload()
+        response = self.api().post("/api/clusterpackages/", payload, format="json")
+        self.assertEqual(response.status_code, 201)
+        payload["status"] = status_model.objects.create(
+            name="Out of use", group=self.group
+        ).pk
+        response = self.api().post("/api/clusterpackages/", payload, format="json")
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(ClusterPackage.objects.filter(name="db").count(), 2)
