@@ -59,8 +59,8 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
-            APP_VERSION="${{ github.sha }}"
-            APP_MODIFICATION_DATE="${{ steps.date.outputs.date }}"
+            APP_VERSION=${{ github.sha }}
+            APP_MODIFICATION_DATE=${{ steps.date.outputs.date }}
           platforms: linux/amd64,linux/arm64
           cache-from: type=gha
           cache-to: type=gha,mode=max
