@@ -107,6 +107,20 @@ class Tester(TestCase):
         with self.assertRaises(ObjectDoesNotExist):
             Model.objects.get(name=self.testitem.name)
 
+    def test_deleteview_protected(self):
+        self.login()
+        from operatingsystem.models import Model as OS
+
+        OS.objects.create(version=random_string(), vendor=self.testitem)
+        url = reverse("%s:delete" % app_label, args=[self.testitem.pk])
+        response = self.client.post(url, follow=True)
+        self.assertEqual(response.status_code, 200, "no status 200?")
+        self.assertContains(response, "cannot be deleted because it is referenced by")
+        self.assertTrue(
+            Model.objects.filter(pk=self.testitem.pk).exists(),
+            "item was deleted despite being referenced!",
+        )
+
     def test_createview(self):
         self.login()
         url = reverse("%s:create" % app_label)

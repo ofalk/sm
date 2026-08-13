@@ -106,7 +106,7 @@ class FullIntegrationTest(StaticLiveServerTestCase):
             async with page.expect_navigation():
                 await page.click('form.form button[type="submit"]')
 
-            # 4. Test Protected Deletion (Reassignment)
+            # 4. Test Protected Deletion (graceful message, item stays)
             await page.goto(f"{self.live_server_url}/vendor/delete/{vendor1.pk}/")
             try:
                 await page.click('button:has-text("Confirm Delete")')
@@ -115,54 +115,32 @@ class FullIntegrationTest(StaticLiveServerTestCase):
                 print(f"Failed to find Confirm Delete on {page.url}")
                 print(f"PAGE CONTENT: {await page.content()}")
                 raise
-            await page.wait_for_selector("text=Action Required: This item is in use")
-            # 5. Test Reassignment
-            await page.select_option('select[name="new_target"]', value=str(vendor2.pk))
-            async with page.expect_navigation():
-                await page.click(
-                    f'button:has-text("Reassign items and delete the {vendor1.name}")'
-                )
+            await page.wait_for_selector(
+                "text=cannot be deleted because it is referenced by"
+            )
 
             exists = await asyncio.to_thread(
                 Vendor.objects.filter(pk=vendor1.pk).exists
             )
-            self.assertFalse(exists, "Vendor 1 was not deleted!")
+            self.assertTrue(exists, "Vendor 1 was deleted despite being referenced!")
 
-            from operatingsystem.models import Model as OS
-
-            os_obj = await asyncio.to_thread(OS.objects.get, version=os_version)
-            v_id = await asyncio.to_thread(lambda: os_obj.vendor.id)
-            self.assertEqual(v_id, vendor2.id, "OS was not reassigned to Vendor 2!")
-
-            # 5. Test Bulk Delete (Danger Zone)
-            v3_name = f"Vendor-Bulk-{self.random_string()}"
+            # 5. Test successful deletion of an unreferenced vendor
+            v2_name = f"Vendor-Safe-{self.random_string()}"
             await page.goto(f"{self.live_server_url}/vendor/create")
-            await page.fill('input[name="name"]', v3_name)
+            await page.fill('input[name="name"]', v2_name)
             await page.set_checked("#id_is_software", True)
             async with page.expect_navigation():
                 await page.click('form.form button[type="submit"]')
-            vendor3 = await asyncio.to_thread(Vendor.objects.get, name=v3_name)
+            vendor2 = await asyncio.to_thread(Vendor.objects.get, name=v2_name)
 
-            # Link an OS to it
-            await page.goto(f"{self.live_server_url}/operatingsystem/create")
-            await page.fill('input[name="version"]', f"OS-Bulk-{self.random_string()}")
-            await page.select_option('select[name="vendor"]', label=v3_name)
+            await page.goto(f"{self.live_server_url}/vendor/delete/{vendor2.pk}/")
             async with page.expect_navigation():
-                await page.click('form.form button[type="submit"]')
-
-            # Now delete Vendor 3 with "Delete All"
-            await page.goto(f"{self.live_server_url}/vendor/delete/{vendor3.pk}/")
-            await page.click('button:has-text("Confirm Delete")')
-            await page.wait_for_selector("text=Action Required: This item is in use")
-
-            page.once("dialog", lambda dialog: dialog.accept())
-            async with page.expect_navigation():
-                await page.click('button:has-text("Delete Everything")')
+                await page.click('button:has-text("Confirm Delete")')
 
             exists = await asyncio.to_thread(
-                Vendor.objects.filter(pk=vendor3.pk).exists
+                Vendor.objects.filter(pk=vendor2.pk).exists
             )
-            self.assertFalse(exists, "Vendor 3 was not deleted!")
+            self.assertFalse(exists, "Vendor 2 was not deleted!")
 
             await browser.close()
 

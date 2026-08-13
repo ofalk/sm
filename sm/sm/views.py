@@ -21,31 +21,13 @@ from .utils_starterpack import import_starter_pack
 
 class SafeDeleteMixin:
     """
-    Mixin to catch ProtectedError during deletion and offer
-    reassignment or bulk deletion.
+    Mixin to catch ProtectedError during deletion and show a friendly
+    message instead of raising a 500 error.
     """
-
-    def get_context_data(self, **kwargs: Any) -> Any:
-        context = super().get_context_data(**kwargs)  # type: ignore
-        if hasattr(self, "protected_error") and self.protected_error:  # type: ignore
-            context["protected_error"] = True
-            # Exclude our object from reassign list
-            context["all_objects"] = self.model.objects.exclude(
-                pk=self.object.pk  # type: ignore
-            )
-
-            # Re-collect protected objects properly
-            try:
-                self.object.delete()  # type: ignore
-            except ProtectedError as e:
-                context["protected_objects"] = e.protected_objects
-                context["protected_count"] = len(e.protected_objects)
-        return context
 
     def form_valid(self, form: Any) -> Any:
         success_url = self.get_success_url()  # type: ignore
         try:
-            # Try normal deletion first
             obj_name = str(self.object)  # type: ignore
             self.object.delete()  # type: ignore
             if hasattr(self, "success_message") and self.success_message:  # type: ignore  # noqa: E501
@@ -58,41 +40,19 @@ class SafeDeleteMixin:
                 messages.success(self.request, _("Successfully deleted %s") % obj_name)
             return HttpResponseRedirect(success_url)
         except ProtectedError as e:
-            action = self.request.POST.get("protected_action")
-            if action == "reassign":
-                new_obj_id = self.request.POST.get("new_target")
-                if new_obj_id:
-                    new_obj = self.model.objects.get(pk=new_obj_id)  # type: ignore
-                    # This part is tricky as we don't know the field name on
-                    # the remote side without inspecting the protected objects.
-                    for protected in e.protected_objects:
-                        # Find the FK field that points to our object
-                        for field in protected._meta.fields:
-                            # type: ignore
-                            if field.is_relation and field.related_model == self.model:
-                                setattr(protected, field.name, new_obj)
-                                protected.save()
-
-                    self.object.delete()  # type: ignore
-                    messages.success(
-                        self.request,
-                        _("Successfully reassigned dependencies and deleted %s")
-                        % self.object,  # type: ignore
-                    )
-                    return HttpResponseRedirect(success_url)
-
-            elif action == "delete_all":
-                for protected in e.protected_objects:
-                    protected.delete()
-                self.object.delete()  # type: ignore
-                messages.success(
-                    self.request,
-                    _("Successfully deleted %s and all dependent objects")
-                    % self.object,  # type: ignore
+            instances = ", ".join(str(obj) for obj in e.protected_objects)
+            messages.error(
+                self.request,
+                _(
+                    "%(name)s cannot be deleted because it is referenced by "
+                    "%(count)d other resource(s): %(instances)s"
                 )
-                return HttpResponseRedirect(success_url)
-
-            self.protected_error = True  # type: ignore
+                % {
+                    "name": self.object,  # type: ignore
+                    "count": len(e.protected_objects),
+                    "instances": instances,
+                },
+            )
             return self.render_to_response(
                 self.get_context_data(object=self.object)  # type: ignore
             )
