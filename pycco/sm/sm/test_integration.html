@@ -218,7 +218,7 @@
         <a class='octothorpe' href='#section-9'>#</a>
       </div>
       <ol>
-<li>Test Protected Deletion (Reassignment)</li>
+<li>Test Protected Deletion (graceful message, item stays)</li>
 </ol>
     </div>
     <div class='code'>
@@ -230,7 +230,14 @@
                 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to find Confirm Delete on </span><span class="si">{</span><span class="n">page</span><span class="o">.</span><span class="n">url</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
                 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;PAGE CONTENT: </span><span class="si">{</span><span class="k">await</span><span class="w"> </span><span class="n">page</span><span class="o">.</span><span class="n">content</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
                 <span class="k">raise</span>
-            <span class="k">await</span> <span class="n">page</span><span class="o">.</span><span class="n">wait_for_selector</span><span class="p">(</span><span class="s2">&quot;text=Action Required: This item is in use&quot;</span><span class="p">)</span></pre></div>
+            <span class="k">await</span> <span class="n">page</span><span class="o">.</span><span class="n">wait_for_selector</span><span class="p">(</span>
+                <span class="s2">&quot;text=cannot be deleted because it is referenced by&quot;</span>
+            <span class="p">)</span>
+
+            <span class="n">exists</span> <span class="o">=</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">to_thread</span><span class="p">(</span>
+                <span class="n">Vendor</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="n">vendor1</span><span class="o">.</span><span class="n">pk</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">exists</span><span class="p">,</span> <span class="s2">&quot;Vendor 1 was deleted despite being referenced!&quot;</span><span class="p">)</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -240,26 +247,28 @@
         <a class='octothorpe' href='#section-10'>#</a>
       </div>
       <ol>
-<li>Test Reassignment</li>
+<li>Test successful deletion of an unreferenced vendor</li>
 </ol>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>            <span class="k">await</span> <span class="n">page</span><span class="o">.</span><span class="n">select_option</span><span class="p">(</span><span class="s1">&#39;select[name=&quot;new_target&quot;]&#39;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">vendor2</span><span class="o">.</span><span class="n">pk</span><span class="p">))</span>
+      <div class="highlight"><pre>            <span class="n">v2_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Vendor-Safe-</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">random_string</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="k">await</span> <span class="n">page</span><span class="o">.</span><span class="n">goto</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">live_server_url</span><span class="si">}</span><span class="s2">/vendor/create&quot;</span><span class="p">)</span>
+            <span class="k">await</span> <span class="n">page</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span><span class="s1">&#39;input[name=&quot;name&quot;]&#39;</span><span class="p">,</span> <span class="n">v2_name</span><span class="p">)</span>
+            <span class="k">await</span> <span class="n">page</span><span class="o">.</span><span class="n">set_checked</span><span class="p">(</span><span class="s2">&quot;#id_is_software&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
             <span class="k">async</span> <span class="k">with</span> <span class="n">page</span><span class="o">.</span><span class="n">expect_navigation</span><span class="p">():</span>
-                <span class="k">await</span> <span class="n">page</span><span class="o">.</span><span class="n">click</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s1">&#39;button:has-text(&quot;Reassign items and delete the </span><span class="si">{</span><span class="n">vendor1</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">&quot;)&#39;</span>
-                <span class="p">)</span>
+                <span class="k">await</span> <span class="n">page</span><span class="o">.</span><span class="n">click</span><span class="p">(</span><span class="s1">&#39;form.form button[type=&quot;submit&quot;]&#39;</span><span class="p">)</span>
+            <span class="n">vendor2</span> <span class="o">=</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">to_thread</span><span class="p">(</span><span class="n">Vendor</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">v2_name</span><span class="p">)</span>
+
+            <span class="k">await</span> <span class="n">page</span><span class="o">.</span><span class="n">goto</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">live_server_url</span><span class="si">}</span><span class="s2">/vendor/delete/</span><span class="si">{</span><span class="n">vendor2</span><span class="o">.</span><span class="n">pk</span><span class="si">}</span><span class="s2">/&quot;</span><span class="p">)</span>
+            <span class="k">async</span> <span class="k">with</span> <span class="n">page</span><span class="o">.</span><span class="n">expect_navigation</span><span class="p">():</span>
+                <span class="k">await</span> <span class="n">page</span><span class="o">.</span><span class="n">click</span><span class="p">(</span><span class="s1">&#39;button:has-text(&quot;Confirm Delete&quot;)&#39;</span><span class="p">)</span>
 
             <span class="n">exists</span> <span class="o">=</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">to_thread</span><span class="p">(</span>
-                <span class="n">Vendor</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="n">vendor1</span><span class="o">.</span><span class="n">pk</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span>
+                <span class="n">Vendor</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="n">vendor2</span><span class="o">.</span><span class="n">pk</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span>
             <span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="n">exists</span><span class="p">,</span> <span class="s2">&quot;Vendor 1 was not deleted!&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="n">exists</span><span class="p">,</span> <span class="s2">&quot;Vendor 2 was not deleted!&quot;</span><span class="p">)</span>
 
-            <span class="kn">from</span><span class="w"> </span><span class="nn">operatingsystem.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">Model</span> <span class="k">as</span> <span class="n">OS</span>
-
-            <span class="n">os_obj</span> <span class="o">=</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">to_thread</span><span class="p">(</span><span class="n">OS</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="n">os_version</span><span class="p">)</span>
-            <span class="n">v_id</span> <span class="o">=</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">to_thread</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="n">os_obj</span><span class="o">.</span><span class="n">vendor</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">v_id</span><span class="p">,</span> <span class="n">vendor2</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="s2">&quot;OS was not reassigned to Vendor 2!&quot;</span><span class="p">)</span></pre></div>
+            <span class="k">await</span> <span class="n">browser</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -267,67 +276,6 @@
     <div class='docs'>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-11'>#</a>
-      </div>
-      <ol>
-<li>Test Bulk Delete (Danger Zone)</li>
-</ol>
-    </div>
-    <div class='code'>
-      <div class="highlight"><pre>            <span class="n">v3_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Vendor-Bulk-</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">random_string</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span>
-            <span class="k">await</span> <span class="n">page</span><span class="o">.</span><span class="n">goto</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">live_server_url</span><span class="si">}</span><span class="s2">/vendor/create&quot;</span><span class="p">)</span>
-            <span class="k">await</span> <span class="n">page</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span><span class="s1">&#39;input[name=&quot;name&quot;]&#39;</span><span class="p">,</span> <span class="n">v3_name</span><span class="p">)</span>
-            <span class="k">await</span> <span class="n">page</span><span class="o">.</span><span class="n">set_checked</span><span class="p">(</span><span class="s2">&quot;#id_is_software&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
-            <span class="k">async</span> <span class="k">with</span> <span class="n">page</span><span class="o">.</span><span class="n">expect_navigation</span><span class="p">():</span>
-                <span class="k">await</span> <span class="n">page</span><span class="o">.</span><span class="n">click</span><span class="p">(</span><span class="s1">&#39;form.form button[type=&quot;submit&quot;]&#39;</span><span class="p">)</span>
-            <span class="n">vendor3</span> <span class="o">=</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">to_thread</span><span class="p">(</span><span class="n">Vendor</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">v3_name</span><span class="p">)</span></pre></div>
-    </div>
-  </div>
-  <div class='clearall'></div>
-  <div class='section' id='section-12'>
-    <div class='docs'>
-      <div class='octowrap'>
-        <a class='octothorpe' href='#section-12'>#</a>
-      </div>
-      <p>Link an OS to it</p>
-    </div>
-    <div class='code'>
-      <div class="highlight"><pre>            <span class="k">await</span> <span class="n">page</span><span class="o">.</span><span class="n">goto</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">live_server_url</span><span class="si">}</span><span class="s2">/operatingsystem/create&quot;</span><span class="p">)</span>
-            <span class="k">await</span> <span class="n">page</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span><span class="s1">&#39;input[name=&quot;version&quot;]&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;OS-Bulk-</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">random_string</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-            <span class="k">await</span> <span class="n">page</span><span class="o">.</span><span class="n">select_option</span><span class="p">(</span><span class="s1">&#39;select[name=&quot;vendor&quot;]&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">v3_name</span><span class="p">)</span>
-            <span class="k">async</span> <span class="k">with</span> <span class="n">page</span><span class="o">.</span><span class="n">expect_navigation</span><span class="p">():</span>
-                <span class="k">await</span> <span class="n">page</span><span class="o">.</span><span class="n">click</span><span class="p">(</span><span class="s1">&#39;form.form button[type=&quot;submit&quot;]&#39;</span><span class="p">)</span></pre></div>
-    </div>
-  </div>
-  <div class='clearall'></div>
-  <div class='section' id='section-13'>
-    <div class='docs'>
-      <div class='octowrap'>
-        <a class='octothorpe' href='#section-13'>#</a>
-      </div>
-      <p>Now delete Vendor 3 with &ldquo;Delete All&rdquo;</p>
-    </div>
-    <div class='code'>
-      <div class="highlight"><pre>            <span class="k">await</span> <span class="n">page</span><span class="o">.</span><span class="n">goto</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">live_server_url</span><span class="si">}</span><span class="s2">/vendor/delete/</span><span class="si">{</span><span class="n">vendor3</span><span class="o">.</span><span class="n">pk</span><span class="si">}</span><span class="s2">/&quot;</span><span class="p">)</span>
-            <span class="k">await</span> <span class="n">page</span><span class="o">.</span><span class="n">click</span><span class="p">(</span><span class="s1">&#39;button:has-text(&quot;Confirm Delete&quot;)&#39;</span><span class="p">)</span>
-            <span class="k">await</span> <span class="n">page</span><span class="o">.</span><span class="n">wait_for_selector</span><span class="p">(</span><span class="s2">&quot;text=Action Required: This item is in use&quot;</span><span class="p">)</span>
-
-            <span class="n">page</span><span class="o">.</span><span class="n">once</span><span class="p">(</span><span class="s2">&quot;dialog&quot;</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">dialog</span><span class="p">:</span> <span class="n">dialog</span><span class="o">.</span><span class="n">accept</span><span class="p">())</span>
-            <span class="k">async</span> <span class="k">with</span> <span class="n">page</span><span class="o">.</span><span class="n">expect_navigation</span><span class="p">():</span>
-                <span class="k">await</span> <span class="n">page</span><span class="o">.</span><span class="n">click</span><span class="p">(</span><span class="s1">&#39;button:has-text(&quot;Delete Everything&quot;)&#39;</span><span class="p">)</span>
-
-            <span class="n">exists</span> <span class="o">=</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">to_thread</span><span class="p">(</span>
-                <span class="n">Vendor</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="n">vendor3</span><span class="o">.</span><span class="n">pk</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span>
-            <span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="n">exists</span><span class="p">,</span> <span class="s2">&quot;Vendor 3 was not deleted!&quot;</span><span class="p">)</span>
-
-            <span class="k">await</span> <span class="n">browser</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></pre></div>
-    </div>
-  </div>
-  <div class='clearall'></div>
-  <div class='section' id='section-14'>
-    <div class='docs'>
-      <div class='octowrap'>
-        <a class='octothorpe' href='#section-14'>#</a>
       </div>
       
     </div>
