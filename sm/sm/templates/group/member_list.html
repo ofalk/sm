@@ -93,19 +93,21 @@
                             {% endif %}
                         </td>
                         <td>
-                            {% if user != group.profile.owner %}
-                            <a href="{% url 'group_user_permission_edit' group.id user.id %}" class="btn btn-sm btn-outline-secondary pill me-1">
-                                <i class="fa-solid fa-user-shield me-1"></i> {% trans "Permissions" %}
-                            </a>
-                            {% endif %}
-                            {% if user != request.user and user != group.profile.owner %}
-                            <form method="post" action="{% url 'group_member_remove' group.id user.id %}" class="d-inline" onsubmit="return confirm('{% trans "Are you sure you want to remove this user from the group?" %}');">
-                                {% csrf_token %}
-                                <button type="submit" class="btn btn-sm btn-outline-danger pill">
-                                    <i class="fa-solid fa-user-minus me-1"></i> {% trans "Remove" %}
-                                </button>
-                            </form>
-                            {% endif %}
+                            <div class="d-flex justify-content-end gap-1">
+                                {% if user != group.profile.owner %}
+                                <a href="{% url 'group_user_permission_edit' group.id user.id %}" class="btn btn-sm btn-outline-secondary pill">
+                                    <i class="fa-solid fa-user-shield me-1"></i> {% trans "Permissions" %}
+                                </a>
+                                {% endif %}
+                                {% if user != request.user and user != group.profile.owner %}
+                                <form method="post" action="{% url 'group_member_remove' group.id user.id %}" onsubmit="return confirm('{% trans "Are you sure you want to remove this user from the group?" %}');">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-sm btn-outline-danger pill">
+                                        <i class="fa-solid fa-user-minus me-1"></i> {% trans "Remove" %}
+                                    </button>
+                                </form>
+                                {% endif %}
+                            </div>
                         </td>
                     </tr>
                     {% endfor %}

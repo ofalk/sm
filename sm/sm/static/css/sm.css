@@ -164,25 +164,25 @@ a.google-btn:hover {
 }
 
 /* Action Icons */
-.table td a {
+.table td a:not(.btn) {
   display: inline-block;
   padding: 0.25rem;
   line-height: 1;
 }
 
-.table td a i {
+.table td a:not(.btn) i {
   color: #ccc;
   font-size: 0.9rem;
   transition: color 0.2s;
 }
 
-.table td a:hover i.fa-pen {
+.table td a:not(.btn):hover i.fa-pen {
   color: var(--primary-color);
 }
-.table td a:hover i.fa-trash-can {
+.table td a:not(.btn):hover i.fa-trash-can {
   color: #e74c3c;
 }
-.table td a:hover i.fa-plus-circle {
+.table td a:not(.btn):hover i.fa-plus-circle {
   color: var(--primary-color);
 }
 
