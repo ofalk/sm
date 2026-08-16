@@ -36,6 +36,78 @@
                 <span class="text-muted small ms-2">{% trans "Vendor" %}</span>
             </a>
         {% endfor %}
+
+        {% for domain in domains %}
+            <a href="{{ domain.get_absolute_url }}" class="list-group-item list-group-item-action">
+                <i class="fa-solid fa-globe me-2 text-secondary"></i>
+                <strong>{{ domain.name }}</strong>
+                <span class="text-muted small ms-2">{% trans "Domain" %}</span>
+            </a>
+        {% endfor %}
+
+        {% for location in locations %}
+            <a href="{{ location.get_absolute_url }}" class="list-group-item list-group-item-action">
+                <i class="fa-solid fa-map-marker-alt me-2 text-warning"></i>
+                <strong>{{ location.name }}</strong>
+                <span class="text-muted small ms-2">{% trans "Location" %}</span>
+            </a>
+        {% endfor %}
+
+        {% for status in statuses %}
+            <a href="{{ status.get_absolute_url }}" class="list-group-item list-group-item-action">
+                <i class="fa-solid fa-tag me-2 text-danger"></i>
+                <strong>{{ status.name }}</strong>
+                <span class="text-muted small ms-2">{% trans "Status" %}</span>
+            </a>
+        {% endfor %}
+
+        {% for patchtime in patchtimes %}
+            <a href="{{ patchtime.get_absolute_url }}" class="list-group-item list-group-item-action">
+                <i class="fa-solid fa-calendar me-2 text-secondary"></i>
+                <strong>{{ patchtime.name }}</strong>
+                <span class="text-muted small ms-2">{% trans "Patch Time" %}</span>
+            </a>
+        {% endfor %}
+
+        {% for os in os %}
+            <a href="{{ os.get_absolute_url }}" class="list-group-item list-group-item-action">
+                <i class="fa-solid fa-laptop me-2 text-primary"></i>
+                <strong>{{ os }}</strong>
+                <span class="text-muted small ms-2">{% trans "Operating System" %}</span>
+            </a>
+        {% endfor %}
+
+        {% for servermodel in servermodels %}
+            <a href="{{ servermodel.get_absolute_url }}" class="list-group-item list-group-item-action">
+                <i class="fa-solid fa-cubes me-2 text-secondary"></i>
+                <strong>{{ servermodel }}</strong>
+                <span class="text-muted small ms-2">{% trans "Server Model" %}</span>
+            </a>
+        {% endfor %}
+
+        {% for cs in clustersoftware %}
+            <a href="{{ cs.get_absolute_url }}" class="list-group-item list-group-item-action">
+                <i class="fa-solid fa-shield-halved me-2 text-success"></i>
+                <strong>{{ cs }}</strong>
+                <span class="text-muted small ms-2">{% trans "Cluster Software" %}</span>
+            </a>
+        {% endfor %}
+
+        {% for cpt in clusterpackagetypes %}
+            <a href="{{ cpt.get_absolute_url }}" class="list-group-item list-group-item-action">
+                <i class="fa-solid fa-list-alt me-2 text-secondary"></i>
+                <strong>{{ cpt.name }}</strong>
+                <span class="text-muted small ms-2">{% trans "Package Type" %}</span>
+            </a>
+        {% endfor %}
+
+        {% for cp in clusterpackages %}
+            <a href="{{ cp.get_absolute_url }}" class="list-group-item list-group-item-action">
+                <i class="fa-solid fa-archive me-2 text-secondary"></i>
+                <strong>{{ cp.name }}</strong>
+                <span class="text-muted small ms-2">{% trans "Cluster Package" %}</span>
+            </a>
+        {% endfor %}
     </div>
 {% else %}
     <div class="text-center p-4 text-muted">

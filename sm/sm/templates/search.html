@@ -93,6 +93,177 @@
                 </div>
             </div>
             {% endif %}
+
+            {% if domains %}
+            <div class="col-md-6 mb-4">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-white">
+                        <h5 class="mb-0"><i class="fa-solid fa-globe me-2"></i> {% trans "Domains" %}</h5>
+                    </div>
+                    <div class="card-body p-0">
+                        <ul class="list-group list-group-flush">
+                            {% for domain in domains %}
+                            <li class="list-group-item py-3">
+                                <a href="{{ domain.get_absolute_url }}" class="fw-bold">{{ domain.name }}</a>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            {% if locations %}
+            <div class="col-md-6 mb-4">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-white">
+                        <h5 class="mb-0"><i class="fa-solid fa-map-marker-alt me-2"></i> {% trans "Locations" %}</h5>
+                    </div>
+                    <div class="card-body p-0">
+                        <ul class="list-group list-group-flush">
+                            {% for location in locations %}
+                            <li class="list-group-item py-3">
+                                <a href="{{ location.get_absolute_url }}" class="fw-bold">{{ location.name }}</a>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            {% if statuses %}
+            <div class="col-md-6 mb-4">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-white">
+                        <h5 class="mb-0"><i class="fa-solid fa-tag me-2"></i> {% trans "Statuses" %}</h5>
+                    </div>
+                    <div class="card-body p-0">
+                        <ul class="list-group list-group-flush">
+                            {% for status in statuses %}
+                            <li class="list-group-item py-3">
+                                <a href="{{ status.get_absolute_url }}" class="fw-bold">{{ status.name }}</a>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            {% if patchtimes %}
+            <div class="col-md-6 mb-4">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-white">
+                        <h5 class="mb-0"><i class="fa-solid fa-calendar me-2"></i> {% trans "Patch Times" %}</h5>
+                    </div>
+                    <div class="card-body p-0">
+                        <ul class="list-group list-group-flush">
+                            {% for patchtime in patchtimes %}
+                            <li class="list-group-item py-3">
+                                <a href="{{ patchtime.get_absolute_url }}" class="fw-bold">{{ patchtime.name }}</a>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            {% if os %}
+            <div class="col-md-6 mb-4">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-white">
+                        <h5 class="mb-0"><i class="fa-solid fa-laptop me-2"></i> {% trans "Operating Systems" %}</h5>
+                    </div>
+                    <div class="card-body p-0">
+                        <ul class="list-group list-group-flush">
+                            {% for os in os %}
+                            <li class="list-group-item py-3">
+                                <a href="{{ os.get_absolute_url }}" class="fw-bold">{{ os }}</a>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            {% if servermodels %}
+            <div class="col-md-6 mb-4">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-white">
+                        <h5 class="mb-0"><i class="fa-solid fa-cubes me-2"></i> {% trans "Server Models" %}</h5>
+                    </div>
+                    <div class="card-body p-0">
+                        <ul class="list-group list-group-flush">
+                            {% for servermodel in servermodels %}
+                            <li class="list-group-item py-3">
+                                <a href="{{ servermodel.get_absolute_url }}" class="fw-bold">{{ servermodel }}</a>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            {% if clustersoftware %}
+            <div class="col-md-6 mb-4">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-white">
+                        <h5 class="mb-0"><i class="fa-solid fa-shield-halved me-2"></i> {% trans "Cluster Software" %}</h5>
+                    </div>
+                    <div class="card-body p-0">
+                        <ul class="list-group list-group-flush">
+                            {% for cs in clustersoftware %}
+                            <li class="list-group-item py-3">
+                                <a href="{{ cs.get_absolute_url }}" class="fw-bold">{{ cs }}</a>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            {% if clusterpackagetypes %}
+            <div class="col-md-6 mb-4">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-white">
+                        <h5 class="mb-0"><i class="fa-solid fa-list-alt me-2"></i> {% trans "Package Types" %}</h5>
+                    </div>
+                    <div class="card-body p-0">
+                        <ul class="list-group list-group-flush">
+                            {% for cpt in clusterpackagetypes %}
+                            <li class="list-group-item py-3">
+                                <a href="{{ cpt.get_absolute_url }}" class="fw-bold">{{ cpt.name }}</a>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            {% if clusterpackages %}
+            <div class="col-md-6 mb-4">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-white">
+                        <h5 class="mb-0"><i class="fa-solid fa-archive me-2"></i> {% trans "Cluster Packages" %}</h5>
+                    </div>
+                    <div class="card-body p-0">
+                        <ul class="list-group list-group-flush">
+                            {% for cp in clusterpackages %}
+                            <li class="list-group-item py-3">
+                                <a href="{{ cp.get_absolute_url }}" class="fw-bold">{{ cp.name }}</a>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
         </div>
     {% else %}
         <div class="card shadow-sm mt-5">

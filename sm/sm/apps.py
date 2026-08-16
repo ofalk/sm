@@ -9,3 +9,6 @@ class SmConfig(AppConfig):
         from .patches import apply_patches
 
         apply_patches()
+
+        # Import the module so its @receiver decorators are registered.
+        from . import notifications  # noqa: F401

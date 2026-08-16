@@ -1,0 +1,15 @@
+{% load i18n %}Hello,
+
+{% trans "The status of server" %} {{ server.hostname }} {% trans "has changed to" %} {{ status }}.
+
+{% if group %}{% trans "Group:" %} {{ group.name }}{% endif %}
+
+{% trans "Server details:" %}
+  {% trans "Hostname:" %} {{ server.hostname }}
+  {% trans "Domain:" %} {{ server.domain }}
+  {% trans "Status:" %} {{ status }}
+  {% trans "Location:" %} {{ server.location|default:"-" }}
+  {% trans "Application:" %} {{ server.application|default:"-" }}
+  {% trans "Rack:" %} {{ server.rack|default:"-" }}
+
+{% trans "View it online:" %} {{ server.get_absolute_url }}
