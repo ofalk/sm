@@ -3,6 +3,7 @@ from django.urls import reverse
 from simple_history.models import HistoricalRecords
 from vendor.models import Model as VendorModel
 from django.contrib.auth.models import Group
+from taggit.managers import TaggableManager
 
 from django.core.exceptions import ObjectDoesNotExist
 
@@ -106,6 +107,8 @@ class Model(models.Model):
         on_delete=models.PROTECT,
         related_name="operatingsystems",
     )
+
+    tags = TaggableManager(blank=True, related_name="operatingsystem_tags")
 
     history = HistoricalRecords()
 

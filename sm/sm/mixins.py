@@ -10,6 +10,7 @@ from django.core.exceptions import PermissionDenied
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from rest_framework.exceptions import PermissionDenied as DRFPermissionDenied
 from rest_framework.exceptions import ValidationError
+from .forms import BulkActionForm
 
 
 def required_permission_codename(view: Any) -> str:
@@ -108,6 +109,23 @@ def filter_history_queryset_by_tenant(history_qs: QuerySet, request: Any) -> Que
     return history_qs.filter(Q(group_id__in=group_ids) | Q(group_id__isnull=True))
 
 
+class BulkActionMixin:
+    """
+    Adds a generic bulk-action form and the delete permission flag to the
+    context of list views. Templates can then render the shared bulk toolbar.
+    """
+
+    def get_context_data(self, **kwargs: Any) -> Any:
+        context = super().get_context_data(**kwargs)  # type: ignore
+        model = getattr(self, "model", None)
+        if model and hasattr(self, "object_list"):
+            context["bulk_form"] = BulkActionForm()
+            context["perms_delete_model"] = self.request.user.has_perm(
+                "{}.delete_{}".format(model._meta.app_label, model._meta.model_name)
+            )
+        return context
+
+
 def get_tenant_model_counts(group: Optional[Group]) -> int:
     """Helper function to count tenant items across all models for quota checking."""
     if not group:
@@ -156,6 +174,10 @@ class MultiTenantMixin:
         checks anchored to their own app.
         """
         return getattr(self, "permission_model", None) or getattr(self, "model", None)
+
+    # Set on subclasses to block duplicate items within the same scope
+    # (group, or the single global scope when group is null).
+    unique_per_group_fields: tuple = ()
 
     def get_queryset(self) -> QuerySet:
         # Check basic view permission for the model
@@ -209,6 +231,26 @@ class MultiTenantMixin:
         if required_permission_codename(self) in ("add", "change"):
             kwargs["user"] = self.request.user
         return kwargs
+
+    def get_form(self, form_class=None):
+        """
+        Pre-assign the user's group to a new (unbound) form instance so the
+        form's ``clean()`` can enforce per-group uniqueness before
+        ``form_valid`` runs. This avoids SuccessMessageMixin emitting a false
+        success message when the form is rejected.
+        """
+        form = super().get_form(form_class=form_class)  # type: ignore
+        if not hasattr(form, "instance"):
+            return form
+        if (
+            not form.instance.pk
+            and not form.instance.group
+            and not self.request.user.is_superuser
+        ):
+            user_groups = self.request.user.groups.all()
+            if user_groups.exists():
+                form.instance.group = user_groups.first()
+        return form
 
     def check_quota(self, group: Optional[Group]) -> bool:
         if not group or not hasattr(group, "profile"):
@@ -290,6 +332,63 @@ class APIMultiTenantMixin:
         queryset = super().get_queryset()  # type: ignore
         return filter_queryset_by_tenant(queryset, self.request)
 
+    def check_duplicate_per_group(
+        self, serializer: Any, group: Optional[Group]
+    ) -> None:
+        """
+        Rejects a create whose values collide with an existing item in the
+        same scope. The scope is the target group, or the single global scope
+        when the group is null. Because the DB UniqueConstraint(name, group)
+        treats NULL rows as always-distinct, this guard is required to prevent
+        duplicate *global* items (matching the web forms' behavior).
+
+        Fields are derived from the model's ``UniqueConstraint`` declarations
+        that include the ``group`` column, so it stays in sync with the DB.
+        """
+        model = getattr(serializer, "Meta", None)
+        model = getattr(model, "model", None)
+        if model is None:
+            return
+        from django.db.models import UniqueConstraint
+
+        for constraint in model._meta.constraints:
+            if not isinstance(constraint, UniqueConstraint):
+                continue
+            fields = list(constraint.fields)
+            if "group" not in fields:
+                continue
+            fields.remove("group")
+            if not fields:
+                continue
+
+            lookup = {}
+            missing = False
+            for field in fields:
+                value = serializer.validated_data.get(field)
+                # Nested related fields (e.g. SlugRelatedField) may be
+                # serialized as the object itself or the pk.
+                if hasattr(value, "pk"):
+                    value = value.pk
+                if value is None or value == "":
+                    missing = True
+                    break
+                lookup[field] = value
+            if missing:
+                continue
+
+            qs = model.objects.filter(**lookup)
+            if group and group.pk:
+                qs = qs.filter(group=group)
+            else:
+                qs = qs.filter(group__isnull=True)
+
+            if qs.exists():
+                from rest_framework.exceptions import ValidationError
+
+                raise ValidationError(
+                    _("An item with these values already exists in this scope.")
+                )
+
     def perform_create(self, serializer: Any) -> None:
         user_groups = self.request.user.groups.all()
         group = user_groups.first() if user_groups.exists() else None
@@ -311,6 +410,9 @@ class APIMultiTenantMixin:
                     count = get_tenant_model_counts(group)
                 if count >= group.profile.max_items:
                     raise ValidationError(_("Quota exceeded for this group."))
+
+            # Block duplicates within the same scope (group or global).
+            self.check_duplicate_per_group(serializer, group)
 
             serializer.save(group=group)
         else:

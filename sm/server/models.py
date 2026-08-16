@@ -10,6 +10,7 @@ from django.urls import reverse
 from django.utils.timezone import now
 from simple_history.models import HistoricalRecords
 from django.contrib.auth.models import Group
+from taggit.managers import TaggableManager
 
 from . import app_label
 
@@ -73,10 +74,10 @@ class Model(models.Model):
     )
 
     # => application model
-    # application = models.CharField(max_length=100, blank=True, null=True)
+    application = models.CharField(max_length=100, blank=True, null=True)
 
     # => rack model
-    # rack = models.CharField(max_length=45, blank=True, null=True)
+    rack = models.CharField(max_length=45, blank=True, null=True)
 
     # network!
     primary_ip = models.GenericIPAddressField(blank=True, null=True)
@@ -103,6 +104,8 @@ class Model(models.Model):
         on_delete=models.PROTECT,
         related_name="servers",
     )
+
+    tags = TaggableManager(blank=True, related_name="server_tags")
 
     history = HistoricalRecords()
 

@@ -14,7 +14,11 @@ from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 from django.template.loader import render_to_string
 from typing import Any
-from .utils_permissions import get_group_permissions_for_model
+from .utils_permissions import (
+    get_group_permissions_for_model,
+    APP_MODELS,
+    MODEL_LABELS,
+)
 from django.utils import timezone
 from django.conf import settings
 from django.http import JsonResponse
@@ -139,11 +143,8 @@ class GroupPermissionForm(forms.Form):
         super().__init__(*args, **kwargs)
 
         self.models_to_manage = [
-            ("server", _("Servers")),
-            ("cluster", _("Clusters")),
-            ("domain", _("Domains")),
-            ("vendor", _("Vendors")),
-            ("operatingsystem", _("Operating Systems")),
+            (app_label, MODEL_LABELS.get(app_label, app_label))
+            for app_label, _model in APP_MODELS
         ]
 
         current_perms = self.group.permissions.all().values_list("codename", flat=True)
@@ -214,11 +215,8 @@ class UserPermissionForm(forms.Form):
         super().__init__(*args, **kwargs)
 
         self.models_to_manage = [
-            ("server", _("Servers")),
-            ("cluster", _("Clusters")),
-            ("domain", _("Domains")),
-            ("vendor", _("Vendors")),
-            ("operatingsystem", _("Operating Systems")),
+            (app_label, MODEL_LABELS.get(app_label, app_label))
+            for app_label, _model in APP_MODELS
         ]
 
         group_perms = self.group.permissions.all().values_list("codename", flat=True)
@@ -326,6 +324,10 @@ class InviteGroupMemberView(LoginRequiredMixin, GroupOwnerRequiredMixin, FormVie
                 _("An invitation has already been sent to this email address."),
             )
             return self.form_invalid(form)
+
+        # Replace any expired/used invitation for the same email+group so we
+        # don't trip the (email, group) unique constraint.
+        Invitation.objects.filter(email__iexact=email, group=group).delete()
 
         invitation = Invitation.objects.create(
             email=email,
@@ -449,7 +451,7 @@ class AcceptInvitationView(TemplateView):
 
         from django.contrib.auth import login
 
-        login(request, user)
+        login(request, user, backend="django.contrib.auth.backends.ModelBackend")
 
         return redirect("dashboard")
 

@@ -10,6 +10,7 @@ from django.urls import reverse
 from simple_history.models import HistoricalRecords
 from clustersoftware.models import Model as ClustersoftwareModel
 from django.contrib.auth.models import Group
+from taggit.managers import TaggableManager
 
 from . import app_label
 
@@ -31,7 +32,7 @@ class Model(models.Model):
         group - the (user) group this cluster belongs to
     """
 
-    name = models.CharField(max_length=45, unique=True)
+    name = models.CharField(max_length=45)
     clustersoftware = models.ForeignKey(
         ClustersoftwareModel,
         related_name="%s_set" % app_label,
@@ -44,6 +45,8 @@ class Model(models.Model):
     group = models.ForeignKey(
         Group, editable=False, blank=True, null=True, on_delete=models.PROTECT
     )
+
+    tags = TaggableManager(blank=True, related_name="cluster_tags")
 
     history = HistoricalRecords()
 

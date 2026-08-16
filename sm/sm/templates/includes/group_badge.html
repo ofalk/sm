@@ -1,0 +1,6 @@
+{% load i18n %}
+{% if object.group %}
+<span class="badge text-bg-info" title="{% trans 'Owned by group' %}">{{ object.group.name }}</span>
+{% else %}
+<span class="badge text-bg-light border text-muted" title="{% trans 'Shared across all groups' %}">{% trans "Global" %}</span>
+{% endif %}

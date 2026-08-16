@@ -15,7 +15,6 @@ from cluster.models import Model as ClusterModel
 from clusterpackage.models import Model as ClusterPackageModel
 from clustersoftware.models import Model as ClusterSoftwareModel
 from clusterpackagetype.models import Model as ClusterPackageTypeModel
-
 from .models import GroupProfile, Invitation, ApiKey
 
 

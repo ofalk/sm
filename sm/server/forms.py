@@ -14,9 +14,12 @@ class Form(SMForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        status = StatusModel.objects.filter(name="In use").first()
-        if status is not None:
-            self.fields["status"].initial = status.id
+        try:
+            default_status = StatusModel.objects.filter(name="In use").first()
+            if default_status:
+                self.fields["status"].initial = default_status.id
+        except Exception as e:  # noqa # flake8: noqa # NOQA # pragma: no cover
+            print('No status "In Use" found: %s' % e)
 
     class Meta(SMForm.Meta):
         model = ServerModel

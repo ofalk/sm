@@ -1,5 +1,5 @@
 from django.views.generic import ListView, UpdateView
-from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.auth.mixins import UserPassesTestMixin
 from django.contrib.auth.models import User, Group
 from .models import GroupProfile
 from .forms_admin import GroupProfileForm

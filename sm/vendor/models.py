@@ -2,6 +2,7 @@ from django.db import models
 from django.urls import reverse
 from simple_history.models import HistoricalRecords
 from django.contrib.auth.models import Group
+from taggit.managers import TaggableManager
 
 from . import app_label
 
@@ -27,6 +28,8 @@ class Model(models.Model):
         on_delete=models.PROTECT,
         related_name="vendors",
     )
+
+    tags = TaggableManager(blank=True, related_name="vendor_tags")
 
     history = HistoricalRecords()
 

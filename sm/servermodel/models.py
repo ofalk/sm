@@ -3,6 +3,7 @@ from django.urls import reverse
 from simple_history.models import HistoricalRecords
 from vendor.models import Model as VendorModel
 from django.contrib.auth.models import Group
+from taggit.managers import TaggableManager
 
 from . import app_label
 
@@ -36,6 +37,8 @@ class Model(models.Model):
         related_name="servermodels",
     )
 
+    tags = TaggableManager(blank=True, related_name="servermodel_tags")
+
     def __str__(self):
         return "{} {}".format(self.vendor.name, self.name)
 
@@ -59,9 +62,6 @@ class Model(models.Model):
     class Meta:
         db_table = "{}_{}".format("sm", app_label)
         constraints = [
-            models.UniqueConstraint(
-                fields=["vendor", "name"], name="unique_sm_servermodel_vendor_name"
-            ),
             models.UniqueConstraint(
                 fields=["vendor", "name", "group"],
                 name="unique_sm_servermodel_vendor_name_group",

@@ -29,9 +29,7 @@ class ClusterPackageManager(models.Manager):
             status__name=status,
             package_type__name=package_type,
             **(
-                {"group__name": group}
-                if group is not None
-                else {"group__isnull": True}
+                {"group__name": group} if group is not None else {"group__isnull": True}
             ),
         )
 
@@ -59,7 +57,7 @@ class Model(models.Model):
         related_name="%s_set" % app_label,
         on_delete=models.PROTECT,
     )
-    tags = TaggableManager(blank=True)
+    tags = TaggableManager(blank=True, related_name="clusterpackage_tags")
     history = HistoricalRecords(related_name="clusterpackage_history")
 
     group = models.ForeignKey(

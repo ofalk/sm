@@ -3,6 +3,7 @@ from django.urls import reverse
 from simple_history.models import HistoricalRecords
 from vendor.models import Model as VendorModel
 from django.contrib.auth.models import Group
+from taggit.managers import TaggableManager
 
 from . import app_label
 
@@ -35,6 +36,8 @@ class Model(models.Model):
         related_name="clustersoftwares",
     )
 
+    tags = TaggableManager(blank=True, related_name="clustersoftware_tags")
+
     def __str__(self):
         if self.name and self.version:
             return "{} {}".format(self.name, self.version)
@@ -62,10 +65,6 @@ class Model(models.Model):
     class Meta:
         db_table = "{}_{}".format("sm", app_label)
         constraints = [
-            models.UniqueConstraint(
-                fields=["vendor", "name", "version"],
-                name="unique_sm_clustersoftware_vendor_name_version",
-            ),
             models.UniqueConstraint(
                 fields=["vendor", "name", "version", "group"],
                 name="unique_sm_clustersoftware_vendor_name_version_group",

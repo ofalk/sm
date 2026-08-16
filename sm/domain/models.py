@@ -2,6 +2,7 @@ from django.db import models
 from django.urls import reverse
 from simple_history.models import HistoricalRecords
 from django.contrib.auth.models import Group
+from taggit.managers import TaggableManager
 
 from . import app_label
 
@@ -13,7 +14,7 @@ class ModelManager(models.Manager):
 
 class Model(models.Model):
 
-    name = models.CharField(max_length=45, unique=True, verbose_name="Domain name")
+    name = models.CharField(max_length=45, verbose_name="Domain name")
 
     group = models.ForeignKey(
         Group,
@@ -23,6 +24,8 @@ class Model(models.Model):
         on_delete=models.PROTECT,
         related_name="domains",
     )
+
+    tags = TaggableManager(blank=True, related_name="domain_tags")
 
     objects = ModelManager()
     history = HistoricalRecords()

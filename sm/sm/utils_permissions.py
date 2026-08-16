@@ -6,6 +6,39 @@ import logging
 logger = logging.getLogger(__name__)
 
 
+# All core tenant models that can be permission-managed per group.
+APP_MODELS: List[Tuple[str, str]] = [
+    ("server", "model"),
+    ("cluster", "model"),
+    ("domain", "model"),
+    ("vendor", "model"),
+    ("operatingsystem", "model"),
+    ("status", "model"),
+    ("location", "model"),
+    ("patchtime", "model"),
+    ("servermodel", "model"),
+    ("clusterpackage", "model"),
+    ("clustersoftware", "model"),
+    ("clusterpackagetype", "model"),
+]
+
+# Human-readable labels for the permission management UI, keyed by app_label.
+MODEL_LABELS: dict = {
+    "server": "Servers",
+    "cluster": "Clusters",
+    "domain": "Domains",
+    "vendor": "Vendors",
+    "operatingsystem": "Operating Systems",
+    "status": "Statuses",
+    "location": "Locations",
+    "patchtime": "Patch Times",
+    "servermodel": "Server Models",
+    "clusterpackage": "Cluster Packages",
+    "clustersoftware": "Cluster Software",
+    "clusterpackagetype": "Package Types",
+}
+
+
 def get_group_permissions_for_model(
     app_label: str, model_name: str = "model"
 ) -> List[Permission]:
@@ -33,22 +66,7 @@ def sync_group_permissions(group: Group, grant_all: bool = False) -> None:
     so multi-tenancy works as expected.
     If grant_all is True, also grants add, change, and delete permissions.
     """
-    app_models: List[Tuple[str, str]] = [
-        ("server", "model"),
-        ("cluster", "model"),
-        ("domain", "model"),
-        ("vendor", "model"),
-        ("operatingsystem", "model"),
-        ("status", "model"),
-        ("location", "model"),
-        ("patchtime", "model"),
-        ("servermodel", "model"),
-        ("clusterpackage", "model"),
-        ("clustersoftware", "model"),
-        ("clusterpackagetype", "model"),
-    ]
-
-    for app, model in app_models:
+    for app, model in APP_MODELS:
         perms = get_group_permissions_for_model(app, model)
         if grant_all:
             # Grant all permissions for this model
