@@ -21,7 +21,8 @@
           </button>
         </form>
         {% if perms.vendor.add_model %}
-        <a href="{% url 'vendor:create' %}" class="btn btn-sm btn-primary pill">
+                {% include "includes/export_button.html" with app_label="vendor" %}
+<a href="{% url 'vendor:create' %}" class="btn btn-sm btn-primary pill">
           <i class="fa-solid fa-plus-circle me-1"></i> {% trans "Add New" %}
         </a>
         {% endif %}
@@ -33,9 +34,16 @@
     {% if not object_list %}
       <div class="card-body"><b>{% trans "No results" %}</b></div>
     {% else %}
+    <form id="bulk_action_form" method="post" action="{% url 'vendor:bulk_delete' %}">
+    {% csrf_token %}
+
+    {% include "includes/bulk_toolbar.html" %}
+
+
     <table class="table table-hover" id="vendor_list">
       <thead>
         <tr>
+        {% include "includes/bulk_select_all.html" %}
           <th>{% trans "Name" %}</th>
           <th class="text-center" style="white-space: nowrap;">
             <span class="d-inline-block text-center" style="width: 25px;">
@@ -45,12 +53,14 @@
               <i class="fa-solid fa-code" title="{% trans 'Software Vendor' %}" data-bs-toggle="tooltip"></i>
             </span>
           </th>
+          <th>{% trans "Group" %}</th>
           <th>{% trans "Actions" %}</th>
         </tr>
       </thead>
       <tbody>
         {% for object in object_list %}
           <tr>
+            {% include "includes/bulk_checkbox.html" with bulk_object=object %}
             <td>
               <a href="{% url 'vendor:detail' object.pk %}" title="{{ object.name }}">
                 {{ object.name }}
@@ -68,6 +78,7 @@
                 {% endif %}
               </span>
             </td>
+            <td>{% include "includes/group_badge.html" %}</td>
             <td>
               {% if perms.vendor.change_model %}
               <a href="{% url 'vendor:update' object.pk %}" title="{% trans 'Edit vendor' %}">
@@ -84,6 +95,7 @@
         {% endfor %}
       </tbody>
     </table>
+    </form>
     {% endif %}
     {% include "pagination/pagination.html" %}
   </div> <!-- card -->

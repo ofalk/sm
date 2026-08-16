@@ -14,7 +14,8 @@
     <div class="card-header bg-white d-flex justify-content-between align-items-center">
       <h4 class="mb-0">{% trans "Domain" %}</h4>
       {% if perms.domain.add_model %}
-      <a href="{% url 'domain:create' %}" class="btn btn-sm btn-primary pill">
+              {% include "includes/export_button.html" with app_label="domain" %}
+<a href="{% url 'domain:create' %}" class="btn btn-sm btn-primary pill">
         <i class="fa-solid fa-plus-circle me-1"></i> {% trans "Add New" %}
       </a>
       {% endif %}
@@ -25,21 +26,31 @@
     {% if not object_list %}
       <div class="card-body"><b>{% trans "No results" %}</b></div>
     {% else %}
+    <form id="bulk_action_form" method="post" action="{% url 'domain:bulk_delete' %}">
+    {% csrf_token %}
+
+    {% include "includes/bulk_toolbar.html" %}
+
+
     <table class="table table-hover" id="domain_list">
       <thead>
         <tr>
+        {% include "includes/bulk_select_all.html" %}
           <th>{% trans 'Domainname' %}</th>
+          <th>{% trans 'Group' %}</th>
           <th>{% trans "Actions" %}</th>
         </tr>
       </thead>
       <tbody>
         {% for object in object_list %}
           <tr>
+            {% include "includes/bulk_checkbox.html" with bulk_object=object %}
             <td>
               <a href="{% url 'domain:detail' object.pk %}" title="{{ object.name }}">
                 {{ object.name }}
               </a>
             </td>
+            <td>{% include "includes/group_badge.html" %}</td>
             <td>
               {% if perms.domain.change_model %}
               <a href="{% url 'domain:update' object.pk %}" title="{% trans 'Edit domain' %}">
@@ -56,6 +67,7 @@
         {% endfor %}
       </tbody>
     </table>
+    </form>
     {% endif %}
     {% include "pagination/pagination.html" %}
   </div> <!-- card -->

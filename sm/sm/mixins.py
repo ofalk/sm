@@ -10,7 +10,6 @@ from django.core.exceptions import PermissionDenied
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from rest_framework.exceptions import PermissionDenied as DRFPermissionDenied
 from rest_framework.exceptions import ValidationError
-from .forms import BulkActionForm
 
 
 def required_permission_codename(view: Any) -> str:
@@ -116,6 +115,8 @@ class BulkActionMixin:
     """
 
     def get_context_data(self, **kwargs: Any) -> Any:
+        from .forms import BulkActionForm
+
         context = super().get_context_data(**kwargs)  # type: ignore
         model = getattr(self, "model", None)
         if model and hasattr(self, "object_list"):

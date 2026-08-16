@@ -1,5 +1,5 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
-from sm.views import SafeDeleteMixin
+from sm.views import SafeDeleteMixin, GenericCSVExportView
 from sm.mixins import MultiTenantMixin, filter_queryset_by_tenant
 
 from .models import Model
@@ -53,6 +53,7 @@ class UpdateView(
 
     template_name = "%s/edit.html" % app_label
     model = Model
+
     form_class = Form
     success_url = reverse_lazy("%s:index" % app_label)
 
@@ -86,3 +87,12 @@ class DeleteView(
     template_name = "delete.html"
     model = Model
     success_url = reverse_lazy("%s:index" % app_label)
+
+
+class CSVExportView(GenericCSVExportView):
+    model = Model
+    filename = "servermodel.csv"
+    export_fields = [
+        ("name", "name"),
+        ("vendor", "vendor__name"),
+    ]

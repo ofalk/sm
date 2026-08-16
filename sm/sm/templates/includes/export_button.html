@@ -1,0 +1,4 @@
+{% load i18n %}
+<a href="{% url app_label|add:':export' %}" class="btn btn-sm btn-outline-secondary pill" title="{% trans 'Export as CSV' %}">
+  <i class="fa-solid fa-file-csv me-1"></i> {% trans "Export" %}
+</a>

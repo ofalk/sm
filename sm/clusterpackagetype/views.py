@@ -1,6 +1,12 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
+<<<<<<< HEAD
 from sm.views import SafeDeleteMixin
 from sm.mixins import MultiTenantMixin
+=======
+from sm.views import SafeDeleteMixin, GenericCSVExportView, GenericBulkDeleteView
+from sm.mixins import MultiTenantMixin, BulkActionMixin
+
+>>>>>>> 0e14b74 (feat: bulk operations and CSV export across all models)
 
 from .models import Model
 from .forms import Form, FormDisabled
@@ -17,7 +23,7 @@ from django.utils.translation import gettext as _
 from django.urls import reverse_lazy
 
 
-class ListView(LoginRequiredMixin, MultiTenantMixin, GenericListView):
+class ListView(LoginRequiredMixin, MultiTenantMixin, BulkActionMixin, GenericListView):
     template_name = "%s/list.html" % app_label
     model = Model
     paginate_by = 20
@@ -41,6 +47,7 @@ class UpdateView(
 
     template_name = "%s/edit.html" % app_label
     model = Model
+
     form_class = Form
     success_url = reverse_lazy("%s:index" % app_label)
 
@@ -63,3 +70,15 @@ class DeleteView(
     template_name = "delete.html"
     model = Model
     success_url = reverse_lazy("%s:index" % app_label)
+
+
+class BulkDeleteView(GenericBulkDeleteView):
+    model = Model
+
+
+class CSVExportView(GenericCSVExportView):
+    model = Model
+    filename = "clusterpackagetype.csv"
+    export_fields = [
+        ("name", "name"),
+    ]

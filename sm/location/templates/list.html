@@ -13,7 +13,8 @@
   <div class="card">
     <div class="card-header bg-white d-flex justify-content-between align-items-center">
       <h4 class="mb-0">{% trans "Location" %}</h4>
-      <a href="{% url 'location:create' %}" class="btn btn-sm btn-primary pill">
+              {% include "includes/export_button.html" with app_label="location" %}
+<a href="{% url 'location:create' %}" class="btn btn-sm btn-primary pill">
         <i class="fa-solid fa-plus-circle me-1"></i> {% trans "Add New" %}
       </a>
     </div>
@@ -23,17 +24,26 @@
     {% if not object_list %}
       <div class="card-body"><b>{% trans "No results" %}</b></div>
     {% else %}
+    <form id="bulk_action_form" method="post" action="{% url 'location:bulk_delete' %}">
+    {% csrf_token %}
+
+    {% include "includes/bulk_toolbar.html" %}
+
+
     <table class="table table-hover" id="location_list">
       <thead>
         <tr>
+        {% include "includes/bulk_select_all.html" %}
           <th>{% trans 'Name' %}</th>
           <th>{% trans 'Country' %}</th>
+          <th>{% trans 'Group' %}</th>
           <th>{% trans "Actions" %}</th>
         </tr>
       </thead>
       <tbody>
         {% for object in object_list %}
           <tr>
+            {% include "includes/bulk_checkbox.html" with bulk_object=object %}
             <td>
               <a href="{% url 'location:detail' object.pk %}" title="{{ object.name }}">
                 {{ object.name }}
@@ -42,6 +52,7 @@
             <td>
               <div>{{ object.country }}</div>
             </td>
+            <td>{% include "includes/group_badge.html" %}</td>
             <td>
               <a href="{% url 'location:update' object.pk %}" title="{% trans 'Edit location' %}">
                 <i class="fa-solid fa-pen fa-fw fa-lg" aria-hidden="true"></i>
@@ -54,6 +65,7 @@
         {% endfor %}
       </tbody>
     </table>
+    </form>
     {% endif %}
     {% include "pagination/pagination.html" %}
   </div> <!-- card -->

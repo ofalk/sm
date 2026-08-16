@@ -1,8 +1,8 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 
-from sm.views import SafeDeleteMixin
-from sm.mixins import filter_queryset_by_tenant, MultiTenantMixin
+from sm.views import SafeDeleteMixin, GenericCSVExportView
+from sm.mixins import filter_queryset_by_tenant, MultiTenantMixin, BulkActionMixin
 
 from .models import Model
 from .forms import Form, FormDisabled, BulkActionForm
@@ -24,7 +24,7 @@ from django.utils.translation import gettext as _
 from django.urls import reverse_lazy
 
 
-class ListView(LoginRequiredMixin, MultiTenantMixin, GenericListView):
+class ListView(LoginRequiredMixin, MultiTenantMixin, BulkActionMixin, GenericListView):
     template_name = "%s/list.html" % app_label
     model = Model
     paginate_by = 20
@@ -57,8 +57,9 @@ class ListView(LoginRequiredMixin, MultiTenantMixin, GenericListView):
 
 
 class BulkActionView(LoginRequiredMixin, View):
+
     def post(self, request, *args, **kwargs):
-        server_ids = request.POST.getlist("selected_servers")
+        server_ids = request.POST.getlist("selected_ids")
         if not server_ids:
             messages.warning(request, _("No servers selected."))
             return redirect("server:index")
@@ -161,3 +162,20 @@ class SearchView(LoginRequiredMixin, MultiTenantMixin, GenericListView):
     paginate_by = 20
     paginate_orphans = paginate_by / 4
     ordering = "hostname"
+
+
+class CSVExportView(GenericCSVExportView):
+    model = Model
+    filename = "server.csv"
+    export_fields = [
+        ("hostname", "hostname"),
+        ("status", "status__name"),
+        ("domain", "domain__name"),
+        ("location", "location__name"),
+        ("application", "application"),
+        ("rack", "rack"),
+        ("primary_ip", "primary_ip"),
+        ("management_ip", "management_ip"),
+        ("description", "description"),
+        ("tags", "tags.names"),
+    ]

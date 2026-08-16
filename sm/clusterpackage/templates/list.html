@@ -13,7 +13,8 @@
   <div class="card">
     <div class="card-header bg-white d-flex justify-content-between align-items-center">
       <h4 class="mb-0">{% trans "Clusterpackage" %}</h4>
-      <a href="{% url 'clusterpackage:create' %}" class="btn btn-sm btn-primary pill">
+              {% include "includes/export_button.html" with app_label="clusterpackage" %}
+<a href="{% url 'clusterpackage:create' %}" class="btn btn-sm btn-primary pill">
         <i class="fa-solid fa-plus-circle me-1"></i> {% trans "Add New" %}
       </a>
     </div>
@@ -23,18 +24,27 @@
     {% if not object_list %}
       <div class="card-body"><b>{% trans "No results" %}</b></div>
     {% else %}
+    <form id="bulk_action_form" method="post" action="{% url 'clusterpackage:bulk_delete' %}">
+    {% csrf_token %}
+
+    {% include "includes/bulk_toolbar.html" %}
+
+
     <table class="table table-hover" id="clusterpackage_list">
       <thead>
         <tr>
+        {% include "includes/bulk_select_all.html" %}
           <th>{% trans "Name" %}</th>
           <th>{% trans "Type" %}</th>
           <th>{% trans "Cluster" %}</th>
+          <th>{% trans "Group" %}</th>
           <th>{% trans "Actions" %}</th>
         </tr>
       </thead>
       <tbody>
         {% for clusterpackage in object_list.all %}
           <tr>
+            {% include "includes/bulk_checkbox.html" with bulk_object=clusterpackage %}
             <td>
               <a href="{% url 'clusterpackage:detail' clusterpackage.pk %}" title="{{ clusterpackage.name }}">
                 {{ clusterpackage.name }}
@@ -50,6 +60,7 @@
                 {{ clusterpackage.cluster.name }}
               </a>
             </td>
+            <td>{% include "includes/group_badge.html" with object=clusterpackage %}</td>
             <td>
               <a href="{% url 'clusterpackage:update' clusterpackage.pk %}" title="{% trans 'Edit clusterpackage' %}">
                 <i class="fa-solid fa-pen fa-fw fa-lg" aria-hidden="true"></i>
@@ -62,6 +73,7 @@
         {% endfor %}
       </tbody>
     </table>
+    </form>
     {% endif %}
     {% include "pagination/pagination.html" %}
   </div> <!-- card -->

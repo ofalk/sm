@@ -13,7 +13,8 @@
   <div class="card">
     <div class="card-header bg-white d-flex justify-content-between align-items-center">
       <h4 class="mb-0">{% trans "Clusterpackagetype" %}</h4>
-      <a href="{% url 'clusterpackagetype:create' %}" class="btn btn-sm btn-primary pill">
+              {% include "includes/export_button.html" with app_label="clusterpackagetype" %}
+<a href="{% url 'clusterpackagetype:create' %}" class="btn btn-sm btn-primary pill">
         <i class="fa-solid fa-plus-circle me-1"></i> {% trans "Add New" %}
       </a>
     </div>
@@ -23,21 +24,31 @@
     {% if not object_list %}
       <div class="card-body"><b>{% trans "No results" %}</b></div>
     {% else %}
+    <form id="bulk_action_form" method="post" action="{% url 'clusterpackagetype:bulk_delete' %}">
+    {% csrf_token %}
+
+    {% include "includes/bulk_toolbar.html" %}
+
+
     <table class="table table-hover" id="clusterpackagetype_list">
       <thead>
         <tr>
+        {% include "includes/bulk_select_all.html" %}
           <th>{% trans "Name" %}</th>
+          <th>{% trans "Group" %}</th>
           <th>{% trans "Actions" %}</th>
         </tr>
       </thead>
       <tbody>
         {% for clusterpackagetype in object_list.all %}
           <tr>
+            {% include "includes/bulk_checkbox.html" with bulk_object=clusterpackagetype %}
             <td>
               <a href="{% url 'clusterpackagetype:detail' clusterpackagetype.pk %}" title="{{ clusterpackagetype.name }}">
                 {{ clusterpackagetype.name }}
               </a>
             </td>
+            <td>{% include "includes/group_badge.html" with object=clusterpackagetype %}</td>
             <td>
               <a href="{% url 'clusterpackagetype:update' clusterpackagetype.pk %}" title="{% trans 'Edit clusterpackagetype' %}">
                 <i class="fa-solid fa-pen fa-fw fa-lg" aria-hidden="true"></i>
@@ -50,6 +61,7 @@
         {% endfor %}
       </tbody>
     </table>
+    </form>
     {% endif %}
     {% include "pagination/pagination.html" %}
   </div> <!-- card -->

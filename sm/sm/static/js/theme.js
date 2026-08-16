@@ -161,16 +161,16 @@ $(function () {
 
   // Bulk Actions Logic
   $("#select_all").on("change", function () {
-    $(".server-checkbox").prop("checked", this.checked);
+    $(".bulk-checkbox").prop("checked", this.checked);
     updateBulkToolbar();
   });
 
-  $(".server-checkbox").on("change", function () {
+  $(".bulk-checkbox").on("change", function () {
     updateBulkToolbar();
   });
 
   function updateBulkToolbar() {
-    var count = $(".server-checkbox:checked").length;
+    var count = $(".bulk-checkbox:checked").length;
     $("#selected_count").text(count);
     if (count > 0) {
       $("#bulk_toolbar").removeClass("d-none");
@@ -181,13 +181,13 @@ $(function () {
   }
 
   $("#cancel_bulk").on("click", function () {
-    $(".server-checkbox, #select_all").prop("checked", false);
+    $(".bulk-checkbox, #select_all").prop("checked", false);
     updateBulkToolbar();
   });
 
   $("#apply_bulk").on("click", function (e) {
     if ($("#bulk_delete_check").is(":checked")) {
-      if (!confirm("Are you sure you want to delete the selected servers?")) {
+      if (!confirm("Are you sure you want to delete the selected items?")) {
         e.preventDefault();
       }
     }

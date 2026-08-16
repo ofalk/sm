@@ -1,6 +1,6 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-from sm.views import SafeDeleteMixin
+from sm.views import SafeDeleteMixin, GenericCSVExportView
 from sm.mixins import MultiTenantMixin
 from typing import Any
 
@@ -99,3 +99,12 @@ class DeleteView(
     template_name = "delete.html"
     model = Model
     success_url = reverse_lazy("%s:index" % app_label)
+
+
+class CSVExportView(GenericCSVExportView):
+    model = Model
+    filename = "operatingsystem.csv"
+    export_fields = [
+        ("version", "version"),
+        ("vendor", "vendor__name"),
+    ]

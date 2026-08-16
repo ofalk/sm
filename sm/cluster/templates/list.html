@@ -14,7 +14,8 @@
     <div class="card-header bg-white d-flex justify-content-between align-items-center">
       <h4 class="mb-0">{% trans "Cluster" %}</h4>
       {% if perms.cluster.add_model %}
-      <a href="{% url 'cluster:create' %}" class="btn btn-sm btn-primary pill">
+              {% include "includes/export_button.html" with app_label="cluster" %}
+<a href="{% url 'cluster:create' %}" class="btn btn-sm btn-primary pill">
         <i class="fa-solid fa-plus-circle me-1"></i> {% trans "Add New" %}
       </a>
       {% endif %}
@@ -25,17 +26,26 @@
     {% if not object_list %}
       <div class="card-body"><b>{% trans "No results" %}</b></div>
     {% else %}
+    <form id="bulk_action_form" method="post" action="{% url 'cluster:bulk_delete' %}">
+    {% csrf_token %}
+
+    {% include "includes/bulk_toolbar.html" %}
+
+
     <table class="table table-hover" id="cluster_list">
       <thead>
         <tr>
+        {% include "includes/bulk_select_all.html" %}
           <th>{% trans 'Name' %}</th>
           <th>{% trans 'Software' %}</th>
+          <th>{% trans 'Tags' %}</th>
           <th>{% trans "Actions" %}</th>
         </tr>
       </thead>
       <tbody>
         {% for object in object_list %}
           <tr>
+            {% include "includes/bulk_checkbox.html" with bulk_object=object %}
             <td>
               <a href="{% url 'cluster:detail' object.pk %}" title="{{ object.name }}">
                 {{ object.name }}
@@ -50,7 +60,7 @@
                 None
               {% endif %}
             </td>
-
+            <td>{% include "includes/tags.html" %}</td>
             <td>
               {% if object.group in user.groups.all or user.is_superuser %}
                 {% if perms.cluster.change_model %}
@@ -74,6 +84,7 @@
         {% endfor %}
       </tbody>
     </table>
+    </form>
     {% endif %}
     {% include "pagination/pagination.html" %}
   </div> <!-- card -->

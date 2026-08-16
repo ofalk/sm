@@ -1,7 +1,7 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-from sm.views import SafeDeleteMixin
-from sm.mixins import MultiTenantMixin
+from sm.views import SafeDeleteMixin, GenericCSVExportView, GenericBulkDeleteView
+from sm.mixins import MultiTenantMixin, BulkActionMixin
 
 from .models import Model
 from .forms import Form, FormDisabled
@@ -21,7 +21,7 @@ except Exception:  # pragma: no cover
     from django.urls import reverse_lazy  # pragma: no cover
 
 
-class ListView(LoginRequiredMixin, MultiTenantMixin, GenericListView):
+class ListView(LoginRequiredMixin, MultiTenantMixin, BulkActionMixin, GenericListView):
     template_name = "%s/list.html" % app_label
     model = Model
     paginate_by = 20
@@ -62,3 +62,17 @@ class DeleteView(
     template_name = "delete.html"
     model = Model
     success_url = reverse_lazy("%s:index" % app_label)
+
+
+class BulkDeleteView(GenericBulkDeleteView):
+    model = Model
+
+
+class CSVExportView(GenericCSVExportView):
+    model = Model
+    filename = "vendor.csv"
+    export_fields = [
+        ("name", "name"),
+        ("is_hardware", "is_hardware"),
+        ("is_software", "is_software"),
+    ]

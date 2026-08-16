@@ -12,4 +12,5 @@ urlpatterns = [
     url(r"^delete/(?P<pk>[-\w]+)/$", views.DeleteView.as_view(), name="delete"),
     url(r"^search$", views.SearchView.as_view(), name="search"),
     url(r"^bulk-action$", views.BulkActionView.as_view(), name="bulk_action"),
+    url(r"^export$", views.CSVExportView.as_view(), name="export"),
 ]
