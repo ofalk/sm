@@ -1,0 +1,8 @@
+{% load i18n %}
+{% if object.tags.all %}
+<span class="d-inline-flex flex-wrap gap-1">
+  {% for tag in object.tags.all %}
+  <span class="badge text-bg-secondary">{{ tag.name }}</span>
+  {% endfor %}
+</span>
+{% endif %}

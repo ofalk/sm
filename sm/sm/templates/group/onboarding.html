@@ -1,0 +1,51 @@
+{% extends "site_base.html" %}
+{% load i18n %}
+
+{% block head_title %}{% trans "Welcome" %}{% endblock %}
+
+{% block body %}
+<div class="wide-container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow-sm">
+                <div class="card-header bg-white text-center py-4">
+                    <h3 class="mb-0">
+                        <i class="fa-solid fa-hand-sparkles me-2"></i>{% trans "Welcome to ServerManager" %}
+                    </h3>
+                    <p class="text-muted mb-0 mt-2">
+                        {% trans "You are currently only a member of your personal workspace." %}
+                    </p>
+                </div>
+                <div class="card-body p-4">
+                    <p class="text-muted">
+                        {% trans "Create your own group to manage servers and clusters with your team, or join an existing one using an invitation link." %}
+                    </p>
+
+                    <div class="d-grid gap-3">
+                        <a href="{% url 'group_create' %}" class="btn btn-primary btn-lg pill">
+                            <i class="fa-solid fa-plus me-1"></i> {% trans "Create a New Group" %}
+                        </a>
+                        <div class="text-center text-muted">{% trans "or" %}</div>
+                        <form method="post" action="{% url 'group_onboarding' %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="action" value="join">
+                            <div class="input-group">
+                                <input type="text" name="token" class="form-control"
+                                       placeholder="{% trans 'Paste invitation token' %}" aria-label="{% trans 'Invitation token' %}">
+                                <button type="submit" class="btn btn-outline-primary pill">
+                                    <i class="fa-solid fa-right-to-bracket me-1"></i> {% trans "Join" %}
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="card-footer bg-white text-center">
+                    <a href="{% url 'dashboard' %}" class="btn btn-link text-muted">
+                        {% trans "Skip for now" %}
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

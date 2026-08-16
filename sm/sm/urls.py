@@ -14,6 +14,7 @@ from .views import (
     SearchView,
     ImportStarterPackView,
     HistoryDiffView,
+    PatchScheduleView,
     TermsView,
     PrivacyView,
     ImpressumView,
@@ -31,8 +32,11 @@ from .views_group import (
     GroupFilterView,
     GroupCreateView,
 )
+from .views_onboarding import GroupOnboardingView
 from .views_avatars import avatar_proxy
+from .views_audit import AuditLogView
 from .views_api_keys import ApiKeyListView, RevokeApiKeyView
+from .views_profile import ProfileView
 from .api.views import (
     ServerViewSet,
     VendorViewSet,
@@ -73,6 +77,13 @@ router.register(
 
 urlpatterns = [
     path("admin/doc/", include("django.contrib.admindocs.urls")),
+    # User Management (Staff) - must come before admin/ catch-all
+    path("admin/users/", UserListView.as_view(), name="user_management_list"),
+    path(
+        "admin/groups/<int:pk>/",
+        GroupProfileUpdateView.as_view(),
+        name="group_profile_edit",
+    ),
     path("admin/", admin.site.urls),
     # API
     path("api/", include(router.urls)),
@@ -95,11 +106,14 @@ urlpatterns = [
         RevokeApiKeyView.as_view(),
         name="api_key_revoke",
     ),
+    # Profile
+    path("account/profile/", ProfileView.as_view(), name="profile"),
     # Allauth URLs
     path("accounts/", include("allauth.urls")),
     # Dashboard & Search
     path("", DashboardView.as_view(), name="dashboard"),
     path("search/", SearchView.as_view(), name="search"),
+    path("patch-schedule/", PatchScheduleView.as_view(), name="patch_schedule"),
     path(
         "starter-pack/import/",
         ImportStarterPackView.as_view(),
@@ -116,15 +130,11 @@ urlpatterns = [
     path("privacy/", PrivacyView.as_view(), name="privacy"),
     path("impressum/", ImpressumView.as_view(), name="impressum"),
     path("health/", HealthView.as_view(), name="health"),
-    # User Management (Staff)
-    path("admin/users/", UserListView.as_view(), name="user_management_list"),
-    path(
-        "admin/groups/<int:pk>/",
-        GroupProfileUpdateView.as_view(),
-        name="group_profile_edit",
-    ),
+    # Audit Log
+    path("audit/", AuditLogView.as_view(), name="audit_log"),
     # Group Management (Owner)
     path("group/members/", GroupMemberListView.as_view(), name="group_member_list"),
+    path("group/onboarding/", GroupOnboardingView.as_view(), name="group_onboarding"),
     path("group/create/", GroupCreateView.as_view(), name="group_create"),
     path(
         "group/members/add/<int:group_id>/",

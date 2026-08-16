@@ -9,6 +9,7 @@
                 {{ request.user.username }}
             </a>
             <div class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                <a class="dropdown-item" href="{% url 'profile' %}"><i class="fa-solid fa-user fa-fw me-2"></i> {% trans "Profile" %}</a>
                 <a class="dropdown-item" href="/accounts/password/change/"><i class="fa-solid fa-key fa-fw me-2"></i> {% trans "Change Password" %}</a>
                 <a class="dropdown-item" href="{% url 'api_keys' %}"><i class="fa-solid fa-laptop-code fa-fw me-2"></i> {% trans "API Keys" %}</a>
                 {% if SOCIALACCOUNT_ENABLED %}
@@ -23,6 +24,9 @@
                 </a>
                 <div class="dropdown-divider"></div>
                 {% endif %}
+
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="{% url 'audit_log' %}"><i class="fa-solid fa-clock-rotate-left fa-fw me-2"></i> {% trans "Audit Log" %}</a>
 
                 {% if request.user.groups.exists or request.user.is_superuser %}
                 <h6 class="dropdown-header">{% trans "My Groups" %}</h6>

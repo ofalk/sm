@@ -1,0 +1,22 @@
+{% load i18n %}
+<!-- Bulk Actions Toolbar (Hidden by default) -->
+<div id="bulk_toolbar" class="bg-light border-bottom p-2 d-none">
+    <div class="d-flex align-items-center justify-content-between px-3">
+        <div class="d-flex align-items-center">
+            <span class="badge text-bg-primary me-3"><span id="selected_count">0</span> {% trans "selected" %}</span>
+            <div class="d-flex flex-wrap align-items-center">
+                {% if bulk_form.status %}
+                {{ bulk_form.status }}
+                {% endif %}
+                {% if perms_delete_model %}
+                <div class="form-check ms-3 me-3">
+                    <input type="checkbox" name="delete" class="form-check-input" id="bulk_delete_check">
+                    <label class="form-check-label text-danger" for="bulk_delete_check">{% trans "Delete selected" %}</label>
+                </div>
+                {% endif %}
+                <button type="submit" class="btn btn-sm btn-primary pill ms-2" id="apply_bulk">{% trans "Apply" %}</button>
+            </div>
+        </div>
+        <button type="button" class="btn btn-sm btn-link text-muted" id="cancel_bulk">{% trans "Cancel" %}</button>
+    </div>
+</div>

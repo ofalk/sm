@@ -1,0 +1,21 @@
+{% extends "account/base.html" %}
+{% load i18n %}
+{% load django_bootstrap5 %}
+
+{% block head_title %}{% trans "Profile" %}{% endblock %}
+
+{% block account_content %}
+<div class="card-body p-4">
+    <h3 class="mb-4">{% trans "Your Profile" %}</h3>
+    <form method="post" action="{% url 'profile' %}" class="form">
+        {% csrf_token %}
+        {% bootstrap_form form %}
+        <div class="d-flex justify-content-end gap-2">
+            <a href="{% url 'dashboard' %}" class="btn btn-link text-muted">{% trans "Cancel" %}</a>
+            <button type="submit" class="btn btn-primary pill">
+                <i class="fa-solid fa-save me-1"></i> {% trans "Save Changes" %}
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}

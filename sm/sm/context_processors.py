@@ -1,4 +1,5 @@
 from django.conf import settings
+from .views_onboarding import user_has_real_groups
 
 
 def theme_settings(request):
@@ -16,5 +17,10 @@ def theme_settings(request):
         "ANALYTICS_ID": getattr(settings, "ANALYTICS_ID", None),
         "ANALYTICS_BASE_URL": getattr(
             settings, "ANALYTICS_BASE_URL", "https://api.swetrix.com"
+        ),
+        "ONBOARDING_NEEDED": (
+            getattr(request, "user", None) is not None
+            and getattr(request.user, "is_authenticated", False)
+            and not user_has_real_groups(request.user)
         ),
     }

@@ -12,6 +12,9 @@
                     <h5 class="mb-0">{% trans "Settings" %}</h5>
                 </div>
                 <div class="list-group list-group-flush">
+                    <a class="list-group-item list-group-item-action account-profile" href="{% url "profile" %}">
+                        <i class="fa-regular fa-user fa-fw me-2 text-muted"></i> {% trans "Profile" %}
+                    </a>
                     <a class="list-group-item list-group-item-action account-email" href="{% url "account_email" %}">
                         <i class="fa-regular fa-envelope fa-fw me-2 text-muted"></i> {% trans "Email addresses" %}
                     </a>

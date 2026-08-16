@@ -1,0 +1,41 @@
+{% extends "site_base.html" %}
+{% load i18n %}
+
+{% block head_title %}{% trans "Patch Schedule" %}{% endblock %}
+
+{% block body %}
+<div class="wide-container mt-4">
+    <div class="card">
+        <div class="card-header bg-white d-flex justify-content-between align-items-center">
+            <h4 class="mb-0"><i class="fa-solid fa-calendar me-2"></i> {% trans "Patch Schedule" %}</h4>
+            <span class="badge text-bg-primary">{{ server_count }} {% trans "servers" %}</span>
+        </div>
+        {% if not windows %}
+        <div class="card-body"><b>{% trans "No servers found." %}</b></div>
+        {% else %}
+        <div class="row g-4 p-3">
+            {% for window, servers in windows %}
+            <div class="col-md-6 col-lg-4">
+                <div class="card shadow-sm h-100">
+                    <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                        <strong><i class="fa-solid fa-clock me-2 text-muted"></i>{{ window }}</strong>
+                        <span class="badge text-bg-info">{{ servers|length }}</span>
+                    </div>
+                    <div class="card-body p-0">
+                        <ul class="list-group list-group-flush">
+                            {% for server in servers %}
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <a href="{{ server.get_absolute_url }}" class="fw-bold">{{ server.hostname }}</a>
+                                <span class="badge text-bg-light border">{{ server.status }}</span>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

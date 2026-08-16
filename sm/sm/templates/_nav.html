@@ -12,6 +12,9 @@
             {% if perms.server.view_model %}
             <a class="dropdown-item" href="/server/"><i class="fa-regular fa-hard-drive fa-fw me-2"></i> {% trans "Servers" %}</a>
             {% endif %}
+            {% if perms.server.view_model %}
+            <a class="dropdown-item" href="{% url 'patch_schedule' %}"><i class="fa-solid fa-calendar fa-fw me-2"></i> {% trans "Patch Schedule" %}</a>
+            {% endif %}
             {% if perms.servermodel.view_model %}
             <a class="dropdown-item" href="/servermodel/"><i class="fa-solid fa-cubes fa-fw me-2"></i> {% trans "Server Models" %}</a>
             {% endif %}
