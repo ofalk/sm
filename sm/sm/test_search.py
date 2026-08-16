@@ -180,3 +180,96 @@ class BroaderSearchTest(TestCase):
         response = self.client.get(reverse("search"), {"q": "ajax-find", "ajax": "1"})
         self.assertContains(response, "ajax-find.example.com")
         self.assertTemplateUsed(response, "search_results_ajax.html")
+
+
+@override_settings(PASSWORD_HASHERS=FAST_HASHERS)
+class SearchRefinementTest(TestCase):
+    """Search must match server IPs, serials, related fields, and allow a
+    group filter with relevance ordering."""
+
+    def setUp(self):
+        self.group = Group.objects.create(name="Refine Group")
+        self.user = get_user_model().objects.create_user(
+            username="refiner", password=PASSWORD
+        )
+        self.user.groups.add(self.group)
+        from django.contrib.contenttypes.models import ContentType
+        from django.contrib.auth.models import Permission
+
+        ct = ContentType.objects.get(app_label="server", model="model")
+        self.group.permissions.add(*Permission.objects.filter(content_type=ct))
+        from server.models import Model as Server
+        from status.models import Model as Status
+        from domain.models import Model as Domain
+
+        self.status = Status.objects.create(name="Active", group=self.group)
+        self.domain = Domain.objects.create(name="refine.example.com", group=self.group)
+        self.server = Server.objects.create(
+            hostname="refinehost01",
+            status=self.status,
+            domain=self.domain,
+            group=self.group,
+            primary_ip="10.55.66.77",
+            management_ip="192.168.1.50",
+            serial_nr="SN-REFINE-99",
+            description="refine web server",
+            application="nginx",
+            rack="R-7",
+        )
+        self.client.force_login(self.user)
+
+    def _search(self, q):
+        return self.client.get(reverse("search"), {"q": q})
+
+    def test_search_by_primary_ip(self):
+        response = self._search("10.55.66.77")
+        self.assertContains(response, "refinehost01")
+
+    def test_search_by_management_ip(self):
+        response = self._search("192.168.1.50")
+        self.assertContains(response, "refinehost01")
+
+    def test_search_by_serial(self):
+        response = self._search("SN-REFINE-99")
+        self.assertContains(response, "refinehost01")
+
+    def test_search_by_application(self):
+        response = self._search("nginx")
+        self.assertContains(response, "refinehost01")
+
+    def test_search_by_domain(self):
+        response = self._search("refine.example.com")
+        self.assertContains(response, "refinehost01")
+
+    def test_search_exact_hostname_ranks_first(self):
+        from server.models import Model as Server
+
+        # A substring match that is alphabetically first, to ensure the
+        # exact match still sorts ahead.
+        Server.objects.create(
+            hostname="aaa-refinehost01x",
+            status=self.status,
+            domain=self.domain,
+            group=self.group,
+        )
+        response = self._search("refinehost01")
+        servers = response.context["servers"]
+        self.assertIsInstance(servers, list)
+        self.assertEqual(servers[0].hostname, "refinehost01")
+
+    def test_group_filter_form_present(self):
+        response = self._search("refine")
+        self.assertContains(response, "Filter by group")
+        self.assertContains(response, "Refine Group")
+
+    def test_group_filter_redirect(self):
+        from django.contrib.auth.models import Group
+
+        g2 = Group.objects.create(name="Refine Group 2")
+        self.user.groups.add(g2)
+        response = self.client.post(
+            reverse("group_filter"),
+            {"group": str(g2.pk), "next": reverse("search") + "?q=refine"},
+        )
+        self.assertRedirects(response, reverse("search") + "?q=refine")
+        self.assertEqual(self.client.session["selected_groups"], [str(g2.pk)])

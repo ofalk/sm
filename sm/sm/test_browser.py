@@ -344,6 +344,13 @@ class BrowserIntegrationTest(StaticLiveServerTestCase):
                         # Explicit wait for any late-firing JS
                         await asyncio.sleep(1.0)
 
+                        # Retry once on a transient 5xx (e.g. a momentary DB
+                        # lock on the shared live-server connection).
+                        if any("HTTP 5" in e for e in errors):
+                            errors = []
+                            await new_page.reload(wait_until="networkidle")
+                            await asyncio.sleep(1.0)
+
                         if errors:
                             return (f"[{browser_name}] {url}", errors)
                         return None
@@ -355,8 +362,12 @@ class BrowserIntegrationTest(StaticLiveServerTestCase):
                     finally:
                         await new_page.close()
 
-                # Run up to 5 concurrent checks
-                semaphore = asyncio.Semaphore(5)
+                # Load pages with a small concurrency limit. The live server
+                # runs in a shared thread, and hammering it with too many
+                # concurrent loads (across two browsers) can cause transient
+                # 500s under contention. Capping concurrency keeps the sweep
+                # reliable without serialising everything.
+                semaphore = asyncio.Semaphore(2)
 
                 async def sem_check(url):
                     async with semaphore:

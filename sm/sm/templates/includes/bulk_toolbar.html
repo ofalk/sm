@@ -8,6 +8,12 @@
                 {% if bulk_form.status %}
                 {{ bulk_form.status }}
                 {% endif %}
+                {% if bulk_form.decommission %}
+                <div class="form-check ms-3 me-3">
+                    <input type="checkbox" name="decommission" class="form-check-input" id="bulk_decommission_check">
+                    <label class="form-check-label text-warning" for="bulk_decommission_check">{% trans "Decommission selected" %}</label>
+                </div>
+                {% endif %}
                 {% if perms_delete_model %}
                 <div class="form-check ms-3 me-3">
                     <input type="checkbox" name="delete" class="form-check-input" id="bulk_delete_check">

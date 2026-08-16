@@ -461,7 +461,10 @@ class GroupFilterView(View):
         if not request.user.is_authenticated:
             return JsonResponse({"error": "Unauthorized"}, status=401)
 
+        # Support both the checkbox format ("1,2,3" in `groups`) and the
+        # single-select format (a `group` field) used by the search filter.
         groups_param = request.POST.get("groups", "")
+        single = request.POST.get("group", "")
         if groups_param:
             # Only allow selecting groups the user actually belongs to, so a
             # user can never filter into another tenant's data.
@@ -471,11 +474,28 @@ class GroupFilterView(View):
                 for g in groups_param.split(",")
                 if g.isdigit() and int(g) in user_group_ids
             ]
+        elif single:
+            user_group_ids = set(request.user.groups.values_list("id", flat=True))
+            selected_groups = [
+                single
+            ] if (single.isdigit() and int(single) in user_group_ids) else []
+        else:
+            selected_groups = []
+
+        if selected_groups:
             request.session["selected_groups"] = selected_groups
         else:
             request.session["selected_groups"] = []
 
         request.session.modified = True
+
+        # If a `next` URL was provided, redirect there so the filter applies
+        # to the referring page (e.g. search results).
+        next_url = request.POST.get("next") or request.GET.get("next")
+        if next_url:
+            from django.shortcuts import redirect
+
+            return redirect(next_url)
 
         return JsonResponse({"status": "success"})
 

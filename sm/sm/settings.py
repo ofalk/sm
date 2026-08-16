@@ -1,5 +1,4 @@
 import os
-import tempfile
 import dj_database_url
 from pathlib import Path
 from sys import platform, argv
@@ -188,13 +187,15 @@ if DATABASE_URL:
         "default": dj_database_url.config(default=DATABASE_URL, conn_max_age=600)
     }
 elif "test" in argv:
-    # Use a file-based test database instead of in-memory SQLite to avoid
-    # "database is locked"/transient 500s when the threaded live server
-    # (StaticLiveServerTestCase) and Playwright hit the DB concurrently.
+    # LiveServerTestCase passes the shared in-memory connection to the live
+    # server thread, which is the configuration Django explicitly recommends
+    # for threaded live-server tests (see LiveServerTestCase source). WAL +
+    # busy timeout (set in sm/signals.py) further harden against locks.
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.sqlite3",
-            "NAME": os.path.join(tempfile.gettempdir(), "sm_test.sqlite3"),
+            "NAME": ":memory:",
+            "OPTIONS": {"timeout": 30},
         }
     }
 elif platform == "darwin":

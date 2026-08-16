@@ -315,20 +315,52 @@ class SearchView(LoginRequiredMixin, TemplateView):
                 item for item in nav_targets if query in (item["name"].lower())
             ]
 
-            context["servers"] = self.get_queryset_filtered(Server).filter(
-                hostname__icontains=query
-            )[:10]
+            # Servers: match hostname, IPs, serial, description, application,
+            # rack, and related fields. Exact hostname matches rank first.
+            server_qs = (
+                self.get_queryset_filtered(Server)
+                .filter(
+                    Q(hostname__icontains=query)
+                    | Q(primary_ip__icontains=query)
+                    | Q(management_ip__icontains=query)
+                    | Q(serial_nr__icontains=query)
+                    | Q(description__icontains=query)
+                    | Q(application__icontains=query)
+                    | Q(rack__icontains=query)
+                    | Q(domain__name__icontains=query)
+                    | Q(status__name__icontains=query)
+                    | Q(location__name__icontains=query)
+                    | Q(tags__name__icontains=query)
+                )
+                .distinct()
+            )
+            # Manual relevance: exact hostname match ranks above substring,
+            # then alphabetical.
+            server_list = list(
+                sorted(
+                    server_qs,
+                    key=lambda s: (0 if s.hostname.lower() == query else 1, s.hostname),
+                )[:10]
+            )
+            context["servers"] = server_list
+
             context["vendors"] = self.get_queryset_filtered(Vendor).filter(
                 name__icontains=query
             )[:10]
-            context["clusters"] = self.get_queryset_filtered(Cluster).filter(
-                name__icontains=query
-            )[:10]
+            context["clusters"] = (
+                self.get_queryset_filtered(Cluster)
+                .filter(
+                    Q(name__icontains=query)
+                    | Q(clustersoftware__name__icontains=query)
+                    | Q(clustersoftware__version__icontains=query)
+                )
+                .distinct()[:10]
+            )
             context["domains"] = self.get_queryset_filtered(Domain).filter(
                 name__icontains=query
             )[:10]
             context["locations"] = self.get_queryset_filtered(Location).filter(
-                name__icontains=query
+                Q(name__icontains=query) | Q(country__icontains=query)
             )[:10]
             context["statuses"] = self.get_queryset_filtered(Status).filter(
                 name__icontains=query
@@ -337,20 +369,33 @@ class SearchView(LoginRequiredMixin, TemplateView):
                 name__icontains=query
             )[:10]
             context["servermodels"] = self.get_queryset_filtered(ServerModel).filter(
-                name__icontains=query
+                Q(name__icontains=query) | Q(vendor__name__icontains=query)
             )[:10]
             context["os"] = self.get_queryset_filtered(OS).filter(
-                version__icontains=query
+                Q(version__icontains=query) | Q(vendor__name__icontains=query)
             )[:10]
             context["clustersoftware"] = self.get_queryset_filtered(
                 ClusterSoftware
-            ).filter(Q(name__icontains=query) | Q(version__icontains=query))[:10]
+            ).filter(
+                Q(name__icontains=query)
+                | Q(version__icontains=query)
+                | Q(vendor__name__icontains=query)
+            )[
+                :10
+            ]
             context["clusterpackagetypes"] = self.get_queryset_filtered(
                 ClusterPackageType
             ).filter(name__icontains=query)[:10]
             context["clusterpackages"] = self.get_queryset_filtered(
                 ClusterPackage
-            ).filter(name__icontains=query)[:10]
+            ).filter(
+                Q(name__icontains=query)
+                | Q(cluster__name__icontains=query)
+                | Q(description__icontains=query)
+                | Q(host__icontains=query)
+            )[
+                :10
+            ]
 
             # Simple check if anything was found
             result_lists = [
@@ -367,9 +412,19 @@ class SearchView(LoginRequiredMixin, TemplateView):
                 context["clusterpackagetypes"],
                 context["clusterpackages"],
             ]
-            context["has_results"] = bool(context["nav_results"]) or any(
-                rl.exists() for rl in result_lists if hasattr(rl, "exists")
+            context["has_results"] = (
+                bool(context["nav_results"])
+                or any(hasattr(rl, "exists") and rl.exists() for rl in result_lists)
+                or any(isinstance(rl, list) and rl for rl in result_lists)
             )
+
+            # Group filter for the results page
+            if self.request.user.is_superuser:
+                from django.contrib.auth.models import Group
+
+                context["search_groups"] = Group.objects.all()
+            else:
+                context["search_groups"] = self.request.user.groups.all()
         else:
             context["has_results"] = False
             context["query_too_short"] = True
