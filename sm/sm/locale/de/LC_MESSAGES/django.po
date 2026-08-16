@@ -1,0 +1,2236 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-08-15 19:48+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+#: cluster/templates/detail.html:9 cluster/templates/edit.html:7
+#: cluster/templates/edit.html:15 cluster/templates/list.html:7
+#: cluster/templates/list.html:15 clusterpackage/templates/list.html:39
+#: sm/templates/search_results_ajax.html:28
+msgid "Cluster"
+msgstr "Cluster"
+
+#: cluster/templates/detail.html:17
+msgid "Cluster Details"
+msgstr ""
+
+#: cluster/templates/detail.html:31
+#: sm/templates/account/password_change.html:20
+#: sm/templates/account/password_reset_token.html:16
+#: sm/templates/account/settings.html:25
+msgid "Save"
+msgstr "Speichern"
+
+#: cluster/templates/detail.html:37 clusterpackage/templates/detail.html:27
+#: clusterpackagetype/templates/detail.html:32
+#: clustersoftware/templates/detail.html:27
+#: operatingsystem/templates/detail.html:27 server/templates/detail.html:37
+#: servermodel/templates/detail.html:27 vendor/templates/detail.html:32
+msgid "Edit"
+msgstr "Bearbeiten"
+
+#: cluster/templates/detail.html:42 clusterpackage/templates/detail.html:28
+#: clusterpackagetype/templates/detail.html:33
+#: clustersoftware/templates/detail.html:28
+#: operatingsystem/templates/detail.html:28 server/templates/detail.html:40
+#: servermodel/templates/detail.html:28 sm/templates/delete.html:5
+#: sm/templates/includes/list_history.html:52 vendor/templates/detail.html:33
+msgid "Delete"
+msgstr "Löschen"
+
+#: cluster/templates/detail.html:55
+msgid "Servers in this Cluster"
+msgstr ""
+
+#: cluster/templates/detail.html:64
+msgid "No servers assigned to this cluster."
+msgstr ""
+
+#: cluster/templates/detail.html:71 domain/templates/detail.html:26
+#: location/templates/detail.html:26 operatingsystem/templates/detail.html:40
+#: patchtime/templates/detail.html:26 server/templates/list.html:49
+#: servermodel/templates/detail.html:40 status/templates/detail.html:26
+msgid "Hostname"
+msgstr "Hostname"
+
+#: cluster/templates/detail.html:72 domain/templates/detail.html:27
+#: location/templates/detail.html:27 operatingsystem/templates/detail.html:41
+#: patchtime/templates/detail.html:27 server/templates/list.html:50
+#: servermodel/templates/detail.html:41 sm/templates/account/email.html:28
+#: sm/templates/admin/user_list.html:55 sm/templates/api_keys/list.html:65
+#: sm/templates/group/member_list.html:79
+#: sm/templates/search_results_ajax.html:60 status/templates/detail.html:9
+#: status/templates/detail.html:27 status/templates/edit.html:7
+#: status/templates/edit.html:15 status/templates/list.html:7
+#: status/templates/list.html:15
+msgid "Status"
+msgstr "Status"
+
+#: cluster/templates/detail.html:73 domain/templates/detail.html:28
+#: location/templates/detail.html:9 location/templates/edit.html:7
+#: location/templates/edit.html:15 location/templates/list.html:7
+#: location/templates/list.html:15 operatingsystem/templates/detail.html:42
+#: patchtime/templates/detail.html:28 server/templates/list.html:51
+#: servermodel/templates/detail.html:42
+#: sm/templates/search_results_ajax.html:52 status/templates/detail.html:28
+msgid "Location"
+msgstr "Standort"
+
+#: cluster/templates/list.html:19 clusterpackage/templates/list.html:18
+#: clusterpackagetype/templates/list.html:18
+#: clustersoftware/templates/list.html:18 domain/templates/list.html:19
+#: location/templates/list.html:18 operatingsystem/templates/list.html:29
+#: patchtime/templates/list.html:18 server/templates/list.html:24
+#: servermodel/templates/list.html:23 status/templates/list.html:18
+#: vendor/templates/list.html:26
+msgid "Add New"
+msgstr "Neu anlegen"
+
+#: cluster/templates/list.html:27 clusterpackage/templates/list.html:25
+#: clusterpackagetype/templates/list.html:25
+#: clustersoftware/templates/list.html:25 domain/templates/list.html:27
+#: location/templates/list.html:25 operatingsystem/templates/list.html:38
+#: patchtime/templates/list.html:25 server/templates/list.html:33
+#: servermodel/templates/list.html:31 status/templates/list.html:25
+#: vendor/templates/list.html:35
+msgid "No results"
+msgstr "Keine Ergebnisse"
+
+#: cluster/templates/list.html:39 clusterpackage/templates/detail.html:40
+#: clusterpackage/templates/list.html:37
+#: clusterpackagetype/templates/list.html:37
+#: clustersoftware/templates/detail.html:40 location/templates/list.html:37
+#: patchtime/templates/list.html:37 servermodel/templates/list.html:38
+#: sm/templates/api_keys/list.html:61 status/templates/list.html:37
+#: vendor/templates/list.html:47
+msgid "Name"
+msgstr "Name"
+
+#: cluster/templates/list.html:40 clusterpackage/templates/detail.html:41
+msgid "Software"
+msgstr ""
+
+#: cluster/templates/list.html:41 server/templates/list.html:58
+msgid "Tags"
+msgstr "Tags"
+
+#: cluster/templates/list.html:42 clusterpackage/templates/list.html:41
+#: clusterpackagetype/templates/list.html:39
+#: clustersoftware/templates/list.html:40 domain/templates/list.html:41
+#: location/templates/list.html:40 operatingsystem/templates/list.html:46
+#: patchtime/templates/list.html:39 server/templates/list.html:59
+#: servermodel/templates/list.html:39 sm/templates/admin/user_list.html:21
+#: sm/templates/api_keys/list.html:66 sm/templates/group/member_list.html:80
+#: status/templates/list.html:40 vendor/templates/list.html:57
+msgid "Actions"
+msgstr "Aktionen"
+
+#: cluster/templates/list.html:67
+msgid "Edit cluster"
+msgstr ""
+
+#: cluster/templates/list.html:72
+msgid "Delete cluster"
+msgstr ""
+
+#: cluster/templates/list.html:77
+msgid "Shared resource - insufficient permissions"
+msgstr ""
+
+#: cluster/views.py:46 clusterpackage/views.py:64
+#: clusterpackagetype/views.py:46 clustersoftware/views.py:45
+#: domain/views.py:46 location/views.py:42 operatingsystem/views.py:59
+#: patchtime/views.py:42 server/views.py:118 servermodel/views.py:49
+#: status/views.py:42 vendor/views.py:43
+msgid "was updated successfully"
+msgstr "wurde erfolgreich aktualisiert"
+
+#: cluster/views.py:59 clusterpackage/views.py:94
+#: clusterpackagetype/views.py:58 clustersoftware/views.py:57
+#: domain/views.py:60 location/views.py:54 operatingsystem/views.py:72
+#: patchtime/views.py:54 server/views.py:132 servermodel/views.py:61
+#: status/views.py:54 vendor/views.py:53
+msgid "was created successfully"
+msgstr "wurde erfolgreich erstellt"
+
+#: cluster/views.py:73 clusterpackage/views.py:116
+#: clusterpackagetype/views.py:67 clustersoftware/views.py:76
+#: domain/views.py:74 location/views.py:63 operatingsystem/views.py:96
+#: patchtime/views.py:63 server/views.py:146 servermodel/views.py:80
+#: status/views.py:63 vendor/views.py:63
+msgid "was deleted successfully"
+msgstr "wurde erfolgreich gelöscht"
+
+#: clusterpackage/forms.py:46 sm/api/serializers.py:189
+msgid ""
+"A cluster package with this cluster, name, status and package type already "
+"exists."
+msgstr ""
+
+#: clusterpackage/templates/detail.html:9 clusterpackage/templates/edit.html:7
+#: clusterpackage/templates/edit.html:15 clusterpackage/templates/list.html:7
+#: clusterpackage/templates/list.html:15
+msgid "Clusterpackage"
+msgstr ""
+
+#: clusterpackage/templates/detail.html:34
+msgid "Not assigned to any cluster"
+msgstr ""
+
+#: clusterpackage/templates/detail.html:36
+msgid "Cluster this package is assigned to"
+msgstr ""
+
+#: clusterpackage/templates/list.html:38
+#: sm/templates/includes/history_table.html:17
+#: sm/templates/includes/list_history.html:26
+msgid "Type"
+msgstr "Typ"
+
+#: clusterpackage/templates/list.html:40
+#: clusterpackagetype/templates/list.html:38
+#: clustersoftware/templates/list.html:39 domain/templates/list.html:40
+#: location/templates/list.html:39 patchtime/templates/list.html:38
+#: sm/templates/audit_log.html:35 status/templates/list.html:39
+#: vendor/templates/list.html:56
+msgid "Group"
+msgstr "Gruppe"
+
+#: clusterpackage/templates/list.html:65
+msgid "Edit clusterpackage"
+msgstr ""
+
+#: clusterpackage/templates/list.html:68
+msgid "Delete clusterpackage"
+msgstr ""
+
+#: clusterpackagetype/templates/detail.html:9
+#: clusterpackagetype/templates/detail.html:17
+#: clusterpackagetype/templates/edit.html:7
+#: clusterpackagetype/templates/edit.html:15
+#: clusterpackagetype/templates/list.html:7
+#: clusterpackagetype/templates/list.html:15
+msgid "Clusterpackagetype"
+msgstr ""
+
+#: clusterpackagetype/templates/list.html:53
+msgid "Edit clusterpackagetype"
+msgstr ""
+
+#: clusterpackagetype/templates/list.html:56
+msgid "Delete clusterpackagetype"
+msgstr ""
+
+#: clustersoftware/templates/detail.html:9
+#: clustersoftware/templates/edit.html:7 clustersoftware/templates/edit.html:15
+#: clustersoftware/templates/list.html:7 clustersoftware/templates/list.html:15
+msgid "Clustersoftware"
+msgstr ""
+
+#: clustersoftware/templates/detail.html:34
+msgid "No cluster with this clustersoftware"
+msgstr ""
+
+#: clustersoftware/templates/detail.html:36
+msgid "List of clusters with this clustersoftware"
+msgstr ""
+
+#: clustersoftware/templates/detail.html:41
+#: clustersoftware/templates/list.html:38
+#: operatingsystem/templates/list.html:44 servermodel/templates/list.html:37
+#: sm/templates/search_results_ajax.html:36 vendor/templates/detail.html:9
+#: vendor/templates/edit.html:7 vendor/templates/edit.html:15
+#: vendor/templates/list.html:7 vendor/templates/list.html:15
+msgid "Vendor"
+msgstr "Hersteller"
+
+#: clustersoftware/templates/list.html:37
+msgid "Name/Version"
+msgstr ""
+
+#: clustersoftware/templates/list.html:59
+msgid "Edit clustersoftware"
+msgstr ""
+
+#: clustersoftware/templates/list.html:62
+msgid "Delete clustersoftware"
+msgstr ""
+
+#: domain/templates/detail.html:9 domain/templates/edit.html:7
+#: domain/templates/edit.html:15 domain/templates/list.html:7
+#: domain/templates/list.html:15 sm/templates/search_results_ajax.html:44
+msgid "Domain"
+msgstr "Domain"
+
+#: domain/templates/detail.html:20
+msgid "No servers in this domain"
+msgstr ""
+
+#: domain/templates/detail.html:22
+msgid "List of servers in this domain"
+msgstr ""
+
+#: domain/templates/list.html:39
+msgid "Domainname"
+msgstr ""
+
+#: domain/templates/list.html:56
+msgid "Edit domain"
+msgstr ""
+
+#: domain/templates/list.html:61
+msgid "Delete domain"
+msgstr ""
+
+#: location/templates/detail.html:20
+msgid "No servers at this location"
+msgstr ""
+
+#: location/templates/detail.html:22
+msgid "List of servers at this location"
+msgstr ""
+
+#: location/templates/detail.html:28 patchtime/templates/detail.html:29
+#: sm/templates/audit_log.html:33
+msgid "Model"
+msgstr ""
+
+#: location/templates/detail.html:29 patchtime/templates/detail.html:30
+msgid "OS"
+msgstr ""
+
+#: location/templates/edit.html:7
+msgid "NEW"
+msgstr ""
+
+#: location/templates/list.html:38
+msgid "Country"
+msgstr "Land"
+
+#: location/templates/list.html:57
+msgid "Edit location"
+msgstr ""
+
+#: location/templates/list.html:60
+msgid "Delete location"
+msgstr ""
+
+#: operatingsystem/templates/detail.html:9
+#: operatingsystem/templates/edit.html:7 operatingsystem/templates/edit.html:15
+#: operatingsystem/templates/list.html:7 server/templates/list.html:55
+msgid "Operatingsystem"
+msgstr ""
+
+#: operatingsystem/templates/detail.html:34
+msgid "No servers with this operatingsystem"
+msgstr ""
+
+#: operatingsystem/templates/detail.html:36
+msgid "List of servers with this operatingsystem"
+msgstr ""
+
+#: operatingsystem/templates/list.html:15 sm/templates/_nav.html:39
+#: sm/templates/dashboard.html:77 sm/templates/search.html:177 sm/views.py:303
+msgid "Operating Systems"
+msgstr "Betriebssysteme"
+
+#: operatingsystem/templates/list.html:20 vendor/templates/list.html:20
+msgid "Import Starter Pack"
+msgstr ""
+
+#: operatingsystem/templates/list.html:24 servermodel/templates/list.html:19
+msgid "Show empty"
+msgstr ""
+
+#: operatingsystem/templates/list.html:45 vendor/templates/detail.html:72
+msgid "Versions"
+msgstr ""
+
+#: patchtime/templates/detail.html:9 patchtime/templates/edit.html:7
+#: patchtime/templates/edit.html:15 patchtime/templates/list.html:7
+#: patchtime/templates/list.html:15 server/templates/list.html:57
+msgid "Patchtime"
+msgstr ""
+
+#: patchtime/templates/detail.html:20
+msgid "No servers with this patchtime"
+msgstr ""
+
+#: patchtime/templates/detail.html:22
+msgid "List of servers with this patchtime"
+msgstr ""
+
+#: patchtime/templates/list.html:53
+msgid "Edit patchtime"
+msgstr ""
+
+#: patchtime/templates/list.html:56
+msgid "Delete patchtime"
+msgstr ""
+
+#: server/templates/detail.html:12 server/templates/detail.html:20
+#: server/templates/edit.html:10 server/templates/edit.html:18
+#: server/templates/list.html:7
+msgid "Server"
+msgstr ""
+
+#: server/templates/list.html:15 sm/templates/_nav.html:13
+#: sm/templates/search.html:40 sm/views.py:298
+msgid "Servers"
+msgstr "Server"
+
+#: server/templates/list.html:19
+msgid "Show disposed"
+msgstr ""
+
+#: server/templates/list.html:52
+msgid "Application"
+msgstr "Anwendung"
+
+#: server/templates/list.html:53
+msgid "Rack"
+msgstr "Rack"
+
+#: server/templates/list.html:54
+msgid "Description"
+msgstr "Beschreibung"
+
+#: server/templates/list.html:56
+msgid "Primary IP"
+msgstr "Primäre IP"
+
+#: server/templates/list.html:73
+msgid "View"
+msgstr ""
+
+#: server/templates/list.html:94
+msgid "Edit server"
+msgstr ""
+
+#: server/templates/list.html:99
+msgid "Delete server"
+msgstr ""
+
+#: server/views.py:71
+msgid "No servers selected."
+msgstr ""
+
+#: server/views.py:85
+msgid "You don't have permission to delete servers."
+msgstr ""
+
+#: server/views.py:89
+#, python-format
+msgid "Successfully deleted %d servers."
+msgstr ""
+
+#: server/views.py:97
+#, python-format
+msgid "Successfully updated status to %s for %d servers."
+msgstr ""
+
+#: server/views.py:101
+msgid "No action performed."
+msgstr ""
+
+#: servermodel/templates/detail.html:9 servermodel/templates/edit.html:7
+#: servermodel/templates/edit.html:15 servermodel/templates/list.html:7
+msgid "Servermodel"
+msgstr ""
+
+#: servermodel/templates/detail.html:34
+msgid "No servers with this server model"
+msgstr ""
+
+#: servermodel/templates/detail.html:36
+msgid "List of servers with this server model"
+msgstr ""
+
+#: servermodel/templates/list.html:15 sm/templates/_nav.html:19
+#: sm/templates/search.html:196 sm/views.py:299
+msgid "Server Models"
+msgstr "Servermodelle"
+
+#: servermodel/templates/list.html:54
+msgid "Edit servermodel"
+msgstr ""
+
+#: servermodel/templates/list.html:57
+msgid "None"
+msgstr ""
+
+#: servermodel/templates/list.html:61
+msgid "Add new servermodel"
+msgstr ""
+
+#: sm/forms.py:42
+msgid "An item with this name already exists in this scope."
+msgstr ""
+
+#: sm/forms.py:53
+msgid "Delete selected items"
+msgstr ""
+
+#: sm/mixins.py:177
+#, python-format
+msgid "Quota exceeded for this group (%d items)."
+msgstr "Kontingent für diese Gruppe überschritten (%d Einträge)."
+
+#: sm/mixins.py:272
+msgid "An item with these values already exists in this scope."
+msgstr "Ein Eintrag mit diesen Werten existiert bereits in diesem Bereich."
+
+#: sm/mixins.py:292
+msgid "Quota exceeded for this group."
+msgstr ""
+
+#: sm/notifications.py:34
+#, python-format
+msgid "Server %(hostname)s status changed to %(status)s"
+msgstr "Status von Server %(hostname)s geändert auf %(status)s"
+
+#: sm/notifications.py:36
+msgid "unknown"
+msgstr ""
+
+#: sm/templates/404.html:5
+msgid "Not Found"
+msgstr ""
+
+#: sm/templates/404.html:9
+msgid "Page not found"
+msgstr ""
+
+#: sm/templates/404.html:10
+msgid "We're sorry but that page could not be found."
+msgstr ""
+
+#: sm/templates/500.html:5
+msgid "Server Error"
+msgstr ""
+
+#: sm/templates/500.html:9
+msgid "Something went wrong"
+msgstr ""
+
+#: sm/templates/500.html:10
+msgid ""
+"We're sorry but a server error has occurred. We've been notified and will "
+"look into it as soon as possible."
+msgstr ""
+
+#: sm/templates/_account_bar.html:12 sm/templates/account/base.html:16
+#: sm/templates/account/profile.html:5
+msgid "Profile"
+msgstr "Profil"
+
+#: sm/templates/_account_bar.html:13
+msgid "Change Password"
+msgstr "Passwort ändern"
+
+#: sm/templates/_account_bar.html:14 sm/templates/api_keys/list.html:4
+#: sm/templates/api_keys/list.html:8
+msgid "API Keys"
+msgstr "API-Schlüssel"
+
+#: sm/templates/_account_bar.html:16
+#: sm/templates/socialaccount/connections.html:10
+msgid "Account Connections"
+msgstr ""
+
+#: sm/templates/_account_bar.html:21
+msgid "Administration"
+msgstr ""
+
+#: sm/templates/_account_bar.html:23
+msgid "Django Admin"
+msgstr ""
+
+#: sm/templates/_account_bar.html:29 sm/templates/audit_log.html:4
+#: sm/templates/audit_log.html:10
+msgid "Audit Log"
+msgstr "Audit-Protokoll"
+
+#: sm/templates/_account_bar.html:32
+msgid "My Groups"
+msgstr ""
+
+#: sm/templates/_account_bar.html:34
+msgid "Group Members"
+msgstr "Gruppenmitglieder"
+
+#: sm/templates/_account_bar.html:43 sm/templates/account/logout.html:5
+#: sm/templates/account/logout.html:13 sm/templates/account/logout.html:24
+msgid "Log out"
+msgstr "Abmelden"
+
+#: sm/templates/_account_bar.html:49 sm/templates/account/login.html:7
+#: sm/templates/account/login.html:15 sm/templates/account/login.html:25
+#: sm/templates/account/signup.html:30
+msgid "Log in"
+msgstr ""
+
+#: sm/templates/_footer.html:4
+msgid "Efficient Server Infrastructure Management"
+msgstr ""
+
+#: sm/templates/_footer.html:6
+msgid "Terms"
+msgstr ""
+
+#: sm/templates/_footer.html:7
+msgid "Privacy"
+msgstr ""
+
+#: sm/templates/_footer.html:8 sm/templates/legal/impressum.html:4
+#: sm/templates/legal/impressum.html:10
+msgid "Impressum"
+msgstr ""
+
+#: sm/templates/_footer.html:13
+msgid "Version"
+msgstr "Version"
+
+#: sm/templates/_nav.html:8
+msgid "Infrastructure"
+msgstr ""
+
+#: sm/templates/_nav.html:11
+msgid "Servers & Network"
+msgstr "Server & Netzwerk"
+
+#: sm/templates/_nav.html:16 sm/templates/patch_schedule.html:4
+#: sm/templates/patch_schedule.html:10
+msgid "Patch Schedule"
+msgstr "Patch-Zeitplan"
+
+#: sm/templates/_nav.html:22 sm/templates/search.html:101 sm/views.py:309
+msgid "Domains"
+msgstr "Domains"
+
+#: sm/templates/_nav.html:25 sm/templates/search.html:120 sm/views.py:308
+msgid "Locations"
+msgstr "Standorte"
+
+#: sm/templates/_nav.html:35
+msgid "Configuration"
+msgstr ""
+
+#: sm/templates/_nav.html:42 sm/templates/dashboard.html:62
+#: sm/templates/search.html:63 sm/views.py:300
+msgid "Vendors"
+msgstr "Hersteller"
+
+#: sm/templates/_nav.html:45 sm/templates/search.html:139 sm/views.py:307
+msgid "Statuses"
+msgstr "Status"
+
+#: sm/templates/_nav.html:48 sm/templates/search.html:158 sm/views.py:310
+msgid "Patch Times"
+msgstr "Patch-Zeiten"
+
+#: sm/templates/_nav.html:51 sm/views.py:322
+msgid "API Documentation"
+msgstr ""
+
+#: sm/templates/_nav.html:60 sm/templates/_nav.html:64
+#: sm/templates/search.html:82 sm/views.py:301
+msgid "Clusters"
+msgstr "Cluster"
+
+#: sm/templates/_nav.html:67 sm/templates/search.html:215
+#: sm/templates/search_results_ajax.html:92 sm/views.py:312
+msgid "Cluster Software"
+msgstr "Cluster-Software"
+
+#: sm/templates/_nav.html:70 sm/templates/search.html:253 sm/views.py:317
+msgid "Cluster Packages"
+msgstr "Cluster-Pakete"
+
+#: sm/templates/_nav.html:73 sm/templates/search.html:234
+msgid "Package Types"
+msgstr "Pakettypen"
+
+#: sm/templates/_nav.html:83 sm/templates/admin/user_list.html:54
+#: sm/templates/theme_bootstrap/base.html:90
+msgid "Groups"
+msgstr "Gruppen"
+
+#: sm/templates/account/base.html:12
+msgid "Settings"
+msgstr ""
+
+#: sm/templates/account/base.html:19
+msgid "Email addresses"
+msgstr ""
+
+#: sm/templates/account/base.html:22
+#: sm/templates/account/password_change.html:8
+#: sm/templates/account/password_change.html:12
+msgid "Change password"
+msgstr ""
+
+#: sm/templates/account/base.html:26
+msgid "Social accounts"
+msgstr ""
+
+#: sm/templates/account/delete.html:8 sm/templates/account/delete.html:14
+#: sm/templates/account/delete.html:17
+msgid "Delete Account"
+msgstr ""
+
+#: sm/templates/account/delete.html:19
+#, python-format
+msgid ""
+"If you go ahead and delete your account, your information will be "
+"<b>expunged within %(ACCOUNT_DELETION_EXPUNGE_HOURS)s hours</b>."
+msgstr ""
+
+#: sm/templates/account/delete.html:24
+msgid "Delete My Account"
+msgstr ""
+
+#: sm/templates/account/email.html:9 sm/templates/account/email.html:13
+msgid "Email Addresses"
+msgstr ""
+
+#: sm/templates/account/email.html:18
+msgid "The following email addresses are associated with your account:"
+msgstr ""
+
+#: sm/templates/account/email.html:27 sm/templates/admin/user_list.html:53
+#: sm/templates/group/accept_invitation.html:36
+#: sm/templates/group/member_list.html:78
+msgid "Email"
+msgstr ""
+
+#: sm/templates/account/email.html:29 sm/templates/audit_log.html:32
+#: sm/templates/socialaccount/connections.html:30
+msgid "Action"
+msgstr ""
+
+#: sm/templates/account/email.html:43
+msgid "Verified"
+msgstr ""
+
+#: sm/templates/account/email.html:45
+msgid "Unverified"
+msgstr ""
+
+#: sm/templates/account/email.html:48
+msgid "Primary"
+msgstr ""
+
+#: sm/templates/account/email.html:63
+msgid "Make Primary"
+msgstr ""
+
+#: sm/templates/account/email.html:70
+msgid "Resend Verification"
+msgstr ""
+
+#: sm/templates/account/email.html:77 sm/templates/group/member_list.html:106
+msgid "Remove"
+msgstr ""
+
+#: sm/templates/account/email.html:84
+msgid "Warning:"
+msgstr ""
+
+#: sm/templates/account/email.html:84
+msgid ""
+"You currently do not have any email address set up. You should really add an "
+"email address so you can receive notifications, reset your password, etc."
+msgstr ""
+
+#: sm/templates/account/email.html:90
+msgid "Add Email Address"
+msgstr ""
+
+#: sm/templates/account/email.html:95
+msgid "Add Email"
+msgstr ""
+
+#: sm/templates/account/email.html:105
+msgid "Do you really want to remove the selected email address?"
+msgstr ""
+
+#: sm/templates/account/email/email_confirmation_message.txt:1
+#, python-format
+msgid ""
+"A user on %(site_name)s has created an account using this email address.\n"
+"\n"
+"To confirm this email address, go to %(activate_url)s\n"
+"\n"
+"If you did not sign up for this site, you can ignore this message.\n"
+msgstr ""
+
+#: sm/templates/account/email/email_confirmation_subject.txt:1
+#, python-format
+msgid "Confirm email address for %(site_name)s"
+msgstr ""
+
+#: sm/templates/account/email/invite_user.txt:1
+#, python-format
+msgid ""
+"You have been invited to sign up at %(name)s.\n"
+"\n"
+"%(signup_url)s\n"
+msgstr ""
+
+#: sm/templates/account/email/invite_user_subject.txt:1
+#, python-format
+msgid "Create an account on %(name)s"
+msgstr ""
+
+#: sm/templates/account/email/password_change.txt:1
+#, python-format
+msgid ""
+"This is the email notification to confirm your password has been changed on "
+"%(now)s."
+msgstr ""
+
+#: sm/templates/account/email/password_change_subject.txt:1
+msgid "Change password email notification"
+msgstr ""
+
+#: sm/templates/account/email/password_reset.txt:1
+#, python-format
+msgid ""
+"You're receiving this email because you or someone else has requested a "
+"password for your user account at %(site_name)s.\n"
+"It can be safely ignored if you did not request a password reset. Click the "
+"link below to reset your password.\n"
+"\n"
+"%(password_reset_url)s\n"
+msgstr ""
+
+#: sm/templates/account/email/password_reset_subject.txt:1
+#, python-format
+msgid "[%(site_name)s] Password reset"
+msgstr ""
+
+#: sm/templates/account/email_confirm.html:5
+#: sm/templates/account/email_confirm.html:13
+msgid "Confirm Email"
+msgstr ""
+
+#: sm/templates/account/email_confirm.html:17
+#, python-format
+msgid ""
+"\n"
+"                            <p class=\"mb-4\">Please confirm that "
+"<strong>%(email)s</strong> is an email address for user %(user_display)s.</"
+"p>\n"
+"                        "
+msgstr ""
+
+#: sm/templates/account/email_confirm.html:24
+msgid "Confirm"
+msgstr ""
+
+#: sm/templates/account/email_confirm.html:29
+#, python-format
+msgid ""
+"This e-mail confirmation link expired or is invalid. Please <a "
+"href=\"%(email_url)s\">issue a new e-mail confirmation request</a>."
+msgstr ""
+
+#: sm/templates/account/email_confirmation_sent.html:5
+msgid "Confirm your email address"
+msgstr ""
+
+#: sm/templates/account/email_confirmation_sent.html:13
+msgid "Verification Sent"
+msgstr ""
+
+#: sm/templates/account/email_confirmation_sent.html:17
+#, python-format
+msgid ""
+"We have sent you an email to <strong>%(email)s</strong> for verification. "
+"Follow the link provided to finalize the signup process."
+msgstr ""
+
+#: sm/templates/account/email_confirmation_sent.html:22
+#, python-format
+msgid ""
+"If you do not receive it within a few minutes, contact us at <a "
+"href=\"mailto:%(THEME_CONTACT_EMAIL)s\">%(THEME_CONTACT_EMAIL)s</a>."
+msgstr ""
+
+#: sm/templates/account/email_confirmation_sent.html:26
+msgid "Go back"
+msgstr ""
+
+#: sm/templates/account/email_confirmed.html:5
+msgid "Email confirmed"
+msgstr ""
+
+#: sm/templates/account/email_confirmed.html:13
+msgid "Email Confirmed"
+msgstr ""
+
+#: sm/templates/account/email_confirmed.html:16
+#, python-format
+msgid ""
+"\n"
+"                        <p class=\"mb-4\">You have successfully confirmed "
+"<strong>%(email)s</strong>.</p>\n"
+"                    "
+msgstr ""
+
+#: sm/templates/account/email_confirmed.html:21
+msgid "Proceed to Login"
+msgstr ""
+
+#: sm/templates/account/login.html:31
+msgid "Or log in with"
+msgstr ""
+
+#: sm/templates/account/login.html:36
+msgid "Forgot your password?"
+msgstr ""
+
+#: sm/templates/account/login.html:42
+msgid "Don't have an account?"
+msgstr ""
+
+#: sm/templates/account/login.html:43 sm/templates/account/signup.html:6
+#: sm/templates/account/signup.html:14 sm/templates/account/signup.html:24
+#: sm/templates/account/signup_closed.html:5
+msgid "Sign up"
+msgstr ""
+
+#: sm/templates/account/logout.html:16
+msgid "Are you sure you want to log out?"
+msgstr ""
+
+#: sm/templates/account/password_reset.html:7
+msgid "Password reset"
+msgstr ""
+
+#: sm/templates/account/password_reset.html:17
+msgid "Password Reset"
+msgstr ""
+
+#: sm/templates/account/password_reset.html:21
+msgid ""
+"Forgotten your password? Enter your email address below, and we'll send you "
+"an email allowing you to reset it."
+msgstr ""
+
+#: sm/templates/account/password_reset.html:29
+msgid "Reset my password"
+msgstr ""
+
+#: sm/templates/account/password_reset.html:36
+#, python-format
+msgid ""
+"Trouble? Contact us at <a href=\"mailto:"
+"%(THEME_CONTACT_EMAIL)s\">%(THEME_CONTACT_EMAIL)s</a>."
+msgstr ""
+
+#: sm/templates/account/password_reset_sent.html:6
+msgid "Password reset sent"
+msgstr ""
+
+#: sm/templates/account/password_reset_sent.html:14
+msgid "Password Reset Sent"
+msgstr ""
+
+#: sm/templates/account/password_reset_sent.html:18
+#, python-format
+msgid ""
+"We have sent you an email. If you do not receive it within a few minutes, "
+"try resending or contact us at <a href=\"mailto:"
+"%(THEME_CONTACT_EMAIL)s\">%(THEME_CONTACT_EMAIL)s</a>."
+msgstr ""
+
+#: sm/templates/account/password_reset_sent.html:26
+msgid "Resend"
+msgstr ""
+
+#: sm/templates/account/password_reset_sent.html:30
+#, python-format
+msgid ""
+"We have resent the password email. If you do not receive it within a few "
+"minutes, contact us at <a href=\"mailto:"
+"%(THEME_CONTACT_EMAIL)s\">%(THEME_CONTACT_EMAIL)s</a>."
+msgstr ""
+
+#: sm/templates/account/password_reset_token.html:6
+#: sm/templates/account/password_reset_token.html:12
+msgid "Set your new password"
+msgstr ""
+
+#: sm/templates/account/password_reset_token_fail.html:5
+#: sm/templates/account/password_reset_token_fail.html:8
+msgid "Bad token"
+msgstr ""
+
+#: sm/templates/account/password_reset_token_fail.html:10
+#, python-format
+msgid ""
+"The password reset link was invalid, possibly because it has already been "
+"used.  Please request a <a href=\"%(url)s\">new password reset</a>."
+msgstr ""
+
+#: sm/templates/account/password_set.html:8
+#: sm/templates/account/password_set.html:12
+#: sm/templates/account/password_set.html:20
+msgid "Set Password"
+msgstr ""
+
+#: sm/templates/account/profile.html:9
+msgid "Your Profile"
+msgstr "Ihr Profil"
+
+#: sm/templates/account/profile.html:14
+#: sm/templates/admin/group_profile_edit.html:24 sm/templates/delete.html:25
+#: sm/templates/group/add_member.html:27
+#: sm/templates/group/invite_member.html:27
+#: sm/templates/group/member_list.html:39
+#: sm/templates/group/permission_edit.html:35
+#: sm/templates/group/user_permission_edit.html:36
+#: sm/templates/includes/bulk_toolbar.html:20
+msgid "Cancel"
+msgstr "Abbrechen"
+
+#: sm/templates/account/profile.html:16
+#: sm/templates/admin/group_profile_edit.html:21
+msgid "Save Changes"
+msgstr "Änderungen speichern"
+
+#: sm/templates/account/settings.html:8 sm/templates/account/settings.html:14
+#: sm/templates/socialaccount/connections.html:28
+msgid "Account"
+msgstr ""
+
+#: sm/templates/account/signup.html:29
+msgid "Already have an account?"
+msgstr ""
+
+#: sm/templates/account/signup_closed.html:8
+msgid "This site is in private beta"
+msgstr ""
+
+#: sm/templates/account/signup_closed.html:9
+msgid "If you have signup code you can enter it below."
+msgstr ""
+
+#: sm/templates/account/signup_closed.html:11
+msgid "Your signup code..."
+msgstr ""
+
+#: sm/templates/admin/group_profile_edit.html:5
+msgid "Edit Group Quotas"
+msgstr ""
+
+#: sm/templates/admin/group_profile_edit.html:13
+msgid "Edit Quotas for"
+msgstr ""
+
+#: sm/templates/admin/user_list.html:4
+msgid "User & Group Management"
+msgstr ""
+
+#: sm/templates/admin/user_list.html:10
+msgid "Groups & Quotas"
+msgstr ""
+
+#: sm/templates/admin/user_list.html:16 sm/templates/group/member_list.html:29
+#: sm/views_group.py:64
+msgid "Group Name"
+msgstr "Gruppenname"
+
+#: sm/templates/admin/user_list.html:17 sm/templates/group/member_list.html:90
+msgid "Owner"
+msgstr ""
+
+#: sm/templates/admin/user_list.html:18
+msgid "Members"
+msgstr ""
+
+#: sm/templates/admin/user_list.html:19
+msgid "Item Quota"
+msgstr ""
+
+#: sm/templates/admin/user_list.html:20
+msgid "User Quota"
+msgstr ""
+
+#: sm/templates/admin/user_list.html:34
+msgid "Edit Quotas"
+msgstr ""
+
+#: sm/templates/admin/user_list.html:46
+msgid "All Users"
+msgstr ""
+
+#: sm/templates/admin/user_list.html:52
+#: sm/templates/group/accept_invitation.html:32
+msgid "Username"
+msgstr ""
+
+#: sm/templates/admin/user_list.html:67
+msgid "No groups"
+msgstr ""
+
+#: sm/templates/admin/user_list.html:72
+msgid "Superuser"
+msgstr ""
+
+#: sm/templates/admin/user_list.html:74
+msgid "Staff"
+msgstr ""
+
+#: sm/templates/admin/user_list.html:76 sm/templates/audit_log.html:31
+#: sm/templates/group/member_list.html:77
+#: sm/templates/includes/history_table.html:16
+#: sm/templates/includes/list_history.html:25
+msgid "User"
+msgstr ""
+
+#: sm/templates/api_keys/list.html:12
+msgid ""
+"API keys let external tools query and manage data on your behalf. A key can "
+"only do what you can do, including your group permissions."
+msgstr ""
+
+#: sm/templates/api_keys/list.html:18
+msgid "Key created"
+msgstr ""
+
+#: sm/templates/api_keys/list.html:21
+msgid "Name:"
+msgstr ""
+
+#: sm/templates/api_keys/list.html:22
+msgid "Client ID:"
+msgstr ""
+
+#: sm/templates/api_keys/list.html:23
+msgid "Secret:"
+msgstr ""
+
+#: sm/templates/api_keys/list.html:26
+msgid "Store this secret somewhere safe. It will not be shown again."
+msgstr ""
+
+#: sm/templates/api_keys/list.html:34
+msgid "Create a new key"
+msgstr ""
+
+#: sm/templates/api_keys/list.html:47
+msgid "Generate API Key"
+msgstr ""
+
+#: sm/templates/api_keys/list.html:55
+msgid "Your keys"
+msgstr ""
+
+#: sm/templates/api_keys/list.html:62
+msgid "Client ID"
+msgstr ""
+
+#: sm/templates/api_keys/list.html:63 sm/templates/history_diff.html:32
+#: sm/templates/includes/history_table.html:34
+msgid "Created"
+msgstr ""
+
+#: sm/templates/api_keys/list.html:64
+msgid "Last used"
+msgstr ""
+
+#: sm/templates/api_keys/list.html:78
+msgid "Active"
+msgstr ""
+
+#: sm/templates/api_keys/list.html:80
+msgid "Revoked"
+msgstr ""
+
+#: sm/templates/api_keys/list.html:85
+msgid "Revoke this API key? Any client using it will immediately lose access."
+msgstr ""
+
+#: sm/templates/api_keys/list.html:88
+msgid "Revoke"
+msgstr ""
+
+#: sm/templates/api_keys/list.html:97
+msgid "You have not created any API keys yet."
+msgstr ""
+
+#: sm/templates/audit_log.html:12
+msgid "Filter by group"
+msgstr ""
+
+#: sm/templates/audit_log.html:13
+msgid "All my groups"
+msgstr ""
+
+#: sm/templates/audit_log.html:19
+msgid "Filter"
+msgstr ""
+
+#: sm/templates/audit_log.html:24
+msgid "No audit entries."
+msgstr ""
+
+#: sm/templates/audit_log.html:30
+msgid "When"
+msgstr ""
+
+#: sm/templates/audit_log.html:34 sm/templates/includes/list_history.html:24
+msgid "Object"
+msgstr ""
+
+#: sm/templates/audit_log.html:46
+msgid "system"
+msgstr ""
+
+#: sm/templates/audit_log.html:50
+msgid "created"
+msgstr ""
+
+#: sm/templates/audit_log.html:51
+msgid "changed"
+msgstr ""
+
+#: sm/templates/audit_log.html:52
+msgid "deleted"
+msgstr ""
+
+#: sm/templates/dashboard.html:4 sm/views.py:292
+msgid "Dashboard"
+msgstr "Übersicht"
+
+#: sm/templates/dashboard.html:16
+msgid "Welcome!"
+msgstr ""
+
+#: sm/templates/dashboard.html:17
+msgid ""
+"Create a group or join one with an invitation to start managing "
+"infrastructure with your team."
+msgstr ""
+
+#: sm/templates/dashboard.html:20
+msgid "Get Started"
+msgstr ""
+
+#: sm/templates/dashboard.html:32
+msgid "Total Servers"
+msgstr "Server gesamt"
+
+#: sm/templates/dashboard.html:47
+msgid "Active Clusters"
+msgstr ""
+
+#: sm/templates/dashboard.html:93
+msgid "OS Distribution"
+msgstr ""
+
+#: sm/templates/dashboard.html:107
+msgid "Server Status"
+msgstr ""
+
+#: sm/templates/dashboard.html:121
+msgid "Recently Added Servers"
+msgstr "Zuletzt hinzugefügte Server"
+
+#: sm/templates/dashboard.html:135 sm/templates/patch_schedule.html:14
+msgid "No servers found."
+msgstr "Keine Server gefunden."
+
+#: sm/templates/dashboard.html:142
+msgid "View All Servers"
+msgstr "Alle Server anzeigen"
+
+#: sm/templates/delete.html:11
+msgid "Delete Item"
+msgstr ""
+
+#: sm/templates/delete.html:18
+msgid "Are you sure you want to delete"
+msgstr ""
+
+#: sm/templates/delete.html:19
+msgid "This action is permanent and cannot be reversed."
+msgstr ""
+
+#: sm/templates/delete.html:23
+msgid "Confirm Delete"
+msgstr ""
+
+#: sm/templates/group/accept_invitation.html:5
+msgid "Accept Invitation"
+msgstr ""
+
+#: sm/templates/group/accept_invitation.html:16
+msgid "Go to Login"
+msgstr ""
+
+#: sm/templates/group/accept_invitation.html:20
+msgid "Join Group"
+msgstr ""
+
+#: sm/templates/group/accept_invitation.html:24
+#, python-format
+msgid ""
+"You have been invited by %(owner)s to join <strong>%(group_name)s</strong> "
+"on ServerManager."
+msgstr ""
+
+#: sm/templates/group/accept_invitation.html:27
+msgid "This invitation expires in 24 hours."
+msgstr ""
+
+#: sm/templates/group/accept_invitation.html:40
+msgid "Password"
+msgstr ""
+
+#: sm/templates/group/accept_invitation.html:44
+msgid "Confirm Password"
+msgstr ""
+
+#: sm/templates/group/accept_invitation.html:49
+msgid "Create Account & Join"
+msgstr ""
+
+#: sm/templates/group/accept_invitation.html:52
+msgid "Already have an account? Log in"
+msgstr ""
+
+#: sm/templates/group/add_member.html:5
+msgid "Add Group Member"
+msgstr ""
+
+#: sm/templates/group/add_member.html:13
+msgid "Add Member to Group"
+msgstr ""
+
+#: sm/templates/group/add_member.html:17
+msgid "Enter the username or email of the user you want to add to your group."
+msgstr ""
+
+#: sm/templates/group/add_member.html:24
+msgid "Add to Group"
+msgstr ""
+
+#: sm/templates/group/email/invite.txt:1
+msgid "Hello"
+msgstr ""
+
+#: sm/templates/group/email/invite.txt:3
+#, python-format
+msgid ""
+"You have been invited by %(owner_name)s to join the group \"%(group_name)s\" "
+"on ServerManager."
+msgstr ""
+
+#: sm/templates/group/email/invite.txt:5
+msgid "Click the link below to accept the invitation and create your account:"
+msgstr ""
+
+#: sm/templates/group/email/invite.txt:9
+msgid "This invitation will expire in 24 hours."
+msgstr ""
+
+#: sm/templates/group/email/invite.txt:11
+msgid ""
+"If you did not expect this invitation, you can safely ignore this email."
+msgstr ""
+
+#: sm/templates/group/email/invite.txt:13
+msgid "Best regards"
+msgstr ""
+
+#: sm/templates/group/invite_member.html:5
+msgid "Invite Group Member"
+msgstr ""
+
+#: sm/templates/group/invite_member.html:13
+msgid "Invite Member to Group"
+msgstr ""
+
+#: sm/templates/group/invite_member.html:17
+msgid ""
+"Enter the email address of the user you want to invite. They will receive an "
+"invitation link to sign up and join your group."
+msgstr ""
+
+#: sm/templates/group/invite_member.html:24
+msgid "Send Invitation"
+msgstr ""
+
+#: sm/templates/group/member_list.html:4
+msgid "Manage Group Members"
+msgstr ""
+
+#: sm/templates/group/member_list.html:8
+msgid "Manage My Groups"
+msgstr ""
+
+#: sm/templates/group/member_list.html:13
+#: sm/templates/group/member_list.html:22
+msgid "Create New Group"
+msgstr "Neue Gruppe erstellen"
+
+#: sm/templates/group/member_list.html:33 sm/views_group.py:66
+msgid "Max Users"
+msgstr "Maximale Benutzer"
+
+#: sm/templates/group/member_list.html:35 sm/views_group.py:70
+msgid "Maximum number of users in this group"
+msgstr ""
+
+#: sm/templates/group/member_list.html:40
+msgid "Create Group"
+msgstr ""
+
+#: sm/templates/group/member_list.html:53
+msgid "Users:"
+msgstr ""
+
+#: sm/templates/group/member_list.html:56
+msgid "Group Permissions"
+msgstr ""
+
+#: sm/templates/group/member_list.html:60
+msgid "Add Member"
+msgstr ""
+
+#: sm/templates/group/member_list.html:64
+msgid "Add existing user"
+msgstr ""
+
+#: sm/templates/group/member_list.html:67
+msgid "Invite via email"
+msgstr ""
+
+#: sm/templates/group/member_list.html:92
+msgid "Member"
+msgstr ""
+
+#: sm/templates/group/member_list.html:99
+msgid "Permissions"
+msgstr ""
+
+#: sm/templates/group/member_list.html:103
+msgid "Are you sure you want to remove this user from the group?"
+msgstr ""
+
+#: sm/templates/group/member_list.html:120
+msgid "You do not own any groups."
+msgstr ""
+
+#: sm/templates/group/onboarding.html:4
+msgid "Welcome"
+msgstr ""
+
+#: sm/templates/group/onboarding.html:13
+msgid "Welcome to ServerManager"
+msgstr "Willkommen bei ServerManager"
+
+#: sm/templates/group/onboarding.html:16
+msgid "You are currently only a member of your personal workspace."
+msgstr ""
+
+#: sm/templates/group/onboarding.html:21
+msgid ""
+"Create your own group to manage servers and clusters with your team, or join "
+"an existing one using an invitation link."
+msgstr ""
+
+#: sm/templates/group/onboarding.html:26
+msgid "Create a New Group"
+msgstr ""
+
+#: sm/templates/group/onboarding.html:28
+msgid "or"
+msgstr ""
+
+#: sm/templates/group/onboarding.html:34
+msgid "Paste invitation token"
+msgstr ""
+
+#: sm/templates/group/onboarding.html:34
+msgid "Invitation token"
+msgstr ""
+
+#: sm/templates/group/onboarding.html:36
+msgid "Join"
+msgstr ""
+
+#: sm/templates/group/onboarding.html:44
+msgid "Skip for now"
+msgstr ""
+
+#: sm/templates/group/permission_edit.html:5
+msgid "Edit Group Permissions"
+msgstr "Gruppenberechtigungen bearbeiten"
+
+#: sm/templates/group/permission_edit.html:13
+msgid "Permissions for Group:"
+msgstr ""
+
+#: sm/templates/group/permission_edit.html:17
+msgid "Toggle permissions for all members of this group."
+msgstr ""
+
+#: sm/templates/group/permission_edit.html:30
+#: sm/templates/group/user_permission_edit.html:31
+msgid "Save Permissions"
+msgstr "Berechtigungen speichern"
+
+#: sm/templates/group/user_permission_edit.html:5
+msgid "Edit User Permissions"
+msgstr "Benutzerberechtigungen bearbeiten"
+
+#: sm/templates/group/user_permission_edit.html:13
+msgid "Permissions for User:"
+msgstr ""
+
+#: sm/templates/group/user_permission_edit.html:14
+#: sm/templates/notifications/server_status_change.txt:5
+msgid "Group:"
+msgstr ""
+
+#: sm/templates/group/user_permission_edit.html:18
+msgid ""
+"Toggle specific permissions for this user. These override group permissions."
+msgstr ""
+
+#: sm/templates/history_diff.html:5
+msgid "Version Comparison"
+msgstr ""
+
+#: sm/templates/history_diff.html:14
+msgid "Version History"
+msgstr ""
+
+#: sm/templates/history_diff.html:17
+msgid "Changes in version from"
+msgstr ""
+
+#: sm/templates/history_diff.html:20
+msgid "Back to Detail"
+msgstr ""
+
+#: sm/templates/history_diff.html:29
+#: sm/templates/includes/history_table.html:29
+#: sm/templates/includes/list_history.html:43
+msgid "System"
+msgstr ""
+
+#: sm/templates/history_diff.html:34
+#: sm/templates/includes/history_table.html:36
+msgid "Changed"
+msgstr ""
+
+#: sm/templates/history_diff.html:36
+#: sm/templates/includes/history_table.html:38
+msgid "Deleted"
+msgstr ""
+
+#: sm/templates/history_diff.html:50
+msgid "Field"
+msgstr ""
+
+#: sm/templates/history_diff.html:51
+msgid "Old Value"
+msgstr ""
+
+#: sm/templates/history_diff.html:53
+msgid "New Value"
+msgstr ""
+
+#: sm/templates/history_diff.html:71
+msgid "Initial Version"
+msgstr ""
+
+#: sm/templates/history_diff.html:72
+msgid ""
+"This is the very first record of this object. All data was newly created."
+msgstr ""
+
+#: sm/templates/history_diff.html:77
+msgid "No Data Changes"
+msgstr ""
+
+#: sm/templates/history_diff.html:78
+msgid ""
+"Metadata (like the user or date) was updated, but no actual data fields were "
+"changed."
+msgstr ""
+
+#: sm/templates/includes/bulk_toolbar.html:6
+msgid "selected"
+msgstr "ausgewählt"
+
+#: sm/templates/includes/bulk_toolbar.html:14
+msgid "Delete selected"
+msgstr "Ausgewählte löschen"
+
+#: sm/templates/includes/bulk_toolbar.html:17
+msgid "Apply"
+msgstr "Anwenden"
+
+#: sm/templates/includes/export_button.html:2
+msgid "Export as CSV"
+msgstr "Als CSV exportieren"
+
+#: sm/templates/includes/export_button.html:3
+msgid "Export"
+msgstr "Exportieren"
+
+#: sm/templates/includes/group_badge.html:3
+msgid "Owned by group"
+msgstr ""
+
+#: sm/templates/includes/group_badge.html:5
+msgid "Shared across all groups"
+msgstr ""
+
+#: sm/templates/includes/group_badge.html:5
+msgid "Global"
+msgstr "Global"
+
+#: sm/templates/includes/history_table.html:7
+msgid "Recent History"
+msgstr ""
+
+#: sm/templates/includes/history_table.html:8
+msgid "Last 10 changes"
+msgstr ""
+
+#: sm/templates/includes/history_table.html:15
+#: sm/templates/includes/list_history.html:23
+msgid "Date"
+msgstr ""
+
+#: sm/templates/includes/history_table.html:18
+#: sm/templates/includes/list_history.html:27
+msgid "Summary"
+msgstr ""
+
+#: sm/templates/includes/history_table.html:48
+#: sm/templates/includes/list_history.html:62
+msgid "Initial version"
+msgstr ""
+
+#: sm/templates/includes/history_table.html:50
+#: sm/templates/includes/list_history.html:64
+msgid "No data changes"
+msgstr ""
+
+#: sm/templates/includes/history_table.html:58
+msgid "No history records found."
+msgstr ""
+
+#: sm/templates/includes/list_history.html:8
+msgid "Toggle Recent Changes"
+msgstr ""
+
+#: sm/templates/includes/list_history.html:15
+msgid "Recent Global Changes"
+msgstr ""
+
+#: sm/templates/includes/list_history.html:16
+msgid "Last 10 entries"
+msgstr ""
+
+#: sm/templates/includes/list_history.html:48
+msgid "New"
+msgstr ""
+
+#: sm/templates/includes/list_history.html:50
+msgid "Change"
+msgstr ""
+
+#: sm/templates/legal/impressum.html:15
+msgid "Operator"
+msgstr ""
+
+#: sm/templates/legal/impressum.html:23
+msgid "Contact"
+msgstr ""
+
+#: sm/templates/legal/impressum.html:32
+msgid "Disclaimer"
+msgstr ""
+
+#: sm/templates/legal/impressum.html:34
+msgid ""
+"The contents of our pages were created with great care. However, we cannot "
+"guarantee the accuracy, completeness or topicality of the contents."
+msgstr ""
+
+#: sm/templates/legal/privacy.html:4 sm/templates/legal/privacy.html:10
+msgid "Privacy Policy"
+msgstr ""
+
+#: sm/templates/legal/privacy.html:13
+msgid "Data Collection"
+msgstr ""
+
+#: sm/templates/legal/privacy.html:14
+msgid ""
+"We collect minimal personal data necessary for the operation of "
+"ServerManager, including your name and email address when you register."
+msgstr ""
+
+#: sm/templates/legal/privacy.html:18
+msgid "Cookies"
+msgstr ""
+
+#: sm/templates/legal/privacy.html:19
+msgid ""
+"ServerManager uses cookies to maintain your session and store your "
+"preferences, such as the 'Show Empty' filtering state."
+msgstr ""
+
+#: sm/templates/legal/privacy.html:23
+msgid "Third-Party Services"
+msgstr ""
+
+#: sm/templates/legal/privacy.html:24
+msgid ""
+"When you log in via a social provider, we receive basic profile information "
+"according to the permissions you grant."
+msgstr ""
+
+#: sm/templates/legal/privacy.html:28 sm/templates/legal/terms.html:28
+msgid "Last updated: March 2026"
+msgstr ""
+
+#: sm/templates/legal/terms.html:4 sm/templates/legal/terms.html:10
+msgid "Terms of Service"
+msgstr ""
+
+#: sm/templates/legal/terms.html:13
+msgid "Acceptance of Terms"
+msgstr ""
+
+#: sm/templates/legal/terms.html:14
+msgid ""
+"By accessing and using ServerManager, you accept and agree to be bound by "
+"the terms and provision of this agreement."
+msgstr ""
+
+#: sm/templates/legal/terms.html:18
+msgid "Provision of Service"
+msgstr ""
+
+#: sm/templates/legal/terms.html:19
+msgid ""
+"ServerManager is provided 'as is' without warranty of any kind. We reserve "
+"the right to modify or discontinue the service at any time."
+msgstr ""
+
+#: sm/templates/legal/terms.html:23
+msgid "User Conduct"
+msgstr ""
+
+#: sm/templates/legal/terms.html:24
+msgid ""
+"You agree to use the service only for lawful purposes and in a way that does "
+"not infringe the rights of others."
+msgstr ""
+
+#: sm/templates/notifications/server_status_change.txt:3
+msgid "The status of server"
+msgstr ""
+
+#: sm/templates/notifications/server_status_change.txt:3
+msgid "has changed to"
+msgstr ""
+
+#: sm/templates/notifications/server_status_change.txt:7
+msgid "Server details:"
+msgstr ""
+
+#: sm/templates/notifications/server_status_change.txt:8
+msgid "Hostname:"
+msgstr ""
+
+#: sm/templates/notifications/server_status_change.txt:9
+msgid "Domain:"
+msgstr ""
+
+#: sm/templates/notifications/server_status_change.txt:10
+msgid "Status:"
+msgstr ""
+
+#: sm/templates/notifications/server_status_change.txt:11
+msgid "Location:"
+msgstr ""
+
+#: sm/templates/notifications/server_status_change.txt:12
+msgid "Application:"
+msgstr ""
+
+#: sm/templates/notifications/server_status_change.txt:13
+msgid "Rack:"
+msgstr ""
+
+#: sm/templates/notifications/server_status_change.txt:15
+msgid "View it online:"
+msgstr ""
+
+#: sm/templates/patch_schedule.html:11
+msgid "servers"
+msgstr "Server"
+
+#: sm/templates/search.html:4
+msgid "Search Results"
+msgstr "Suchergebnisse"
+
+#: sm/templates/search.html:9
+msgid "Search Results for"
+msgstr ""
+
+#: sm/templates/search.html:18
+msgid "Quick Jumps"
+msgstr "Schnellsprünge"
+
+#: sm/templates/search.html:273
+msgid "Query too short."
+msgstr "Suchbegriff zu kurz."
+
+#: sm/templates/search.html:274
+msgid "Please enter at least 2 characters to search."
+msgstr "Bitte mindestens 2 Zeichen eingeben."
+
+#: sm/templates/search.html:276
+msgid "No results found."
+msgstr "Keine Ergebnisse gefunden."
+
+#: sm/templates/search.html:277
+msgid "Try searching for a different hostname, vendor, or cluster name."
+msgstr "Versuchen Sie einen anderen Hostname, Hersteller oder Cluster-Namen."
+
+#: sm/templates/search.html:280
+msgid "Back to Dashboard"
+msgstr "Zurück zur Übersicht"
+
+#: sm/templates/search_results_ajax.html:9
+msgid "Jump to Page"
+msgstr "Zur Seite springen"
+
+#: sm/templates/search_results_ajax.html:68
+msgid "Patch Time"
+msgstr "Patch-Zeit"
+
+#: sm/templates/search_results_ajax.html:76
+msgid "Operating System"
+msgstr "Betriebssystem"
+
+#: sm/templates/search_results_ajax.html:84
+msgid "Server Model"
+msgstr "Servermodell"
+
+#: sm/templates/search_results_ajax.html:100
+msgid "Package Type"
+msgstr "Pakettyp"
+
+#: sm/templates/search_results_ajax.html:108
+msgid "Cluster Package"
+msgstr "Cluster-Paket"
+
+#: sm/templates/search_results_ajax.html:114
+msgid "No matching resources found."
+msgstr "Keine passenden Ressourcen gefunden."
+
+#: sm/templates/socialaccount/authentication_error.html:6
+#: sm/templates/socialaccount/authentication_error.html:14
+msgid "Social Network Login Failure"
+msgstr ""
+
+#: sm/templates/socialaccount/authentication_error.html:18
+msgid ""
+"An error occurred while attempting to login via your social network account."
+msgstr ""
+
+#: sm/templates/socialaccount/authentication_error.html:21
+msgid "Back to Login"
+msgstr ""
+
+#: sm/templates/socialaccount/connections.html:14
+msgid "Social Connections"
+msgstr ""
+
+#: sm/templates/socialaccount/connections.html:19
+msgid ""
+"You can sign in to your account using any of the following third party "
+"accounts:"
+msgstr ""
+
+#: sm/templates/socialaccount/connections.html:29
+msgid "Provider"
+msgstr ""
+
+#: sm/templates/socialaccount/connections.html:50
+msgid "Connected"
+msgstr ""
+
+#: sm/templates/socialaccount/connections.html:60
+msgid "Remove Selected"
+msgstr ""
+
+#: sm/templates/socialaccount/connections.html:65
+msgid "You currently have no social accounts connected."
+msgstr ""
+
+#: sm/templates/socialaccount/connections.html:70
+msgid "Add a Third Party Account"
+msgstr ""
+
+#: sm/templates/socialaccount/login.html:7
+#: sm/templates/socialaccount/login.html:18
+msgid "Sign In"
+msgstr ""
+
+#: sm/templates/socialaccount/login.html:16
+msgid "Connect Account"
+msgstr ""
+
+#: sm/templates/socialaccount/login.html:24
+#, python-format
+msgid "You are about to connect a third party account from %(provider)s."
+msgstr ""
+
+#: sm/templates/socialaccount/login.html:28
+#, python-format
+msgid "You are about to sign in using a third party account from %(provider)s."
+msgstr ""
+
+#: sm/templates/socialaccount/login.html:35
+msgid "Continue"
+msgstr ""
+
+#: sm/templates/socialaccount/signup.html:6
+#: sm/templates/socialaccount/signup.html:14
+msgid "Signup"
+msgstr ""
+
+#: sm/templates/socialaccount/signup.html:18
+#, python-format
+msgid ""
+"You are about to use your %(provider_name)s account to login to "
+"%(site_name)s. As a final step, please complete the following form:"
+msgstr ""
+
+#: sm/templates/socialaccount/signup.html:29
+msgid "Sign Up"
+msgstr ""
+
+#: sm/templates/socialaccount/snippets/provider_list_navbar.html:9
+msgid "Social Login"
+msgstr ""
+
+#: sm/templates/theme_bootstrap/base.html:67
+#: sm/templates/theme_bootstrap/base.html:78
+msgid "Search..."
+msgstr "Suchen..."
+
+#: sm/templates/theme_bootstrap/base.html:95
+msgid "All"
+msgstr ""
+
+#: sm/templates/theme_bootstrap/base.html:157
+msgid "Search anything... (Servers, Clusters, Groups, Vendors)"
+msgstr ""
+
+#: sm/templates/theme_bootstrap/base.html:163
+msgid "Type to start searching across the infrastructure."
+msgstr ""
+
+#: sm/templates/theme_bootstrap/base.html:167
+msgid "to select"
+msgstr ""
+
+#: sm/templates/theme_bootstrap/base.html:168
+msgid "to close"
+msgstr ""
+
+#: sm/templates/theme_bootstrap/menuitem.html:11
+msgid "List"
+msgstr ""
+
+#: sm/templates/theme_bootstrap/menuitem.html:15
+msgid "Create new"
+msgstr ""
+
+#: sm/templates/theme_bootstrap/menuitem.html:20
+msgid "Search"
+msgstr ""
+
+#: sm/views.py:50
+#, python-format
+msgid "Successfully deleted %s"
+msgstr ""
+
+#: sm/views.py:57
+#, python-format
+msgid ""
+"%(name)s cannot be deleted because it is referenced by %(count)d other "
+"resource(s): %(instances)s"
+msgstr ""
+
+#: sm/views.py:105 sm/views.py:117
+msgid "No items selected."
+msgstr ""
+
+#: sm/views.py:124
+#, python-format
+msgid "Successfully deleted %d item(s)."
+msgstr ""
+
+#: sm/views.py:132
+#, python-format
+msgid "Some items cannot be deleted because they are referenced by: %s"
+msgstr ""
+
+#: sm/views.py:294
+msgid "Group Management"
+msgstr "Gruppenverwaltung"
+
+#: sm/views.py:450 sm/views.py:454
+msgid "Unassigned"
+msgstr "Nicht zugeordnet"
+
+#: sm/views.py:465
+msgid "You are not assigned to any group."
+msgstr ""
+
+#: sm/views.py:473
+#, python-format
+msgid "Imported %d vendors and %d operating systems into group %s."
+msgstr ""
+
+#: sm/views_admin.py:37
+msgid "Group profile updated successfully."
+msgstr ""
+
+#: sm/views_api_keys.py:16
+msgid "Name (optional)"
+msgstr ""
+
+#: sm/views_api_keys.py:19
+msgid "A label to remember this key by."
+msgstr ""
+
+#: sm/views_api_keys.py:42
+msgid "API key created. Copy the secret now - it will not be shown again."
+msgstr ""
+
+#: sm/views_api_keys.py:54
+#, python-format
+msgid "API key %(key)s has been revoked."
+msgstr ""
+
+#: sm/views_group.py:51
+msgid "Username or Email"
+msgstr ""
+
+#: sm/views_group.py:60
+msgid "User does not exist."
+msgstr ""
+
+#: sm/views_group.py:96
+#, python-format
+msgid "User quota exceeded for this group (%d users)."
+msgstr ""
+
+#: sm/views_group.py:104
+#, python-format
+msgid "User %s added to group %s."
+msgstr ""
+
+#: sm/views_group.py:125
+msgid "You cannot remove yourself from your own group."
+msgstr ""
+
+#: sm/views_group.py:131
+#, python-format
+msgid "User %s removed from group %s."
+msgstr ""
+
+#: sm/views_group.py:163 sm/views_group.py:236
+#, python-format
+msgid "Can Edit %s"
+msgstr ""
+
+#: sm/views_group.py:205
+msgid "Group permissions updated successfully."
+msgstr ""
+
+#: sm/views_group.py:241
+msgid "(Inherited from group)"
+msgstr ""
+
+#: sm/views_group.py:281
+msgid "User permissions updated successfully."
+msgstr ""
+
+#: sm/views_group.py:286
+msgid "Email Address"
+msgstr ""
+
+#: sm/views_group.py:291 sm/views_profile.py:18
+msgid "A user with this email already exists."
+msgstr ""
+
+#: sm/views_group.py:318
+msgid "An invitation has already been sent to this email address."
+msgstr ""
+
+#: sm/views_group.py:336
+#, python-format
+msgid "Invitation sent to %(email)s."
+msgstr ""
+
+#: sm/views_group.py:344
+#, python-format
+msgid "Invitation to join %(group_name)s on ServerManager"
+msgstr ""
+
+#: sm/views_group.py:377
+msgid "This invitation has expired."
+msgstr ""
+
+#: sm/views_group.py:381
+msgid "This invitation has already been used."
+msgstr ""
+
+#: sm/views_group.py:392
+msgid "This invitation is no longer valid."
+msgstr ""
+
+#: sm/views_group.py:401
+msgid "All fields are required."
+msgstr ""
+
+#: sm/views_group.py:405
+msgid "Passwords do not match."
+msgstr ""
+
+#: sm/views_group.py:409
+msgid "Username already exists."
+msgstr ""
+
+#: sm/views_group.py:413
+msgid "Email already registered."
+msgstr ""
+
+#: sm/views_group.py:428
+#, python-format
+msgid "You have joined %(group_name)s!"
+msgstr ""
+
+#: sm/views_group.py:470
+#, python-format
+msgid "You can only create up to %d groups."
+msgstr ""
+
+#: sm/views_group.py:476
+msgid "A group with this name already exists."
+msgstr ""
+
+#: sm/views_group.py:492
+#, python-format
+msgid "Group '%s' created successfully."
+msgstr ""
+
+#: sm/views_group.py:496
+msgid "Failed to create group."
+msgstr ""
+
+#: sm/views_onboarding.py:38 sm/views_onboarding.py:42
+msgid "Invalid invitation token."
+msgstr ""
+
+#: sm/views_onboarding.py:47
+msgid "Please choose an action."
+msgstr ""
+
+#: sm/views_profile.py:41
+msgid "Your profile has been updated."
+msgstr ""
+
+#: status/templates/detail.html:20
+msgid "No servers with this status"
+msgstr ""
+
+#: status/templates/detail.html:22
+msgid "List of servers with this status"
+msgstr ""
+
+#: status/templates/list.html:38
+msgid "Icon"
+msgstr ""
+
+#: status/templates/list.html:57
+msgid "Edit status"
+msgstr ""
+
+#: status/templates/list.html:60
+msgid "Delete status"
+msgstr ""
+
+#: vendor/templates/detail.html:17
+msgid "Vendor Details"
+msgstr ""
+
+#: vendor/templates/detail.html:42
+msgid "No servermodels from this vendor"
+msgstr ""
+
+#: vendor/templates/detail.html:44
+msgid "List of models from this vendor"
+msgstr ""
+
+#: vendor/templates/detail.html:49
+msgid "Models"
+msgstr ""
+
+#: vendor/templates/detail.html:65
+msgid "No operatingsystems from this vendor"
+msgstr ""
+
+#: vendor/templates/detail.html:67
+msgid "List of operatingsystems versions from this vendor"
+msgstr ""
+
+#: vendor/templates/list.html:50 vendor/templates/list.html:72
+msgid "(virtual) Hardware Vendor"
+msgstr ""
+
+#: vendor/templates/list.html:53 vendor/templates/list.html:77
+msgid "Software Vendor"
+msgstr ""
+
+#: vendor/templates/list.html:84
+msgid "Edit vendor"
+msgstr ""
+
+#: vendor/templates/list.html:89
+msgid "Delete vendor"
+msgstr ""
