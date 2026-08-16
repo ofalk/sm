@@ -39,6 +39,8 @@ class ServerViewSet(APIMultiTenantMixin, viewsets.ModelViewSet):
     queryset = Server.objects.all().order_by("hostname")
     serializer_class = ServerSerializer
     permission_classes = [SmModelPermissions]
+    search_fields = ["hostname", "primary_ip", "management_ip", "description"]
+    ordering_fields = ["hostname", "status", "location", "primary_ip", "last_update"]
 
 
 class VendorViewSet(APIMultiTenantMixin, viewsets.ModelViewSet):
@@ -49,6 +51,8 @@ class VendorViewSet(APIMultiTenantMixin, viewsets.ModelViewSet):
     queryset = Vendor.objects.all().order_by("name")
     serializer_class = VendorSerializer
     permission_classes = [SmModelPermissions]
+    search_fields = ["name"]
+    ordering_fields = ["name"]
 
 
 class StatusViewSet(APIMultiTenantMixin, viewsets.ModelViewSet):
@@ -59,57 +63,77 @@ class StatusViewSet(APIMultiTenantMixin, viewsets.ModelViewSet):
     queryset = Status.objects.all().order_by("name")
     serializer_class = StatusSerializer
     permission_classes = [SmModelPermissions]
+    search_fields = ["name"]
+    ordering_fields = ["name"]
 
 
 class LocationViewSet(APIMultiTenantMixin, viewsets.ModelViewSet):
     queryset = Location.objects.all().order_by("name")
     serializer_class = LocationSerializer
     permission_classes = [SmModelPermissions]
+    search_fields = ["name", "country"]
+    ordering_fields = ["name", "country"]
 
 
 class DomainViewSet(APIMultiTenantMixin, viewsets.ModelViewSet):
     queryset = Domain.objects.all().order_by("name")
     serializer_class = DomainSerializer
     permission_classes = [SmModelPermissions]
+    search_fields = ["name"]
+    ordering_fields = ["name"]
 
 
 class PatchtimeViewSet(APIMultiTenantMixin, viewsets.ModelViewSet):
     queryset = Patchtime.objects.all().order_by("name")
     serializer_class = PatchtimeSerializer
     permission_classes = [SmModelPermissions]
+    search_fields = ["name"]
+    ordering_fields = ["name"]
 
 
 class OSViewSet(APIMultiTenantMixin, viewsets.ModelViewSet):
     queryset = OS.objects.all().order_by("version")
     serializer_class = OSSerializer
     permission_classes = [SmModelPermissions]
+    search_fields = ["version", "vendor__name"]
+    ordering_fields = ["version", "vendor__name"]
 
 
 class ServerModelViewSet(APIMultiTenantMixin, viewsets.ModelViewSet):
     queryset = ServerModel.objects.all().order_by("name")
     serializer_class = ServerModelSerializer
     permission_classes = [SmModelPermissions]
+    search_fields = ["name", "vendor__name"]
+    ordering_fields = ["name", "vendor__name"]
 
 
 class ClusterViewSet(APIMultiTenantMixin, viewsets.ModelViewSet):
     queryset = Cluster.objects.all().order_by("name")
     serializer_class = ClusterSerializer
     permission_classes = [SmModelPermissions]
+    search_fields = ["name", "clustersoftware__name"]
+    ordering_fields = ["name"]
 
 
 class ClusterPackageViewSet(APIMultiTenantMixin, viewsets.ModelViewSet):
     queryset = ClusterPackage.objects.all().order_by("name")
     serializer_class = ClusterPackageSerializer
     permission_classes = [SmModelPermissions]
+    search_fields = ["name", "cluster__name", "description", "host"]
+    ordering_fields = ["name", "cluster__name", "status__name"]
 
 
 class ClusterSoftwareViewSet(APIMultiTenantMixin, viewsets.ModelViewSet):
     queryset = ClusterSoftware.objects.all().order_by("name")
     serializer_class = ClusterSoftwareSerializer
     permission_classes = [SmModelPermissions]
+    search_fields = ["name", "version", "vendor__name"]
+    ordering_fields = ["name", "version", "vendor__name"]
 
 
 class ClusterPackageTypeViewSet(APIMultiTenantMixin, viewsets.ModelViewSet):
     queryset = ClusterPackageType.objects.all().order_by("name")
     serializer_class = ClusterPackageTypeSerializer
     permission_classes = [SmModelPermissions]
+    search_fields = ["name"]
+    ordering_fields = ["name"]

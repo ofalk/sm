@@ -27,6 +27,9 @@ EMAIL_BACKEND = config(
 THEME_CONTACT_EMAIL = config("THEME_CONTACT_EMAIL", default="oliver@linux-kernel.at")
 THEME_GITHUB_URL = config("THEME_GITHUB_URL", default="https://github.com/ofalk/sm")
 
+# Send an email to group members + superusers when a server's status changes.
+SERVER_STATUS_NOTIFY = config("SERVER_STATUS_NOTIFY", default=False, cast=bool)
+
 # Version information
 APP_VERSION = config("APP_VERSION", default="unknown")
 APP_MODIFICATION_DATE = config("APP_MODIFICATION_DATE", default="unknown")
@@ -120,6 +123,7 @@ MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.locale.LocaleMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -232,6 +236,11 @@ TIME_ZONE = "UTC"
 USE_I18N = True
 USE_TZ = True
 
+# Path where application-level translations live (po/mo files).
+LOCALE_PATHS = [
+    BASE_DIR / "sm" / "locale",
+]
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/stable/howto/static-files/
 
@@ -342,6 +351,20 @@ REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "sm.api.authentication.ApiKeyAuthentication",
         "rest_framework.authentication.SessionAuthentication",
+    ],
+    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
+    "PAGE_SIZE": 25,
+    "DEFAULT_FILTER_BACKENDS": [
+        "rest_framework.filters.SearchFilter",
+        "rest_framework.filters.OrderingFilter",
+    ],
+    "DEFAULT_THROTTLE_RATES": {
+        "user": "1000/hour",
+        "anon": "100/hour",
+    },
+    "DEFAULT_THROTTLE_CLASSES": [
+        "rest_framework.throttling.UserRateThrottle",
+        "rest_framework.throttling.AnonRateThrottle",
     ],
 }
 

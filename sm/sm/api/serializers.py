@@ -2,6 +2,7 @@ from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 from datetime import datetime
+from taggit.serializers import TaggitSerializer, TagListSerializerField
 from vendor.models import Model as Vendor
 from status.models import Model as Status
 from location.models import Model as Location
@@ -82,7 +83,7 @@ class CoercingDateField(serializers.DateField):
         return super().to_representation(value)
 
 
-class ServerSerializer(serializers.ModelSerializer):
+class ServerSerializer(TaggitSerializer, serializers.ModelSerializer):
     status = TenantSlugRelatedField(slug_field="name", queryset=Status.objects.all())
     domain = TenantSlugRelatedField(slug_field="name", queryset=Domain.objects.all())
     location = TenantSlugRelatedField(
@@ -101,6 +102,7 @@ class ServerSerializer(serializers.ModelSerializer):
     servermodel = ServerModelSerializer(read_only=True)
     delivery_date = CoercingDateField(required=False)
     install_date = CoercingDateField(required=False)
+    tags = TagListSerializerField(required=False)
 
     class Meta:
         model = Server
@@ -117,43 +119,53 @@ class ServerSerializer(serializers.ModelSerializer):
             "delivery_date",
             "install_date",
             "description",
+            "application",
+            "rack",
             "monitoring_from_puppet",
             "management_ip",
             "management_hostname",
+            "tags",
         ]
 
 
-class LocationSerializer(serializers.ModelSerializer):
+class LocationSerializer(TaggitSerializer, serializers.ModelSerializer):
+    tags = TagListSerializerField(required=False)
+
     class Meta:
         model = Location
         fields = "__all__"
 
 
-class DomainSerializer(serializers.ModelSerializer):
+class DomainSerializer(TaggitSerializer, serializers.ModelSerializer):
+    tags = TagListSerializerField(required=False)
+
     class Meta:
         model = Domain
         fields = "__all__"
 
 
-class PatchtimeSerializer(serializers.ModelSerializer):
+class PatchtimeSerializer(TaggitSerializer, serializers.ModelSerializer):
+    tags = TagListSerializerField(required=False)
+
     class Meta:
         model = Patchtime
         fields = "__all__"
 
 
-class ClusterSerializer(serializers.ModelSerializer):
+class ClusterSerializer(TaggitSerializer, serializers.ModelSerializer):
     clustersoftware = TenantPrimaryKeyRelatedField(
         queryset=ClusterSoftware.objects.all(),
         required=False,
         allow_null=True,
     )
+    tags = TagListSerializerField(required=False)
 
     class Meta:
         model = Cluster
         fields = "__all__"
 
 
-class ClusterPackageSerializer(serializers.ModelSerializer):
+class ClusterPackageSerializer(TaggitSerializer, serializers.ModelSerializer):
     status_name = serializers.CharField(source="status.name", read_only=True)
     package_type_name = serializers.CharField(
         source="package_type.name", read_only=True
@@ -170,6 +182,7 @@ class ClusterPackageSerializer(serializers.ModelSerializer):
     package_type = TenantPrimaryKeyRelatedField(
         queryset=ClusterPackageType.objects.all()
     )
+    tags = TagListSerializerField(required=False)
 
     class Meta:
         model = ClusterPackage

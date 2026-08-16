@@ -80,3 +80,17 @@ class Tester(TestCase):
             "%s" % (reverse("%s:detail" % app_label, kwargs={"pk": self.testitem.pk})),
             "aboslute url not built correctly",
         )
+
+    def test_application_field_blank_by_default(self):
+        self.assertIsNone(self.testitem.application)
+        self.testitem.application = "Web Server"
+        self.testitem.save()
+        self.testitem.refresh_from_db()
+        self.assertEqual(self.testitem.application, "Web Server")
+
+    def test_rack_field_blank_by_default(self):
+        self.assertIsNone(self.testitem.rack)
+        self.testitem.rack = "R-12-A"
+        self.testitem.save()
+        self.testitem.refresh_from_db()
+        self.assertEqual(self.testitem.rack, "R-12-A")
