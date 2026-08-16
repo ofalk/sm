@@ -498,6 +498,7 @@ class ApiSerializerFieldsTest(TestCase):
         server = data["test01"]
         self.assertEqual(server["management_ip"], "10.0.1.1")
         self.assertEqual(server["management_hostname"], "mgmt-test01")
+        self.assertIs(server["monitoring"], True)
         self.assertIs(server["monitoring_from_puppet"], True)
         self.assertEqual(server["application"], "Web Server")
         self.assertEqual(server["rack"], "R-12-A")
@@ -589,3 +590,126 @@ class ApiSerializerFieldsTest(TestCase):
         response = self.api().post("/api/clusterpackages/", payload, format="json")
         self.assertEqual(response.status_code, 201)
         self.assertEqual(ClusterPackage.objects.filter(name="db").count(), 2)
+
+
+@override_settings(PASSWORD_HASHERS=FAST_HASHERS)
+class ApiMonitoringFieldTest(TestCase):
+    """The monitoring flag is presented as ``monitoring`` with the legacy
+    ``monitoring_from_puppet`` alias still readable and writable."""
+
+    def setUp(self):
+        self.group = Group.objects.create(name="Monitoring API Group")
+        self.user = User.objects.create_user("monapi", password=PASSWORD)
+        self.user.groups.add(self.group)
+        for perm in ("view_model", "add_model", "change_model"):
+            self.group.permissions.add(
+                Permission.objects.get(
+                    content_type=ContentType.objects.get(
+                        app_label="server", model="model"
+                    ),
+                    codename=perm,
+                )
+            )
+        self.status = Status.objects.create(name="In use")
+        self.domain = Domain.objects.create(name="mon.example.com")
+        self.key, self.secret = ApiKey.create_for_user(self.user, "mon")
+
+    def api(self):
+        client = APIClient()
+        client.credentials(
+            HTTP_AUTHORIZATION=f"ApiKey {self.key.client_id}:{self.secret}"
+        )
+        return client
+
+    def test_serializer_exposes_both_field_names(self):
+        from sm.api.serializers import ServerSerializer
+
+        server = Server.objects.create(
+            hostname="mon01",
+            status=self.status,
+            domain=self.domain,
+            monitoring_from_puppet=True,
+            group=self.group,
+        )
+        data = ServerSerializer(server).data
+        self.assertIs(data["monitoring"], True)
+        self.assertIs(data["monitoring_from_puppet"], True)
+
+    def test_create_with_new_monitoring_key(self):
+        response = self.api().post(
+            "/api/servers/",
+            {
+                "hostname": "mon-new",
+                "status": "In use",
+                "domain": "mon.example.com",
+                "monitoring": True,
+            },
+            format="json",
+        )
+        self.assertEqual(response.status_code, 201, response.content)
+        server = Server.objects.get(hostname="mon-new")
+        self.assertIs(server.monitoring_from_puppet, True)
+
+    def test_create_with_legacy_key_still_works(self):
+        response = self.api().post(
+            "/api/servers/",
+            {
+                "hostname": "mon-legacy",
+                "status": "In use",
+                "domain": "mon.example.com",
+                "monitoring_from_puppet": True,
+            },
+            format="json",
+        )
+        self.assertEqual(response.status_code, 201, response.content)
+        server = Server.objects.get(hostname="mon-legacy")
+        self.assertIs(server.monitoring_from_puppet, True)
+
+    def test_update_with_new_monitoring_key(self):
+        server = Server.objects.create(
+            hostname="mon-update",
+            status=self.status,
+            domain=self.domain,
+            group=self.group,
+        )
+        response = self.api().patch(
+            f"/api/servers/{server.pk}/",
+            {"monitoring": True},
+            format="json",
+        )
+        self.assertEqual(response.status_code, 200, response.content)
+        server.refresh_from_db()
+        self.assertIs(server.monitoring_from_puppet, True)
+
+    def test_update_with_legacy_key_still_works(self):
+        server = Server.objects.create(
+            hostname="mon-update-legacy",
+            status=self.status,
+            domain=self.domain,
+            monitoring_from_puppet=True,
+            group=self.group,
+        )
+        response = self.api().patch(
+            f"/api/servers/{server.pk}/",
+            {"monitoring_from_puppet": False},
+            format="json",
+        )
+        self.assertEqual(response.status_code, 200, response.content)
+        server.refresh_from_db()
+        self.assertIs(server.monitoring_from_puppet, False)
+
+    def test_get_returns_both_fields(self):
+        Server.objects.create(
+            hostname="mon-get",
+            status=self.status,
+            domain=self.domain,
+            monitoring_from_puppet=True,
+            group=self.group,
+        )
+        response = self.api().get("/api/servers/")
+        self.assertEqual(response.status_code, 200)
+        server = next(
+            item for item in unwrap(response) if item["hostname"] == "mon-get"
+        )
+        self.assertIs(server["monitoring"], True)
+        self.assertIs(server["monitoring_from_puppet"], True)

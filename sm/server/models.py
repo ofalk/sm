@@ -31,7 +31,9 @@ class Model(models.Model):
     last_update = models.DateTimeField(auto_now=True)
     documentation_url = models.URLField(max_length=2083, blank=True, null=True)
     memory_in_mb = models.IntegerField(blank=True, null=True)
-    monitoring_from_puppet = models.BooleanField(default=False)
+    monitoring_from_puppet = models.BooleanField(
+        default=False, verbose_name="Monitoring"
+    )
     location = models.ForeignKey(
         LocationModel,
         on_delete=models.PROTECT,

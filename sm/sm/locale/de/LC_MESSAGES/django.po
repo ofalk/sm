@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-15 19:48+0000\n"
+"POT-Creation-Date: 2026-08-16 13:38+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,6 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
 #: cluster/templates/detail.html:9 cluster/templates/edit.html:7
 #: cluster/templates/edit.html:15 cluster/templates/list.html:7
 #: cluster/templates/list.html:15 clusterpackage/templates/list.html:39
@@ -84,7 +85,7 @@ msgstr "Status"
 #: location/templates/detail.html:9 location/templates/edit.html:7
 #: location/templates/edit.html:15 location/templates/list.html:7
 #: location/templates/list.html:15 operatingsystem/templates/detail.html:42
-#: patchtime/templates/detail.html:28 server/templates/list.html:51
+#: patchtime/templates/detail.html:28 server/templates/list.html:52
 #: servermodel/templates/detail.html:42
 #: sm/templates/search_results_ajax.html:52 status/templates/detail.html:28
 msgid "Location"
@@ -124,7 +125,7 @@ msgstr "Name"
 msgid "Software"
 msgstr ""
 
-#: cluster/templates/list.html:41 server/templates/list.html:58
+#: cluster/templates/list.html:41 server/templates/list.html:59
 msgid "Tags"
 msgstr "Tags"
 
@@ -132,7 +133,7 @@ msgstr "Tags"
 #: clusterpackagetype/templates/list.html:39
 #: clustersoftware/templates/list.html:40 domain/templates/list.html:41
 #: location/templates/list.html:40 operatingsystem/templates/list.html:46
-#: patchtime/templates/list.html:39 server/templates/list.html:59
+#: patchtime/templates/list.html:39 server/templates/list.html:60
 #: servermodel/templates/list.html:39 sm/templates/admin/user_list.html:21
 #: sm/templates/api_keys/list.html:66 sm/templates/group/member_list.html:80
 #: status/templates/list.html:40 vendor/templates/list.html:57
@@ -151,31 +152,31 @@ msgstr ""
 msgid "Shared resource - insufficient permissions"
 msgstr ""
 
-#: cluster/views.py:46 clusterpackage/views.py:64
-#: clusterpackagetype/views.py:46 clustersoftware/views.py:45
-#: domain/views.py:46 location/views.py:42 operatingsystem/views.py:59
-#: patchtime/views.py:42 server/views.py:118 servermodel/views.py:49
-#: status/views.py:42 vendor/views.py:43
+#: cluster/views.py:44 clusterpackage/views.py:62
+#: clusterpackagetype/views.py:44 clustersoftware/views.py:43
+#: domain/views.py:44 location/views.py:40 operatingsystem/views.py:59
+#: patchtime/views.py:40 server/views.py:116 servermodel/views.py:49
+#: status/views.py:40 vendor/views.py:41
 msgid "was updated successfully"
 msgstr "wurde erfolgreich aktualisiert"
 
-#: cluster/views.py:59 clusterpackage/views.py:94
-#: clusterpackagetype/views.py:58 clustersoftware/views.py:57
-#: domain/views.py:60 location/views.py:54 operatingsystem/views.py:72
-#: patchtime/views.py:54 server/views.py:132 servermodel/views.py:61
-#: status/views.py:54 vendor/views.py:53
+#: cluster/views.py:57 clusterpackage/views.py:92
+#: clusterpackagetype/views.py:56 clustersoftware/views.py:55
+#: domain/views.py:58 location/views.py:52 operatingsystem/views.py:72
+#: patchtime/views.py:52 server/views.py:130 servermodel/views.py:61
+#: status/views.py:52 vendor/views.py:51
 msgid "was created successfully"
 msgstr "wurde erfolgreich erstellt"
 
-#: cluster/views.py:73 clusterpackage/views.py:116
-#: clusterpackagetype/views.py:67 clustersoftware/views.py:76
-#: domain/views.py:74 location/views.py:63 operatingsystem/views.py:96
-#: patchtime/views.py:63 server/views.py:146 servermodel/views.py:80
-#: status/views.py:63 vendor/views.py:63
+#: cluster/views.py:71 clusterpackage/views.py:114
+#: clusterpackagetype/views.py:65 clustersoftware/views.py:74
+#: domain/views.py:72 location/views.py:61 operatingsystem/views.py:96
+#: patchtime/views.py:61 server/views.py:144 servermodel/views.py:80
+#: status/views.py:61 vendor/views.py:61
 msgid "was deleted successfully"
 msgstr "wurde erfolgreich gelöscht"
 
-#: clusterpackage/forms.py:46 sm/api/serializers.py:189
+#: clusterpackage/forms.py:46 sm/api/serializers.py:203
 msgid ""
 "A cluster package with this cluster, name, status and package type already "
 "exists."
@@ -331,7 +332,7 @@ msgstr ""
 
 #: operatingsystem/templates/detail.html:9
 #: operatingsystem/templates/edit.html:7 operatingsystem/templates/edit.html:15
-#: operatingsystem/templates/list.html:7 server/templates/list.html:55
+#: operatingsystem/templates/list.html:7 server/templates/list.html:56
 msgid "Operatingsystem"
 msgstr ""
 
@@ -344,7 +345,7 @@ msgid "List of servers with this operatingsystem"
 msgstr ""
 
 #: operatingsystem/templates/list.html:15 sm/templates/_nav.html:39
-#: sm/templates/dashboard.html:77 sm/templates/search.html:177 sm/views.py:303
+#: sm/templates/dashboard.html:77 sm/templates/search.html:177 sm/views.py:305
 msgid "Operating Systems"
 msgstr "Betriebssysteme"
 
@@ -362,7 +363,7 @@ msgstr ""
 
 #: patchtime/templates/detail.html:9 patchtime/templates/edit.html:7
 #: patchtime/templates/edit.html:15 patchtime/templates/list.html:7
-#: patchtime/templates/list.html:15 server/templates/list.html:57
+#: patchtime/templates/list.html:15 server/templates/list.html:58
 msgid "Patchtime"
 msgstr ""
 
@@ -389,7 +390,7 @@ msgid "Server"
 msgstr ""
 
 #: server/templates/list.html:15 sm/templates/_nav.html:13
-#: sm/templates/search.html:40 sm/views.py:298
+#: sm/templates/search.html:40 sm/views.py:300
 msgid "Servers"
 msgstr "Server"
 
@@ -397,53 +398,73 @@ msgstr "Server"
 msgid "Show disposed"
 msgstr ""
 
-#: server/templates/list.html:52
+#: server/templates/list.html:51
+msgid "Monitoring"
+msgstr "Monitoring"
+
+#: server/templates/list.html:53
 msgid "Application"
 msgstr "Anwendung"
 
-#: server/templates/list.html:53
+#: server/templates/list.html:54
 msgid "Rack"
 msgstr "Rack"
 
-#: server/templates/list.html:54
+#: server/templates/list.html:55
 msgid "Description"
 msgstr "Beschreibung"
 
-#: server/templates/list.html:56
+#: server/templates/list.html:57
 msgid "Primary IP"
 msgstr "Primäre IP"
 
-#: server/templates/list.html:73
+#: server/templates/list.html:74
 msgid "View"
 msgstr ""
 
-#: server/templates/list.html:94
+#: server/templates/list.html:83
+msgid "Monitoring enabled"
+msgstr "Monitoring aktiviert"
+
+#: server/templates/list.html:84
+msgid "Yes"
+msgstr "Ja"
+
+#: server/templates/list.html:87
+msgid "No monitoring"
+msgstr ""
+
+#: server/templates/list.html:88
+msgid "No"
+msgstr "Nein"
+
+#: server/templates/list.html:106
 msgid "Edit server"
 msgstr ""
 
-#: server/templates/list.html:99
+#: server/templates/list.html:111
 msgid "Delete server"
 msgstr ""
 
-#: server/views.py:71
+#: server/views.py:69
 msgid "No servers selected."
 msgstr ""
 
-#: server/views.py:85
+#: server/views.py:83
 msgid "You don't have permission to delete servers."
 msgstr ""
 
-#: server/views.py:89
+#: server/views.py:87
 #, python-format
 msgid "Successfully deleted %d servers."
 msgstr ""
 
-#: server/views.py:97
+#: server/views.py:95
 #, python-format
 msgid "Successfully updated status to %s for %d servers."
 msgstr ""
 
-#: server/views.py:101
+#: server/views.py:99
 msgid "No action performed."
 msgstr ""
 
@@ -461,7 +482,7 @@ msgid "List of servers with this server model"
 msgstr ""
 
 #: servermodel/templates/list.html:15 sm/templates/_nav.html:19
-#: sm/templates/search.html:196 sm/views.py:299
+#: sm/templates/search.html:196 sm/views.py:301
 msgid "Server Models"
 msgstr "Servermodelle"
 
@@ -485,16 +506,16 @@ msgstr ""
 msgid "Delete selected items"
 msgstr ""
 
-#: sm/mixins.py:177
+#: sm/mixins.py:176
 #, python-format
 msgid "Quota exceeded for this group (%d items)."
 msgstr "Kontingent für diese Gruppe überschritten (%d Einträge)."
 
-#: sm/mixins.py:272
+#: sm/mixins.py:271
 msgid "An item with these values already exists in this scope."
 msgstr "Ein Eintrag mit diesen Werten existiert bereits in diesem Bereich."
 
-#: sm/mixins.py:292
+#: sm/mixins.py:291
 msgid "Quota exceeded for this group."
 msgstr ""
 
@@ -618,11 +639,11 @@ msgstr "Server & Netzwerk"
 msgid "Patch Schedule"
 msgstr "Patch-Zeitplan"
 
-#: sm/templates/_nav.html:22 sm/templates/search.html:101 sm/views.py:309
+#: sm/templates/_nav.html:22 sm/templates/search.html:101 sm/views.py:311
 msgid "Domains"
 msgstr "Domains"
 
-#: sm/templates/_nav.html:25 sm/templates/search.html:120 sm/views.py:308
+#: sm/templates/_nav.html:25 sm/templates/search.html:120 sm/views.py:310
 msgid "Locations"
 msgstr "Standorte"
 
@@ -631,33 +652,33 @@ msgid "Configuration"
 msgstr ""
 
 #: sm/templates/_nav.html:42 sm/templates/dashboard.html:62
-#: sm/templates/search.html:63 sm/views.py:300
+#: sm/templates/search.html:63 sm/views.py:302
 msgid "Vendors"
 msgstr "Hersteller"
 
-#: sm/templates/_nav.html:45 sm/templates/search.html:139 sm/views.py:307
+#: sm/templates/_nav.html:45 sm/templates/search.html:139 sm/views.py:309
 msgid "Statuses"
 msgstr "Status"
 
-#: sm/templates/_nav.html:48 sm/templates/search.html:158 sm/views.py:310
+#: sm/templates/_nav.html:48 sm/templates/search.html:158 sm/views.py:312
 msgid "Patch Times"
 msgstr "Patch-Zeiten"
 
-#: sm/templates/_nav.html:51 sm/views.py:322
+#: sm/templates/_nav.html:51 sm/views.py:324
 msgid "API Documentation"
 msgstr ""
 
 #: sm/templates/_nav.html:60 sm/templates/_nav.html:64
-#: sm/templates/search.html:82 sm/views.py:301
+#: sm/templates/search.html:82 sm/views.py:303
 msgid "Clusters"
 msgstr "Cluster"
 
 #: sm/templates/_nav.html:67 sm/templates/search.html:215
-#: sm/templates/search_results_ajax.html:92 sm/views.py:312
+#: sm/templates/search_results_ajax.html:92 sm/views.py:314
 msgid "Cluster Software"
 msgstr "Cluster-Software"
 
-#: sm/templates/_nav.html:70 sm/templates/search.html:253 sm/views.py:317
+#: sm/templates/_nav.html:70 sm/templates/search.html:253 sm/views.py:319
 msgid "Cluster Packages"
 msgstr "Cluster-Pakete"
 
@@ -1216,7 +1237,7 @@ msgstr ""
 msgid "deleted"
 msgstr ""
 
-#: sm/templates/dashboard.html:4 sm/views.py:292
+#: sm/templates/dashboard.html:4 sm/views.py:294
 msgid "Dashboard"
 msgstr "Übersicht"
 
@@ -2003,12 +2024,12 @@ msgstr ""
 msgid "Successfully deleted %d item(s)."
 msgstr ""
 
-#: sm/views.py:132
+#: sm/views.py:130
 #, python-format
 msgid "Some items cannot be deleted because they are referenced by: %s"
 msgstr ""
 
-#: sm/views.py:294
+#: sm/views.py:296
 msgid "Group Management"
 msgstr "Gruppenverwaltung"
 

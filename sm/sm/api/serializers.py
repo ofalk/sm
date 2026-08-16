@@ -104,6 +104,14 @@ class ServerSerializer(TaggitSerializer, serializers.ModelSerializer):
     install_date = CoercingDateField(required=False)
     tags = TagListSerializerField(required=False)
 
+    # "monitoring" is the canonical presentation of the monitoring flag.
+    # "monitoring_from_puppet" remains as a read-only legacy alias so old
+    # API consumers that read the field keep working.
+    monitoring = serializers.BooleanField(
+        source="monitoring_from_puppet", required=False
+    )
+    monitoring_from_puppet = serializers.BooleanField(read_only=True)
+
     class Meta:
         model = Server
         fields = [
@@ -121,11 +129,19 @@ class ServerSerializer(TaggitSerializer, serializers.ModelSerializer):
             "description",
             "application",
             "rack",
+            "monitoring",
             "monitoring_from_puppet",
             "management_ip",
             "management_hostname",
             "tags",
         ]
+
+    def to_internal_value(self, data):
+        # If an API client sends the legacy "monitoring_from_puppet" key
+        # without the new "monitoring" key, honour it.
+        if "monitoring_from_puppet" in data and "monitoring" not in data:
+            data = {**data, "monitoring": data["monitoring_from_puppet"]}
+        return super().to_internal_value(data)
 
 
 class LocationSerializer(TaggitSerializer, serializers.ModelSerializer):
