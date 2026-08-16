@@ -1,6 +1,18 @@
-from django.test import TestCase, Client
+from django.test import TestCase, Client, override_settings
 from django.urls import reverse
 from django.contrib.auth import get_user_model
+from django.contrib.auth.models import Group, Permission
+from django.contrib.contenttypes.models import ContentType
+
+PASSWORD = "password123"
+FAST_HASHERS = ("django.contrib.auth.hashers.MD5PasswordHasher",)
+
+
+def grant(group, app, *codenames):
+    ct = ContentType.objects.get(app_label=app, model="model")
+    group.permissions.add(
+        *Permission.objects.filter(content_type=ct, codename__in=codenames)
+    )
 
 
 class SearchTest(TestCase):
@@ -37,3 +49,134 @@ class SearchTest(TestCase):
         response = self.client.get(reverse("search"), {"q": "a"})
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Query too short")
+
+
+@override_settings(PASSWORD_HASHERS=FAST_HASHERS)
+class BroaderSearchTest(TestCase):
+    """Search must cover all reference models, partitioned by group."""
+
+    def setUp(self):
+        self.group = Group.objects.create(name="Search Tenant")
+        self.user = get_user_model().objects.create_user(
+            username="searcher", password=PASSWORD
+        )
+        self.user.groups.add(self.group)
+        for app in [
+            "domain",
+            "location",
+            "status",
+            "patchtime",
+            "servermodel",
+            "vendor",
+            "operatingsystem",
+            "clustersoftware",
+            "clusterpackagetype",
+            "cluster",
+            "server",
+        ]:
+            grant(self.group, app, "view_model")
+        self.client.force_login(self.user)
+
+        from vendor.models import Model as Vendor
+        from servermodel.models import Model as ServerModel
+        from operatingsystem.models import Model as OS
+        from clustersoftware.models import Model as ClusterSoftware
+        from clusterpackagetype.models import Model as ClusterPackageType
+        from cluster.models import Model as Cluster
+
+        self.vendor = Vendor.objects.create(name="SearchVendor", group=self.group)
+        self.servermodel = ServerModel.objects.create(
+            name="SearchBlade", vendor=self.vendor, group=self.group
+        )
+        self.os = OS.objects.create(
+            version="SearchOS 1", vendor=self.vendor, group=self.group
+        )
+        self.soft = ClusterSoftware.objects.create(
+            name="SearchSoft", version="2.0", vendor=self.vendor, group=self.group
+        )
+        self.cpt = ClusterPackageType.objects.create(
+            name="SearchType", group=self.group
+        )
+        self.cluster = Cluster.objects.create(
+            name="SearchCluster", clustersoftware=self.soft, group=self.group
+        )
+
+    def _search(self, q):
+        return self.client.get(reverse("search"), {"q": q})
+
+    def test_domains_searchable(self):
+        from domain.models import Model as Domain
+
+        Domain.objects.create(name="foundme.example.com", group=self.group)
+        response = self._search("foundme")
+        self.assertContains(response, "foundme.example.com")
+
+    def test_locations_searchable(self):
+        from location.models import Model as Location
+
+        Location.objects.create(name="Searchville", country="DE", group=self.group)
+        response = self._search("Searchville")
+        self.assertContains(response, "Searchville")
+
+    def test_statuses_searchable(self):
+        from status.models import Model as Status
+
+        Status.objects.create(name="Search-Only-Status", group=self.group)
+        response = self._search("Search-Only")
+        self.assertContains(response, "Search-Only-Status")
+
+    def test_patchtimes_searchable(self):
+        from patchtime.models import Model as Patchtime
+
+        Patchtime.objects.create(name="Search Window", group=self.group)
+        response = self._search("Search Window")
+        self.assertContains(response, "Search Window")
+
+    def test_servermodels_searchable(self):
+        response = self._search("SearchBlade")
+        self.assertContains(response, "SearchBlade")
+
+    def test_os_searchable(self):
+        response = self._search("SearchOS")
+        self.assertContains(response, "SearchOS")
+
+    def test_clustersoftware_searchable(self):
+        response = self._search("SearchSoft")
+        self.assertContains(response, "SearchSoft")
+
+    def test_clusterpackagetype_searchable(self):
+        response = self._search("SearchType")
+        self.assertContains(response, "SearchType")
+
+    def test_clusters_searchable(self):
+        response = self._search("SearchCluster")
+        self.assertContains(response, "SearchCluster")
+
+    def test_servers_searchable(self):
+        from server.models import Model as Server
+        from status.models import Model as Status
+        from domain.models import Model as Domain
+
+        status = Status.objects.create(name="Active", group=self.group)
+        domain = Domain.objects.create(name="s.example.com", group=self.group)
+        Server.objects.create(
+            hostname="searchhost01", status=status, domain=domain, group=self.group
+        )
+        response = self._search("searchhost01")
+        self.assertContains(response, "searchhost01")
+
+    def test_search_respects_tenancy(self):
+        from domain.models import Model as Domain
+
+        other = Group.objects.create(name="Other Tenant")
+        Domain.objects.create(name="secret-other.example.com", group=other)
+        response = self._search("secret-other")
+        self.assertNotContains(response, "secret-other.example.com")
+
+    def test_search_ajax_includes_reference_results(self):
+        from domain.models import Model as Domain
+
+        Domain.objects.create(name="ajax-find.example.com", group=self.group)
+        response = self.client.get(reverse("search"), {"q": "ajax-find", "ajax": "1"})
+        self.assertContains(response, "ajax-find.example.com")
+        self.assertTemplateUsed(response, "search_results_ajax.html")

@@ -31,6 +31,17 @@ def view_perm(app_label):
     )
 
 
+def unwrap(response):
+    """
+    Return the list of items from a DRF response, handling the paginated
+    ``{"count": N, "results": [...]}`` envelope transparently.
+    """
+    data = response.json()
+    if isinstance(data, dict) and "results" in data:
+        return data["results"]
+    return data
+
+
 @override_settings(PASSWORD_HASHERS=FAST_HASHERS)
 class ApiKeyManagementTest(TestCase):
     """Tests for the API key management UI."""
@@ -230,7 +241,7 @@ class ApiMultiTenancyTest(TestCase):
 
     def test_user_only_sees_own_group_data(self):
         response = self.apiclient(self.user_a).get("/api/servers/")
-        names = {item["hostname"] for item in response.json()}
+        names = {item["hostname"] for item in unwrap(response)}
         self.assertEqual(response.status_code, 200)
         self.assertIn("alpha", names)
         self.assertNotIn("beta", names)
@@ -238,14 +249,14 @@ class ApiMultiTenancyTest(TestCase):
 
     def test_other_user_has_own_partition(self):
         response = self.apiclient(self.user_b).get("/api/servers/")
-        names = {item["hostname"] for item in response.json()}
+        names = {item["hostname"] for item in unwrap(response)}
         self.assertIn("beta", names)
         self.assertNotIn("alpha", names)
         self.assertIn("global", names)
 
     def test_partitioning_applies_to_all_models(self):
         response = self.apiclient(self.user_a).get("/api/vendors/")
-        names = {item["name"] for item in response.json()}
+        names = {item["name"] for item in unwrap(response)}
         self.assertIn("Vendor A", names)
         self.assertNotIn("Vendor B", names)
 
@@ -253,7 +264,7 @@ class ApiMultiTenancyTest(TestCase):
         client = APIClient()
         client.force_login(self.superuser)
         response = client.get("/api/servers/")
-        names = {item["hostname"] for item in response.json()}
+        names = {item["hostname"] for item in unwrap(response)}
         self.assertEqual(response.status_code, 200)
         self.assertIn("alpha", names)
         self.assertIn("beta", names)
@@ -295,7 +306,7 @@ class ApiMultiTenancyTest(TestCase):
             format="json",
         )
         response = self.apiclient(self.user_b).get("/api/servers/")
-        names = {item["hostname"] for item in response.json()}
+        names = {item["hostname"] for item in unwrap(response)}
         self.assertNotIn("private", names)
 
 
@@ -477,15 +488,19 @@ class ApiSerializerFieldsTest(TestCase):
             management_ip="10.0.1.1",
             management_hostname="mgmt-test01",
             monitoring_from_puppet=True,
+            application="Web Server",
+            rack="R-12-A",
             group=self.group,
         )
         response = self.api().get("/api/servers/")
         self.assertEqual(response.status_code, 200)
-        data = {item["hostname"]: item for item in response.json()}
+        data = {item["hostname"]: item for item in unwrap(response)}
         server = data["test01"]
         self.assertEqual(server["management_ip"], "10.0.1.1")
         self.assertEqual(server["management_hostname"], "mgmt-test01")
         self.assertIs(server["monitoring_from_puppet"], True)
+        self.assertEqual(server["application"], "Web Server")
+        self.assertEqual(server["rack"], "R-12-A")
 
     def test_clusterpackage_exposes_name_fields(self):
         from cluster.models import Model as Cluster
@@ -504,12 +519,17 @@ class ApiSerializerFieldsTest(TestCase):
         status = Status.objects.create(name="In use")
         pkg_type = ClusterPackageType.objects.create(name="PostgreSQL R/W")
         ClusterPackage.objects.create(
-            name="db", cluster=cluster, package_type=pkg_type, status=status,
-            host="10.0.0.2", description="main db", group=self.group,
+            name="db",
+            cluster=cluster,
+            package_type=pkg_type,
+            status=status,
+            host="10.0.0.2",
+            description="main db",
+            group=self.group,
         )
         response = self.api().get("/api/clusterpackages/")
         self.assertEqual(response.status_code, 200)
-        data = response.json()[0]
+        data = unwrap(response)[0]
         self.assertEqual(data["cluster_name"], "pg01")
         self.assertEqual(data["package_type_name"], "PostgreSQL R/W")
         self.assertEqual(data["status_name"], "In use")
@@ -532,14 +552,19 @@ class ApiSerializerFieldsTest(TestCase):
         pkg_type = ClusterPackageType.objects.create(
             name="PostgreSQL R/W", group=self.group
         )
-        return cluster, status, pkg_type, {
-            "name": "db",
-            "cluster": cluster.pk,
-            "status": status.pk,
-            "package_type": pkg_type.pk,
-            "host": "10.0.0.2",
-            "description": "main db",
-        }
+        return (
+            cluster,
+            status,
+            pkg_type,
+            {
+                "name": "db",
+                "cluster": cluster.pk,
+                "status": status.pk,
+                "package_type": pkg_type.pk,
+                "host": "10.0.0.2",
+                "description": "main db",
+            },
+        )
 
     def test_clusterpackage_duplicate_create_rejected(self):
         from clusterpackage.models import Model as ClusterPackage
