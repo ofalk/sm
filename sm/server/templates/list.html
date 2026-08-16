@@ -49,6 +49,7 @@
           <th>{% trans 'Hostname' %}</th>
           <th>{% trans 'Status' %}</th>
           <th class="text-center">{% trans 'Monitoring' %}</th>
+          <th>{% trans 'Lifecycle' %}</th>
           <th>{% trans 'Location' %}</th>
           <th>{% trans 'Application' %}</th>
           <th>{% trans 'Rack' %}</th>
@@ -89,6 +90,17 @@
               </span>
               {% endif %}
             </td>
+            <td>
+              {% if object.decommission_date %}
+              <span class="badge text-bg-danger" title="{% trans 'Decommissioned on' %} {{ object.decommission_date }}">
+                <i class="fa-solid fa-box-archive me-1"></i>{{ object.decommission_date|date:"Y-m-d" }}
+              </span>
+              {% else %}
+              <span class="badge text-bg-success" title="{% trans 'In service' %}">
+                <i class="fa-solid fa-circle-check me-1"></i>{% trans "Active" %}
+              </span>
+              {% endif %}
+            </td>
             <td title="{{ object.location }}">{{ object.location|truncatechars:15 }}</td>
             <td>{{ object.application|default:"" }}</td>
             <td>{{ object.rack|default:"" }}</td>
@@ -106,6 +118,21 @@
               <a href="{% url 'server:update' object.pk %}" title="{% trans 'Edit server' %}">
                 <i class="fa-solid fa-pen fa-fw fa-lg" aria-hidden="true"></i>
               </a>
+              {% if object.decommission_date %}
+              <form method="post" action="{% url 'server:restore' object.pk %}" class="d-inline" onsubmit="return confirm('{% trans 'Restore this server?' %}');">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-link p-0 text-success" title="{% trans 'Restore server' %}">
+                  <i class="fa-solid fa-rotate-left fa-fw fa-lg" aria-hidden="true"></i>
+                </button>
+              </form>
+              {% else %}
+              <form method="post" action="{% url 'server:decommission' object.pk %}" class="d-inline" onsubmit="return confirm('{% trans 'Decommission this server?' %}');">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-link p-0 text-warning" title="{% trans 'Decommission server' %}">
+                  <i class="fa-solid fa-box-archive fa-fw fa-lg" aria-hidden="true"></i>
+                </button>
+              </form>
+              {% endif %}
               {% endif %}
               {% if perms.server.delete_model %}
               <a href="{% url 'server:delete' object.pk %}" title="{% trans 'Delete server' %}">

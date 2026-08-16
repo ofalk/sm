@@ -28,6 +28,7 @@ class Model(models.Model):
     domain = models.ForeignKey(DomainModel, on_delete=models.PROTECT, default=1)
     delivery_date = models.DateField(default=now)
     install_date = models.DateField(default=now)
+    decommission_date = models.DateField(blank=True, null=True)
     last_update = models.DateTimeField(auto_now=True)
     documentation_url = models.URLField(max_length=2083, blank=True, null=True)
     memory_in_mb = models.IntegerField(blank=True, null=True)
@@ -113,6 +114,19 @@ class Model(models.Model):
 
     def __str__(self):
         return "%s" % self.hostname
+
+    @property
+    def is_decommissioned(self) -> bool:
+        return self.decommission_date is not None
+
+    @property
+    def lifecycle_stage(self) -> str:
+        """Human-readable lifecycle stage: ordered, active, decommissioned."""
+        if self.decommission_date is not None:
+            return "decommissioned"
+        if self.install_date and self.install_date > self.delivery_date:
+            return "installed"
+        return "ordered"
 
     def natural_key(self):
         return (self.hostname,) + self.status.natural_key()

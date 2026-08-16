@@ -9,8 +9,9 @@ from .forms import Form, FormDisabled, BulkActionForm
 from . import app_label
 
 from django.views import View
-from django.shortcuts import redirect
+from django.shortcuts import get_object_or_404, redirect
 from django.db import transaction
+from django.utils import timezone
 
 from django.views.generic import ListView as GenericListView
 from django.views.generic.edit import UpdateView as GenericUpdateView
@@ -86,6 +87,23 @@ class BulkActionView(LoginRequiredMixin, View):
                     return redirect("server:index")
                 servers.delete()
                 messages.success(request, _("Successfully deleted %d servers.") % count)
+            elif form.cleaned_data["decommission"]:
+                if not request.user.has_perm("server.change_model"):
+                    messages.error(
+                        request,
+                        _("You don't have permission to change servers."),
+                    )
+                    return redirect("server:index")
+                decommissioned = 0
+                for server in servers:
+                    if server.decommission_date is None:
+                        server.decommission_date = timezone.localdate()
+                        server.save()
+                        decommissioned += 1
+                messages.success(
+                    request,
+                    _("Successfully decommissioned %d servers.") % decommissioned,
+                )
             elif form.cleaned_data["status"]:
                 # Check change permission before re-labelling any servers.
                 if not request.user.has_perm("server.change_model"):
@@ -107,6 +125,40 @@ class BulkActionView(LoginRequiredMixin, View):
             else:
                 messages.info(request, _("No action performed."))
 
+        return redirect("server:index")
+
+
+class DecommissionView(LoginRequiredMixin, MultiTenantMixin, View):
+    """Marks a single server as decommissioned (sets the decommission date)."""
+
+    def post(self, request, *args, **kwargs):
+        server = get_object_or_404(Model, pk=kwargs.get("pk"))
+        if not request.user.has_perm("server.change_model"):
+            messages.error(request, _("You don't have permission to change servers."))
+            return redirect("server:index")
+        server.decommission_date = timezone.localdate()
+        server.save()
+        messages.success(
+            request,
+            _("%(hostname)s has been decommissioned.") % {"hostname": server.hostname},
+        )
+        return redirect("server:index")
+
+
+class RestoreView(LoginRequiredMixin, MultiTenantMixin, View):
+    """Clears the decommission date, bringing a server back into use."""
+
+    def post(self, request, *args, **kwargs):
+        server = get_object_or_404(Model, pk=kwargs.get("pk"))
+        if not request.user.has_perm("server.change_model"):
+            messages.error(request, _("You don't have permission to change servers."))
+            return redirect("server:index")
+        server.decommission_date = None
+        server.save()
+        messages.success(
+            request,
+            _("%(hostname)s has been restored.") % {"hostname": server.hostname},
+        )
         return redirect("server:index")
 
 
@@ -177,5 +229,6 @@ class CSVExportView(GenericCSVExportView):
         ("primary_ip", "primary_ip"),
         ("management_ip", "management_ip"),
         ("description", "description"),
+        ("decommission_date", "decommission_date"),
         ("tags", "tags.names"),
     ]

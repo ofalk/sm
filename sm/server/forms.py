@@ -41,3 +41,6 @@ class BulkActionForm(forms.Form):
         empty_label="--- No Change ---",
     )
     delete = forms.BooleanField(required=False, label="Delete Selected Servers")
+    decommission = forms.BooleanField(
+        required=False, label="Decommission (set decommission date)"
+    )

@@ -102,6 +102,7 @@ class ServerSerializer(TaggitSerializer, serializers.ModelSerializer):
     servermodel = ServerModelSerializer(read_only=True)
     delivery_date = CoercingDateField(required=False)
     install_date = CoercingDateField(required=False)
+    decommission_date = CoercingDateField(required=False, allow_null=True)
     tags = TagListSerializerField(required=False)
 
     # "monitoring" is the canonical presentation of the monitoring flag.
@@ -126,6 +127,7 @@ class ServerSerializer(TaggitSerializer, serializers.ModelSerializer):
             "primary_ip",
             "delivery_date",
             "install_date",
+            "decommission_date",
             "description",
             "application",
             "rack",
