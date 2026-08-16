@@ -43,6 +43,13 @@
                     <small class="text-muted">{{ form.name.help_text }}</small>
                     {% endif %}
                 </div>
+                <div class="mb-3">
+                    <label for="id_expires_in_days">{{ form.expires_in_days.label }}</label>
+                    <input type="number" class="form-control" id="id_expires_in_days" name="expires_in_days" min="1" max="3650" value="{{ form.expires_in_days.value|default:90 }}">
+                    {% if form.expires_in_days.help_text %}
+                    <small class="text-muted">{{ form.expires_in_days.help_text }}</small>
+                    {% endif %}
+                </div>
                 <button type="submit" class="btn btn-primary pill">
                     <i class="fa-solid fa-plus me-1"></i> {% trans "Generate API Key" %}
                 </button>
@@ -61,6 +68,7 @@
                         <th>{% trans "Name" %}</th>
                         <th>{% trans "Client ID" %}</th>
                         <th>{% trans "Created" %}</th>
+                        <th>{% trans "Expires" %}</th>
                         <th>{% trans "Last used" %}</th>
                         <th>{% trans "Status" %}</th>
                         <th>{% trans "Actions" %}</th>
@@ -72,16 +80,31 @@
                         <td>{{ key.name|default:"-" }}</td>
                         <td><code>{{ key.client_id }}</code></td>
                         <td>{{ key.created_at|date:"Y-m-d H:i" }}</td>
+                        <td>
+                            {% if key.expires_at %}
+                            {{ key.expires_at|date:"Y-m-d" }}
+                            {% else %}
+                            <span class="text-muted">{% trans "Never" %}</span>
+                            {% endif %}
+                        </td>
                         <td>{{ key.last_used_at|date:"Y-m-d H:i"|default:"-" }}</td>
                         <td>
-                            {% if key.is_active %}
+                            {% if key.is_expired %}
+                            <span class="badge text-bg-danger">{% trans "Expired" %}</span>
+                            {% elif key.is_active %}
                             <span class="badge text-bg-success">{% trans "Active" %}</span>
                             {% else %}
                             <span class="badge text-bg-secondary">{% trans "Revoked" %}</span>
                             {% endif %}
                         </td>
                         <td>
-                            {% if key.is_active %}
+                            {% if key.is_active and not key.is_expired %}
+                            <form method="post" action="{% url 'api_key_rotate' key.pk %}" class="d-inline" onsubmit="return confirm('{% trans "Rotate this API key? The old key will stop working immediately." %}');">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-sm btn-outline-primary pill">
+                                    <i class="fa-solid fa-rotate me-1"></i> {% trans "Rotate" %}
+                                </button>
+                            </form>
                             <form method="post" action="{% url 'api_key_revoke' key.pk %}" class="d-inline" onsubmit="return confirm('{% trans "Revoke this API key? Any client using it will immediately lose access." %}');">
                                 {% csrf_token %}
                                 <button type="submit" class="btn btn-sm btn-outline-danger pill">
@@ -93,7 +116,7 @@
                     </tr>
                     {% empty %}
                     <tr>
-                        <td colspan="6" class="text-center text-muted py-4">
+                        <td colspan="7" class="text-center text-muted py-4">
                             {% trans "You have not created any API keys yet." %}
                         </td>
                     </tr>

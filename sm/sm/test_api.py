@@ -713,3 +713,166 @@ class ApiMonitoringFieldTest(TestCase):
         )
         self.assertIs(server["monitoring"], True)
         self.assertIs(server["monitoring_from_puppet"], True)
+
+
+@override_settings(PASSWORD_HASHERS=FAST_HASHERS)
+class ApiKeyLifecycleTest(TestCase):
+    """API key expiry, rotation, and revocation lifecycle."""
+
+    def setUp(self):
+        self.user = User.objects.create_user("lifeuser", password=PASSWORD)
+        self.user.groups.clear()
+        self.client.login(username="lifeuser", password=PASSWORD)
+
+    def test_key_expiry_rejected_by_auth(self):
+        from datetime import timedelta
+        from django.utils import timezone
+
+        key, secret = ApiKey.create_for_user(
+            self.user,
+            "expiring",
+            expires_at=timezone.now() - timedelta(days=1),
+        )
+        client = APIClient()
+        client.credentials(HTTP_AUTHORIZATION=f"ApiKey {key.client_id}:{secret}")
+        response = client.get("/api/servers/")
+        self.assertEqual(response.status_code, 401)
+
+    def test_key_not_yet_expired_accepted(self):
+        from datetime import timedelta
+        from django.utils import timezone
+
+        key, secret = ApiKey.create_for_user(
+            self.user,
+            "valid",
+            expires_at=timezone.now() + timedelta(days=30),
+        )
+        client = APIClient()
+        client.credentials(HTTP_AUTHORIZATION=f"ApiKey {key.client_id}:{secret}")
+        response = client.get("/api/servers/")
+        # No view permission yet, but auth itself succeeded (403 not 401).
+        self.assertIn(response.status_code, [200, 403])
+
+    def test_is_expired_helper(self):
+        from datetime import timedelta
+        from django.utils import timezone
+
+        key, _ = ApiKey.create_for_user(
+            self.user, "exp", expires_at=timezone.now() - timedelta(days=1)
+        )
+        self.assertTrue(key.is_expired())
+
+        key2, _ = ApiKey.create_for_user(self.user, "ok")
+        self.assertFalse(key2.is_expired())
+
+    def test_rotate_revokes_old_and_creates_new(self):
+        key, secret = ApiKey.create_for_user(self.user, "rotatable")
+        new_key, new_secret = key.rotate()
+        key.refresh_from_db()
+        self.assertFalse(key.is_active)
+        self.assertIsNotNone(key.revoked_at)
+        self.assertNotEqual(new_key.pk, key.pk)
+        self.assertEqual(new_key.name, "rotatable")
+        self.assertIsNotNone(new_key.secret_hash)
+        # The new key's secret is distinct from the old one.
+        self.assertNotEqual(new_secret, secret)
+
+    def test_rotate_ui(self):
+        from django.urls import reverse
+
+        key, _ = ApiKey.create_for_user(self.user, "rotate-ui")
+        response = self.client.post(reverse("api_key_rotate", args=[key.pk]))
+        self.assertEqual(response.status_code, 200)
+        key.refresh_from_db()
+        self.assertFalse(key.is_active)
+        self.assertIn("new_secret", response.context)
+
+    def test_cannot_rotate_other_users_key(self):
+        from django.urls import reverse
+
+        other = User.objects.create_user("other", password=PASSWORD)
+        other.groups.clear()
+        key, _ = ApiKey.create_for_user(other, "theirs")
+        response = self.client.post(reverse("api_key_rotate", args=[key.pk]))
+        self.assertEqual(response.status_code, 404)
+
+    def test_create_with_expiry(self):
+        from datetime import timedelta
+        from django.utils import timezone
+
+        response = self.client.post(
+            reverse("api_keys"), {"name": "expire-me", "expires_in_days": 30}
+        )
+        self.assertEqual(response.status_code, 200)
+        key = ApiKey.objects.get(user=self.user, name="expire-me")
+        self.assertIsNotNone(key.expires_at)
+        expected = timezone.now() + timedelta(days=30)
+        delta = abs((key.expires_at - expected).total_seconds())
+        self.assertLess(delta, 120)
+
+    def test_list_shows_expiry(self):
+        from datetime import timedelta
+        from django.utils import timezone
+
+        ApiKey.create_for_user(
+            self.user,
+            "shown",
+            expires_at=timezone.now() + timedelta(days=30),
+        )
+        response = self.client.get(reverse("api_keys"))
+        self.assertContains(response, "shown")
+        self.assertContains(response, "Expires")
+
+
+@override_settings(PASSWORD_HASHERS=FAST_HASHERS)
+class ApiKeyCleanupCommandTest(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user("cleanup", password=PASSWORD)
+        self.user.groups.clear()
+
+    def _run_command(self, **options):
+        from django.core.management import call_command
+
+        out = __import__("io").StringIO()
+        call_command("cleanup_api_keys", stdout=out, **options)
+        return out.getvalue()
+
+    def test_revokes_expired_keys(self):
+        from datetime import timedelta
+        from django.utils import timezone
+
+        ApiKey.create_for_user(
+            self.user, "expired", expires_at=timezone.now() - timedelta(days=1)
+        )
+        self._run_command()
+        key = ApiKey.objects.get(name="expired")
+        self.assertFalse(key.is_active)
+        self.assertIsNotNone(key.revoked_at)
+
+    def test_revokes_inactive_keys(self):
+        from datetime import timedelta
+        from django.utils import timezone
+
+        key, _ = ApiKey.create_for_user(self.user, "idle")
+        key.last_used_at = timezone.now() - timedelta(days=200)
+        key.save(update_fields=["last_used_at"])
+        self._run_command()
+        key.refresh_from_db()
+        self.assertFalse(key.is_active)
+
+    def test_keeps_recently_used_keys(self):
+        key, _ = ApiKey.create_for_user(self.user, "active")
+        self._run_command()
+        key.refresh_from_db()
+        self.assertTrue(key.is_active)
+
+    def test_dry_run_does_not_revoke(self):
+        from datetime import timedelta
+        from django.utils import timezone
+
+        ApiKey.create_for_user(
+            self.user, "expired", expires_at=timezone.now() - timedelta(days=1)
+        )
+        self._run_command(dry_run=True)
+        key = ApiKey.objects.get(name="expired")
+        self.assertTrue(key.is_active)

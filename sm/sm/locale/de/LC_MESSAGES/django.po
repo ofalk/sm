@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-16 13:38+0000\n"
+"POT-Creation-Date: 2026-08-16 15:40+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -72,7 +72,7 @@ msgstr "Hostname"
 #: location/templates/detail.html:27 operatingsystem/templates/detail.html:41
 #: patchtime/templates/detail.html:27 server/templates/list.html:50
 #: servermodel/templates/detail.html:41 sm/templates/account/email.html:28
-#: sm/templates/admin/user_list.html:55 sm/templates/api_keys/list.html:65
+#: sm/templates/admin/user_list.html:55 sm/templates/api_keys/list.html:73
 #: sm/templates/group/member_list.html:79
 #: sm/templates/search_results_ajax.html:60 status/templates/detail.html:9
 #: status/templates/detail.html:27 status/templates/edit.html:7
@@ -85,7 +85,7 @@ msgstr "Status"
 #: location/templates/detail.html:9 location/templates/edit.html:7
 #: location/templates/edit.html:15 location/templates/list.html:7
 #: location/templates/list.html:15 operatingsystem/templates/detail.html:42
-#: patchtime/templates/detail.html:28 server/templates/list.html:52
+#: patchtime/templates/detail.html:28 server/templates/list.html:53
 #: servermodel/templates/detail.html:42
 #: sm/templates/search_results_ajax.html:52 status/templates/detail.html:28
 msgid "Location"
@@ -116,7 +116,7 @@ msgstr "Keine Ergebnisse"
 #: clusterpackagetype/templates/list.html:37
 #: clustersoftware/templates/detail.html:40 location/templates/list.html:37
 #: patchtime/templates/list.html:37 servermodel/templates/list.html:38
-#: sm/templates/api_keys/list.html:61 status/templates/list.html:37
+#: sm/templates/api_keys/list.html:68 status/templates/list.html:37
 #: vendor/templates/list.html:47
 msgid "Name"
 msgstr "Name"
@@ -125,7 +125,7 @@ msgstr "Name"
 msgid "Software"
 msgstr ""
 
-#: cluster/templates/list.html:41 server/templates/list.html:59
+#: cluster/templates/list.html:41 server/templates/list.html:60
 msgid "Tags"
 msgstr "Tags"
 
@@ -133,9 +133,9 @@ msgstr "Tags"
 #: clusterpackagetype/templates/list.html:39
 #: clustersoftware/templates/list.html:40 domain/templates/list.html:41
 #: location/templates/list.html:40 operatingsystem/templates/list.html:46
-#: patchtime/templates/list.html:39 server/templates/list.html:60
+#: patchtime/templates/list.html:39 server/templates/list.html:61
 #: servermodel/templates/list.html:39 sm/templates/admin/user_list.html:21
-#: sm/templates/api_keys/list.html:66 sm/templates/group/member_list.html:80
+#: sm/templates/api_keys/list.html:74 sm/templates/group/member_list.html:80
 #: status/templates/list.html:40 vendor/templates/list.html:57
 msgid "Actions"
 msgstr "Aktionen"
@@ -155,7 +155,7 @@ msgstr ""
 #: cluster/views.py:44 clusterpackage/views.py:62
 #: clusterpackagetype/views.py:44 clustersoftware/views.py:43
 #: domain/views.py:44 location/views.py:40 operatingsystem/views.py:59
-#: patchtime/views.py:40 server/views.py:116 servermodel/views.py:49
+#: patchtime/views.py:40 server/views.py:168 servermodel/views.py:49
 #: status/views.py:40 vendor/views.py:41
 msgid "was updated successfully"
 msgstr "wurde erfolgreich aktualisiert"
@@ -163,7 +163,7 @@ msgstr "wurde erfolgreich aktualisiert"
 #: cluster/views.py:57 clusterpackage/views.py:92
 #: clusterpackagetype/views.py:56 clustersoftware/views.py:55
 #: domain/views.py:58 location/views.py:52 operatingsystem/views.py:72
-#: patchtime/views.py:52 server/views.py:130 servermodel/views.py:61
+#: patchtime/views.py:52 server/views.py:182 servermodel/views.py:61
 #: status/views.py:52 vendor/views.py:51
 msgid "was created successfully"
 msgstr "wurde erfolgreich erstellt"
@@ -171,12 +171,12 @@ msgstr "wurde erfolgreich erstellt"
 #: cluster/views.py:71 clusterpackage/views.py:114
 #: clusterpackagetype/views.py:65 clustersoftware/views.py:74
 #: domain/views.py:72 location/views.py:61 operatingsystem/views.py:96
-#: patchtime/views.py:61 server/views.py:144 servermodel/views.py:80
+#: patchtime/views.py:61 server/views.py:196 servermodel/views.py:80
 #: status/views.py:61 vendor/views.py:61
 msgid "was deleted successfully"
 msgstr "wurde erfolgreich gelöscht"
 
-#: clusterpackage/forms.py:46 sm/api/serializers.py:203
+#: clusterpackage/forms.py:46 sm/api/serializers.py:207
 msgid ""
 "A cluster package with this cluster, name, status and package type already "
 "exists."
@@ -332,7 +332,7 @@ msgstr ""
 
 #: operatingsystem/templates/detail.html:9
 #: operatingsystem/templates/edit.html:7 operatingsystem/templates/edit.html:15
-#: operatingsystem/templates/list.html:7 server/templates/list.html:56
+#: operatingsystem/templates/list.html:7 server/templates/list.html:57
 msgid "Operatingsystem"
 msgstr ""
 
@@ -345,7 +345,7 @@ msgid "List of servers with this operatingsystem"
 msgstr ""
 
 #: operatingsystem/templates/list.html:15 sm/templates/_nav.html:39
-#: sm/templates/dashboard.html:77 sm/templates/search.html:177 sm/views.py:305
+#: sm/templates/dashboard.html:77 sm/templates/search.html:191 sm/views.py:305
 msgid "Operating Systems"
 msgstr "Betriebssysteme"
 
@@ -363,7 +363,7 @@ msgstr ""
 
 #: patchtime/templates/detail.html:9 patchtime/templates/edit.html:7
 #: patchtime/templates/edit.html:15 patchtime/templates/list.html:7
-#: patchtime/templates/list.html:15 server/templates/list.html:58
+#: patchtime/templates/list.html:15 server/templates/list.html:59
 msgid "Patchtime"
 msgstr ""
 
@@ -390,7 +390,7 @@ msgid "Server"
 msgstr ""
 
 #: server/templates/list.html:15 sm/templates/_nav.html:13
-#: sm/templates/search.html:40 sm/views.py:300
+#: sm/templates/search.html:54 sm/views.py:300
 msgid "Servers"
 msgstr "Server"
 
@@ -402,70 +402,121 @@ msgstr ""
 msgid "Monitoring"
 msgstr "Monitoring"
 
-#: server/templates/list.html:53
+#: server/templates/list.html:52
+msgid "Lifecycle"
+msgstr ""
+
+#: server/templates/list.html:54
 msgid "Application"
 msgstr "Anwendung"
 
-#: server/templates/list.html:54
+#: server/templates/list.html:55
 msgid "Rack"
 msgstr "Rack"
 
-#: server/templates/list.html:55
+#: server/templates/list.html:56
 msgid "Description"
 msgstr "Beschreibung"
 
-#: server/templates/list.html:57
+#: server/templates/list.html:58
 msgid "Primary IP"
 msgstr "Primäre IP"
 
-#: server/templates/list.html:74
+#: server/templates/list.html:75
 msgid "View"
 msgstr ""
 
-#: server/templates/list.html:83
+#: server/templates/list.html:84
 msgid "Monitoring enabled"
 msgstr "Monitoring aktiviert"
 
-#: server/templates/list.html:84
+#: server/templates/list.html:85
 msgid "Yes"
 msgstr "Ja"
 
-#: server/templates/list.html:87
+#: server/templates/list.html:88
 msgid "No monitoring"
 msgstr ""
 
-#: server/templates/list.html:88
+#: server/templates/list.html:89
 msgid "No"
 msgstr "Nein"
 
-#: server/templates/list.html:106
+#: server/templates/list.html:95
+msgid "Decommissioned on"
+msgstr "Außer Betrieb seit"
+
+#: server/templates/list.html:99
+msgid "In service"
+msgstr "In Betrieb"
+
+#: server/templates/list.html:100 sm/templates/api_keys/list.html:95
+msgid "Active"
+msgstr "Aktiv"
+
+#: server/templates/list.html:118
 msgid "Edit server"
 msgstr ""
 
-#: server/templates/list.html:111
+#: server/templates/list.html:122
+msgid "Restore this server?"
+msgstr "Diesen Server wiederherstellen?"
+
+#: server/templates/list.html:124
+msgid "Restore server"
+msgstr "Server wiederherstellen"
+
+#: server/templates/list.html:129
+msgid "Decommission this server?"
+msgstr "Diesen Server außer Betrieb nehmen?"
+
+#: server/templates/list.html:131
+msgid "Decommission server"
+msgstr ""
+
+#: server/templates/list.html:138
 msgid "Delete server"
 msgstr ""
 
-#: server/views.py:69
+#: server/views.py:70
 msgid "No servers selected."
 msgstr ""
 
-#: server/views.py:83
+#: server/views.py:84
 msgid "You don't have permission to delete servers."
 msgstr ""
 
-#: server/views.py:87
+#: server/views.py:88
 #, python-format
 msgid "Successfully deleted %d servers."
 msgstr ""
 
-#: server/views.py:95
+#: server/views.py:93 server/views.py:128 server/views.py:145
+msgid "You don't have permission to change servers."
+msgstr ""
+
+#: server/views.py:104
+#, python-format
+msgid "Successfully decommissioned %d servers."
+msgstr ""
+
+#: server/views.py:113
 #, python-format
 msgid "Successfully updated status to %s for %d servers."
 msgstr ""
 
-#: server/views.py:99
+#: server/views.py:117
 msgid "No action performed."
+msgstr ""
+
+#: server/views.py:134
+#, python-format
+msgid "%(hostname)s has been decommissioned."
+msgstr ""
+
+#: server/views.py:151
+#, python-format
+msgid "%(hostname)s has been restored."
 msgstr ""
 
 #: servermodel/templates/detail.html:9 servermodel/templates/edit.html:7
@@ -482,7 +533,7 @@ msgid "List of servers with this server model"
 msgstr ""
 
 #: servermodel/templates/list.html:15 sm/templates/_nav.html:19
-#: sm/templates/search.html:196 sm/views.py:301
+#: sm/templates/search.html:210 sm/views.py:301
 msgid "Server Models"
 msgstr "Servermodelle"
 
@@ -639,11 +690,11 @@ msgstr "Server & Netzwerk"
 msgid "Patch Schedule"
 msgstr "Patch-Zeitplan"
 
-#: sm/templates/_nav.html:22 sm/templates/search.html:101 sm/views.py:311
+#: sm/templates/_nav.html:22 sm/templates/search.html:115 sm/views.py:311
 msgid "Domains"
 msgstr "Domains"
 
-#: sm/templates/_nav.html:25 sm/templates/search.html:120 sm/views.py:310
+#: sm/templates/_nav.html:25 sm/templates/search.html:134 sm/views.py:310
 msgid "Locations"
 msgstr "Standorte"
 
@@ -652,15 +703,15 @@ msgid "Configuration"
 msgstr ""
 
 #: sm/templates/_nav.html:42 sm/templates/dashboard.html:62
-#: sm/templates/search.html:63 sm/views.py:302
+#: sm/templates/search.html:77 sm/views.py:302
 msgid "Vendors"
 msgstr "Hersteller"
 
-#: sm/templates/_nav.html:45 sm/templates/search.html:139 sm/views.py:309
+#: sm/templates/_nav.html:45 sm/templates/search.html:153 sm/views.py:309
 msgid "Statuses"
 msgstr "Status"
 
-#: sm/templates/_nav.html:48 sm/templates/search.html:158 sm/views.py:312
+#: sm/templates/_nav.html:48 sm/templates/search.html:172 sm/views.py:312
 msgid "Patch Times"
 msgstr "Patch-Zeiten"
 
@@ -669,20 +720,20 @@ msgid "API Documentation"
 msgstr ""
 
 #: sm/templates/_nav.html:60 sm/templates/_nav.html:64
-#: sm/templates/search.html:82 sm/views.py:303
+#: sm/templates/search.html:96 sm/views.py:303
 msgid "Clusters"
 msgstr "Cluster"
 
-#: sm/templates/_nav.html:67 sm/templates/search.html:215
+#: sm/templates/_nav.html:67 sm/templates/search.html:229
 #: sm/templates/search_results_ajax.html:92 sm/views.py:314
 msgid "Cluster Software"
 msgstr "Cluster-Software"
 
-#: sm/templates/_nav.html:70 sm/templates/search.html:253 sm/views.py:319
+#: sm/templates/_nav.html:70 sm/templates/search.html:267 sm/views.py:319
 msgid "Cluster Packages"
 msgstr "Cluster-Pakete"
 
-#: sm/templates/_nav.html:73 sm/templates/search.html:234
+#: sm/templates/_nav.html:73 sm/templates/search.html:248
 msgid "Package Types"
 msgstr "Pakettypen"
 
@@ -1027,7 +1078,7 @@ msgstr "Ihr Profil"
 #: sm/templates/group/member_list.html:39
 #: sm/templates/group/permission_edit.html:35
 #: sm/templates/group/user_permission_edit.html:36
-#: sm/templates/includes/bulk_toolbar.html:20
+#: sm/templates/includes/bulk_toolbar.html:26
 msgid "Cancel"
 msgstr "Abbrechen"
 
@@ -1156,58 +1207,74 @@ msgstr ""
 msgid "Create a new key"
 msgstr ""
 
-#: sm/templates/api_keys/list.html:47
+#: sm/templates/api_keys/list.html:54
 msgid "Generate API Key"
 msgstr ""
 
-#: sm/templates/api_keys/list.html:55
+#: sm/templates/api_keys/list.html:62
 msgid "Your keys"
 msgstr ""
 
-#: sm/templates/api_keys/list.html:62
+#: sm/templates/api_keys/list.html:69
 msgid "Client ID"
 msgstr ""
 
-#: sm/templates/api_keys/list.html:63 sm/templates/history_diff.html:32
+#: sm/templates/api_keys/list.html:70 sm/templates/history_diff.html:32
 #: sm/templates/includes/history_table.html:34
 msgid "Created"
 msgstr ""
 
-#: sm/templates/api_keys/list.html:64
+#: sm/templates/api_keys/list.html:71
+msgid "Expires"
+msgstr "Läuft ab"
+
+#: sm/templates/api_keys/list.html:72
 msgid "Last used"
 msgstr ""
 
-#: sm/templates/api_keys/list.html:78
-msgid "Active"
-msgstr ""
+#: sm/templates/api_keys/list.html:87
+msgid "Never"
+msgstr "Nie"
 
-#: sm/templates/api_keys/list.html:80
+#: sm/templates/api_keys/list.html:93
+msgid "Expired"
+msgstr "Abgelaufen"
+
+#: sm/templates/api_keys/list.html:97
 msgid "Revoked"
 msgstr ""
 
-#: sm/templates/api_keys/list.html:85
+#: sm/templates/api_keys/list.html:102
+msgid "Rotate this API key? The old key will stop working immediately."
+msgstr "Diesen API-Schlüssel rotieren? Der alte Schlüssel funktioniert sofort nicht mehr."
+
+#: sm/templates/api_keys/list.html:105
+msgid "Rotate"
+msgstr "Rotieren"
+
+#: sm/templates/api_keys/list.html:108
 msgid "Revoke this API key? Any client using it will immediately lose access."
 msgstr ""
 
-#: sm/templates/api_keys/list.html:88
+#: sm/templates/api_keys/list.html:111
 msgid "Revoke"
 msgstr ""
 
-#: sm/templates/api_keys/list.html:97
+#: sm/templates/api_keys/list.html:120
 msgid "You have not created any API keys yet."
 msgstr ""
 
-#: sm/templates/audit_log.html:12
+#: sm/templates/audit_log.html:12 sm/templates/search.html:13
 msgid "Filter by group"
-msgstr ""
+msgstr "Nach Gruppe filtern"
 
-#: sm/templates/audit_log.html:13
+#: sm/templates/audit_log.html:13 sm/templates/search.html:14
 msgid "All my groups"
-msgstr ""
+msgstr "Alle meine Gruppen"
 
-#: sm/templates/audit_log.html:19
+#: sm/templates/audit_log.html:19 sm/templates/search.html:20
 msgid "Filter"
-msgstr ""
+msgstr "Filtern"
 
 #: sm/templates/audit_log.html:24
 msgid "No audit entries."
@@ -1606,10 +1673,16 @@ msgid "selected"
 msgstr "ausgewählt"
 
 #: sm/templates/includes/bulk_toolbar.html:14
+#, fuzzy
+#| msgid "Delete selected"
+msgid "Decommission selected"
+msgstr "Ausgewählte löschen"
+
+#: sm/templates/includes/bulk_toolbar.html:20
 msgid "Delete selected"
 msgstr "Ausgewählte löschen"
 
-#: sm/templates/includes/bulk_toolbar.html:17
+#: sm/templates/includes/bulk_toolbar.html:23
 msgid "Apply"
 msgstr "Anwenden"
 
@@ -1827,27 +1900,27 @@ msgstr "Suchergebnisse"
 msgid "Search Results for"
 msgstr ""
 
-#: sm/templates/search.html:18
+#: sm/templates/search.html:32
 msgid "Quick Jumps"
 msgstr "Schnellsprünge"
 
-#: sm/templates/search.html:273
+#: sm/templates/search.html:287
 msgid "Query too short."
 msgstr "Suchbegriff zu kurz."
 
-#: sm/templates/search.html:274
+#: sm/templates/search.html:288
 msgid "Please enter at least 2 characters to search."
 msgstr "Bitte mindestens 2 Zeichen eingeben."
 
-#: sm/templates/search.html:276
+#: sm/templates/search.html:290
 msgid "No results found."
 msgstr "Keine Ergebnisse gefunden."
 
-#: sm/templates/search.html:277
+#: sm/templates/search.html:291
 msgid "Try searching for a different hostname, vendor, or cluster name."
 msgstr "Versuchen Sie einen anderen Hostname, Hersteller oder Cluster-Namen."
 
-#: sm/templates/search.html:280
+#: sm/templates/search.html:294
 msgid "Back to Dashboard"
 msgstr "Zurück zur Übersicht"
 
@@ -2033,15 +2106,15 @@ msgstr ""
 msgid "Group Management"
 msgstr "Gruppenverwaltung"
 
-#: sm/views.py:450 sm/views.py:454
+#: sm/views.py:491 sm/views.py:495
 msgid "Unassigned"
 msgstr "Nicht zugeordnet"
 
-#: sm/views.py:465
+#: sm/views.py:506
 msgid "You are not assigned to any group."
 msgstr ""
 
-#: sm/views.py:473
+#: sm/views.py:514
 #, python-format
 msgid "Imported %d vendors and %d operating systems into group %s."
 msgstr ""
@@ -2050,22 +2123,35 @@ msgstr ""
 msgid "Group profile updated successfully."
 msgstr ""
 
-#: sm/views_api_keys.py:16
+#: sm/views_api_keys.py:19
 msgid "Name (optional)"
 msgstr ""
 
-#: sm/views_api_keys.py:19
+#: sm/views_api_keys.py:22
 msgid "A label to remember this key by."
 msgstr ""
 
-#: sm/views_api_keys.py:42
+#: sm/views_api_keys.py:25
+msgid "Expire after (days)"
+msgstr "Ablauf nach (Tagen)"
+
+#: sm/views_api_keys.py:30
+msgid "Optional. The key will be rejected after this many days."
+msgstr ""
+
+#: sm/views_api_keys.py:63
 msgid "API key created. Copy the secret now - it will not be shown again."
 msgstr ""
 
-#: sm/views_api_keys.py:54
+#: sm/views_api_keys.py:76
 #, python-format
 msgid "API key %(key)s has been revoked."
 msgstr ""
+
+#: sm/views_api_keys.py:97
+#, python-format
+msgid "API key %(key)s has been rotated. Copy the new secret now."
+msgstr "API-Schlüssel %(key)s wurde rotiert. Kopieren Sie jetzt das neue Geheimnis."
 
 #: sm/views_group.py:51
 msgid "Username or Email"
@@ -2166,21 +2252,21 @@ msgstr ""
 msgid "You have joined %(group_name)s!"
 msgstr ""
 
-#: sm/views_group.py:470
+#: sm/views_group.py:487
 #, python-format
 msgid "You can only create up to %d groups."
 msgstr ""
 
-#: sm/views_group.py:476
+#: sm/views_group.py:493
 msgid "A group with this name already exists."
 msgstr ""
 
-#: sm/views_group.py:492
+#: sm/views_group.py:509
 #, python-format
 msgid "Group '%s' created successfully."
 msgstr ""
 
-#: sm/views_group.py:496
+#: sm/views_group.py:513
 msgid "Failed to create group."
 msgstr ""
 

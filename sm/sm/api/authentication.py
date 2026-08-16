@@ -50,6 +50,9 @@ class ApiKeyAuthentication(BaseAuthentication):
         if key is None or not check_password(secret, key.secret_hash):
             raise AuthenticationFailed("Invalid API key credentials.")
 
+        if key.is_expired():
+            raise AuthenticationFailed("API key has expired.")
+
         if not key.user.is_active:
             raise AuthenticationFailed("User account is disabled.")
 

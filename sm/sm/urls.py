@@ -35,7 +35,11 @@ from .views_group import (
 from .views_onboarding import GroupOnboardingView
 from .views_avatars import avatar_proxy
 from .views_audit import AuditLogView
-from .views_api_keys import ApiKeyListView, RevokeApiKeyView
+from .views_api_keys import (
+    ApiKeyListView,
+    RevokeApiKeyView,
+    RotateApiKeyView,
+)
 from .views_profile import ProfileView
 from .api.views import (
     ServerViewSet,
@@ -105,6 +109,11 @@ urlpatterns = [
         "account/api-keys/revoke/<int:pk>/",
         RevokeApiKeyView.as_view(),
         name="api_key_revoke",
+    ),
+    path(
+        "account/api-keys/rotate/<int:pk>/",
+        RotateApiKeyView.as_view(),
+        name="api_key_rotate",
     ),
     # Profile
     path("account/profile/", ProfileView.as_view(), name="profile"),

@@ -118,6 +118,14 @@ class ApiKey(models.Model):
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(default=timezone.now)
     last_used_at = models.DateTimeField(null=True, blank=True)
+    expires_at = models.DateTimeField(
+        null=True,
+        blank=True,
+        help_text="Optional expiry timestamp. Expired keys are rejected.",
+    )
+    revoked_at = models.DateTimeField(
+        null=True, blank=True, help_text="When the key was revoked or rotated."
+    )
 
     class Meta:
         verbose_name = "API Key"
@@ -127,8 +135,13 @@ class ApiKey(models.Model):
     def __str__(self) -> str:
         return self.name or self.client_id
 
+    def is_expired(self) -> bool:
+        return self.expires_at is not None and timezone.now() >= self.expires_at
+
     @classmethod
-    def create_for_user(cls, user: User, name: str = "") -> tuple[ApiKey, str]:
+    def create_for_user(
+        cls, user: User, name: str = "", expires_at=None
+    ) -> tuple[ApiKey, str]:
         """
         Creates a new key for the user and returns the key instance together
         with the plaintext secret. The secret is not persisted in plaintext.
@@ -140,5 +153,18 @@ class ApiKey(models.Model):
             name=name,
             client_id=client_id,
             secret_hash=make_password(secret),
+            expires_at=expires_at,
         )
         return key, secret
+
+    def rotate(self, name: str = "") -> tuple[ApiKey, str]:
+        """
+        Revokes this key and returns a fresh key with the same name. The old
+        key keeps its client_id/secret but is immediately invalidated.
+        """
+        self.is_active = False
+        self.revoked_at = timezone.now()
+        self.save(update_fields=["is_active", "revoked_at"])
+        return self.create_for_user(
+            self.user, name=name or self.name, expires_at=self.expires_at
+        )
