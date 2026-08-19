@@ -10,6 +10,8 @@ from django.utils.translation import gettext as _
 from django import forms
 from django.views import View
 from django.core.mail import send_mail
+from django.contrib.auth.password_validation import validate_password
+from django.core.exceptions import ValidationError
 from django.template.loader import render_to_string
 from typing import Any
 from .utils_permissions import get_group_permissions_for_model
@@ -267,12 +269,16 @@ class UserPermissionUpdateView(LoginRequiredMixin, GroupOwnerRequiredMixin, Form
         group_id = self.kwargs.get("group_id")
         user_id = self.kwargs.get("user_id")
         if self.request.user.is_superuser:
-            kwargs["group"] = get_object_or_404(Group, pk=group_id)
+            group = get_object_or_404(Group, pk=group_id)
         else:
-            kwargs["group"] = get_object_or_404(
+            group = get_object_or_404(
                 Group, pk=group_id, profile__owner=self.request.user
             )
-        kwargs["user"] = get_object_or_404(User, pk=user_id)
+        # Only group owners may edit the permissions of their own group's
+        # members. Without the membership check an owner could grant/revoke
+        # the (global) user permissions of arbitrary users in other groups.
+        kwargs["group"] = group
+        kwargs["user"] = get_object_or_404(User, pk=user_id, groups=group)
         return kwargs
 
     def get_success_url(self) -> str:
@@ -403,6 +409,20 @@ class AcceptInvitationView(TemplateView):
             messages.error(request, _("Passwords do not match."))
             return self.get(request, *args, **kwargs)
 
+        # The invitee must claim the invited account under the invited email,
+        # otherwise anyone with the link could register a new identity.
+        if email.lower() != invitation.email.lower():
+            messages.error(request, _("The email does not match the invitation."))
+            return self.get(request, *args, **kwargs)
+
+        try:
+            validate_password(password)
+        except ValidationError as exc:
+            messages.error(
+                request, _("Password is not strong enough: %s") % " ".join(exc.messages)
+            )
+            return self.get(request, *args, **kwargs)
+
         if User.objects.filter(username=username).exists():
             messages.error(request, _("Username already exists."))
             return self.get(request, *args, **kwargs)
@@ -441,7 +461,14 @@ class GroupFilterView(View):
 
         groups_param = request.POST.get("groups", "")
         if groups_param:
-            selected_groups = [g for g in groups_param.split(",") if g]
+            # Only allow selecting groups the user actually belongs to, so a
+            # user can never filter into another tenant's data.
+            user_group_ids = set(request.user.groups.values_list("id", flat=True))
+            selected_groups = [
+                g
+                for g in groups_param.split(",")
+                if g.isdigit() and int(g) in user_group_ids
+            ]
             request.session["selected_groups"] = selected_groups
         else:
             request.session["selected_groups"] = []
