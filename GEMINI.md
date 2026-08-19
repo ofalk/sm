@@ -35,7 +35,7 @@ This document provides context for AI agents working on the modernization of thi
     - **Clean Models:** Removed redundant `app_label` and `managed` attributes from all model `Meta` classes.
     - **Native Natural Keys:** Completely removed the `django-natural-keys` dependency in favor of native Django `natural_key` and `get_by_natural_key` implementations.
     - **Robust Serialization:** Formalized critical serialization patches in `sm/sm/patches.py` to handle fixture loading edge cases.
-6.  **Test Suite:** All **260 tests** are passing, including Playwright browser tests (Chromium + Firefox) that scan every page for JS/console/network/HTTP errors. Test logic has been modernized to use `follow=True` for POST requests and direct message verification.
+6.  **Test Suite:** All **294 unit/API tests** are passing, plus Playwright browser tests (Chromium + Firefox) covering a CRUD workflow and multi-tenancy isolation. This includes **23 dedicated multi-tenancy isolation tests** (web, API, history, FK scoping, permission enforcement) in `sm/sm/test_multitenancy_isolation.py`. Test logic has been modernized to use `follow=True` for POST requests and direct message verification.
 7.  **REST API:** The full data model is exposed via Django REST Framework ViewSets (`/api/`), with OpenAPI docs at `/api/schema/`. All ViewSets apply group-based multi-tenancy filtering and enforce model permissions (including `view_` for reads).
 8.  **API Keys:** Users can generate `client_id`/secret credential pairs from *API Keys* in their account menu (`/account/api-keys/`). Keys authenticate via `Authorization: ApiKey <client_id>:<secret>` and grant exactly the access of the owning user (group permissions included). Secrets are stored hashed and shown only once.
 9.  **Bootstrap 5 Migration:** Migrated from EOL Bootstrap 4.6.2/`django-bootstrap4` to **Bootstrap 5.3.3** + **`django-bootstrap5`**. This included updating the CDN assets (Bootswatch Cosmo 5, bundled Popper), renaming template tags (`{% load bootstrap4 %}` → `{% load django_bootstrap5 %}`), replacing removed tags (`{% buttons %}`), and migrating markup (`data-*` → `data-bs-*`, `mr-*`/`ml-*`/`pr-*`/`pl-*` → `me-*`/`ms-*`/`pe-*`/`ps-*`, `form-group` → `mb-3`, custom form controls → `form-check`/`form-switch`, input-group wrappers, `badge-*` → `text-bg-*`, `btn-block` → `d-block w-100`, `.close` → `.btn-close`, `jumbotron`). The command palette modal now uses the Bootstrap 5 JS API instead of the removed jQuery plugin.
@@ -50,7 +50,8 @@ This document provides context for AI agents working on the modernization of thi
 ## Immediate Next Steps
 
 1.  **Production Social Auth:** Configure real `SocialApp` credentials in the production database.
-2.  **Search Refinement:** Implement or polish global search functionality now that the UI is standardized.
+2.  **Multi-Tenancy:** Data isolation across all apps is complete and verified by 23 isolation tests. The canonical reference is `MULTI_TENANCY_DEVELOPER_GUIDE.md`; the redundant `MULTI_TENANCY.md` and stale `MULTITENANCY_STATUS.md` were removed during documentation consolidation.
+3.  **Security Hardening:** `SECRET_KEY` is required when `DEBUG=False` (with `SECURE_*` settings enabled), `.env` is git-ignored, and the entrypoint writes the generated admin password to `/app/.admin_password` instead of stdout.
 
 ## Known Quirks
 

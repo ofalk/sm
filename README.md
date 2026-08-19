@@ -4,13 +4,14 @@
 
 A modern Django-based server management application for tracking infrastructure, configurations, and clusters.
 
-> **Note:** This application is currently **single-tenant**. Multi-tenancy support is on the roadmap.
+Multi-tenancy is supported: servers, clusters, and reference data are scoped to user groups, and quotas/permissions are enforced per group on both the web UI and the API.
 
 ## Features
 
 - **Infrastructure Tracking:** Manage vendors, locations, operating systems, and server models.
 - **Cluster Management:** Organize servers into clusters with associated software and packages.
-- **Modern UI:** Clean, responsive interface built with Bootstrap 4.6 and Bootswatch Cosmo.
+- **Multi-Tenancy:** Group-scoped data with per-group quotas and permissions.
+- **Modern UI:** Clean, responsive interface built with Bootstrap 5 and Bootswatch Cosmo.
 - **Secure Auth:** Integrated with `django-allauth` for robust account management.
 - **API Support:** Includes Django Rest Framework for programmatic access.
 
