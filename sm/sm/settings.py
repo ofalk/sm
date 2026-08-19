@@ -4,14 +4,21 @@ import dj_database_url
 from pathlib import Path
 from sys import platform, argv
 import django.contrib.messages as messages
+from django.core.exceptions import ImproperlyConfigured
 from decouple import config, Csv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Environment-based configuration
-SECRET_KEY = config("SECRET_KEY", default="django-insecure-default-key-for-dev")
 DEBUG = config("DEBUG", default=False, cast=bool)
+_cfg_secret = config("SECRET_KEY", default="")
+if not _cfg_secret:
+    if DEBUG:
+        _cfg_secret = "django-insecure-default-key-for-dev"
+    else:
+        raise ImproperlyConfigured("SECRET_KEY must be set when DEBUG is False.")
+SECRET_KEY = _cfg_secret
 ALLOWED_HOSTS = config("ALLOWED_HOSTS", default="localhost,127.0.0.1", cast=Csv())
 EMAIL_BACKEND = config(
     "EMAIL_BACKEND", default="django.core.mail.backends.console.EmailBackend"
@@ -354,6 +361,18 @@ BOOTSTRAP5 = {
 }
 
 HTML_MINIFY = True
+
+# Security hardening (only applied when not in DEBUG so local HTTP dev works).
+if not DEBUG:
+    SECURE_SSL_REDIRECT = config("SECURE_SSL_REDIRECT", default=True, cast=bool)
+    SESSION_COOKIE_SECURE = config("SESSION_COOKIE_SECURE", default=True, cast=bool)
+    CSRF_COOKIE_SECURE = config("CSRF_COOKIE_SECURE", default=True, cast=bool)
+    SECURE_HSTS_SECONDS = config("SECURE_HSTS_SECONDS", default=31536000, cast=int)
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+    SECURE_REFERRER_POLICY = "same-origin"
+    X_FRAME_OPTIONS = "DENY"
 
 if not DISABLE_SOCIAL_AUTH and os.path.isfile(BASE_DIR / "config_local.py"):
     from config_local import *  # noqa

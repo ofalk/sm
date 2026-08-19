@@ -5,9 +5,10 @@ ENV PYTHONUNBUFFERED=1
 ENV PIP_NO_CACHE_DIR=1
 ENV PIP_DISABLE_PIP_VERSION_CHECK=1
 ENV DJANGO_SETTINGS_MODULE=sm.settings
+# Override these at build/run time for production deployments.
 ENV SECRET_KEY="docker-insecure-key-for-quick-test"
 ENV DEBUG=False
-ENV ALLOWED_HOSTS="*"
+ENV ALLOWED_HOSTS="localhost,127.0.0.1"
 
 ARG APP_VERSION=unknown
 ARG APP_MODIFICATION_DATE=unknown

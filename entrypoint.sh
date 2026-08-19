@@ -60,7 +60,12 @@ ensure_admin)
     # If ADMIN_PASSWORD is provided in ENV, use it. Otherwise generate random.
     if [ -z "$ADMIN_PASSWORD" ]; then
         export ADMIN_PASSWORD=$(python3 -c "import secrets; import string; print(''.join(secrets.choice(string.ascii_letters + string.digits) for i in range(16)))")
-        echo "Generated random password: $ADMIN_PASSWORD"
+        # Never print the generated password to stdout/logs. Write it to a
+        # restrictively-permissioned file instead.
+        PASSWORD_FILE="/app/.admin_password"
+        umask 077
+        echo "$ADMIN_PASSWORD" > "$PASSWORD_FILE"
+        echo "Generated a random admin password (see $PASSWORD_FILE)."
     else
         echo "Using provided ADMIN_PASSWORD from environment"
     fi
