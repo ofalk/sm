@@ -22,13 +22,6 @@ except Exception:  # pragma: no cover
     from django.urls import reverse_lazy  # pragma: no cover
 
 
-def _get_group_for_user(user):
-    if user.is_superuser:
-        return None
-    groups = user.groups.all()
-    return groups.first() if groups.exists() else None
-
-
 class ListView(LoginRequiredMixin, GenericListView):
     template_name = "%s/list.html" % app_label
     model = Model
@@ -70,7 +63,6 @@ class UpdateView(SuccessMessageMixin, LoginRequiredMixin, GenericUpdateView):
 
     def form_valid(self, form):
         self.object = form.save(commit=False)
-        self.object.group = _get_group_for_user(self.request.user)
         self.object.save()
         messages.success(self.request, self.success_message % self.object.__dict__)
 
@@ -102,7 +94,10 @@ class CreateView(SuccessMessageMixin, LoginRequiredMixin, GenericCreateView):
 
     def form_valid(self, form):
         self.object = form.save(commit=False)
-        self.object.group = _get_group_for_user(self.request.user)
+        # Group is not a form field (editable=False); new packages inherit
+        # their cluster's tenant group.
+        if self.object.group is None:
+            self.object.group = self.object.cluster.group
         self.object.save()
         messages.success(self.request, self.success_message % self.object.__dict__)
 

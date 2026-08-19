@@ -18,17 +18,21 @@ from django.utils.translation import gettext as _
 
 from django.urls import reverse_lazy
 
+from vendor.models import Model as VendorModel
+
 
 class ListView(LoginRequiredMixin, MultiTenantMixin, GenericListView):
     template_name = "%s/list.html" % app_label
-    model = Model
+    # Grouped list: rows are Vendors (with their operating systems prefetched),
+    # so the queryset model is the Vendor model. Permission checks stay
+    # anchored to this app via ``permission_model``.
+    model = VendorModel
+    permission_model = Model
     paginate_by = 20
     paginate_orphans = paginate_by / 4
     ordering = "vendor"
 
     def get_queryset(self) -> Any:
-        from vendor.models import Model as VendorModel
-
         # Filtering by group is handled by MultiTenantMixin
         # (via super().get_queryset())
         # But we need the vendor grouping logic
@@ -77,8 +81,6 @@ class CreateView(
     success_url = reverse_lazy("%s:index" % app_label)
 
     def get_initial(self) -> Any:
-        from vendor.models import Model as VendorModel
-
         initial = super().get_initial()
         if "vendor" in self.kwargs:
             initial["vendor"] = VendorModel.objects.filter(

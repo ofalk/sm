@@ -15,6 +15,32 @@ from clusterpackage.models import Model as ClusterPackage
 from clustersoftware.models import Model as ClusterSoftware
 from clusterpackagetype.models import Model as ClusterPackageType
 
+from sm.mixins import filter_queryset_by_tenant
+
+
+class TenantSlugRelatedField(serializers.SlugRelatedField):
+    """
+    A ``SlugRelatedField`` whose queryset is scoped to the requesting user's
+    accessible groups, so a user can never reference (create/update against) a
+    related object belonging to another tenant.
+    """
+
+    def get_queryset(self):
+        request = self.context.get("request")
+        if request is not None and not getattr(request.user, "is_superuser", False):
+            return filter_queryset_by_tenant(self.queryset, request)
+        return self.queryset
+
+
+class TenantPrimaryKeyRelatedField(serializers.PrimaryKeyRelatedField):
+    """A PK related field scoped to the requesting user's accessible groups."""
+
+    def get_queryset(self):
+        request = self.context.get("request")
+        if request is not None and not getattr(request.user, "is_superuser", False):
+            return filter_queryset_by_tenant(self.queryset, request)
+        return self.queryset
+
 
 class VendorSerializer(serializers.ModelSerializer):
     class Meta:
@@ -29,9 +55,7 @@ class StatusSerializer(serializers.ModelSerializer):
 
 
 class OSSerializer(serializers.ModelSerializer):
-    vendor = serializers.SlugRelatedField(
-        slug_field="name", queryset=Vendor.objects.all()
-    )
+    vendor = TenantSlugRelatedField(slug_field="name", queryset=Vendor.objects.all())
 
     class Meta:
         model = OS
@@ -39,9 +63,7 @@ class OSSerializer(serializers.ModelSerializer):
 
 
 class ServerModelSerializer(serializers.ModelSerializer):
-    vendor = serializers.SlugRelatedField(
-        slug_field="name", queryset=Vendor.objects.all()
-    )
+    vendor = TenantSlugRelatedField(slug_field="name", queryset=Vendor.objects.all())
 
     class Meta:
         model = ServerModel
@@ -61,19 +83,15 @@ class CoercingDateField(serializers.DateField):
 
 
 class ServerSerializer(serializers.ModelSerializer):
-    status = serializers.SlugRelatedField(
-        slug_field="name", queryset=Status.objects.all()
-    )
-    domain = serializers.SlugRelatedField(
-        slug_field="name", queryset=Domain.objects.all()
-    )
-    location = serializers.SlugRelatedField(
+    status = TenantSlugRelatedField(slug_field="name", queryset=Status.objects.all())
+    domain = TenantSlugRelatedField(slug_field="name", queryset=Domain.objects.all())
+    location = TenantSlugRelatedField(
         slug_field="name",
         queryset=Location.objects.all(),
         required=False,
         allow_null=True,
     )
-    patchtime = serializers.SlugRelatedField(
+    patchtime = TenantSlugRelatedField(
         slug_field="name",
         queryset=Patchtime.objects.all(),
         required=False,
@@ -124,6 +142,12 @@ class PatchtimeSerializer(serializers.ModelSerializer):
 
 
 class ClusterSerializer(serializers.ModelSerializer):
+    clustersoftware = TenantPrimaryKeyRelatedField(
+        queryset=ClusterSoftware.objects.all(),
+        required=False,
+        allow_null=True,
+    )
+
     class Meta:
         model = Cluster
         fields = "__all__"
@@ -131,13 +155,20 @@ class ClusterSerializer(serializers.ModelSerializer):
 
 class ClusterPackageSerializer(serializers.ModelSerializer):
     status_name = serializers.CharField(source="status.name", read_only=True)
-    package_type_name = serializers.CharField(source="package_type.name", read_only=True)
+    package_type_name = serializers.CharField(
+        source="package_type.name", read_only=True
+    )
     cluster_name = serializers.CharField(source="cluster.name", read_only=True)
     clustersoftware = serializers.CharField(
         source="cluster.clustersoftware.name", read_only=True, allow_null=True
     )
     clustersoftwareversion = serializers.CharField(
         source="cluster.clustersoftware.version", read_only=True, allow_null=True
+    )
+    cluster = TenantPrimaryKeyRelatedField(queryset=Cluster.objects.all())
+    status = TenantPrimaryKeyRelatedField(queryset=Status.objects.all())
+    package_type = TenantPrimaryKeyRelatedField(
+        queryset=ClusterPackageType.objects.all()
     )
 
     class Meta:
@@ -178,9 +209,7 @@ class ClusterPackageSerializer(serializers.ModelSerializer):
 
 
 class ClusterSoftwareSerializer(serializers.ModelSerializer):
-    vendor = serializers.SlugRelatedField(
-        slug_field="name", queryset=Vendor.objects.all()
-    )
+    vendor = TenantSlugRelatedField(slug_field="name", queryset=Vendor.objects.all())
 
     class Meta:
         model = ClusterSoftware

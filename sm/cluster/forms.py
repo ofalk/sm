@@ -1,5 +1,6 @@
 from .models import Model
 from sm.forms import SMForm, SMFormDisabled
+from sm.mixins import filter_queryset_for_user
 from server.models import Model as ServerModel
 
 from django.forms import ModelMultipleChoiceField
@@ -24,9 +25,15 @@ class Form(SMForm):
         super().__init__(*args, **kwargs)
 
         self.fields["server_set"].required = False
-        self.fields["server_set"].initial = self.instance.server_set.all().values_list(
-            "id", flat=True
+        self.fields["server_set"].queryset = filter_queryset_for_user(
+            ServerModel.objects.all().order_by("-cluster", "hostname"), self.user
         )
+        if self.instance and self.instance.pk:
+            self.fields["server_set"].initial = (
+                self.instance.server_set.all().values_list("id", flat=True)
+            )
+        else:
+            self.fields["server_set"].initial = []
 
     class Meta(SMForm.Meta):
         model = Model

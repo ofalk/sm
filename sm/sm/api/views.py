@@ -102,13 +102,6 @@ class ClusterPackageViewSet(APIMultiTenantMixin, viewsets.ModelViewSet):
     serializer_class = ClusterPackageSerializer
     permission_classes = [SmModelPermissions]
 
-    def get_queryset(self):
-        queryset = super().get_queryset()
-        if self.request.user.is_superuser:
-            return queryset
-        user_groups = self.request.user.groups.all()
-        return queryset.filter(cluster__group__in=user_groups)
-
 
 class ClusterSoftwareViewSet(APIMultiTenantMixin, viewsets.ModelViewSet):
     queryset = ClusterSoftware.objects.all().order_by("name")

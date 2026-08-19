@@ -10,6 +10,7 @@ class Form(SMForm):
 
     def __init__(self, *args, user=None, **kwargs):
         self.user = user
+        kwargs["user"] = user  # let SMForm scope FK choices to the user
         super().__init__(*args, **kwargs)
 
     def clean(self):
@@ -20,12 +21,11 @@ class Form(SMForm):
         package_type = cleaned_data.get("package_type")
         if None in (cluster, name, status, package_type):
             return cleaned_data
-        group = None
-        if self.instance and self.instance.pk and self.instance.group is not None:
+        # Packages inherit their cluster's tenant group. On update the group is
+        # immutable (editable=False) so the existing instance group governs.
+        if self.instance and self.instance.pk:
             group = self.instance.group
-        elif self.user and not self.user.is_superuser:
-            group = self.user.groups.first()
-        if group is None:
+        else:
             group = cluster.group
         queryset = Model.objects.filter(
             cluster=cluster,

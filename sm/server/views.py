@@ -2,7 +2,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 
 from sm.views import SafeDeleteMixin
-from sm.mixins import MultiTenantMixin
+from sm.mixins import filter_queryset_by_tenant, MultiTenantMixin
 
 from .models import Model
 from .forms import Form, FormDisabled, BulkActionForm
@@ -10,6 +10,7 @@ from . import app_label
 
 from django.views import View
 from django.shortcuts import redirect
+from django.db import transaction
 
 from django.views.generic import ListView as GenericListView
 from django.views.generic.edit import UpdateView as GenericUpdateView
@@ -20,10 +21,7 @@ from django.contrib.messages.views import SuccessMessageMixin
 
 from django.utils.translation import gettext as _
 
-try:
-    from django.urls import reverse_lazy
-except Exception:  # pragma: no cover
-    from django.urls import reverse_lazy  # pragma: no cover
+from django.urls import reverse_lazy
 
 
 class ListView(LoginRequiredMixin, MultiTenantMixin, GenericListView):
@@ -35,7 +33,18 @@ class ListView(LoginRequiredMixin, MultiTenantMixin, GenericListView):
     ordering = "hostname"
 
     def get_queryset(self):
-        queryset = super().get_queryset()
+        queryset = (
+            super()
+            .get_queryset()
+            .select_related(
+                "status",
+                "location",
+                "domain",
+                "patchtime",
+                "servermodel",
+                "operatingsystem__vendor",
+            )
+        )
         if "srvmanager-show_disposed" in self.request.COOKIES:
             if self.request.COOKIES["srvmanager-show_disposed"] == "true":
                 return queryset.order_by(self.ordering)
@@ -47,7 +56,7 @@ class ListView(LoginRequiredMixin, MultiTenantMixin, GenericListView):
         return context
 
 
-class BulkActionView(LoginRequiredMixin, MultiTenantMixin, View):
+class BulkActionView(LoginRequiredMixin, View):
     def post(self, request, *args, **kwargs):
         server_ids = request.POST.getlist("selected_servers")
         if not server_ids:
@@ -56,8 +65,14 @@ class BulkActionView(LoginRequiredMixin, MultiTenantMixin, View):
 
         form = BulkActionForm(request.POST)
         if form.is_valid():
-            # Use get_queryset to ensure multi-tenancy filtering
-            servers = self.get_queryset().filter(id__in=server_ids)
+            # Filter by tenant so a user can never bulk-operate on another
+            # group's servers.
+            servers = filter_queryset_by_tenant(Model.objects.all(), request).filter(
+                id__in=server_ids
+            )
+            # Global (group-less) seed fixtures are read-only for tenant users
+            if not request.user.is_superuser:
+                servers = servers.exclude(group__isnull=True)
             count = servers.count()
 
             if form.cleaned_data["delete"]:
@@ -71,10 +86,18 @@ class BulkActionView(LoginRequiredMixin, MultiTenantMixin, View):
                 servers.delete()
                 messages.success(request, _("Successfully deleted %d servers.") % count)
             elif form.cleaned_data["status"]:
+                # Check change permission before re-labelling any servers.
+                if not request.user.has_perm("server.change_model"):
+                    messages.error(
+                        request,
+                        _("You don't have permission to change servers."),
+                    )
+                    return redirect("server:index")
                 new_status = form.cleaned_data["status"]
-                for server in servers:
-                    server.status = new_status
-                    server.save()
+                with transaction.atomic():
+                    for server in servers:
+                        server.status = new_status
+                        server.save()
                 messages.success(
                     request,
                     _("Successfully updated status to %s for %d servers.")

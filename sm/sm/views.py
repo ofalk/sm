@@ -1,3 +1,5 @@
+import logging
+
 from django.views.generic import TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
@@ -5,10 +7,10 @@ from server.models import Model as Server
 from cluster.models import Model as Cluster
 from vendor.models import Model as Vendor
 from operatingsystem.models import Model as OS
-from django.db.models import Count, Q
+from django.db.models import Count
 from django.core.exceptions import ObjectDoesNotExist
 from django.apps import apps
-from django.http import Http404, HttpResponseRedirect, JsonResponse
+from django.http import Http404, JsonResponse
 from django.conf import settings
 
 from django.db.models import ProtectedError
@@ -16,7 +18,10 @@ from django.utils.translation import gettext as _
 from django.shortcuts import redirect
 from django.views import View
 from typing import Any, List
+from .mixins import filter_queryset_by_tenant, filter_history_queryset_by_tenant
 from .utils_starterpack import import_starter_pack
+
+logger = logging.getLogger(__name__)
 
 
 class SafeDeleteMixin:
@@ -26,10 +31,11 @@ class SafeDeleteMixin:
     """
 
     def form_valid(self, form: Any) -> Any:
-        success_url = self.get_success_url()  # type: ignore
         try:
             obj_name = str(self.object)  # type: ignore
-            self.object.delete()  # type: ignore
+            # Chain to the rest of the MRO (e.g. MultiTenantMixin) so tenant
+            # guards such as read-only global fixtures are enforced.
+            response = super().form_valid(form)  # type: ignore
             if hasattr(self, "success_message") and self.success_message:  # type: ignore  # noqa: E501
                 messages.success(
                     # type: ignore
@@ -38,7 +44,7 @@ class SafeDeleteMixin:
                 )
             else:
                 messages.success(self.request, _("Successfully deleted %s") % obj_name)
-            return HttpResponseRedirect(success_url)
+            return response
         except ProtectedError as e:
             instances = ", ".join(str(obj) for obj in e.protected_objects)
             messages.error(
@@ -62,14 +68,9 @@ class DashboardView(LoginRequiredMixin, TemplateView):
     template_name = "dashboard.html"
 
     def get_queryset_filtered(self, model: Any) -> Any:
-        if self.request.user.is_superuser:
+        if not hasattr(model, "group"):
             return model.objects.all()
-        user_groups = self.request.user.groups.all()
-        if hasattr(model, "group"):
-            return model.objects.filter(
-                Q(group__in=user_groups) | Q(group__isnull=True)
-            )
-        return model.objects.all()
+        return filter_queryset_by_tenant(model.objects.all(), self.request)
 
     def get_context_data(self, **kwargs: Any) -> Any:
         context = super().get_context_data(**kwargs)
@@ -77,8 +78,8 @@ class DashboardView(LoginRequiredMixin, TemplateView):
         # Basic Stats (Filtered)
         context["server_count"] = self.get_queryset_filtered(Server).count()
         context["cluster_count"] = self.get_queryset_filtered(Cluster).count()
-        context["vendor_count"] = Vendor.objects.count()
-        context["os_count"] = OS.objects.count()
+        context["vendor_count"] = self.get_queryset_filtered(Vendor).count()
+        context["os_count"] = self.get_queryset_filtered(OS).count()
 
         # Data for Charts (Filtered)
         # OS Distribution
@@ -119,14 +120,9 @@ class SearchView(LoginRequiredMixin, TemplateView):
     template_name = "search.html"
 
     def get_queryset_filtered(self, model: Any) -> Any:
-        if self.request.user.is_superuser:
+        if not hasattr(model, "group"):
             return model.objects.all()
-        user_groups = self.request.user.groups.all()
-        if hasattr(model, "group"):
-            return model.objects.filter(
-                Q(group__in=user_groups) | Q(group__isnull=True)
-            )
-        return model.objects.all()
+        return filter_queryset_by_tenant(model.objects.all(), self.request)
 
     def get_template_names(self) -> List[str]:
         if self.request.GET.get("ajax"):
@@ -185,7 +181,9 @@ class SearchView(LoginRequiredMixin, TemplateView):
             context["servers"] = self.get_queryset_filtered(Server).filter(
                 hostname__icontains=query
             )[:10]
-            context["vendors"] = Vendor.objects.filter(name__icontains=query)[:10]
+            context["vendors"] = self.get_queryset_filtered(Vendor).filter(
+                name__icontains=query
+            )[:10]
             context["clusters"] = self.get_queryset_filtered(Cluster).filter(
                 name__icontains=query
             )[:10]
@@ -216,7 +214,10 @@ class HistoryDiffView(LoginRequiredMixin, TemplateView):
 
         try:
             model = apps.get_model(app_label, "Model")
-            record = model.history.get(history_id=history_id)  # type: ignore
+            history_qs = filter_history_queryset_by_tenant(
+                model.history.all(), self.request  # type: ignore
+            )
+            record = history_qs.get(history_id=history_id)
         except (LookupError, ObjectDoesNotExist):
             raise Http404("History record not found")
 
@@ -277,9 +278,12 @@ class HealthView(View):
 
             connection.cursor()
             health["checks"]["database"] = "ok"
-        except Exception as e:
+        except Exception:
+            # Log the real error server-side; never leak connection internals
+            # (host/port/user) to unauthenticated callers.
+            logger.exception("Health check: database connection failed")
             health["status"] = "unhealthy"
-            health["checks"]["database"] = f"error: {str(e)}"
+            health["checks"]["database"] = "unavailable"
 
         status_code = 200 if health["status"] == "healthy" else 503
         return JsonResponse(health, status=status_code)

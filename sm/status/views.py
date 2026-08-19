@@ -1,7 +1,6 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib import messages
-from django.http import HttpResponseRedirect
 from sm.views import SafeDeleteMixin
+from sm.mixins import MultiTenantMixin
 
 from .models import Model
 from .forms import Form, FormDisabled
@@ -15,13 +14,10 @@ from django.contrib.messages.views import SuccessMessageMixin
 
 from django.utils.translation import gettext as _
 
-try:
-    from django.urls import reverse_lazy
-except Exception:  # pragma: no cover
-    from django.urls import reverse_lazy  # pragma: no cover
+from django.urls import reverse_lazy
 
 
-class ListView(LoginRequiredMixin, GenericListView):
+class ListView(LoginRequiredMixin, MultiTenantMixin, GenericListView):
     template_name = "%s/list.html" % app_label
     model = Model
     paginate_by = 20
@@ -29,29 +25,26 @@ class ListView(LoginRequiredMixin, GenericListView):
     ordering = "name"
 
 
-class DetailView(LoginRequiredMixin, GenericUpdateView):
+class DetailView(LoginRequiredMixin, MultiTenantMixin, GenericUpdateView):
     template_name = "%s/detail.html" % app_label
     model = Model
     form_class = FormDisabled
 
 
-class UpdateView(SuccessMessageMixin, LoginRequiredMixin, GenericUpdateView):
+class UpdateView(
+    SuccessMessageMixin, LoginRequiredMixin, MultiTenantMixin, GenericUpdateView
+):
     success_message = "%(name)s " + _("was updated successfully")
     model = Model
 
     template_name = "%s/edit.html" % app_label
-
-    def form_valid(self, form):
-        self.object = form.save()
-        messages.success(self.request, self.success_message % self.object.__dict__)
-
-        return HttpResponseRedirect(self.get_success_url())
-
     form_class = Form
     success_url = reverse_lazy("%s:index" % app_label)
 
 
-class CreateView(SuccessMessageMixin, LoginRequiredMixin, GenericCreateView):
+class CreateView(
+    SuccessMessageMixin, LoginRequiredMixin, MultiTenantMixin, GenericCreateView
+):
     success_message = "%(name)s " + _("was created successfully")
 
     template_name = "%s/edit.html" % app_label
@@ -59,14 +52,10 @@ class CreateView(SuccessMessageMixin, LoginRequiredMixin, GenericCreateView):
     model = Model
     success_url = reverse_lazy("%s:index" % app_label)
 
-    def form_valid(self, form):
-        self.object = form.save()
-        messages.success(self.request, self.success_message % self.object.__dict__)
 
-        return HttpResponseRedirect(self.get_success_url())
-
-
-class DeleteView(SafeDeleteMixin, LoginRequiredMixin, GenericDeleteView):
+class DeleteView(
+    SafeDeleteMixin, LoginRequiredMixin, MultiTenantMixin, GenericDeleteView
+):
     success_message = "%(name)s " + _("was deleted successfully")
     template_name = "delete.html"
     model = Model

@@ -129,9 +129,6 @@ class Model(models.Model):
         db_table = "{}_{}".format("sm", app_label)
         constraints = [
             models.UniqueConstraint(
-                fields=["hostname", "status"], name="unique_sm_server_hostname_status"
-            ),
-            models.UniqueConstraint(
                 fields=["hostname", "status", "group"],
                 name="unique_sm_server_hostname_status_group",
             ),

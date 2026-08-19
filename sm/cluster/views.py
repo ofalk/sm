@@ -15,10 +15,7 @@ from django.contrib.messages.views import SuccessMessageMixin
 
 from django.utils.translation import gettext as _
 
-try:
-    from django.urls import reverse_lazy
-except Exception:  # pragma: no cover
-    from django.urls import reverse_lazy  # pragma: no cover
+from django.urls import reverse_lazy
 
 
 class ListView(LoginRequiredMixin, MultiTenantMixin, GenericListView):
@@ -57,7 +54,7 @@ class CreateView(
     success_message = "%(name)s " + _("was created successfully")
 
     template_name = "%s/edit.html" % app_label
-    fields = "__all__"
+    form_class = Form
     model = Model
     success_url = reverse_lazy("%s:index" % app_label)
 

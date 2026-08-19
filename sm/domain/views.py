@@ -58,7 +58,7 @@ class CreateView(
     success_message = "%(name)s " + _("was created successfully")
 
     template_name = "%s/edit.html" % app_label
-    fields = "__all__"
+    form_class = Form
     model = Model
     success_url = reverse_lazy("%s:index" % app_label)
 
