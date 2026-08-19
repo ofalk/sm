@@ -363,7 +363,9 @@ BOOTSTRAP5 = {
 HTML_MINIFY = True
 
 # Security hardening (only applied when not in DEBUG so local HTTP dev works).
-if not DEBUG:
+# Skipped while running the test suite, which always runs with DEBUG=False and
+# uses plain-HTTP requests that SECURE_SSL_REDIRECT would redirect away.
+if not DEBUG and "test" not in argv:
     SECURE_SSL_REDIRECT = config("SECURE_SSL_REDIRECT", default=True, cast=bool)
     SESSION_COOKIE_SECURE = config("SESSION_COOKIE_SECURE", default=True, cast=bool)
     CSRF_COOKIE_SECURE = config("CSRF_COOKIE_SECURE", default=True, cast=bool)
