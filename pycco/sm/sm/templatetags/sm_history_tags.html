@@ -62,8 +62,8 @@ If the field is a foreign key, resolve the ID to a string representation.</p>
 first record created after history was enabled.</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>        <span class="k">if</span> <span class="n">record</span><span class="o">.</span><span class="n">history_type</span> <span class="o">==</span> <span class="s2">&quot;~&quot;</span><span class="p">:</span>
-            <span class="k">return</span> <span class="p">[{</span><span class="s2">&quot;field&quot;</span><span class="p">:</span> <span class="s2">&quot;System&quot;</span><span class="p">,</span> <span class="s2">&quot;old&quot;</span><span class="p">:</span> <span class="s2">&quot;N/A&quot;</span><span class="p">,</span> <span class="s2">&quot;new&quot;</span><span class="p">:</span> <span class="s2">&quot;History enabled&quot;</span><span class="p">}]</span>
+      <div class="highlight"><pre>        <span class="k">if</span> <span class="n">record</span><span class="o">.</span><span class="n">history_type</span> <span class="o">==</span> <span class="s2">"~"</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[{</span><span class="s2">"field"</span><span class="p">:</span> <span class="s2">"System"</span><span class="p">,</span> <span class="s2">"old"</span><span class="p">:</span> <span class="s2">"N/A"</span><span class="p">,</span> <span class="s2">"new"</span><span class="p">:</span> <span class="s2">"History enabled"</span><span class="p">}]</span>
         <span class="k">return</span> <span class="kc">None</span>
 
     <span class="n">diff</span> <span class="o">=</span> <span class="n">record</span><span class="o">.</span><span class="n">diff_against</span><span class="p">(</span><span class="n">record</span><span class="o">.</span><span class="n">prev_record</span><span class="p">)</span>
@@ -102,7 +102,7 @@ first record created after history was enabled.</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre>                <span class="k">def</span><span class="w"> </span><span class="nf">resolve_fk</span><span class="p">(</span><span class="n">val</span><span class="p">):</span>
-                    <span class="k">if</span> <span class="n">val</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">val</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">val</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">val</span> <span class="o">==</span> <span class="s2">""</span><span class="p">:</span>
                         <span class="k">return</span> <span class="kc">None</span>
                     <span class="k">try</span><span class="p">:</span></pre></div>
     </div>
@@ -119,7 +119,7 @@ first record created after history was enabled.</p>
       <div class="highlight"><pre>                        <span class="n">obj</span> <span class="o">=</span> <span class="n">related_model</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="n">val</span><span class="p">)</span>
                         <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
                     <span class="k">except</span> <span class="n">related_model</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
-                        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;ID </span><span class="si">{</span><span class="n">val</span><span class="si">}</span><span class="s2"> (deleted)&quot;</span>
+                        <span class="k">return</span> <span class="sa">f</span><span class="s2">"ID </span><span class="si">{</span><span class="n">val</span><span class="si">}</span><span class="s2"> (deleted)"</span>
 
                 <span class="n">old_val</span> <span class="o">=</span> <span class="n">resolve_fk</span><span class="p">(</span><span class="n">old_val</span><span class="p">)</span>
                 <span class="n">new_val</span> <span class="o">=</span> <span class="n">resolve_fk</span><span class="p">(</span><span class="n">new_val</span><span class="p">)</span>
@@ -137,7 +137,7 @@ first record created after history was enabled.</p>
     <div class='code'>
       <div class="highlight"><pre>            <span class="k">pass</span>
 
-        <span class="n">enhanced_changes</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;field&quot;</span><span class="p">:</span> <span class="n">field_name</span><span class="p">,</span> <span class="s2">&quot;old&quot;</span><span class="p">:</span> <span class="n">old_val</span><span class="p">,</span> <span class="s2">&quot;new&quot;</span><span class="p">:</span> <span class="n">new_val</span><span class="p">})</span>
+        <span class="n">enhanced_changes</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">"field"</span><span class="p">:</span> <span class="n">field_name</span><span class="p">,</span> <span class="s2">"old"</span><span class="p">:</span> <span class="n">old_val</span><span class="p">,</span> <span class="s2">"new"</span><span class="p">:</span> <span class="n">new_val</span><span class="p">})</span>
 
     <span class="k">return</span> <span class="n">enhanced_changes</span>
 

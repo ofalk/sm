@@ -53,8 +53,8 @@ along with any tags included in message.extra_tags</p>
       
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="n">level_tag</span> <span class="o">=</span> <span class="n">force_text</span><span class="p">(</span><span class="n">LEVEL_TAGS</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">message</span><span class="o">.</span><span class="n">level</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">),</span> <span class="n">strings_only</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">level_tag</span> <span class="o">==</span> <span class="s2">&quot;error&quot;</span><span class="p">:</span></pre></div>
+      <div class="highlight"><pre>    <span class="n">level_tag</span> <span class="o">=</span> <span class="n">force_text</span><span class="p">(</span><span class="n">LEVEL_TAGS</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">message</span><span class="o">.</span><span class="n">level</span><span class="p">,</span> <span class="s2">""</span><span class="p">),</span> <span class="n">strings_only</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">level_tag</span> <span class="o">==</span> <span class="s2">"error"</span><span class="p">:</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -67,22 +67,22 @@ along with any tags included in message.extra_tags</p>
 in Bootstrap 3</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>        <span class="n">level_tag</span> <span class="o">=</span> <span class="s2">&quot;danger&quot;</span>
+      <div class="highlight"><pre>        <span class="n">level_tag</span> <span class="o">=</span> <span class="s2">"danger"</span>
 
     <span class="k">if</span> <span class="n">level_tag</span><span class="p">:</span>
-        <span class="n">alert_level_tag</span> <span class="o">=</span> <span class="s2">&quot;alert-</span><span class="si">{tag}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="o">=</span><span class="n">level_tag</span><span class="p">)</span>
+        <span class="n">alert_level_tag</span> <span class="o">=</span> <span class="s2">"alert-</span><span class="si">{tag}</span><span class="s2">"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tag</span><span class="o">=</span><span class="n">level_tag</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">alert_level_tag</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="n">extra_tags</span> <span class="o">=</span> <span class="n">force_text</span><span class="p">(</span><span class="n">message</span><span class="o">.</span><span class="n">extra_tags</span><span class="p">,</span> <span class="n">strings_only</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">extra_tags</span> <span class="ow">and</span> <span class="n">alert_level_tag</span><span class="p">:</span>
-        <span class="k">return</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">extra_tags</span><span class="p">,</span> <span class="n">alert_level_tag</span><span class="p">])</span>
+        <span class="k">return</span> <span class="s2">" "</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">extra_tags</span><span class="p">,</span> <span class="n">alert_level_tag</span><span class="p">])</span>
     <span class="k">elif</span> <span class="n">extra_tags</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">extra_tags</span>
     <span class="k">elif</span> <span class="n">alert_level_tag</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">alert_level_tag</span>
-    <span class="k">return</span> <span class="s2">&quot;&quot;</span></pre></div>
+    <span class="k">return</span> <span class="s2">""</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>

@@ -32,6 +32,8 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">django</span><span class="w"> </span><span class="kn">import</span> <span class="n">forms</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">django.views</span><span class="w"> </span><span class="kn">import</span> <span class="n">View</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">django.core.mail</span><span class="w"> </span><span class="kn">import</span> <span class="n">send_mail</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.contrib.auth.password_validation</span><span class="w"> </span><span class="kn">import</span> <span class="n">validate_password</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.core.exceptions</span><span class="w"> </span><span class="kn">import</span> <span class="n">ValidationError</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">django.template.loader</span><span class="w"> </span><span class="kn">import</span> <span class="n">render_to_string</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.utils_permissions</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_group_permissions_for_model</span>
@@ -99,8 +101,8 @@
     </div>
     <div class='code'>
       <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">GroupMemberListView</span><span class="p">(</span><span class="n">LoginRequiredMixin</span><span class="p">,</span> <span class="n">GroupOwnerRequiredMixin</span><span class="p">,</span> <span class="n">ListView</span><span class="p">):</span>
-    <span class="n">template_name</span> <span class="o">=</span> <span class="s2">&quot;group/member_list.html&quot;</span>
-    <span class="n">context_object_name</span> <span class="o">=</span> <span class="s2">&quot;groups&quot;</span></pre></div>
+    <span class="n">template_name</span> <span class="o">=</span> <span class="s2">"group/member_list.html"</span>
+    <span class="n">context_object_name</span> <span class="o">=</span> <span class="s2">"groups"</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -114,12 +116,12 @@
     <div class='code'>
       <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">get_queryset</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_superuser</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">Group</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">prefetch_related</span><span class="p">(</span><span class="s2">&quot;user_set&quot;</span><span class="p">,</span> <span class="s2">&quot;profile&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">Group</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">prefetch_related</span><span class="p">(</span><span class="s2">"user_set"</span><span class="p">,</span> <span class="s2">"profile"</span><span class="p">)</span>
         <span class="k">return</span> <span class="p">(</span>
             <span class="n">Group</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span>
                 <span class="n">Q</span><span class="p">(</span><span class="n">profile__owner</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span> <span class="o">|</span> <span class="n">Q</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
             <span class="p">)</span>
-            <span class="o">.</span><span class="n">prefetch_related</span><span class="p">(</span><span class="s2">&quot;user_set&quot;</span><span class="p">,</span> <span class="s2">&quot;profile&quot;</span><span class="p">)</span>
+            <span class="o">.</span><span class="n">prefetch_related</span><span class="p">(</span><span class="s2">"user_set"</span><span class="p">,</span> <span class="s2">"profile"</span><span class="p">)</span>
             <span class="o">.</span><span class="n">distinct</span><span class="p">()</span>
         <span class="p">)</span></pre></div>
     </div>
@@ -134,7 +136,7 @@
     </div>
     <div class='code'>
       <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">AddGroupMemberForm</span><span class="p">(</span><span class="n">forms</span><span class="o">.</span><span class="n">Form</span><span class="p">):</span>
-    <span class="n">username</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="n">_</span><span class="p">(</span><span class="s2">&quot;Username or Email&quot;</span><span class="p">))</span></pre></div>
+    <span class="n">username</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="n">_</span><span class="p">(</span><span class="s2">"Username or Email"</span><span class="p">))</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -147,13 +149,13 @@
     </div>
     <div class='code'>
       <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">clean_username</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
-        <span class="n">username</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s2">&quot;username&quot;</span><span class="p">]</span>
+        <span class="n">username</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s2">"username"</span><span class="p">]</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="k">if</span> <span class="s2">&quot;@&quot;</span> <span class="ow">in</span> <span class="n">username</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s2">"@"</span> <span class="ow">in</span> <span class="n">username</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">email</span><span class="o">=</span><span class="n">username</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="n">username</span><span class="p">)</span>
         <span class="k">except</span> <span class="n">User</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">forms</span><span class="o">.</span><span class="n">ValidationError</span><span class="p">(</span><span class="n">_</span><span class="p">(</span><span class="s2">&quot;User does not exist.&quot;</span><span class="p">))</span></pre></div>
+            <span class="k">raise</span> <span class="n">forms</span><span class="o">.</span><span class="n">ValidationError</span><span class="p">(</span><span class="n">_</span><span class="p">(</span><span class="s2">"User does not exist."</span><span class="p">))</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -166,13 +168,13 @@
     </div>
     <div class='code'>
       <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">CreateGroupForm</span><span class="p">(</span><span class="n">forms</span><span class="o">.</span><span class="n">Form</span><span class="p">):</span>
-    <span class="n">name</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="n">_</span><span class="p">(</span><span class="s2">&quot;Group Name&quot;</span><span class="p">),</span> <span class="n">max_length</span><span class="o">=</span><span class="mi">150</span><span class="p">)</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="n">_</span><span class="p">(</span><span class="s2">"Group Name"</span><span class="p">),</span> <span class="n">max_length</span><span class="o">=</span><span class="mi">150</span><span class="p">)</span>
     <span class="n">max_users</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">(</span>
-        <span class="n">label</span><span class="o">=</span><span class="n">_</span><span class="p">(</span><span class="s2">&quot;Max Users&quot;</span><span class="p">),</span>
+        <span class="n">label</span><span class="o">=</span><span class="n">_</span><span class="p">(</span><span class="s2">"Max Users"</span><span class="p">),</span>
         <span class="n">initial</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
         <span class="n">min_value</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
         <span class="n">max_value</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
-        <span class="n">help_text</span><span class="o">=</span><span class="n">_</span><span class="p">(</span><span class="s2">&quot;Maximum number of users in this group&quot;</span><span class="p">),</span>
+        <span class="n">help_text</span><span class="o">=</span><span class="n">_</span><span class="p">(</span><span class="s2">"Maximum number of users in this group"</span><span class="p">),</span>
     <span class="p">)</span></pre></div>
     </div>
   </div>
@@ -187,7 +189,7 @@
     <div class='code'>
       <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">AddGroupMemberView</span><span class="p">(</span><span class="n">LoginRequiredMixin</span><span class="p">,</span> <span class="n">GroupOwnerRequiredMixin</span><span class="p">,</span> <span class="n">FormView</span><span class="p">):</span>
     <span class="n">form_class</span> <span class="o">=</span> <span class="n">AddGroupMemberForm</span>
-    <span class="n">template_name</span> <span class="o">=</span> <span class="s2">&quot;group/add_member.html&quot;</span></pre></div>
+    <span class="n">template_name</span> <span class="o">=</span> <span class="s2">"group/add_member.html"</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -200,7 +202,7 @@
     </div>
     <div class='code'>
       <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">get_success_url</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">reverse_lazy</span><span class="p">(</span><span class="s2">&quot;group_member_list&quot;</span><span class="p">)</span></pre></div>
+        <span class="k">return</span> <span class="n">reverse_lazy</span><span class="p">(</span><span class="s2">"group_member_list"</span><span class="p">)</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -213,7 +215,7 @@
     </div>
     <div class='code'>
       <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">form_valid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">form</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
-        <span class="n">group_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;group_id&quot;</span><span class="p">)</span></pre></div>
+        <span class="n">group_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"group_id"</span><span class="p">)</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -232,12 +234,12 @@
                 <span class="n">Group</span><span class="p">,</span> <span class="n">pk</span><span class="o">=</span><span class="n">group_id</span><span class="p">,</span> <span class="n">profile__owner</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">user</span>
             <span class="p">)</span>
 
-        <span class="n">user_to_add</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s2">&quot;username&quot;</span><span class="p">]</span>
+        <span class="n">user_to_add</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s2">"username"</span><span class="p">]</span>
 
         <span class="k">if</span> <span class="n">group</span><span class="o">.</span><span class="n">user_set</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="n">group</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">max_users</span><span class="p">:</span>
             <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">,</span>
-                <span class="n">_</span><span class="p">(</span><span class="s2">&quot;User quota exceeded for this group (</span><span class="si">%d</span><span class="s2"> users).&quot;</span><span class="p">)</span>
+                <span class="n">_</span><span class="p">(</span><span class="s2">"User quota exceeded for this group (</span><span class="si">%d</span><span class="s2"> users)."</span><span class="p">)</span>
                 <span class="o">%</span> <span class="n">group</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">max_users</span><span class="p">,</span>
             <span class="p">)</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">form_invalid</span><span class="p">(</span><span class="n">form</span><span class="p">)</span>
@@ -245,7 +247,7 @@
         <span class="n">group</span><span class="o">.</span><span class="n">user_set</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">user_to_add</span><span class="p">)</span>
         <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">,</span>
-            <span class="n">_</span><span class="p">(</span><span class="s2">&quot;User </span><span class="si">%s</span><span class="s2"> added to group </span><span class="si">%s</span><span class="s2">.&quot;</span><span class="p">)</span> <span class="o">%</span> <span class="p">(</span><span class="n">user_to_add</span><span class="o">.</span><span class="n">username</span><span class="p">,</span> <span class="n">group</span><span class="o">.</span><span class="n">name</span><span class="p">),</span>
+            <span class="n">_</span><span class="p">(</span><span class="s2">"User </span><span class="si">%s</span><span class="s2"> added to group </span><span class="si">%s</span><span class="s2">."</span><span class="p">)</span> <span class="o">%</span> <span class="p">(</span><span class="n">user_to_add</span><span class="o">.</span><span class="n">username</span><span class="p">,</span> <span class="n">group</span><span class="o">.</span><span class="n">name</span><span class="p">),</span>
         <span class="p">)</span>
         <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">form_valid</span><span class="p">(</span><span class="n">form</span><span class="p">)</span></pre></div>
     </div>
@@ -272,8 +274,8 @@
     </div>
     <div class='code'>
       <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">post</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
-        <span class="n">group_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;group_id&quot;</span><span class="p">)</span>
-        <span class="n">user_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;user_id&quot;</span><span class="p">)</span>
+        <span class="n">group_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"group_id"</span><span class="p">)</span>
+        <span class="n">user_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"user_id"</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_superuser</span><span class="p">:</span>
             <span class="n">group</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">Group</span><span class="p">,</span> <span class="n">pk</span><span class="o">=</span><span class="n">group_id</span><span class="p">)</span>
@@ -286,17 +288,17 @@
 
         <span class="k">if</span> <span class="n">user_to_remove</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">user</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_superuser</span><span class="p">:</span>
             <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
-                <span class="n">request</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;You cannot remove yourself from your own group.&quot;</span><span class="p">)</span>
+                <span class="n">request</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">"You cannot remove yourself from your own group."</span><span class="p">)</span>
             <span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">group</span><span class="o">.</span><span class="n">user_set</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">user_to_remove</span><span class="p">)</span>
             <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span>
                 <span class="n">request</span><span class="p">,</span>
-                <span class="n">_</span><span class="p">(</span><span class="s2">&quot;User </span><span class="si">%s</span><span class="s2"> removed from group </span><span class="si">%s</span><span class="s2">.&quot;</span><span class="p">)</span>
+                <span class="n">_</span><span class="p">(</span><span class="s2">"User </span><span class="si">%s</span><span class="s2"> removed from group </span><span class="si">%s</span><span class="s2">."</span><span class="p">)</span>
                 <span class="o">%</span> <span class="p">(</span><span class="n">user_to_remove</span><span class="o">.</span><span class="n">username</span><span class="p">,</span> <span class="n">group</span><span class="o">.</span><span class="n">name</span><span class="p">),</span>
             <span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;group_member_list&quot;</span><span class="p">)</span></pre></div>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">"group_member_list"</span><span class="p">)</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -321,18 +323,18 @@
     </div>
     <div class='code'>
       <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">group</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;group&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">group</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">"group"</span><span class="p">)</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">models_to_manage</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="p">(</span><span class="s2">&quot;server&quot;</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Servers&quot;</span><span class="p">)),</span>
-            <span class="p">(</span><span class="s2">&quot;cluster&quot;</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Clusters&quot;</span><span class="p">)),</span>
-            <span class="p">(</span><span class="s2">&quot;domain&quot;</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Domains&quot;</span><span class="p">)),</span>
-            <span class="p">(</span><span class="s2">&quot;vendor&quot;</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Vendors&quot;</span><span class="p">)),</span>
-            <span class="p">(</span><span class="s2">&quot;operatingsystem&quot;</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Operating Systems&quot;</span><span class="p">)),</span>
+            <span class="p">(</span><span class="s2">"server"</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">"Servers"</span><span class="p">)),</span>
+            <span class="p">(</span><span class="s2">"cluster"</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">"Clusters"</span><span class="p">)),</span>
+            <span class="p">(</span><span class="s2">"domain"</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">"Domains"</span><span class="p">)),</span>
+            <span class="p">(</span><span class="s2">"vendor"</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">"Vendors"</span><span class="p">)),</span>
+            <span class="p">(</span><span class="s2">"operatingsystem"</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">"Operating Systems"</span><span class="p">)),</span>
         <span class="p">]</span>
 
-        <span class="n">current_perms</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">group</span><span class="o">.</span><span class="n">permissions</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s2">&quot;codename&quot;</span><span class="p">,</span> <span class="n">flat</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">current_perms</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">group</span><span class="o">.</span><span class="n">permissions</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s2">"codename"</span><span class="p">,</span> <span class="n">flat</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
         <span class="k">for</span> <span class="n">app_label</span><span class="p">,</span> <span class="n">label</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">models_to_manage</span><span class="p">:</span></pre></div>
     </div>
@@ -349,15 +351,15 @@ because we named our model &lsquo;Model&rsquo;</p>
     <div class='code'>
       <div class="highlight"><pre>            <span class="n">perms</span> <span class="o">=</span> <span class="n">get_group_permissions_for_model</span><span class="p">(</span><span class="n">app_label</span><span class="p">)</span>
             <span class="n">change_perm</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span>
-                <span class="p">(</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">perms</span> <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">codename</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;change_&quot;</span><span class="p">)),</span> <span class="kc">None</span>
+                <span class="p">(</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">perms</span> <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">codename</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"change_"</span><span class="p">)),</span> <span class="kc">None</span>
             <span class="p">)</span>
 
             <span class="n">initial_val</span> <span class="o">=</span> <span class="kc">False</span>
             <span class="k">if</span> <span class="n">change_perm</span><span class="p">:</span>
                 <span class="n">initial_val</span> <span class="o">=</span> <span class="n">change_perm</span><span class="o">.</span><span class="n">codename</span> <span class="ow">in</span> <span class="n">current_perms</span>
 
-            <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;edit_</span><span class="si">{</span><span class="n">app_label</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span>
-                <span class="n">label</span><span class="o">=</span><span class="n">_</span><span class="p">(</span><span class="s2">&quot;Can Edit </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">)</span> <span class="o">%</span> <span class="n">label</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="sa">f</span><span class="s2">"edit_</span><span class="si">{</span><span class="n">app_label</span><span class="si">}</span><span class="s2">"</span><span class="p">]</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span>
+                <span class="n">label</span><span class="o">=</span><span class="n">_</span><span class="p">(</span><span class="s2">"Can Edit </span><span class="si">%s</span><span class="s2">"</span><span class="p">)</span> <span class="o">%</span> <span class="n">label</span><span class="p">,</span>
                 <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                 <span class="n">initial</span><span class="o">=</span><span class="n">initial_val</span><span class="p">,</span>
             <span class="p">)</span></pre></div>
@@ -390,10 +392,10 @@ because we named our model &lsquo;Model&rsquo;</p>
       <div class="highlight"><pre>            <span class="n">edit_perms</span> <span class="o">=</span> <span class="p">[</span>
                 <span class="n">p</span>
                 <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">perms</span>
-                <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">codename</span><span class="o">.</span><span class="n">startswith</span><span class="p">((</span><span class="s2">&quot;add_&quot;</span><span class="p">,</span> <span class="s2">&quot;change_&quot;</span><span class="p">,</span> <span class="s2">&quot;delete_&quot;</span><span class="p">))</span>
+                <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">codename</span><span class="o">.</span><span class="n">startswith</span><span class="p">((</span><span class="s2">"add_"</span><span class="p">,</span> <span class="s2">"change_"</span><span class="p">,</span> <span class="s2">"delete_"</span><span class="p">))</span>
             <span class="p">]</span>
 
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cleaned_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;edit_</span><span class="si">{</span><span class="n">app_label</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">):</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cleaned_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="sa">f</span><span class="s2">"edit_</span><span class="si">{</span><span class="n">app_label</span><span class="si">}</span><span class="s2">"</span><span class="p">):</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">group</span><span class="o">.</span><span class="n">permissions</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="o">*</span><span class="n">edit_perms</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">group</span><span class="o">.</span><span class="n">permissions</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="o">*</span><span class="n">edit_perms</span><span class="p">)</span></pre></div>
@@ -409,7 +411,7 @@ because we named our model &lsquo;Model&rsquo;</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">GroupPermissionUpdateView</span><span class="p">(</span><span class="n">LoginRequiredMixin</span><span class="p">,</span> <span class="n">GroupOwnerRequiredMixin</span><span class="p">,</span> <span class="n">FormView</span><span class="p">):</span>
-    <span class="n">template_name</span> <span class="o">=</span> <span class="s2">&quot;group/permission_edit.html&quot;</span>
+    <span class="n">template_name</span> <span class="o">=</span> <span class="s2">"group/permission_edit.html"</span>
     <span class="n">form_class</span> <span class="o">=</span> <span class="n">GroupPermissionForm</span></pre></div>
     </div>
   </div>
@@ -424,11 +426,11 @@ because we named our model &lsquo;Model&rsquo;</p>
     <div class='code'>
       <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">get_form_kwargs</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
         <span class="n">kwargs</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_form_kwargs</span><span class="p">()</span>
-        <span class="n">group_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;group_id&quot;</span><span class="p">)</span>
+        <span class="n">group_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"group_id"</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_superuser</span><span class="p">:</span>
-            <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;group&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">Group</span><span class="p">,</span> <span class="n">pk</span><span class="o">=</span><span class="n">group_id</span><span class="p">)</span>
+            <span class="n">kwargs</span><span class="p">[</span><span class="s2">"group"</span><span class="p">]</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">Group</span><span class="p">,</span> <span class="n">pk</span><span class="o">=</span><span class="n">group_id</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;group&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span>
+            <span class="n">kwargs</span><span class="p">[</span><span class="s2">"group"</span><span class="p">]</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span>
                 <span class="n">Group</span><span class="p">,</span> <span class="n">pk</span><span class="o">=</span><span class="n">group_id</span><span class="p">,</span> <span class="n">profile__owner</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">user</span>
             <span class="p">)</span>
         <span class="k">return</span> <span class="n">kwargs</span></pre></div>
@@ -444,7 +446,7 @@ because we named our model &lsquo;Model&rsquo;</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">get_success_url</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">reverse_lazy</span><span class="p">(</span><span class="s2">&quot;group_member_list&quot;</span><span class="p">)</span></pre></div>
+        <span class="k">return</span> <span class="n">reverse_lazy</span><span class="p">(</span><span class="s2">"group_member_list"</span><span class="p">)</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -458,7 +460,7 @@ because we named our model &lsquo;Model&rsquo;</p>
     <div class='code'>
       <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">form_valid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">form</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
         <span class="n">form</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
-        <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Group permissions updated successfully.&quot;</span><span class="p">))</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">"Group permissions updated successfully."</span><span class="p">))</span>
         <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">form_valid</span><span class="p">(</span><span class="n">form</span><span class="p">)</span></pre></div>
     </div>
   </div>
@@ -484,25 +486,25 @@ because we named our model &lsquo;Model&rsquo;</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">user</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;user&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">group</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;group&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">user</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">"user"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">group</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">"group"</span><span class="p">)</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">models_to_manage</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="p">(</span><span class="s2">&quot;server&quot;</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Servers&quot;</span><span class="p">)),</span>
-            <span class="p">(</span><span class="s2">&quot;cluster&quot;</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Clusters&quot;</span><span class="p">)),</span>
-            <span class="p">(</span><span class="s2">&quot;domain&quot;</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Domains&quot;</span><span class="p">)),</span>
-            <span class="p">(</span><span class="s2">&quot;vendor&quot;</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Vendors&quot;</span><span class="p">)),</span>
-            <span class="p">(</span><span class="s2">&quot;operatingsystem&quot;</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Operating Systems&quot;</span><span class="p">)),</span>
+            <span class="p">(</span><span class="s2">"server"</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">"Servers"</span><span class="p">)),</span>
+            <span class="p">(</span><span class="s2">"cluster"</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">"Clusters"</span><span class="p">)),</span>
+            <span class="p">(</span><span class="s2">"domain"</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">"Domains"</span><span class="p">)),</span>
+            <span class="p">(</span><span class="s2">"vendor"</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">"Vendors"</span><span class="p">)),</span>
+            <span class="p">(</span><span class="s2">"operatingsystem"</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">"Operating Systems"</span><span class="p">)),</span>
         <span class="p">]</span>
 
-        <span class="n">group_perms</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">group</span><span class="o">.</span><span class="n">permissions</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s2">&quot;codename&quot;</span><span class="p">,</span> <span class="n">flat</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="n">user_perms</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">user_permissions</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s2">&quot;codename&quot;</span><span class="p">,</span> <span class="n">flat</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">group_perms</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">group</span><span class="o">.</span><span class="n">permissions</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s2">"codename"</span><span class="p">,</span> <span class="n">flat</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">user_perms</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">user_permissions</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s2">"codename"</span><span class="p">,</span> <span class="n">flat</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
         <span class="k">for</span> <span class="n">app_label</span><span class="p">,</span> <span class="n">label</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">models_to_manage</span><span class="p">:</span>
             <span class="n">perms</span> <span class="o">=</span> <span class="n">get_group_permissions_for_model</span><span class="p">(</span><span class="n">app_label</span><span class="p">)</span>
             <span class="n">change_perm</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span>
-                <span class="p">(</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">perms</span> <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">codename</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;change_&quot;</span><span class="p">)),</span> <span class="kc">None</span>
+                <span class="p">(</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">perms</span> <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">codename</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"change_"</span><span class="p">)),</span> <span class="kc">None</span>
             <span class="p">)</span>
 
             <span class="n">initial_val</span> <span class="o">=</span> <span class="kc">False</span>
@@ -511,13 +513,13 @@ because we named our model &lsquo;Model&rsquo;</p>
 
             <span class="n">inherited</span> <span class="o">=</span> <span class="n">change_perm</span><span class="o">.</span><span class="n">codename</span> <span class="ow">in</span> <span class="n">group_perms</span> <span class="k">if</span> <span class="n">change_perm</span> <span class="k">else</span> <span class="kc">False</span>
 
-            <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;edit_</span><span class="si">{</span><span class="n">app_label</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span>
-                <span class="n">label</span><span class="o">=</span><span class="n">_</span><span class="p">(</span><span class="s2">&quot;Can Edit </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">)</span> <span class="o">%</span> <span class="n">label</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="sa">f</span><span class="s2">"edit_</span><span class="si">{</span><span class="n">app_label</span><span class="si">}</span><span class="s2">"</span><span class="p">]</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span>
+                <span class="n">label</span><span class="o">=</span><span class="n">_</span><span class="p">(</span><span class="s2">"Can Edit </span><span class="si">%s</span><span class="s2">"</span><span class="p">)</span> <span class="o">%</span> <span class="n">label</span><span class="p">,</span>
                 <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                 <span class="n">initial</span><span class="o">=</span><span class="n">initial_val</span><span class="p">,</span>
             <span class="p">)</span>
             <span class="k">if</span> <span class="n">inherited</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;edit_</span><span class="si">{</span><span class="n">app_label</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">help_text</span> <span class="o">=</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;(Inherited from group)&quot;</span><span class="p">)</span></pre></div>
+                <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="sa">f</span><span class="s2">"edit_</span><span class="si">{</span><span class="n">app_label</span><span class="si">}</span><span class="s2">"</span><span class="p">]</span><span class="o">.</span><span class="n">help_text</span> <span class="o">=</span> <span class="n">_</span><span class="p">(</span><span class="s2">"(Inherited from group)"</span><span class="p">)</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -536,10 +538,10 @@ because we named our model &lsquo;Model&rsquo;</p>
             <span class="n">edit_perms</span> <span class="o">=</span> <span class="p">[</span>
                 <span class="n">p</span>
                 <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">perms</span>
-                <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">codename</span><span class="o">.</span><span class="n">startswith</span><span class="p">((</span><span class="s2">&quot;add_&quot;</span><span class="p">,</span> <span class="s2">&quot;change_&quot;</span><span class="p">,</span> <span class="s2">&quot;delete_&quot;</span><span class="p">))</span>
+                <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">codename</span><span class="o">.</span><span class="n">startswith</span><span class="p">((</span><span class="s2">"add_"</span><span class="p">,</span> <span class="s2">"change_"</span><span class="p">,</span> <span class="s2">"delete_"</span><span class="p">))</span>
             <span class="p">]</span>
 
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cleaned_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;edit_</span><span class="si">{</span><span class="n">app_label</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">):</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cleaned_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="sa">f</span><span class="s2">"edit_</span><span class="si">{</span><span class="n">app_label</span><span class="si">}</span><span class="s2">"</span><span class="p">):</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">user_permissions</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="o">*</span><span class="n">edit_perms</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">user_permissions</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="o">*</span><span class="n">edit_perms</span><span class="p">)</span></pre></div>
@@ -555,7 +557,7 @@ because we named our model &lsquo;Model&rsquo;</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">UserPermissionUpdateView</span><span class="p">(</span><span class="n">LoginRequiredMixin</span><span class="p">,</span> <span class="n">GroupOwnerRequiredMixin</span><span class="p">,</span> <span class="n">FormView</span><span class="p">):</span>
-    <span class="n">template_name</span> <span class="o">=</span> <span class="s2">&quot;group/user_permission_edit.html&quot;</span>
+    <span class="n">template_name</span> <span class="o">=</span> <span class="s2">"group/user_permission_edit.html"</span>
     <span class="n">form_class</span> <span class="o">=</span> <span class="n">UserPermissionForm</span></pre></div>
     </div>
   </div>
@@ -570,16 +572,14 @@ because we named our model &lsquo;Model&rsquo;</p>
     <div class='code'>
       <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">get_form_kwargs</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
         <span class="n">kwargs</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_form_kwargs</span><span class="p">()</span>
-        <span class="n">group_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;group_id&quot;</span><span class="p">)</span>
-        <span class="n">user_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;user_id&quot;</span><span class="p">)</span>
+        <span class="n">group_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"group_id"</span><span class="p">)</span>
+        <span class="n">user_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"user_id"</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_superuser</span><span class="p">:</span>
-            <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;group&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">Group</span><span class="p">,</span> <span class="n">pk</span><span class="o">=</span><span class="n">group_id</span><span class="p">)</span>
+            <span class="n">group</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">Group</span><span class="p">,</span> <span class="n">pk</span><span class="o">=</span><span class="n">group_id</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;group&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span>
+            <span class="n">group</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span>
                 <span class="n">Group</span><span class="p">,</span> <span class="n">pk</span><span class="o">=</span><span class="n">group_id</span><span class="p">,</span> <span class="n">profile__owner</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">user</span>
-            <span class="p">)</span>
-        <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;user&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">User</span><span class="p">,</span> <span class="n">pk</span><span class="o">=</span><span class="n">user_id</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">kwargs</span></pre></div>
+            <span class="p">)</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -588,11 +588,14 @@ because we named our model &lsquo;Model&rsquo;</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-30'>#</a>
       </div>
-      
+      <p>Only group owners may edit the permissions of their own group&rsquo;s
+members. Without the membership check an owner could grant/revoke
+the (global) user permissions of arbitrary users in other groups.</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">get_success_url</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">reverse_lazy</span><span class="p">(</span><span class="s2">&quot;group_member_list&quot;</span><span class="p">)</span></pre></div>
+      <div class="highlight"><pre>        <span class="n">kwargs</span><span class="p">[</span><span class="s2">"group"</span><span class="p">]</span> <span class="o">=</span> <span class="n">group</span>
+        <span class="n">kwargs</span><span class="p">[</span><span class="s2">"user"</span><span class="p">]</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">User</span><span class="p">,</span> <span class="n">pk</span><span class="o">=</span><span class="n">user_id</span><span class="p">,</span> <span class="n">groups</span><span class="o">=</span><span class="n">group</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">kwargs</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -604,10 +607,8 @@ because we named our model &lsquo;Model&rsquo;</p>
       
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">form_valid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">form</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
-        <span class="n">form</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
-        <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;User permissions updated successfully.&quot;</span><span class="p">))</span>
-        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">form_valid</span><span class="p">(</span><span class="n">form</span><span class="p">)</span></pre></div>
+      <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">get_success_url</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">reverse_lazy</span><span class="p">(</span><span class="s2">"group_member_list"</span><span class="p">)</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -619,8 +620,10 @@ because we named our model &lsquo;Model&rsquo;</p>
       
     </div>
     <div class='code'>
-      <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">InviteGroupMemberForm</span><span class="p">(</span><span class="n">forms</span><span class="o">.</span><span class="n">Form</span><span class="p">):</span>
-    <span class="n">email</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">EmailField</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="n">_</span><span class="p">(</span><span class="s2">&quot;Email Address&quot;</span><span class="p">))</span></pre></div>
+      <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">form_valid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">form</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+        <span class="n">form</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">"User permissions updated successfully."</span><span class="p">))</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">form_valid</span><span class="p">(</span><span class="n">form</span><span class="p">)</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -632,11 +635,8 @@ because we named our model &lsquo;Model&rsquo;</p>
       
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">clean_email</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
-        <span class="n">email</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s2">&quot;email&quot;</span><span class="p">]</span>
-        <span class="k">if</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">email__iexact</span><span class="o">=</span><span class="n">email</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
-            <span class="k">raise</span> <span class="n">forms</span><span class="o">.</span><span class="n">ValidationError</span><span class="p">(</span><span class="n">_</span><span class="p">(</span><span class="s2">&quot;A user with this email already exists.&quot;</span><span class="p">))</span>
-        <span class="k">return</span> <span class="n">email</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span></pre></div>
+      <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">InviteGroupMemberForm</span><span class="p">(</span><span class="n">forms</span><span class="o">.</span><span class="n">Form</span><span class="p">):</span>
+    <span class="n">email</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">EmailField</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="n">_</span><span class="p">(</span><span class="s2">"Email Address"</span><span class="p">))</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -648,9 +648,11 @@ because we named our model &lsquo;Model&rsquo;</p>
       
     </div>
     <div class='code'>
-      <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">InviteGroupMemberView</span><span class="p">(</span><span class="n">LoginRequiredMixin</span><span class="p">,</span> <span class="n">GroupOwnerRequiredMixin</span><span class="p">,</span> <span class="n">FormView</span><span class="p">):</span>
-    <span class="n">form_class</span> <span class="o">=</span> <span class="n">InviteGroupMemberForm</span>
-    <span class="n">template_name</span> <span class="o">=</span> <span class="s2">&quot;group/invite_member.html&quot;</span></pre></div>
+      <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">clean_email</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+        <span class="n">email</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s2">"email"</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">email__iexact</span><span class="o">=</span><span class="n">email</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+            <span class="k">raise</span> <span class="n">forms</span><span class="o">.</span><span class="n">ValidationError</span><span class="p">(</span><span class="n">_</span><span class="p">(</span><span class="s2">"A user with this email already exists."</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">email</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -662,8 +664,9 @@ because we named our model &lsquo;Model&rsquo;</p>
       
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">get_success_url</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">reverse_lazy</span><span class="p">(</span><span class="s2">&quot;group_member_list&quot;</span><span class="p">)</span></pre></div>
+      <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">InviteGroupMemberView</span><span class="p">(</span><span class="n">LoginRequiredMixin</span><span class="p">,</span> <span class="n">GroupOwnerRequiredMixin</span><span class="p">,</span> <span class="n">FormView</span><span class="p">):</span>
+    <span class="n">form_class</span> <span class="o">=</span> <span class="n">InviteGroupMemberForm</span>
+    <span class="n">template_name</span> <span class="o">=</span> <span class="s2">"group/invite_member.html"</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -675,11 +678,8 @@ because we named our model &lsquo;Model&rsquo;</p>
       
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">get_group</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Group</span><span class="p">:</span>
-        <span class="n">group_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;group_id&quot;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_superuser</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">Group</span><span class="p">,</span> <span class="n">pk</span><span class="o">=</span><span class="n">group_id</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">Group</span><span class="p">,</span> <span class="n">pk</span><span class="o">=</span><span class="n">group_id</span><span class="p">,</span> <span class="n">profile__owner</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span></pre></div>
+      <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">get_success_url</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">reverse_lazy</span><span class="p">(</span><span class="s2">"group_member_list"</span><span class="p">)</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -691,9 +691,25 @@ because we named our model &lsquo;Model&rsquo;</p>
       
     </div>
     <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">get_group</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Group</span><span class="p">:</span>
+        <span class="n">group_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"group_id"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_superuser</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">Group</span><span class="p">,</span> <span class="n">pk</span><span class="o">=</span><span class="n">group_id</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">Group</span><span class="p">,</span> <span class="n">pk</span><span class="o">=</span><span class="n">group_id</span><span class="p">,</span> <span class="n">profile__owner</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-38'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-38'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
       <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">form_valid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">form</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
         <span class="n">group</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_group</span><span class="p">()</span>
-        <span class="n">email</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s2">&quot;email&quot;</span><span class="p">]</span>
+        <span class="n">email</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s2">"email"</span><span class="p">]</span>
 
         <span class="n">existing_invitation</span> <span class="o">=</span> <span class="n">Invitation</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span>
             <span class="n">email__iexact</span><span class="o">=</span><span class="n">email</span><span class="p">,</span> <span class="n">group</span><span class="o">=</span><span class="n">group</span>
@@ -701,7 +717,7 @@ because we named our model &lsquo;Model&rsquo;</p>
         <span class="k">if</span> <span class="n">existing_invitation</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">existing_invitation</span><span class="o">.</span><span class="n">is_expired</span><span class="p">():</span>
             <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">,</span>
-                <span class="n">_</span><span class="p">(</span><span class="s2">&quot;An invitation has already been sent to this email address.&quot;</span><span class="p">),</span>
+                <span class="n">_</span><span class="p">(</span><span class="s2">"An invitation has already been sent to this email address."</span><span class="p">),</span>
             <span class="p">)</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">form_invalid</span><span class="p">(</span><span class="n">form</span><span class="p">)</span>
 
@@ -715,46 +731,9 @@ because we named our model &lsquo;Model&rsquo;</p>
 
         <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">,</span>
-            <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Invitation sent to </span><span class="si">%(email)s</span><span class="s2">.&quot;</span><span class="p">)</span> <span class="o">%</span> <span class="p">{</span><span class="s2">&quot;email&quot;</span><span class="p">:</span> <span class="n">email</span><span class="p">},</span>
+            <span class="n">_</span><span class="p">(</span><span class="s2">"Invitation sent to </span><span class="si">%(email)s</span><span class="s2">."</span><span class="p">)</span> <span class="o">%</span> <span class="p">{</span><span class="s2">"email"</span><span class="p">:</span> <span class="n">email</span><span class="p">},</span>
         <span class="p">)</span>
         <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">form_valid</span><span class="p">(</span><span class="n">form</span><span class="p">)</span></pre></div>
-    </div>
-  </div>
-  <div class='clearall'></div>
-  <div class='section' id='section-38'>
-    <div class='docs'>
-      <div class='octowrap'>
-        <a class='octothorpe' href='#section-38'>#</a>
-      </div>
-      
-    </div>
-    <div class='code'>
-      <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">send_invitation_email</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">invitation</span><span class="p">:</span> <span class="n">Invitation</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">invite_url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">build_absolute_uri</span><span class="p">(</span>
-            <span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;accept_invitation&quot;</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;token&quot;</span><span class="p">:</span> <span class="n">invitation</span><span class="o">.</span><span class="n">token</span><span class="p">})</span>
-        <span class="p">)</span>
-        <span class="n">subject</span> <span class="o">=</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Invitation to join </span><span class="si">%(group_name)s</span><span class="s2"> on ServerManager&quot;</span><span class="p">)</span> <span class="o">%</span> <span class="p">{</span>
-            <span class="s2">&quot;group_name&quot;</span><span class="p">:</span> <span class="n">invitation</span><span class="o">.</span><span class="n">group</span><span class="o">.</span><span class="n">name</span>
-        <span class="p">}</span>
-        <span class="n">message</span> <span class="o">=</span> <span class="n">render_to_string</span><span class="p">(</span>
-            <span class="s2">&quot;group/email/invite.txt&quot;</span><span class="p">,</span>
-            <span class="p">{</span>
-                <span class="s2">&quot;invitation&quot;</span><span class="p">:</span> <span class="n">invitation</span><span class="p">,</span>
-                <span class="s2">&quot;invite_url&quot;</span><span class="p">:</span> <span class="n">invite_url</span><span class="p">,</span>
-                <span class="s2">&quot;owner_name&quot;</span><span class="p">:</span> <span class="p">(</span>
-                    <span class="n">invitation</span><span class="o">.</span><span class="n">created_by</span><span class="o">.</span><span class="n">username</span>
-                    <span class="k">if</span> <span class="n">invitation</span><span class="o">.</span><span class="n">created_by</span>
-                    <span class="k">else</span> <span class="s2">&quot;An administrator&quot;</span>
-                <span class="p">),</span>
-            <span class="p">},</span>
-        <span class="p">)</span>
-        <span class="n">send_mail</span><span class="p">(</span>
-            <span class="n">subject</span><span class="p">,</span>
-            <span class="n">message</span><span class="p">,</span>
-            <span class="nb">getattr</span><span class="p">(</span><span class="n">settings</span><span class="p">,</span> <span class="s2">&quot;DEFAULT_FROM_EMAIL&quot;</span><span class="p">,</span> <span class="s2">&quot;noreply@servermanager&quot;</span><span class="p">),</span>
-            <span class="p">[</span><span class="n">invitation</span><span class="o">.</span><span class="n">email</span><span class="p">],</span>
-            <span class="n">fail_silently</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-        <span class="p">)</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -766,8 +745,32 @@ because we named our model &lsquo;Model&rsquo;</p>
       
     </div>
     <div class='code'>
-      <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">AcceptInvitationView</span><span class="p">(</span><span class="n">TemplateView</span><span class="p">):</span>
-    <span class="n">template_name</span> <span class="o">=</span> <span class="s2">&quot;group/accept_invitation.html&quot;</span></pre></div>
+      <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">send_invitation_email</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">invitation</span><span class="p">:</span> <span class="n">Invitation</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">invite_url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">build_absolute_uri</span><span class="p">(</span>
+            <span class="n">reverse</span><span class="p">(</span><span class="s2">"accept_invitation"</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">=</span><span class="p">{</span><span class="s2">"token"</span><span class="p">:</span> <span class="n">invitation</span><span class="o">.</span><span class="n">token</span><span class="p">})</span>
+        <span class="p">)</span>
+        <span class="n">subject</span> <span class="o">=</span> <span class="n">_</span><span class="p">(</span><span class="s2">"Invitation to join </span><span class="si">%(group_name)s</span><span class="s2"> on ServerManager"</span><span class="p">)</span> <span class="o">%</span> <span class="p">{</span>
+            <span class="s2">"group_name"</span><span class="p">:</span> <span class="n">invitation</span><span class="o">.</span><span class="n">group</span><span class="o">.</span><span class="n">name</span>
+        <span class="p">}</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="n">render_to_string</span><span class="p">(</span>
+            <span class="s2">"group/email/invite.txt"</span><span class="p">,</span>
+            <span class="p">{</span>
+                <span class="s2">"invitation"</span><span class="p">:</span> <span class="n">invitation</span><span class="p">,</span>
+                <span class="s2">"invite_url"</span><span class="p">:</span> <span class="n">invite_url</span><span class="p">,</span>
+                <span class="s2">"owner_name"</span><span class="p">:</span> <span class="p">(</span>
+                    <span class="n">invitation</span><span class="o">.</span><span class="n">created_by</span><span class="o">.</span><span class="n">username</span>
+                    <span class="k">if</span> <span class="n">invitation</span><span class="o">.</span><span class="n">created_by</span>
+                    <span class="k">else</span> <span class="s2">"An administrator"</span>
+                <span class="p">),</span>
+            <span class="p">},</span>
+        <span class="p">)</span>
+        <span class="n">send_mail</span><span class="p">(</span>
+            <span class="n">subject</span><span class="p">,</span>
+            <span class="n">message</span><span class="p">,</span>
+            <span class="nb">getattr</span><span class="p">(</span><span class="n">settings</span><span class="p">,</span> <span class="s2">"DEFAULT_FROM_EMAIL"</span><span class="p">,</span> <span class="s2">"noreply@servermanager"</span><span class="p">),</span>
+            <span class="p">[</span><span class="n">invitation</span><span class="o">.</span><span class="n">email</span><span class="p">],</span>
+            <span class="n">fail_silently</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="p">)</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -779,21 +782,8 @@ because we named our model &lsquo;Model&rsquo;</p>
       
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">get_context_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
-        <span class="n">context</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_context_data</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="n">token</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;token&quot;</span><span class="p">)</span>
-        <span class="n">invitation</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">Invitation</span><span class="p">,</span> <span class="n">token</span><span class="o">=</span><span class="n">token</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="n">invitation</span><span class="o">.</span><span class="n">is_expired</span><span class="p">():</span>
-            <span class="n">context</span><span class="p">[</span><span class="s2">&quot;error&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;This invitation has expired.&quot;</span><span class="p">)</span>
-            <span class="k">return</span> <span class="n">context</span>
-
-        <span class="k">if</span> <span class="n">invitation</span><span class="o">.</span><span class="n">accepted_at</span><span class="p">:</span>
-            <span class="n">context</span><span class="p">[</span><span class="s2">&quot;error&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;This invitation has already been used.&quot;</span><span class="p">)</span>
-            <span class="k">return</span> <span class="n">context</span>
-
-        <span class="n">context</span><span class="p">[</span><span class="s2">&quot;invitation&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">invitation</span>
-        <span class="k">return</span> <span class="n">context</span></pre></div>
+      <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">AcceptInvitationView</span><span class="p">(</span><span class="n">TemplateView</span><span class="p">):</span>
+    <span class="n">template_name</span> <span class="o">=</span> <span class="s2">"group/accept_invitation.html"</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -805,33 +795,82 @@ because we named our model &lsquo;Model&rsquo;</p>
       
     </div>
     <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">get_context_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+        <span class="n">context</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_context_data</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">token</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"token"</span><span class="p">)</span>
+        <span class="n">invitation</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">Invitation</span><span class="p">,</span> <span class="n">token</span><span class="o">=</span><span class="n">token</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">invitation</span><span class="o">.</span><span class="n">is_expired</span><span class="p">():</span>
+            <span class="n">context</span><span class="p">[</span><span class="s2">"error"</span><span class="p">]</span> <span class="o">=</span> <span class="n">_</span><span class="p">(</span><span class="s2">"This invitation has expired."</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">context</span>
+
+        <span class="k">if</span> <span class="n">invitation</span><span class="o">.</span><span class="n">accepted_at</span><span class="p">:</span>
+            <span class="n">context</span><span class="p">[</span><span class="s2">"error"</span><span class="p">]</span> <span class="o">=</span> <span class="n">_</span><span class="p">(</span><span class="s2">"This invitation has already been used."</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">context</span>
+
+        <span class="n">context</span><span class="p">[</span><span class="s2">"invitation"</span><span class="p">]</span> <span class="o">=</span> <span class="n">invitation</span>
+        <span class="k">return</span> <span class="n">context</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-42'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-42'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
       <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">post</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
-        <span class="n">token</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;token&quot;</span><span class="p">)</span>
+        <span class="n">token</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"token"</span><span class="p">)</span>
         <span class="n">invitation</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">Invitation</span><span class="p">,</span> <span class="n">token</span><span class="o">=</span><span class="n">token</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">invitation</span><span class="o">.</span><span class="n">is_expired</span><span class="p">()</span> <span class="ow">or</span> <span class="n">invitation</span><span class="o">.</span><span class="n">accepted_at</span><span class="p">:</span>
-            <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;This invitation is no longer valid.&quot;</span><span class="p">))</span>
-            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;account_login&quot;</span><span class="p">)</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">"This invitation is no longer valid."</span><span class="p">))</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">"account_login"</span><span class="p">)</span>
 
-        <span class="n">username</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;username&quot;</span><span class="p">)</span>
-        <span class="n">email</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;email&quot;</span><span class="p">)</span>
-        <span class="n">password</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;password&quot;</span><span class="p">)</span>
-        <span class="n">password_confirm</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;password_confirm&quot;</span><span class="p">)</span>
+        <span class="n">username</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"username"</span><span class="p">)</span>
+        <span class="n">email</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"email"</span><span class="p">)</span>
+        <span class="n">password</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"password"</span><span class="p">)</span>
+        <span class="n">password_confirm</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"password_confirm"</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">username</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">email</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">password</span><span class="p">:</span>
-            <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;All fields are required.&quot;</span><span class="p">))</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">"All fields are required."</span><span class="p">))</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">password</span> <span class="o">!=</span> <span class="n">password_confirm</span><span class="p">:</span>
-            <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Passwords do not match.&quot;</span><span class="p">))</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">"Passwords do not match."</span><span class="p">))</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-43'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-43'>#</a>
+      </div>
+      <p>The invitee must claim the invited account under the invited email,
+otherwise anyone with the link could register a new identity.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="k">if</span> <span class="n">email</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">!=</span> <span class="n">invitation</span><span class="o">.</span><span class="n">email</span><span class="o">.</span><span class="n">lower</span><span class="p">():</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">"The email does not match the invitation."</span><span class="p">))</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">validate_password</span><span class="p">(</span><span class="n">password</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">ValidationError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                <span class="n">request</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">"Password is not strong enough: </span><span class="si">%s</span><span class="s2">"</span><span class="p">)</span> <span class="o">%</span> <span class="s2">" "</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">exc</span><span class="o">.</span><span class="n">messages</span><span class="p">)</span>
+            <span class="p">)</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="n">username</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
-            <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Username already exists.&quot;</span><span class="p">))</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">"Username already exists."</span><span class="p">))</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">email__iexact</span><span class="o">=</span><span class="n">email</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
-            <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Email already registered.&quot;</span><span class="p">))</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">"Email already registered."</span><span class="p">))</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
         <span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create_user</span><span class="p">(</span>
@@ -846,52 +885,15 @@ because we named our model &lsquo;Model&rsquo;</p>
 
         <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span>
             <span class="n">request</span><span class="p">,</span>
-            <span class="n">_</span><span class="p">(</span><span class="s2">&quot;You have joined </span><span class="si">%(group_name)s</span><span class="s2">!&quot;</span><span class="p">)</span>
-            <span class="o">%</span> <span class="p">{</span><span class="s2">&quot;group_name&quot;</span><span class="p">:</span> <span class="n">invitation</span><span class="o">.</span><span class="n">group</span><span class="o">.</span><span class="n">name</span><span class="p">},</span>
+            <span class="n">_</span><span class="p">(</span><span class="s2">"You have joined </span><span class="si">%(group_name)s</span><span class="s2">!"</span><span class="p">)</span>
+            <span class="o">%</span> <span class="p">{</span><span class="s2">"group_name"</span><span class="p">:</span> <span class="n">invitation</span><span class="o">.</span><span class="n">group</span><span class="o">.</span><span class="n">name</span><span class="p">},</span>
         <span class="p">)</span>
 
         <span class="kn">from</span><span class="w"> </span><span class="nn">django.contrib.auth</span><span class="w"> </span><span class="kn">import</span> <span class="n">login</span>
 
         <span class="n">login</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">user</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;dashboard&quot;</span><span class="p">)</span></pre></div>
-    </div>
-  </div>
-  <div class='clearall'></div>
-  <div class='section' id='section-42'>
-    <div class='docs'>
-      <div class='octowrap'>
-        <a class='octothorpe' href='#section-42'>#</a>
-      </div>
-      
-    </div>
-    <div class='code'>
-      <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">GroupFilterView</span><span class="p">(</span><span class="n">View</span><span class="p">):</span></pre></div>
-    </div>
-  </div>
-  <div class='clearall'></div>
-  <div class='section' id='section-43'>
-    <div class='docs'>
-      <div class='octowrap'>
-        <a class='octothorpe' href='#section-43'>#</a>
-      </div>
-      
-    </div>
-    <div class='code'>
-      <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">post</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_authenticated</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">JsonResponse</span><span class="p">({</span><span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;Unauthorized&quot;</span><span class="p">},</span> <span class="n">status</span><span class="o">=</span><span class="mi">401</span><span class="p">)</span>
-
-        <span class="n">groups_param</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;groups&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">groups_param</span><span class="p">:</span>
-            <span class="n">selected_groups</span> <span class="o">=</span> <span class="p">[</span><span class="n">g</span> <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">groups_param</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="n">g</span><span class="p">]</span>
-            <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="p">[</span><span class="s2">&quot;selected_groups&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">selected_groups</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="p">[</span><span class="s2">&quot;selected_groups&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
-
-        <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">modified</span> <span class="o">=</span> <span class="kc">True</span>
-
-        <span class="k">return</span> <span class="n">JsonResponse</span><span class="p">({</span><span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;success&quot;</span><span class="p">})</span></pre></div>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">"dashboard"</span><span class="p">)</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -903,10 +905,7 @@ because we named our model &lsquo;Model&rsquo;</p>
       
     </div>
     <div class='code'>
-      <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">GroupCreateView</span><span class="p">(</span><span class="n">LoginRequiredMixin</span><span class="p">,</span> <span class="n">FormView</span><span class="p">):</span>
-    <span class="n">form_class</span> <span class="o">=</span> <span class="n">CreateGroupForm</span>
-    <span class="n">template_name</span> <span class="o">=</span> <span class="s2">&quot;group/member_list.html&quot;</span>
-    <span class="n">success_url</span> <span class="o">=</span> <span class="n">reverse_lazy</span><span class="p">(</span><span class="s2">&quot;group_member_list&quot;</span><span class="p">)</span></pre></div>
+      <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">GroupFilterView</span><span class="p">(</span><span class="n">View</span><span class="p">):</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -918,25 +917,12 @@ because we named our model &lsquo;Model&rsquo;</p>
       
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">form_valid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">form</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
-        <span class="n">name</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span>
-        <span class="n">max_users</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;max_users&quot;</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+      <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">post</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_authenticated</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">JsonResponse</span><span class="p">({</span><span class="s2">"error"</span><span class="p">:</span> <span class="s2">"Unauthorized"</span><span class="p">},</span> <span class="n">status</span><span class="o">=</span><span class="mi">401</span><span class="p">)</span>
 
-        <span class="n">max_groups</span> <span class="o">=</span> <span class="mi">5</span>
-        <span class="n">owned_groups_count</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">owned_groups</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
-        <span class="k">if</span> <span class="n">owned_groups_count</span> <span class="o">&gt;=</span> <span class="n">max_groups</span><span class="p">:</span>
-            <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">,</span>
-                <span class="n">_</span><span class="p">(</span><span class="s2">&quot;You can only create up to </span><span class="si">%d</span><span class="s2"> groups.&quot;</span><span class="p">)</span> <span class="o">%</span> <span class="n">max_groups</span><span class="p">,</span>
-            <span class="p">)</span>
-            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;group_member_list&quot;</span><span class="p">)</span>
-
-        <span class="n">existing</span> <span class="o">=</span> <span class="n">Group</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
-        <span class="k">if</span> <span class="n">existing</span><span class="p">:</span>
-            <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;A group with this name already exists.&quot;</span><span class="p">))</span>
-            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;group_member_list&quot;</span><span class="p">)</span>
-
-        <span class="n">group</span> <span class="o">=</span> <span class="n">Group</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span></pre></div>
+        <span class="n">groups_param</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"groups"</span><span class="p">,</span> <span class="s2">""</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">groups_param</span><span class="p">:</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -944,6 +930,76 @@ because we named our model &lsquo;Model&rsquo;</p>
     <div class='docs'>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-46'>#</a>
+      </div>
+      <p>Only allow selecting groups the user actually belongs to, so a
+user can never filter into another tenant&rsquo;s data.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>            <span class="n">user_group_ids</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">groups</span><span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s2">"id"</span><span class="p">,</span> <span class="n">flat</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+            <span class="n">selected_groups</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="n">g</span>
+                <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">groups_param</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">","</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">g</span><span class="o">.</span><span class="n">isdigit</span><span class="p">()</span> <span class="ow">and</span> <span class="nb">int</span><span class="p">(</span><span class="n">g</span><span class="p">)</span> <span class="ow">in</span> <span class="n">user_group_ids</span>
+            <span class="p">]</span>
+            <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="p">[</span><span class="s2">"selected_groups"</span><span class="p">]</span> <span class="o">=</span> <span class="n">selected_groups</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="p">[</span><span class="s2">"selected_groups"</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">modified</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="k">return</span> <span class="n">JsonResponse</span><span class="p">({</span><span class="s2">"status"</span><span class="p">:</span> <span class="s2">"success"</span><span class="p">})</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-47'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-47'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">GroupCreateView</span><span class="p">(</span><span class="n">LoginRequiredMixin</span><span class="p">,</span> <span class="n">FormView</span><span class="p">):</span>
+    <span class="n">form_class</span> <span class="o">=</span> <span class="n">CreateGroupForm</span>
+    <span class="n">template_name</span> <span class="o">=</span> <span class="s2">"group/member_list.html"</span>
+    <span class="n">success_url</span> <span class="o">=</span> <span class="n">reverse_lazy</span><span class="p">(</span><span class="s2">"group_member_list"</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-48'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-48'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">form_valid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">form</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s2">"name"</span><span class="p">]</span>
+        <span class="n">max_users</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"max_users"</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+
+        <span class="n">max_groups</span> <span class="o">=</span> <span class="mi">5</span>
+        <span class="n">owned_groups_count</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">owned_groups</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">owned_groups_count</span> <span class="o">&gt;=</span> <span class="n">max_groups</span><span class="p">:</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">,</span>
+                <span class="n">_</span><span class="p">(</span><span class="s2">"You can only create up to </span><span class="si">%d</span><span class="s2"> groups."</span><span class="p">)</span> <span class="o">%</span> <span class="n">max_groups</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">"group_member_list"</span><span class="p">)</span>
+
+        <span class="n">existing</span> <span class="o">=</span> <span class="n">Group</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">existing</span><span class="p">:</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">"A group with this name already exists."</span><span class="p">))</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">"group_member_list"</span><span class="p">)</span>
+
+        <span class="n">group</span> <span class="o">=</span> <span class="n">Group</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-49'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-49'>#</a>
       </div>
       <p>Profile is already created by create_group_profile signal</p>
     </div>
@@ -959,22 +1015,22 @@ because we named our model &lsquo;Model&rsquo;</p>
 
         <span class="n">sync_group_permissions</span><span class="p">(</span><span class="n">group</span><span class="p">,</span> <span class="n">grant_all</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-        <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Group &#39;</span><span class="si">%s</span><span class="s2">&#39; created successfully.&quot;</span><span class="p">)</span> <span class="o">%</span> <span class="n">name</span><span class="p">)</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">"Group '</span><span class="si">%s</span><span class="s2">' created successfully."</span><span class="p">)</span> <span class="o">%</span> <span class="n">name</span><span class="p">)</span>
         <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">form_valid</span><span class="p">(</span><span class="n">form</span><span class="p">)</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-47'>
+  <div class='section' id='section-50'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-47'>#</a>
+        <a class='octothorpe' href='#section-50'>#</a>
       </div>
       
     </div>
     <div class='code'>
       <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">form_invalid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">form</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
-        <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Failed to create group.&quot;</span><span class="p">))</span>
-        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;group_member_list&quot;</span><span class="p">)</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">"Failed to create group."</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">"group_member_list"</span><span class="p">)</span>
 
 </pre></div>
     </div>

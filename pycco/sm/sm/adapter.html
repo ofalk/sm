@@ -42,7 +42,8 @@
       <div class='octowrap'>
         <a class='octothorpe' href='#section-2'>#</a>
       </div>
-      <p>Connect existing local accounts with social accounts if emails match.</p>
+      <p>Connect an existing local account to a social account only when the
+provider has verified a matching email address.</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">pre_social_login</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">sociallogin</span><span class="p">):</span></pre></div>
@@ -60,18 +61,16 @@
       <div class="highlight"><pre>        <span class="k">if</span> <span class="n">sociallogin</span><span class="o">.</span><span class="n">is_existing</span><span class="p">:</span>
             <span class="k">return</span>
 
-        <span class="n">email_addresses</span> <span class="o">=</span> <span class="n">sociallogin</span><span class="o">.</span><span class="n">email_addresses</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">email_addresses</span><span class="p">:</span>
-            <span class="k">return</span>
-
-        <span class="n">email</span> <span class="o">=</span> <span class="n">email_addresses</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">email</span>
-
         <span class="n">User</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">email</span><span class="o">=</span><span class="n">email</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">email_address</span> <span class="ow">in</span> <span class="n">sociallogin</span><span class="o">.</span><span class="n">email_addresses</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">email_address</span><span class="o">.</span><span class="n">verified</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">email</span><span class="o">=</span><span class="n">email_address</span><span class="o">.</span><span class="n">email</span><span class="p">)</span>
+            <span class="k">except</span> <span class="p">(</span><span class="n">User</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">,</span> <span class="n">User</span><span class="o">.</span><span class="n">MultipleObjectsReturned</span><span class="p">):</span>
+                <span class="k">continue</span>
             <span class="n">sociallogin</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">user</span><span class="p">)</span>
-        <span class="k">except</span> <span class="n">User</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
-            <span class="k">pass</span>
+            <span class="k">return</span>
 
 </pre></div>
     </div>

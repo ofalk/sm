@@ -38,7 +38,7 @@
     </div>
     <div class='code'>
       <div class="highlight"><pre><span class="k">def</span><span class="w"> </span><span class="nf">get_group_permissions_for_model</span><span class="p">(</span>
-    <span class="n">app_label</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">model_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;model&quot;</span>
+    <span class="n">app_label</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">model_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"model"</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Permission</span><span class="p">]:</span></pre></div>
     </div>
   </div>
@@ -55,7 +55,7 @@
         <span class="n">ct</span> <span class="o">=</span> <span class="n">ContentType</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">app_label</span><span class="o">=</span><span class="n">app_label</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="n">model_name</span><span class="p">)</span>
         <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">Permission</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">content_type</span><span class="o">=</span><span class="n">ct</span><span class="p">))</span>
     <span class="k">except</span> <span class="n">ContentType</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;ContentType for </span><span class="si">{</span><span class="n">app_label</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">model_name</span><span class="si">}</span><span class="s2"> not found.&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">"ContentType for </span><span class="si">{</span><span class="n">app_label</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">model_name</span><span class="si">}</span><span class="s2"> not found."</span><span class="p">)</span>
         <span class="k">return</span> <span class="p">[]</span></pre></div>
     </div>
   </div>
@@ -107,18 +107,18 @@ If grant_all is True, also grants add, change, and delete permissions.</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre>    <span class="n">app_models</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="p">(</span><span class="s2">&quot;server&quot;</span><span class="p">,</span> <span class="s2">&quot;model&quot;</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;cluster&quot;</span><span class="p">,</span> <span class="s2">&quot;model&quot;</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;domain&quot;</span><span class="p">,</span> <span class="s2">&quot;model&quot;</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;vendor&quot;</span><span class="p">,</span> <span class="s2">&quot;model&quot;</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;operatingsystem&quot;</span><span class="p">,</span> <span class="s2">&quot;model&quot;</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;status&quot;</span><span class="p">,</span> <span class="s2">&quot;model&quot;</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;location&quot;</span><span class="p">,</span> <span class="s2">&quot;model&quot;</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;patchtime&quot;</span><span class="p">,</span> <span class="s2">&quot;model&quot;</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;servermodel&quot;</span><span class="p">,</span> <span class="s2">&quot;model&quot;</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;clusterpackage&quot;</span><span class="p">,</span> <span class="s2">&quot;model&quot;</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;clustersoftware&quot;</span><span class="p">,</span> <span class="s2">&quot;model&quot;</span><span class="p">),</span>
-        <span class="p">(</span><span class="s2">&quot;clusterpackagetype&quot;</span><span class="p">,</span> <span class="s2">&quot;model&quot;</span><span class="p">),</span>
+        <span class="p">(</span><span class="s2">"server"</span><span class="p">,</span> <span class="s2">"model"</span><span class="p">),</span>
+        <span class="p">(</span><span class="s2">"cluster"</span><span class="p">,</span> <span class="s2">"model"</span><span class="p">),</span>
+        <span class="p">(</span><span class="s2">"domain"</span><span class="p">,</span> <span class="s2">"model"</span><span class="p">),</span>
+        <span class="p">(</span><span class="s2">"vendor"</span><span class="p">,</span> <span class="s2">"model"</span><span class="p">),</span>
+        <span class="p">(</span><span class="s2">"operatingsystem"</span><span class="p">,</span> <span class="s2">"model"</span><span class="p">),</span>
+        <span class="p">(</span><span class="s2">"status"</span><span class="p">,</span> <span class="s2">"model"</span><span class="p">),</span>
+        <span class="p">(</span><span class="s2">"location"</span><span class="p">,</span> <span class="s2">"model"</span><span class="p">),</span>
+        <span class="p">(</span><span class="s2">"patchtime"</span><span class="p">,</span> <span class="s2">"model"</span><span class="p">),</span>
+        <span class="p">(</span><span class="s2">"servermodel"</span><span class="p">,</span> <span class="s2">"model"</span><span class="p">),</span>
+        <span class="p">(</span><span class="s2">"clusterpackage"</span><span class="p">,</span> <span class="s2">"model"</span><span class="p">),</span>
+        <span class="p">(</span><span class="s2">"clustersoftware"</span><span class="p">,</span> <span class="s2">"model"</span><span class="p">),</span>
+        <span class="p">(</span><span class="s2">"clusterpackagetype"</span><span class="p">,</span> <span class="s2">"model"</span><span class="p">),</span>
     <span class="p">]</span>
 
     <span class="k">for</span> <span class="n">app</span><span class="p">,</span> <span class="n">model</span> <span class="ow">in</span> <span class="n">app_models</span><span class="p">:</span>
@@ -148,11 +148,11 @@ If grant_all is True, also grants add, change, and delete permissions.</p>
       <p>By default, give view permission to every group</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>            <span class="n">view_perm</span> <span class="o">=</span> <span class="nb">next</span><span class="p">((</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">perms</span> <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">codename</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;view_&quot;</span><span class="p">)),</span> <span class="kc">None</span><span class="p">)</span>
+      <div class="highlight"><pre>            <span class="n">view_perm</span> <span class="o">=</span> <span class="nb">next</span><span class="p">((</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">perms</span> <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">codename</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"view_"</span><span class="p">)),</span> <span class="kc">None</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">view_perm</span><span class="p">:</span>
                 <span class="n">group</span><span class="o">.</span><span class="n">permissions</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">view_perm</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;View permission for </span><span class="si">{</span><span class="n">app</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">model</span><span class="si">}</span><span class="s2"> not found.&quot;</span><span class="p">)</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">"View permission for </span><span class="si">{</span><span class="n">app</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">model</span><span class="si">}</span><span class="s2"> not found."</span><span class="p">)</span>
 
 </pre></div>
     </div>

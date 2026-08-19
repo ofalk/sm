@@ -52,24 +52,24 @@
     <div class='code'>
       <div class="highlight"><pre>    <span class="nd">@classmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">setUpClass</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
-        <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;DJANGO_ALLOW_ASYNC_UNSAFE&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;true&quot;</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">"DJANGO_ALLOW_ASYNC_UNSAFE"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"true"</span>
         <span class="kn">from</span><span class="w"> </span><span class="nn">django.conf</span><span class="w"> </span><span class="kn">import</span> <span class="n">settings</span>
 
-        <span class="n">settings</span><span class="o">.</span><span class="n">ACCOUNT_EMAIL_VERIFICATION</span> <span class="o">=</span> <span class="s2">&quot;none&quot;</span>
-        <span class="n">settings</span><span class="o">.</span><span class="n">AUTHENTICATION_BACKENDS</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;django.contrib.auth.backends.ModelBackend&quot;</span><span class="p">]</span>
+        <span class="n">settings</span><span class="o">.</span><span class="n">ACCOUNT_EMAIL_VERIFICATION</span> <span class="o">=</span> <span class="s2">"none"</span>
+        <span class="n">settings</span><span class="o">.</span><span class="n">AUTHENTICATION_BACKENDS</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"django.contrib.auth.backends.ModelBackend"</span><span class="p">]</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">setUpClass</span><span class="p">()</span>
         <span class="n">User</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span>
-        <span class="bp">cls</span><span class="o">.</span><span class="n">username</span> <span class="o">=</span> <span class="s2">&quot;testadmin&quot;</span>
-        <span class="bp">cls</span><span class="o">.</span><span class="n">password</span> <span class="o">=</span> <span class="s2">&quot;testpass123&quot;</span>
+        <span class="bp">cls</span><span class="o">.</span><span class="n">username</span> <span class="o">=</span> <span class="s2">"testadmin"</span>
+        <span class="bp">cls</span><span class="o">.</span><span class="n">password</span> <span class="o">=</span> <span class="s2">"testpass123"</span>
         <span class="bp">cls</span><span class="o">.</span><span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create_superuser</span><span class="p">(</span>
-            <span class="bp">cls</span><span class="o">.</span><span class="n">username</span><span class="p">,</span> <span class="s2">&quot;admin@example.com&quot;</span><span class="p">,</span> <span class="bp">cls</span><span class="o">.</span><span class="n">password</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="n">username</span><span class="p">,</span> <span class="s2">"admin@example.com"</span><span class="p">,</span> <span class="bp">cls</span><span class="o">.</span><span class="n">password</span>
         <span class="p">)</span>
         <span class="bp">cls</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">set_password</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">password</span><span class="p">)</span>
         <span class="bp">cls</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
         <span class="kn">from</span><span class="w"> </span><span class="nn">allauth.account.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">EmailAddress</span>
 
         <span class="n">EmailAddress</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
-            <span class="n">user</span><span class="o">=</span><span class="bp">cls</span><span class="o">.</span><span class="n">user</span><span class="p">,</span> <span class="n">email</span><span class="o">=</span><span class="s2">&quot;admin@example.com&quot;</span><span class="p">,</span> <span class="n">verified</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">primary</span><span class="o">=</span><span class="kc">True</span>
+            <span class="n">user</span><span class="o">=</span><span class="bp">cls</span><span class="o">.</span><span class="n">user</span><span class="p">,</span> <span class="n">email</span><span class="o">=</span><span class="s2">"admin@example.com"</span><span class="p">,</span> <span class="n">verified</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">primary</span><span class="o">=</span><span class="kc">True</span>
         <span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">setUp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></pre></div>
@@ -87,12 +87,12 @@
       <div class="highlight"><pre>        <span class="kn">from</span><span class="w"> </span><span class="nn">django.contrib.sites.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">Site</span>
         <span class="kn">from</span><span class="w"> </span><span class="nn">django.apps</span><span class="w"> </span><span class="kn">import</span> <span class="n">apps</span>
 
-        <span class="k">if</span> <span class="n">apps</span><span class="o">.</span><span class="n">is_installed</span><span class="p">(</span><span class="s2">&quot;allauth.socialaccount&quot;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">apps</span><span class="o">.</span><span class="n">is_installed</span><span class="p">(</span><span class="s2">"allauth.socialaccount"</span><span class="p">):</span>
             <span class="kn">from</span><span class="w"> </span><span class="nn">allauth.socialaccount.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">SocialApp</span>
 
             <span class="n">site</span> <span class="o">=</span> <span class="n">Site</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_current</span><span class="p">()</span>
             <span class="n">SocialApp</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span>
-                <span class="n">provider</span><span class="o">=</span><span class="s2">&quot;facebook&quot;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Facebook&quot;</span><span class="p">,</span> <span class="n">client_id</span><span class="o">=</span><span class="s2">&quot;123&quot;</span><span class="p">,</span> <span class="n">secret</span><span class="o">=</span><span class="s2">&quot;abc&quot;</span>
+                <span class="n">provider</span><span class="o">=</span><span class="s2">"facebook"</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"Facebook"</span><span class="p">,</span> <span class="n">client_id</span><span class="o">=</span><span class="s2">"123"</span><span class="p">,</span> <span class="n">secret</span><span class="o">=</span><span class="s2">"abc"</span>
             <span class="p">)</span>
             <span class="k">for</span> <span class="n">app</span> <span class="ow">in</span> <span class="n">SocialApp</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">():</span>
                 <span class="n">app</span><span class="o">.</span><span class="n">sites</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">site</span><span class="p">)</span></pre></div>
@@ -108,7 +108,7 @@
     </div>
     <div class='code'>
       <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">random_string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mi">8</span><span class="p">):</span>
-        <span class="k">return</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">choices</span><span class="p">(</span><span class="n">string</span><span class="o">.</span><span class="n">ascii_lowercase</span> <span class="o">+</span> <span class="n">string</span><span class="o">.</span><span class="n">digits</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="n">length</span><span class="p">))</span>
+        <span class="k">return</span> <span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">choices</span><span class="p">(</span><span class="n">string</span><span class="o">.</span><span class="n">ascii_lowercase</span> <span class="o">+</span> <span class="n">string</span><span class="o">.</span><span class="n">digits</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="n">length</span><span class="p">))</span>
 
     <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_async_test_crud</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">async</span> <span class="k">with</span> <span class="n">async_playwright</span><span class="p">()</span> <span class="k">as</span> <span class="n">p</span><span class="p">:</span>
@@ -129,14 +129,14 @@
 
             <span class="n">client</span> <span class="o">=</span> <span class="n">Client</span><span class="p">()</span>
             <span class="n">client</span><span class="o">.</span><span class="n">force_login</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
-            <span class="n">session_key</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">cookies</span><span class="p">[</span><span class="s2">&quot;sessionid&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value</span>
+            <span class="n">session_key</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">cookies</span><span class="p">[</span><span class="s2">"sessionid"</span><span class="p">]</span><span class="o">.</span><span class="n">value</span>
             <span class="k">await</span> <span class="n">context</span><span class="o">.</span><span class="n">add_cookies</span><span class="p">(</span>
                 <span class="p">[</span>
                     <span class="p">{</span>
-                        <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;sessionid&quot;</span><span class="p">,</span>
-                        <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="n">session_key</span><span class="p">,</span>
-                        <span class="s2">&quot;domain&quot;</span><span class="p">:</span> <span class="s2">&quot;localhost&quot;</span><span class="p">,</span>
-                        <span class="s2">&quot;path&quot;</span><span class="p">:</span> <span class="s2">&quot;/&quot;</span><span class="p">,</span>
+                        <span class="s2">"name"</span><span class="p">:</span> <span class="s2">"sessionid"</span><span class="p">,</span>
+                        <span class="s2">"value"</span><span class="p">:</span> <span class="n">session_key</span><span class="p">,</span>
+                        <span class="s2">"domain"</span><span class="p">:</span> <span class="s2">"localhost"</span><span class="p">,</span>
+                        <span class="s2">"path"</span><span class="p">:</span> <span class="s2">"/"</span><span class="p">,</span>
                     <span class="p">}</span>
                 <span class="p">]</span>
             <span class="p">)</span>
@@ -155,12 +155,12 @@
 </ol>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>            <span class="n">vendor_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Vendor-</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">random_string</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span>
-            <span class="k">await</span> <span class="n">page</span><span class="o">.</span><span class="n">goto</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">live_server_url</span><span class="si">}</span><span class="s2">/vendor/create&quot;</span><span class="p">)</span>
-            <span class="k">await</span> <span class="n">page</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span><span class="s1">&#39;input[name=&quot;name&quot;]&#39;</span><span class="p">,</span> <span class="n">vendor_name</span><span class="p">)</span>
-            <span class="k">await</span> <span class="n">page</span><span class="o">.</span><span class="n">set_checked</span><span class="p">(</span><span class="s2">&quot;#id_is_software&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+      <div class="highlight"><pre>            <span class="n">vendor_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"Vendor-</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">random_string</span><span class="p">()</span><span class="si">}</span><span class="s2">"</span>
+            <span class="k">await</span> <span class="n">page</span><span class="o">.</span><span class="n">goto</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">live_server_url</span><span class="si">}</span><span class="s2">/vendor/create"</span><span class="p">)</span>
+            <span class="k">await</span> <span class="n">page</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span><span class="s1">'input[name="name"]'</span><span class="p">,</span> <span class="n">vendor_name</span><span class="p">)</span>
+            <span class="k">await</span> <span class="n">page</span><span class="o">.</span><span class="n">set_checked</span><span class="p">(</span><span class="s2">"#id_is_software"</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
             <span class="k">async</span> <span class="k">with</span> <span class="n">page</span><span class="o">.</span><span class="n">expect_navigation</span><span class="p">():</span>
-                <span class="k">await</span> <span class="n">page</span><span class="o">.</span><span class="n">click</span><span class="p">(</span><span class="s1">&#39;form.form button[type=&quot;submit&quot;]&#39;</span><span class="p">)</span>
+                <span class="k">await</span> <span class="n">page</span><span class="o">.</span><span class="n">click</span><span class="p">(</span><span class="s1">'form.form button[type="submit"]'</span><span class="p">)</span>
 
             <span class="kn">from</span><span class="w"> </span><span class="nn">vendor.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">Model</span> <span class="k">as</span> <span class="n">Vendor</span>
 
@@ -178,12 +178,12 @@
 </ol>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>            <span class="n">vendor_name2</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Vendor-Safe-</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">random_string</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span>
-            <span class="k">await</span> <span class="n">page</span><span class="o">.</span><span class="n">goto</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">live_server_url</span><span class="si">}</span><span class="s2">/vendor/create&quot;</span><span class="p">)</span>
-            <span class="k">await</span> <span class="n">page</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span><span class="s1">&#39;input[name=&quot;name&quot;]&#39;</span><span class="p">,</span> <span class="n">vendor_name2</span><span class="p">)</span>
-            <span class="k">await</span> <span class="n">page</span><span class="o">.</span><span class="n">set_checked</span><span class="p">(</span><span class="s2">&quot;#id_is_software&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+      <div class="highlight"><pre>            <span class="n">vendor_name2</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"Vendor-Safe-</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">random_string</span><span class="p">()</span><span class="si">}</span><span class="s2">"</span>
+            <span class="k">await</span> <span class="n">page</span><span class="o">.</span><span class="n">goto</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">live_server_url</span><span class="si">}</span><span class="s2">/vendor/create"</span><span class="p">)</span>
+            <span class="k">await</span> <span class="n">page</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span><span class="s1">'input[name="name"]'</span><span class="p">,</span> <span class="n">vendor_name2</span><span class="p">)</span>
+            <span class="k">await</span> <span class="n">page</span><span class="o">.</span><span class="n">set_checked</span><span class="p">(</span><span class="s2">"#id_is_software"</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
             <span class="k">async</span> <span class="k">with</span> <span class="n">page</span><span class="o">.</span><span class="n">expect_navigation</span><span class="p">():</span>
-                <span class="k">await</span> <span class="n">page</span><span class="o">.</span><span class="n">click</span><span class="p">(</span><span class="s1">&#39;form.form button[type=&quot;submit&quot;]&#39;</span><span class="p">)</span>
+                <span class="k">await</span> <span class="n">page</span><span class="o">.</span><span class="n">click</span><span class="p">(</span><span class="s1">'form.form button[type="submit"]'</span><span class="p">)</span>
             <span class="n">vendor2</span> <span class="o">=</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">to_thread</span><span class="p">(</span><span class="n">Vendor</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">vendor_name2</span><span class="p">)</span></pre></div>
     </div>
   </div>
@@ -198,17 +198,17 @@
 </ol>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>            <span class="n">os_version</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;OS-</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">random_string</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span>
-            <span class="k">await</span> <span class="n">page</span><span class="o">.</span><span class="n">goto</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">live_server_url</span><span class="si">}</span><span class="s2">/operatingsystem/create&quot;</span><span class="p">)</span>
-            <span class="k">await</span> <span class="n">page</span><span class="o">.</span><span class="n">wait_for_load_state</span><span class="p">(</span><span class="s2">&quot;networkidle&quot;</span><span class="p">)</span>
+      <div class="highlight"><pre>            <span class="n">os_version</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"OS-</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">random_string</span><span class="p">()</span><span class="si">}</span><span class="s2">"</span>
+            <span class="k">await</span> <span class="n">page</span><span class="o">.</span><span class="n">goto</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">live_server_url</span><span class="si">}</span><span class="s2">/operatingsystem/create"</span><span class="p">)</span>
+            <span class="k">await</span> <span class="n">page</span><span class="o">.</span><span class="n">wait_for_load_state</span><span class="p">(</span><span class="s2">"networkidle"</span><span class="p">)</span>
             <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-            <span class="k">await</span> <span class="n">page</span><span class="o">.</span><span class="n">screenshot</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="s2">&quot;os_form_ready.png&quot;</span><span class="p">)</span>
+            <span class="k">await</span> <span class="n">page</span><span class="o">.</span><span class="n">screenshot</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="s2">"os_form_ready.png"</span><span class="p">)</span>
 
-            <span class="k">await</span> <span class="n">page</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span><span class="s1">&#39;input[name=&quot;version&quot;]&#39;</span><span class="p">,</span> <span class="n">os_version</span><span class="p">)</span>
-            <span class="k">await</span> <span class="n">page</span><span class="o">.</span><span class="n">select_option</span><span class="p">(</span><span class="s1">&#39;select[name=&quot;vendor&quot;]&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">vendor_name</span><span class="p">)</span>
-            <span class="k">await</span> <span class="n">page</span><span class="o">.</span><span class="n">screenshot</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="s2">&quot;os_form_filled.png&quot;</span><span class="p">)</span>
+            <span class="k">await</span> <span class="n">page</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span><span class="s1">'input[name="version"]'</span><span class="p">,</span> <span class="n">os_version</span><span class="p">)</span>
+            <span class="k">await</span> <span class="n">page</span><span class="o">.</span><span class="n">select_option</span><span class="p">(</span><span class="s1">'select[name="vendor"]'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">vendor_name</span><span class="p">)</span>
+            <span class="k">await</span> <span class="n">page</span><span class="o">.</span><span class="n">screenshot</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="s2">"os_form_filled.png"</span><span class="p">)</span>
             <span class="k">async</span> <span class="k">with</span> <span class="n">page</span><span class="o">.</span><span class="n">expect_navigation</span><span class="p">():</span>
-                <span class="k">await</span> <span class="n">page</span><span class="o">.</span><span class="n">click</span><span class="p">(</span><span class="s1">&#39;form.form button[type=&quot;submit&quot;]&#39;</span><span class="p">)</span></pre></div>
+                <span class="k">await</span> <span class="n">page</span><span class="o">.</span><span class="n">click</span><span class="p">(</span><span class="s1">'form.form button[type="submit"]'</span><span class="p">)</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -222,22 +222,22 @@
 </ol>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>            <span class="k">await</span> <span class="n">page</span><span class="o">.</span><span class="n">goto</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">live_server_url</span><span class="si">}</span><span class="s2">/vendor/delete/</span><span class="si">{</span><span class="n">vendor1</span><span class="o">.</span><span class="n">pk</span><span class="si">}</span><span class="s2">/&quot;</span><span class="p">)</span>
+      <div class="highlight"><pre>            <span class="k">await</span> <span class="n">page</span><span class="o">.</span><span class="n">goto</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">live_server_url</span><span class="si">}</span><span class="s2">/vendor/delete/</span><span class="si">{</span><span class="n">vendor1</span><span class="o">.</span><span class="n">pk</span><span class="si">}</span><span class="s2">/"</span><span class="p">)</span>
             <span class="k">try</span><span class="p">:</span>
-                <span class="k">await</span> <span class="n">page</span><span class="o">.</span><span class="n">click</span><span class="p">(</span><span class="s1">&#39;button:has-text(&quot;Confirm Delete&quot;)&#39;</span><span class="p">)</span>
+                <span class="k">await</span> <span class="n">page</span><span class="o">.</span><span class="n">click</span><span class="p">(</span><span class="s1">'button:has-text("Confirm Delete")'</span><span class="p">)</span>
             <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-                <span class="k">await</span> <span class="n">page</span><span class="o">.</span><span class="n">screenshot</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="s2">&quot;delete_confirm_fail.png&quot;</span><span class="p">)</span>
-                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to find Confirm Delete on </span><span class="si">{</span><span class="n">page</span><span class="o">.</span><span class="n">url</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;PAGE CONTENT: </span><span class="si">{</span><span class="k">await</span><span class="w"> </span><span class="n">page</span><span class="o">.</span><span class="n">content</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="k">await</span> <span class="n">page</span><span class="o">.</span><span class="n">screenshot</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="s2">"delete_confirm_fail.png"</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Failed to find Confirm Delete on </span><span class="si">{</span><span class="n">page</span><span class="o">.</span><span class="n">url</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"PAGE CONTENT: </span><span class="si">{</span><span class="k">await</span><span class="w"> </span><span class="n">page</span><span class="o">.</span><span class="n">content</span><span class="p">()</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
                 <span class="k">raise</span>
             <span class="k">await</span> <span class="n">page</span><span class="o">.</span><span class="n">wait_for_selector</span><span class="p">(</span>
-                <span class="s2">&quot;text=cannot be deleted because it is referenced by&quot;</span>
+                <span class="s2">"text=cannot be deleted because it is referenced by"</span>
             <span class="p">)</span>
 
             <span class="n">exists</span> <span class="o">=</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">to_thread</span><span class="p">(</span>
                 <span class="n">Vendor</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="n">vendor1</span><span class="o">.</span><span class="n">pk</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span>
             <span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">exists</span><span class="p">,</span> <span class="s2">&quot;Vendor 1 was deleted despite being referenced!&quot;</span><span class="p">)</span></pre></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">exists</span><span class="p">,</span> <span class="s2">"Vendor 1 was deleted despite being referenced!"</span><span class="p">)</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -251,22 +251,22 @@
 </ol>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>            <span class="n">v2_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Vendor-Safe-</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">random_string</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span>
-            <span class="k">await</span> <span class="n">page</span><span class="o">.</span><span class="n">goto</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">live_server_url</span><span class="si">}</span><span class="s2">/vendor/create&quot;</span><span class="p">)</span>
-            <span class="k">await</span> <span class="n">page</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span><span class="s1">&#39;input[name=&quot;name&quot;]&#39;</span><span class="p">,</span> <span class="n">v2_name</span><span class="p">)</span>
-            <span class="k">await</span> <span class="n">page</span><span class="o">.</span><span class="n">set_checked</span><span class="p">(</span><span class="s2">&quot;#id_is_software&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+      <div class="highlight"><pre>            <span class="n">v2_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"Vendor-Safe-</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">random_string</span><span class="p">()</span><span class="si">}</span><span class="s2">"</span>
+            <span class="k">await</span> <span class="n">page</span><span class="o">.</span><span class="n">goto</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">live_server_url</span><span class="si">}</span><span class="s2">/vendor/create"</span><span class="p">)</span>
+            <span class="k">await</span> <span class="n">page</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span><span class="s1">'input[name="name"]'</span><span class="p">,</span> <span class="n">v2_name</span><span class="p">)</span>
+            <span class="k">await</span> <span class="n">page</span><span class="o">.</span><span class="n">set_checked</span><span class="p">(</span><span class="s2">"#id_is_software"</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
             <span class="k">async</span> <span class="k">with</span> <span class="n">page</span><span class="o">.</span><span class="n">expect_navigation</span><span class="p">():</span>
-                <span class="k">await</span> <span class="n">page</span><span class="o">.</span><span class="n">click</span><span class="p">(</span><span class="s1">&#39;form.form button[type=&quot;submit&quot;]&#39;</span><span class="p">)</span>
+                <span class="k">await</span> <span class="n">page</span><span class="o">.</span><span class="n">click</span><span class="p">(</span><span class="s1">'form.form button[type="submit"]'</span><span class="p">)</span>
             <span class="n">vendor2</span> <span class="o">=</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">to_thread</span><span class="p">(</span><span class="n">Vendor</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">v2_name</span><span class="p">)</span>
 
-            <span class="k">await</span> <span class="n">page</span><span class="o">.</span><span class="n">goto</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">live_server_url</span><span class="si">}</span><span class="s2">/vendor/delete/</span><span class="si">{</span><span class="n">vendor2</span><span class="o">.</span><span class="n">pk</span><span class="si">}</span><span class="s2">/&quot;</span><span class="p">)</span>
+            <span class="k">await</span> <span class="n">page</span><span class="o">.</span><span class="n">goto</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">live_server_url</span><span class="si">}</span><span class="s2">/vendor/delete/</span><span class="si">{</span><span class="n">vendor2</span><span class="o">.</span><span class="n">pk</span><span class="si">}</span><span class="s2">/"</span><span class="p">)</span>
             <span class="k">async</span> <span class="k">with</span> <span class="n">page</span><span class="o">.</span><span class="n">expect_navigation</span><span class="p">():</span>
-                <span class="k">await</span> <span class="n">page</span><span class="o">.</span><span class="n">click</span><span class="p">(</span><span class="s1">&#39;button:has-text(&quot;Confirm Delete&quot;)&#39;</span><span class="p">)</span>
+                <span class="k">await</span> <span class="n">page</span><span class="o">.</span><span class="n">click</span><span class="p">(</span><span class="s1">'button:has-text("Confirm Delete")'</span><span class="p">)</span>
 
             <span class="n">exists</span> <span class="o">=</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">to_thread</span><span class="p">(</span>
                 <span class="n">Vendor</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="n">vendor2</span><span class="o">.</span><span class="n">pk</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span>
             <span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="n">exists</span><span class="p">,</span> <span class="s2">&quot;Vendor 2 was not deleted!&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="n">exists</span><span class="p">,</span> <span class="s2">"Vendor 2 was not deleted!"</span><span class="p">)</span>
 
             <span class="k">await</span> <span class="n">browser</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></pre></div>
     </div>

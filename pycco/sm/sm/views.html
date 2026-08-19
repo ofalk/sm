@@ -20,17 +20,19 @@
       
     </div>
     <div class='code'>
-      <div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">django.views.generic</span><span class="w"> </span><span class="kn">import</span> <span class="n">TemplateView</span>
+      <div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.views.generic</span><span class="w"> </span><span class="kn">import</span> <span class="n">TemplateView</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">django.contrib.auth.mixins</span><span class="w"> </span><span class="kn">import</span> <span class="n">LoginRequiredMixin</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">django.contrib</span><span class="w"> </span><span class="kn">import</span> <span class="n">messages</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">server.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">Model</span> <span class="k">as</span> <span class="n">Server</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">cluster.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">Model</span> <span class="k">as</span> <span class="n">Cluster</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">vendor.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">Model</span> <span class="k">as</span> <span class="n">Vendor</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">operatingsystem.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">Model</span> <span class="k">as</span> <span class="n">OS</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">django.db.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">Count</span><span class="p">,</span> <span class="n">Q</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.db.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">Count</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">django.core.exceptions</span><span class="w"> </span><span class="kn">import</span> <span class="n">ObjectDoesNotExist</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">django.apps</span><span class="w"> </span><span class="kn">import</span> <span class="n">apps</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">django.http</span><span class="w"> </span><span class="kn">import</span> <span class="n">Http404</span><span class="p">,</span> <span class="n">HttpResponseRedirect</span><span class="p">,</span> <span class="n">JsonResponse</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.http</span><span class="w"> </span><span class="kn">import</span> <span class="n">Http404</span><span class="p">,</span> <span class="n">JsonResponse</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">django.conf</span><span class="w"> </span><span class="kn">import</span> <span class="n">settings</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">django.db.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">ProtectedError</span>
@@ -38,7 +40,10 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">django.shortcuts</span><span class="w"> </span><span class="kn">import</span> <span class="n">redirect</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">django.views</span><span class="w"> </span><span class="kn">import</span> <span class="n">View</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">List</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">.utils_starterpack</span><span class="w"> </span><span class="kn">import</span> <span class="n">import_starter_pack</span></pre></div>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.mixins</span><span class="w"> </span><span class="kn">import</span> <span class="n">filter_queryset_by_tenant</span><span class="p">,</span> <span class="n">filter_history_queryset_by_tenant</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.utils_starterpack</span><span class="w"> </span><span class="kn">import</span> <span class="n">import_starter_pack</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -76,12 +81,8 @@ message instead of raising a 500 error.</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">form_valid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">form</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
-        <span class="n">success_url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_success_url</span><span class="p">()</span>  <span class="c1"># type: ignore</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="n">obj_name</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">object</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>  <span class="c1"># type: ignore</span>
-            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;success_message&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">success_message</span><span class="p">:</span>  <span class="c1"># type: ignore  # noqa: E501</span>
-                <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span></pre></div>
+            <span class="n">obj_name</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">object</span><span class="p">)</span>  <span class="c1"># type: ignore</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -90,32 +91,13 @@ message instead of raising a 500 error.</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-4'>#</a>
       </div>
-      <p>type: ignore</p>
+      <p>Chain to the rest of the MRO (e.g. MultiTenantMixin) so tenant
+guards such as read-only global fixtures are enforced.</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>                    <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">,</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">success_message</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">,</span>
-                <span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Successfully deleted </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">)</span> <span class="o">%</span> <span class="n">obj_name</span><span class="p">)</span>
-            <span class="k">return</span> <span class="n">HttpResponseRedirect</span><span class="p">(</span><span class="n">success_url</span><span class="p">)</span>
-        <span class="k">except</span> <span class="n">ProtectedError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="n">instances</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span> <span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="n">e</span><span class="o">.</span><span class="n">protected_objects</span><span class="p">)</span>
-            <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">,</span>
-                <span class="n">_</span><span class="p">(</span>
-                    <span class="s2">&quot;</span><span class="si">%(name)s</span><span class="s2"> cannot be deleted because it is referenced by &quot;</span>
-                    <span class="s2">&quot;</span><span class="si">%(count)d</span><span class="s2"> other resource(s): </span><span class="si">%(instances)s</span><span class="s2">&quot;</span>
-                <span class="p">)</span>
-                <span class="o">%</span> <span class="p">{</span>
-                    <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">object</span><span class="p">,</span>  <span class="c1"># type: ignore</span>
-                    <span class="s2">&quot;count&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">protected_objects</span><span class="p">),</span>
-                    <span class="s2">&quot;instances&quot;</span><span class="p">:</span> <span class="n">instances</span><span class="p">,</span>
-                <span class="p">},</span>
-            <span class="p">)</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">render_to_response</span><span class="p">(</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">get_context_data</span><span class="p">(</span><span class="nb">object</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">object</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
-            <span class="p">)</span></pre></div>
+      <div class="highlight"><pre>            <span class="n">response</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">form_valid</span><span class="p">(</span><span class="n">form</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">"success_message"</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">success_message</span><span class="p">:</span>  <span class="c1"># type: ignore  # noqa: E501</span>
+                <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -124,11 +106,32 @@ message instead of raising a 500 error.</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-5'>#</a>
       </div>
-      
+      <p>type: ignore</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">DashboardView</span><span class="p">(</span><span class="n">LoginRequiredMixin</span><span class="p">,</span> <span class="n">TemplateView</span><span class="p">):</span>
-    <span class="n">template_name</span> <span class="o">=</span> <span class="s2">&quot;dashboard.html&quot;</span></pre></div>
+      <div class="highlight"><pre>                    <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">success_message</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">,</span>
+                <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">"Successfully deleted </span><span class="si">%s</span><span class="s2">"</span><span class="p">)</span> <span class="o">%</span> <span class="n">obj_name</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">response</span>
+        <span class="k">except</span> <span class="n">ProtectedError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">instances</span> <span class="o">=</span> <span class="s2">", "</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span> <span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="n">e</span><span class="o">.</span><span class="n">protected_objects</span><span class="p">)</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">,</span>
+                <span class="n">_</span><span class="p">(</span>
+                    <span class="s2">"</span><span class="si">%(name)s</span><span class="s2"> cannot be deleted because it is referenced by "</span>
+                    <span class="s2">"</span><span class="si">%(count)d</span><span class="s2"> other resource(s): </span><span class="si">%(instances)s</span><span class="s2">"</span>
+                <span class="p">)</span>
+                <span class="o">%</span> <span class="p">{</span>
+                    <span class="s2">"name"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">object</span><span class="p">,</span>  <span class="c1"># type: ignore</span>
+                    <span class="s2">"count"</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">protected_objects</span><span class="p">),</span>
+                    <span class="s2">"instances"</span><span class="p">:</span> <span class="n">instances</span><span class="p">,</span>
+                <span class="p">},</span>
+            <span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">render_to_response</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">get_context_data</span><span class="p">(</span><span class="nb">object</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">object</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
+            <span class="p">)</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -140,15 +143,8 @@ message instead of raising a 500 error.</p>
       
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">get_queryset_filtered</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_superuser</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">model</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
-        <span class="n">user_groups</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">groups</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
-        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="s2">&quot;group&quot;</span><span class="p">):</span>
-            <span class="k">return</span> <span class="n">model</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span>
-                <span class="n">Q</span><span class="p">(</span><span class="n">group__in</span><span class="o">=</span><span class="n">user_groups</span><span class="p">)</span> <span class="o">|</span> <span class="n">Q</span><span class="p">(</span><span class="n">group__isnull</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-            <span class="p">)</span>
-        <span class="k">return</span> <span class="n">model</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span></pre></div>
+      <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">DashboardView</span><span class="p">(</span><span class="n">LoginRequiredMixin</span><span class="p">,</span> <span class="n">TemplateView</span><span class="p">):</span>
+    <span class="n">template_name</span> <span class="o">=</span> <span class="s2">"dashboard.html"</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -160,8 +156,10 @@ message instead of raising a 500 error.</p>
       
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">get_context_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
-        <span class="n">context</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_context_data</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></pre></div>
+      <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">get_queryset_filtered</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="s2">"group"</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">model</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">filter_queryset_by_tenant</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">)</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -170,13 +168,11 @@ message instead of raising a 500 error.</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-8'>#</a>
       </div>
-      <p>Basic Stats (Filtered)</p>
+      
     </div>
     <div class='code'>
-      <div class="highlight"><pre>        <span class="n">context</span><span class="p">[</span><span class="s2">&quot;server_count&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_queryset_filtered</span><span class="p">(</span><span class="n">Server</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
-        <span class="n">context</span><span class="p">[</span><span class="s2">&quot;cluster_count&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_queryset_filtered</span><span class="p">(</span><span class="n">Cluster</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
-        <span class="n">context</span><span class="p">[</span><span class="s2">&quot;vendor_count&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Vendor</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
-        <span class="n">context</span><span class="p">[</span><span class="s2">&quot;os_count&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">OS</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">count</span><span class="p">()</span></pre></div>
+      <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">get_context_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+        <span class="n">context</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_context_data</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -185,23 +181,13 @@ message instead of raising a 500 error.</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-9'>#</a>
       </div>
-      <p>Data for Charts (Filtered)
-OS Distribution</p>
+      <p>Basic Stats (Filtered)</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>        <span class="n">os_dist</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">get_queryset_filtered</span><span class="p">(</span><span class="n">Server</span><span class="p">)</span>
-            <span class="o">.</span><span class="n">values</span><span class="p">(</span><span class="s2">&quot;operatingsystem__vendor__name&quot;</span><span class="p">,</span> <span class="s2">&quot;operatingsystem__version&quot;</span><span class="p">)</span>
-            <span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="n">count</span><span class="o">=</span><span class="n">Count</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">))</span>
-            <span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;-count&quot;</span><span class="p">)[:</span><span class="mi">5</span><span class="p">]</span>
-        <span class="p">)</span>
-
-        <span class="n">context</span><span class="p">[</span><span class="s2">&quot;os_labels&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">item</span><span class="p">[</span><span class="s1">&#39;operatingsystem__vendor__name&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> &quot;</span>
-            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">item</span><span class="p">[</span><span class="s1">&#39;operatingsystem__version&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
-            <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">os_dist</span>
-        <span class="p">]</span>
-        <span class="n">context</span><span class="p">[</span><span class="s2">&quot;os_data&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">item</span><span class="p">[</span><span class="s2">&quot;count&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">os_dist</span><span class="p">]</span></pre></div>
+      <div class="highlight"><pre>        <span class="n">context</span><span class="p">[</span><span class="s2">"server_count"</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_queryset_filtered</span><span class="p">(</span><span class="n">Server</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
+        <span class="n">context</span><span class="p">[</span><span class="s2">"cluster_count"</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_queryset_filtered</span><span class="p">(</span><span class="n">Cluster</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
+        <span class="n">context</span><span class="p">[</span><span class="s2">"vendor_count"</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_queryset_filtered</span><span class="p">(</span><span class="n">Vendor</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
+        <span class="n">context</span><span class="p">[</span><span class="s2">"os_count"</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_queryset_filtered</span><span class="p">(</span><span class="n">OS</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -210,18 +196,23 @@ OS Distribution</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-10'>#</a>
       </div>
-      <p>Status Distribution</p>
+      <p>Data for Charts (Filtered)
+OS Distribution</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>        <span class="n">status_dist</span> <span class="o">=</span> <span class="p">(</span>
+      <div class="highlight"><pre>        <span class="n">os_dist</span> <span class="o">=</span> <span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">get_queryset_filtered</span><span class="p">(</span><span class="n">Server</span><span class="p">)</span>
-            <span class="o">.</span><span class="n">values</span><span class="p">(</span><span class="s2">&quot;status__name&quot;</span><span class="p">)</span>
-            <span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="n">count</span><span class="o">=</span><span class="n">Count</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">))</span>
-            <span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;-count&quot;</span><span class="p">)</span>
+            <span class="o">.</span><span class="n">values</span><span class="p">(</span><span class="s2">"operatingsystem__vendor__name"</span><span class="p">,</span> <span class="s2">"operatingsystem__version"</span><span class="p">)</span>
+            <span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="n">count</span><span class="o">=</span><span class="n">Count</span><span class="p">(</span><span class="s2">"id"</span><span class="p">))</span>
+            <span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">"-count"</span><span class="p">)[:</span><span class="mi">5</span><span class="p">]</span>
         <span class="p">)</span>
 
-        <span class="n">context</span><span class="p">[</span><span class="s2">&quot;status_labels&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">item</span><span class="p">[</span><span class="s2">&quot;status__name&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">status_dist</span><span class="p">]</span>
-        <span class="n">context</span><span class="p">[</span><span class="s2">&quot;status_data&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">item</span><span class="p">[</span><span class="s2">&quot;count&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">status_dist</span><span class="p">]</span></pre></div>
+        <span class="n">context</span><span class="p">[</span><span class="s2">"os_labels"</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">item</span><span class="p">[</span><span class="s1">'operatingsystem__vendor__name'</span><span class="p">]</span><span class="si">}</span><span class="s2"> "</span>
+            <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">item</span><span class="p">[</span><span class="s1">'operatingsystem__version'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span>
+            <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">os_dist</span>
+        <span class="p">]</span>
+        <span class="n">context</span><span class="p">[</span><span class="s2">"os_data"</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">item</span><span class="p">[</span><span class="s2">"count"</span><span class="p">]</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">os_dist</span><span class="p">]</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -230,14 +221,18 @@ OS Distribution</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-11'>#</a>
       </div>
-      <p>Recent Activity (Filtered)</p>
+      <p>Status Distribution</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>        <span class="n">context</span><span class="p">[</span><span class="s2">&quot;recent_servers&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">get_queryset_filtered</span><span class="p">(</span><span class="n">Server</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;-id&quot;</span><span class="p">)[:</span><span class="mi">5</span><span class="p">]</span>
+      <div class="highlight"><pre>        <span class="n">status_dist</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">get_queryset_filtered</span><span class="p">(</span><span class="n">Server</span><span class="p">)</span>
+            <span class="o">.</span><span class="n">values</span><span class="p">(</span><span class="s2">"status__name"</span><span class="p">)</span>
+            <span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="n">count</span><span class="o">=</span><span class="n">Count</span><span class="p">(</span><span class="s2">"id"</span><span class="p">))</span>
+            <span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">"-count"</span><span class="p">)</span>
         <span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">context</span></pre></div>
+        <span class="n">context</span><span class="p">[</span><span class="s2">"status_labels"</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">item</span><span class="p">[</span><span class="s2">"status__name"</span><span class="p">]</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">status_dist</span><span class="p">]</span>
+        <span class="n">context</span><span class="p">[</span><span class="s2">"status_data"</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">item</span><span class="p">[</span><span class="s2">"count"</span><span class="p">]</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">status_dist</span><span class="p">]</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -246,11 +241,14 @@ OS Distribution</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-12'>#</a>
       </div>
-      
+      <p>Recent Activity (Filtered)</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">SearchView</span><span class="p">(</span><span class="n">LoginRequiredMixin</span><span class="p">,</span> <span class="n">TemplateView</span><span class="p">):</span>
-    <span class="n">template_name</span> <span class="o">=</span> <span class="s2">&quot;search.html&quot;</span></pre></div>
+      <div class="highlight"><pre>        <span class="n">context</span><span class="p">[</span><span class="s2">"recent_servers"</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">get_queryset_filtered</span><span class="p">(</span><span class="n">Server</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">"-id"</span><span class="p">)[:</span><span class="mi">5</span><span class="p">]</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">context</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -262,15 +260,8 @@ OS Distribution</p>
       
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">get_queryset_filtered</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_superuser</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">model</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
-        <span class="n">user_groups</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">groups</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
-        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="s2">&quot;group&quot;</span><span class="p">):</span>
-            <span class="k">return</span> <span class="n">model</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span>
-                <span class="n">Q</span><span class="p">(</span><span class="n">group__in</span><span class="o">=</span><span class="n">user_groups</span><span class="p">)</span> <span class="o">|</span> <span class="n">Q</span><span class="p">(</span><span class="n">group__isnull</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-            <span class="p">)</span>
-        <span class="k">return</span> <span class="n">model</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span></pre></div>
+      <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">SearchView</span><span class="p">(</span><span class="n">LoginRequiredMixin</span><span class="p">,</span> <span class="n">TemplateView</span><span class="p">):</span>
+    <span class="n">template_name</span> <span class="o">=</span> <span class="s2">"search.html"</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -282,10 +273,10 @@ OS Distribution</p>
       
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">get_template_names</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ajax&quot;</span><span class="p">):</span>
-            <span class="k">return</span> <span class="p">[</span><span class="s2">&quot;search_results_ajax.html&quot;</span><span class="p">]</span>
-        <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">template_name</span><span class="p">]</span></pre></div>
+      <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">get_queryset_filtered</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="s2">"group"</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">model</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">filter_queryset_by_tenant</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">)</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -297,10 +288,10 @@ OS Distribution</p>
       
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">get_context_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
-        <span class="n">context</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_context_data</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="n">query</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;q&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
-        <span class="n">context</span><span class="p">[</span><span class="s2">&quot;query&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">query</span></pre></div>
+      <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">get_template_names</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"ajax"</span><span class="p">):</span>
+            <span class="k">return</span> <span class="p">[</span><span class="s2">"search_results_ajax.html"</span><span class="p">]</span>
+        <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">template_name</span><span class="p">]</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -309,47 +300,13 @@ OS Distribution</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-16'>#</a>
       </div>
-      <p>Navigation Quick Jumps</p>
+      
     </div>
     <div class='code'>
-      <div class="highlight"><pre>        <span class="n">nav_targets</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Dashboard&quot;</span><span class="p">),</span> <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;/&quot;</span><span class="p">,</span> <span class="s2">&quot;icon&quot;</span><span class="p">:</span> <span class="s2">&quot;fa-gauge-high&quot;</span><span class="p">},</span>
-            <span class="p">{</span>
-                <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Group Management&quot;</span><span class="p">),</span>
-                <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;/group/members/&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;icon&quot;</span><span class="p">:</span> <span class="s2">&quot;fa-users&quot;</span><span class="p">,</span>
-            <span class="p">},</span>
-            <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Servers&quot;</span><span class="p">),</span> <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;/server/&quot;</span><span class="p">,</span> <span class="s2">&quot;icon&quot;</span><span class="p">:</span> <span class="s2">&quot;fa-server&quot;</span><span class="p">},</span>
-            <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Server Models&quot;</span><span class="p">),</span> <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;/servermodel/&quot;</span><span class="p">,</span> <span class="s2">&quot;icon&quot;</span><span class="p">:</span> <span class="s2">&quot;fa-cubes&quot;</span><span class="p">},</span>
-            <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Vendors&quot;</span><span class="p">),</span> <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;/vendor/&quot;</span><span class="p">,</span> <span class="s2">&quot;icon&quot;</span><span class="p">:</span> <span class="s2">&quot;fa-industry&quot;</span><span class="p">},</span>
-            <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Clusters&quot;</span><span class="p">),</span> <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;/cluster/&quot;</span><span class="p">,</span> <span class="s2">&quot;icon&quot;</span><span class="p">:</span> <span class="s2">&quot;fa-th-large&quot;</span><span class="p">},</span>
-            <span class="p">{</span>
-                <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Operating Systems&quot;</span><span class="p">),</span>
-                <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;/operatingsystem/&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;icon&quot;</span><span class="p">:</span> <span class="s2">&quot;fa-laptop&quot;</span><span class="p">,</span>
-            <span class="p">},</span>
-            <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Statuses&quot;</span><span class="p">),</span> <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;/status/&quot;</span><span class="p">,</span> <span class="s2">&quot;icon&quot;</span><span class="p">:</span> <span class="s2">&quot;fa-tag&quot;</span><span class="p">},</span>
-            <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Locations&quot;</span><span class="p">),</span> <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;/location/&quot;</span><span class="p">,</span> <span class="s2">&quot;icon&quot;</span><span class="p">:</span> <span class="s2">&quot;fa-map-marker-alt&quot;</span><span class="p">},</span>
-            <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Domains&quot;</span><span class="p">),</span> <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;/domain/&quot;</span><span class="p">,</span> <span class="s2">&quot;icon&quot;</span><span class="p">:</span> <span class="s2">&quot;fa-globe&quot;</span><span class="p">},</span>
-            <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Patch Times&quot;</span><span class="p">),</span> <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;/patchtime/&quot;</span><span class="p">,</span> <span class="s2">&quot;icon&quot;</span><span class="p">:</span> <span class="s2">&quot;fa-calendar&quot;</span><span class="p">},</span>
-            <span class="p">{</span>
-                <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Cluster Software&quot;</span><span class="p">),</span>
-                <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;/clustersoftware/&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;icon&quot;</span><span class="p">:</span> <span class="s2">&quot;fa-shield-halved&quot;</span><span class="p">,</span>
-            <span class="p">},</span>
-            <span class="p">{</span>
-                <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Cluster Packages&quot;</span><span class="p">),</span>
-                <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;/clusterpackage/&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;icon&quot;</span><span class="p">:</span> <span class="s2">&quot;fa-archive&quot;</span><span class="p">,</span>
-            <span class="p">},</span>
-            <span class="p">{</span>
-                <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;API Documentation&quot;</span><span class="p">),</span>
-                <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;/api/schema/swagger-ui/&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;icon&quot;</span><span class="p">:</span> <span class="s2">&quot;fa-book&quot;</span><span class="p">,</span>
-            <span class="p">},</span>
-        <span class="p">]</span>
-
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">query</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">:</span></pre></div>
+      <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">get_context_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+        <span class="n">context</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_context_data</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">query</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"q"</span><span class="p">,</span> <span class="s2">""</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+        <span class="n">context</span><span class="p">[</span><span class="s2">"query"</span><span class="p">]</span> <span class="o">=</span> <span class="n">query</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -358,20 +315,47 @@ OS Distribution</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-17'>#</a>
       </div>
-      <p>Filter navigation targets</p>
+      <p>Navigation Quick Jumps</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>            <span class="n">context</span><span class="p">[</span><span class="s2">&quot;nav_results&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
-                <span class="n">item</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">nav_targets</span> <span class="k">if</span> <span class="n">query</span> <span class="ow">in</span> <span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span>
-            <span class="p">]</span>
+      <div class="highlight"><pre>        <span class="n">nav_targets</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="p">{</span><span class="s2">"name"</span><span class="p">:</span> <span class="n">_</span><span class="p">(</span><span class="s2">"Dashboard"</span><span class="p">),</span> <span class="s2">"url"</span><span class="p">:</span> <span class="s2">"/"</span><span class="p">,</span> <span class="s2">"icon"</span><span class="p">:</span> <span class="s2">"fa-gauge-high"</span><span class="p">},</span>
+            <span class="p">{</span>
+                <span class="s2">"name"</span><span class="p">:</span> <span class="n">_</span><span class="p">(</span><span class="s2">"Group Management"</span><span class="p">),</span>
+                <span class="s2">"url"</span><span class="p">:</span> <span class="s2">"/group/members/"</span><span class="p">,</span>
+                <span class="s2">"icon"</span><span class="p">:</span> <span class="s2">"fa-users"</span><span class="p">,</span>
+            <span class="p">},</span>
+            <span class="p">{</span><span class="s2">"name"</span><span class="p">:</span> <span class="n">_</span><span class="p">(</span><span class="s2">"Servers"</span><span class="p">),</span> <span class="s2">"url"</span><span class="p">:</span> <span class="s2">"/server/"</span><span class="p">,</span> <span class="s2">"icon"</span><span class="p">:</span> <span class="s2">"fa-server"</span><span class="p">},</span>
+            <span class="p">{</span><span class="s2">"name"</span><span class="p">:</span> <span class="n">_</span><span class="p">(</span><span class="s2">"Server Models"</span><span class="p">),</span> <span class="s2">"url"</span><span class="p">:</span> <span class="s2">"/servermodel/"</span><span class="p">,</span> <span class="s2">"icon"</span><span class="p">:</span> <span class="s2">"fa-cubes"</span><span class="p">},</span>
+            <span class="p">{</span><span class="s2">"name"</span><span class="p">:</span> <span class="n">_</span><span class="p">(</span><span class="s2">"Vendors"</span><span class="p">),</span> <span class="s2">"url"</span><span class="p">:</span> <span class="s2">"/vendor/"</span><span class="p">,</span> <span class="s2">"icon"</span><span class="p">:</span> <span class="s2">"fa-industry"</span><span class="p">},</span>
+            <span class="p">{</span><span class="s2">"name"</span><span class="p">:</span> <span class="n">_</span><span class="p">(</span><span class="s2">"Clusters"</span><span class="p">),</span> <span class="s2">"url"</span><span class="p">:</span> <span class="s2">"/cluster/"</span><span class="p">,</span> <span class="s2">"icon"</span><span class="p">:</span> <span class="s2">"fa-th-large"</span><span class="p">},</span>
+            <span class="p">{</span>
+                <span class="s2">"name"</span><span class="p">:</span> <span class="n">_</span><span class="p">(</span><span class="s2">"Operating Systems"</span><span class="p">),</span>
+                <span class="s2">"url"</span><span class="p">:</span> <span class="s2">"/operatingsystem/"</span><span class="p">,</span>
+                <span class="s2">"icon"</span><span class="p">:</span> <span class="s2">"fa-laptop"</span><span class="p">,</span>
+            <span class="p">},</span>
+            <span class="p">{</span><span class="s2">"name"</span><span class="p">:</span> <span class="n">_</span><span class="p">(</span><span class="s2">"Statuses"</span><span class="p">),</span> <span class="s2">"url"</span><span class="p">:</span> <span class="s2">"/status/"</span><span class="p">,</span> <span class="s2">"icon"</span><span class="p">:</span> <span class="s2">"fa-tag"</span><span class="p">},</span>
+            <span class="p">{</span><span class="s2">"name"</span><span class="p">:</span> <span class="n">_</span><span class="p">(</span><span class="s2">"Locations"</span><span class="p">),</span> <span class="s2">"url"</span><span class="p">:</span> <span class="s2">"/location/"</span><span class="p">,</span> <span class="s2">"icon"</span><span class="p">:</span> <span class="s2">"fa-map-marker-alt"</span><span class="p">},</span>
+            <span class="p">{</span><span class="s2">"name"</span><span class="p">:</span> <span class="n">_</span><span class="p">(</span><span class="s2">"Domains"</span><span class="p">),</span> <span class="s2">"url"</span><span class="p">:</span> <span class="s2">"/domain/"</span><span class="p">,</span> <span class="s2">"icon"</span><span class="p">:</span> <span class="s2">"fa-globe"</span><span class="p">},</span>
+            <span class="p">{</span><span class="s2">"name"</span><span class="p">:</span> <span class="n">_</span><span class="p">(</span><span class="s2">"Patch Times"</span><span class="p">),</span> <span class="s2">"url"</span><span class="p">:</span> <span class="s2">"/patchtime/"</span><span class="p">,</span> <span class="s2">"icon"</span><span class="p">:</span> <span class="s2">"fa-calendar"</span><span class="p">},</span>
+            <span class="p">{</span>
+                <span class="s2">"name"</span><span class="p">:</span> <span class="n">_</span><span class="p">(</span><span class="s2">"Cluster Software"</span><span class="p">),</span>
+                <span class="s2">"url"</span><span class="p">:</span> <span class="s2">"/clustersoftware/"</span><span class="p">,</span>
+                <span class="s2">"icon"</span><span class="p">:</span> <span class="s2">"fa-shield-halved"</span><span class="p">,</span>
+            <span class="p">},</span>
+            <span class="p">{</span>
+                <span class="s2">"name"</span><span class="p">:</span> <span class="n">_</span><span class="p">(</span><span class="s2">"Cluster Packages"</span><span class="p">),</span>
+                <span class="s2">"url"</span><span class="p">:</span> <span class="s2">"/clusterpackage/"</span><span class="p">,</span>
+                <span class="s2">"icon"</span><span class="p">:</span> <span class="s2">"fa-archive"</span><span class="p">,</span>
+            <span class="p">},</span>
+            <span class="p">{</span>
+                <span class="s2">"name"</span><span class="p">:</span> <span class="n">_</span><span class="p">(</span><span class="s2">"API Documentation"</span><span class="p">),</span>
+                <span class="s2">"url"</span><span class="p">:</span> <span class="s2">"/api/schema/swagger-ui/"</span><span class="p">,</span>
+                <span class="s2">"icon"</span><span class="p">:</span> <span class="s2">"fa-book"</span><span class="p">,</span>
+            <span class="p">},</span>
+        <span class="p">]</span>
 
-            <span class="n">context</span><span class="p">[</span><span class="s2">&quot;servers&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_queryset_filtered</span><span class="p">(</span><span class="n">Server</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span>
-                <span class="n">hostname__icontains</span><span class="o">=</span><span class="n">query</span>
-            <span class="p">)[:</span><span class="mi">10</span><span class="p">]</span>
-            <span class="n">context</span><span class="p">[</span><span class="s2">&quot;vendors&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Vendor</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">name__icontains</span><span class="o">=</span><span class="n">query</span><span class="p">)[:</span><span class="mi">10</span><span class="p">]</span>
-            <span class="n">context</span><span class="p">[</span><span class="s2">&quot;clusters&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_queryset_filtered</span><span class="p">(</span><span class="n">Cluster</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span>
-                <span class="n">name__icontains</span><span class="o">=</span><span class="n">query</span>
-            <span class="p">)[:</span><span class="mi">10</span><span class="p">]</span></pre></div>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">query</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">:</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -380,22 +364,22 @@ OS Distribution</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-18'>#</a>
       </div>
-      <p>Simple check if anything was found</p>
+      <p>Filter navigation targets</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>            <span class="n">context</span><span class="p">[</span><span class="s2">&quot;has_results&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">any</span><span class="p">(</span>
-                <span class="p">[</span>
-                    <span class="n">context</span><span class="p">[</span><span class="s2">&quot;nav_results&quot;</span><span class="p">],</span>
-                    <span class="n">context</span><span class="p">[</span><span class="s2">&quot;servers&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">exists</span><span class="p">(),</span>
-                    <span class="n">context</span><span class="p">[</span><span class="s2">&quot;vendors&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">exists</span><span class="p">(),</span>
-                    <span class="n">context</span><span class="p">[</span><span class="s2">&quot;clusters&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">exists</span><span class="p">(),</span>
-                <span class="p">]</span>
-            <span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">context</span><span class="p">[</span><span class="s2">&quot;has_results&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
-            <span class="n">context</span><span class="p">[</span><span class="s2">&quot;query_too_short&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+      <div class="highlight"><pre>            <span class="n">context</span><span class="p">[</span><span class="s2">"nav_results"</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="n">item</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">nav_targets</span> <span class="k">if</span> <span class="n">query</span> <span class="ow">in</span> <span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="s2">"name"</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span>
+            <span class="p">]</span>
 
-        <span class="k">return</span> <span class="n">context</span></pre></div>
+            <span class="n">context</span><span class="p">[</span><span class="s2">"servers"</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_queryset_filtered</span><span class="p">(</span><span class="n">Server</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span>
+                <span class="n">hostname__icontains</span><span class="o">=</span><span class="n">query</span>
+            <span class="p">)[:</span><span class="mi">10</span><span class="p">]</span>
+            <span class="n">context</span><span class="p">[</span><span class="s2">"vendors"</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_queryset_filtered</span><span class="p">(</span><span class="n">Vendor</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span>
+                <span class="n">name__icontains</span><span class="o">=</span><span class="n">query</span>
+            <span class="p">)[:</span><span class="mi">10</span><span class="p">]</span>
+            <span class="n">context</span><span class="p">[</span><span class="s2">"clusters"</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_queryset_filtered</span><span class="p">(</span><span class="n">Cluster</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span>
+                <span class="n">name__icontains</span><span class="o">=</span><span class="n">query</span>
+            <span class="p">)[:</span><span class="mi">10</span><span class="p">]</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -404,11 +388,22 @@ OS Distribution</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-19'>#</a>
       </div>
-      
+      <p>Simple check if anything was found</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">HistoryDiffView</span><span class="p">(</span><span class="n">LoginRequiredMixin</span><span class="p">,</span> <span class="n">TemplateView</span><span class="p">):</span>
-    <span class="n">template_name</span> <span class="o">=</span> <span class="s2">&quot;history_diff.html&quot;</span></pre></div>
+      <div class="highlight"><pre>            <span class="n">context</span><span class="p">[</span><span class="s2">"has_results"</span><span class="p">]</span> <span class="o">=</span> <span class="nb">any</span><span class="p">(</span>
+                <span class="p">[</span>
+                    <span class="n">context</span><span class="p">[</span><span class="s2">"nav_results"</span><span class="p">],</span>
+                    <span class="n">context</span><span class="p">[</span><span class="s2">"servers"</span><span class="p">]</span><span class="o">.</span><span class="n">exists</span><span class="p">(),</span>
+                    <span class="n">context</span><span class="p">[</span><span class="s2">"vendors"</span><span class="p">]</span><span class="o">.</span><span class="n">exists</span><span class="p">(),</span>
+                    <span class="n">context</span><span class="p">[</span><span class="s2">"clusters"</span><span class="p">]</span><span class="o">.</span><span class="n">exists</span><span class="p">(),</span>
+                <span class="p">]</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">context</span><span class="p">[</span><span class="s2">"has_results"</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="n">context</span><span class="p">[</span><span class="s2">"query_too_short"</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="k">return</span> <span class="n">context</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -420,27 +415,8 @@ OS Distribution</p>
       
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">get_context_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
-        <span class="n">context</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_context_data</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="n">app_label</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;app_label&quot;</span><span class="p">)</span>
-        <span class="n">history_id</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;history_id&quot;</span><span class="p">)</span>
-
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">model</span> <span class="o">=</span> <span class="n">apps</span><span class="o">.</span><span class="n">get_model</span><span class="p">(</span><span class="n">app_label</span><span class="p">,</span> <span class="s2">&quot;Model&quot;</span><span class="p">)</span>
-            <span class="n">record</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">history</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">history_id</span><span class="o">=</span><span class="n">history_id</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
-        <span class="k">except</span> <span class="p">(</span><span class="ne">LookupError</span><span class="p">,</span> <span class="n">ObjectDoesNotExist</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="n">Http404</span><span class="p">(</span><span class="s2">&quot;History record not found&quot;</span><span class="p">)</span>
-
-        <span class="n">context</span><span class="p">[</span><span class="s2">&quot;record&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">record</span>
-        <span class="n">context</span><span class="p">[</span><span class="s2">&quot;instance&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">record</span><span class="o">.</span><span class="n">instance</span>
-        <span class="n">context</span><span class="p">[</span><span class="s2">&quot;app_label&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">app_label</span>
-
-        <span class="k">if</span> <span class="n">record</span><span class="o">.</span><span class="n">prev_record</span><span class="p">:</span>
-            <span class="n">context</span><span class="p">[</span><span class="s2">&quot;diff&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">record</span><span class="o">.</span><span class="n">diff_against</span><span class="p">(</span><span class="n">record</span><span class="o">.</span><span class="n">prev_record</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">context</span><span class="p">[</span><span class="s2">&quot;diff&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-
-        <span class="k">return</span> <span class="n">context</span></pre></div>
+      <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">HistoryDiffView</span><span class="p">(</span><span class="n">LoginRequiredMixin</span><span class="p">,</span> <span class="n">TemplateView</span><span class="p">):</span>
+    <span class="n">template_name</span> <span class="o">=</span> <span class="s2">"history_diff.html"</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -452,7 +428,30 @@ OS Distribution</p>
       
     </div>
     <div class='code'>
-      <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">ImportStarterPackView</span><span class="p">(</span><span class="n">LoginRequiredMixin</span><span class="p">,</span> <span class="n">View</span><span class="p">):</span></pre></div>
+      <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">get_context_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+        <span class="n">context</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_context_data</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">app_label</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"app_label"</span><span class="p">)</span>
+        <span class="n">history_id</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"history_id"</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">model</span> <span class="o">=</span> <span class="n">apps</span><span class="o">.</span><span class="n">get_model</span><span class="p">(</span><span class="n">app_label</span><span class="p">,</span> <span class="s2">"Model"</span><span class="p">)</span>
+            <span class="n">history_qs</span> <span class="o">=</span> <span class="n">filter_history_queryset_by_tenant</span><span class="p">(</span>
+                <span class="n">model</span><span class="o">.</span><span class="n">history</span><span class="o">.</span><span class="n">all</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span>  <span class="c1"># type: ignore</span>
+            <span class="p">)</span>
+            <span class="n">record</span> <span class="o">=</span> <span class="n">history_qs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">history_id</span><span class="o">=</span><span class="n">history_id</span><span class="p">)</span>
+        <span class="k">except</span> <span class="p">(</span><span class="ne">LookupError</span><span class="p">,</span> <span class="n">ObjectDoesNotExist</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">Http404</span><span class="p">(</span><span class="s2">"History record not found"</span><span class="p">)</span>
+
+        <span class="n">context</span><span class="p">[</span><span class="s2">"record"</span><span class="p">]</span> <span class="o">=</span> <span class="n">record</span>
+        <span class="n">context</span><span class="p">[</span><span class="s2">"instance"</span><span class="p">]</span> <span class="o">=</span> <span class="n">record</span><span class="o">.</span><span class="n">instance</span>
+        <span class="n">context</span><span class="p">[</span><span class="s2">"app_label"</span><span class="p">]</span> <span class="o">=</span> <span class="n">app_label</span>
+
+        <span class="k">if</span> <span class="n">record</span><span class="o">.</span><span class="n">prev_record</span><span class="p">:</span>
+            <span class="n">context</span><span class="p">[</span><span class="s2">"diff"</span><span class="p">]</span> <span class="o">=</span> <span class="n">record</span><span class="o">.</span><span class="n">diff_against</span><span class="p">(</span><span class="n">record</span><span class="o">.</span><span class="n">prev_record</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">context</span><span class="p">[</span><span class="s2">"diff"</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">return</span> <span class="n">context</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -464,21 +463,7 @@ OS Distribution</p>
       
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">post</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
-        <span class="n">user_groups</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">groups</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">user_groups</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
-            <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;You are not assigned to any group.&quot;</span><span class="p">))</span>
-            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;dashboard&quot;</span><span class="p">)</span>
-
-        <span class="n">group</span> <span class="o">=</span> <span class="n">user_groups</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
-        <span class="n">results</span> <span class="o">=</span> <span class="n">import_starter_pack</span><span class="p">(</span><span class="n">group</span><span class="p">)</span>
-
-        <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span>
-            <span class="n">request</span><span class="p">,</span>
-            <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Imported </span><span class="si">%d</span><span class="s2"> vendors and </span><span class="si">%d</span><span class="s2"> operating systems into group </span><span class="si">%s</span><span class="s2">.&quot;</span><span class="p">)</span>
-            <span class="o">%</span> <span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="s2">&quot;vendors&quot;</span><span class="p">],</span> <span class="n">results</span><span class="p">[</span><span class="s2">&quot;os&quot;</span><span class="p">],</span> <span class="n">group</span><span class="o">.</span><span class="n">name</span><span class="p">),</span>
-        <span class="p">)</span>
-        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;vendor:index&quot;</span><span class="p">)</span></pre></div>
+      <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">ImportStarterPackView</span><span class="p">(</span><span class="n">LoginRequiredMixin</span><span class="p">,</span> <span class="n">View</span><span class="p">):</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -490,8 +475,21 @@ OS Distribution</p>
       
     </div>
     <div class='code'>
-      <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">TermsView</span><span class="p">(</span><span class="n">TemplateView</span><span class="p">):</span>
-    <span class="n">template_name</span> <span class="o">=</span> <span class="s2">&quot;legal/terms.html&quot;</span></pre></div>
+      <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">post</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+        <span class="n">user_groups</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">groups</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">user_groups</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">"You are not assigned to any group."</span><span class="p">))</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">"dashboard"</span><span class="p">)</span>
+
+        <span class="n">group</span> <span class="o">=</span> <span class="n">user_groups</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="n">import_starter_pack</span><span class="p">(</span><span class="n">group</span><span class="p">)</span>
+
+        <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span>
+            <span class="n">request</span><span class="p">,</span>
+            <span class="n">_</span><span class="p">(</span><span class="s2">"Imported </span><span class="si">%d</span><span class="s2"> vendors and </span><span class="si">%d</span><span class="s2"> operating systems into group </span><span class="si">%s</span><span class="s2">."</span><span class="p">)</span>
+            <span class="o">%</span> <span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="s2">"vendors"</span><span class="p">],</span> <span class="n">results</span><span class="p">[</span><span class="s2">"os"</span><span class="p">],</span> <span class="n">group</span><span class="o">.</span><span class="n">name</span><span class="p">),</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">"vendor:index"</span><span class="p">)</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -503,8 +501,8 @@ OS Distribution</p>
       
     </div>
     <div class='code'>
-      <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">PrivacyView</span><span class="p">(</span><span class="n">TemplateView</span><span class="p">):</span>
-    <span class="n">template_name</span> <span class="o">=</span> <span class="s2">&quot;legal/privacy.html&quot;</span></pre></div>
+      <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">TermsView</span><span class="p">(</span><span class="n">TemplateView</span><span class="p">):</span>
+    <span class="n">template_name</span> <span class="o">=</span> <span class="s2">"legal/terms.html"</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -516,8 +514,8 @@ OS Distribution</p>
       
     </div>
     <div class='code'>
-      <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">ImpressumView</span><span class="p">(</span><span class="n">TemplateView</span><span class="p">):</span>
-    <span class="n">template_name</span> <span class="o">=</span> <span class="s2">&quot;legal/impressum.html&quot;</span></pre></div>
+      <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">PrivacyView</span><span class="p">(</span><span class="n">TemplateView</span><span class="p">):</span>
+    <span class="n">template_name</span> <span class="o">=</span> <span class="s2">"legal/privacy.html"</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -529,7 +527,8 @@ OS Distribution</p>
       
     </div>
     <div class='code'>
-      <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">HealthView</span><span class="p">(</span><span class="n">View</span><span class="p">):</span></pre></div>
+      <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">ImpressumView</span><span class="p">(</span><span class="n">TemplateView</span><span class="p">):</span>
+    <span class="n">template_name</span> <span class="o">=</span> <span class="s2">"legal/impressum.html"</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -541,13 +540,7 @@ OS Distribution</p>
       
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JsonResponse</span><span class="p">:</span>
-        <span class="n">health</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;healthy&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;version&quot;</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">settings</span><span class="p">,</span> <span class="s2">&quot;APP_VERSION&quot;</span><span class="p">,</span> <span class="s2">&quot;unknown&quot;</span><span class="p">),</span>
-            <span class="s2">&quot;last_modification&quot;</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">settings</span><span class="p">,</span> <span class="s2">&quot;APP_MODIFICATION_DATE&quot;</span><span class="p">,</span> <span class="s2">&quot;unknown&quot;</span><span class="p">),</span>
-            <span class="s2">&quot;checks&quot;</span><span class="p">:</span> <span class="p">{},</span>
-        <span class="p">}</span></pre></div>
+      <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">HealthView</span><span class="p">(</span><span class="n">View</span><span class="p">):</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -556,6 +549,24 @@ OS Distribution</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-28'>#</a>
       </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JsonResponse</span><span class="p">:</span>
+        <span class="n">health</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">"status"</span><span class="p">:</span> <span class="s2">"healthy"</span><span class="p">,</span>
+            <span class="s2">"version"</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">settings</span><span class="p">,</span> <span class="s2">"APP_VERSION"</span><span class="p">,</span> <span class="s2">"unknown"</span><span class="p">),</span>
+            <span class="s2">"last_modification"</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">settings</span><span class="p">,</span> <span class="s2">"APP_MODIFICATION_DATE"</span><span class="p">,</span> <span class="s2">"unknown"</span><span class="p">),</span>
+            <span class="s2">"checks"</span><span class="p">:</span> <span class="p">{},</span>
+        <span class="p">}</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-29'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-29'>#</a>
+      </div>
       <p>Check database connection</p>
     </div>
     <div class='code'>
@@ -563,12 +574,25 @@ OS Distribution</p>
             <span class="kn">from</span><span class="w"> </span><span class="nn">django.db</span><span class="w"> </span><span class="kn">import</span> <span class="n">connection</span>
 
             <span class="n">connection</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
-            <span class="n">health</span><span class="p">[</span><span class="s2">&quot;checks&quot;</span><span class="p">][</span><span class="s2">&quot;database&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;ok&quot;</span>
-        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="n">health</span><span class="p">[</span><span class="s2">&quot;status&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;unhealthy&quot;</span>
-            <span class="n">health</span><span class="p">[</span><span class="s2">&quot;checks&quot;</span><span class="p">][</span><span class="s2">&quot;database&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;error: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="n">health</span><span class="p">[</span><span class="s2">"checks"</span><span class="p">][</span><span class="s2">"database"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"ok"</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-30'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-30'>#</a>
+      </div>
+      <p>Log the real error server-side; never leak connection internals
+(host/port/user) to unauthenticated callers.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>            <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">"Health check: database connection failed"</span><span class="p">)</span>
+            <span class="n">health</span><span class="p">[</span><span class="s2">"status"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"unhealthy"</span>
+            <span class="n">health</span><span class="p">[</span><span class="s2">"checks"</span><span class="p">][</span><span class="s2">"database"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"unavailable"</span>
 
-        <span class="n">status_code</span> <span class="o">=</span> <span class="mi">200</span> <span class="k">if</span> <span class="n">health</span><span class="p">[</span><span class="s2">&quot;status&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;healthy&quot;</span> <span class="k">else</span> <span class="mi">503</span>
+        <span class="n">status_code</span> <span class="o">=</span> <span class="mi">200</span> <span class="k">if</span> <span class="n">health</span><span class="p">[</span><span class="s2">"status"</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"healthy"</span> <span class="k">else</span> <span class="mi">503</span>
         <span class="k">return</span> <span class="n">JsonResponse</span><span class="p">(</span><span class="n">health</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="n">status_code</span><span class="p">)</span>
 
 </pre></div>

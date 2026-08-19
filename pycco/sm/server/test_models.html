@@ -37,7 +37,7 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">django</span>
 
-<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;DJANGO_SETTINGS_MODULE&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;sm.settings&quot;</span>
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">"DJANGO_SETTINGS_MODULE"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"sm.settings"</span>
 <span class="n">django</span><span class="o">.</span><span class="n">setup</span><span class="p">()</span></pre></div>
     </div>
   </div>
@@ -54,15 +54,15 @@
     <span class="n">model</span> <span class="o">=</span> <span class="n">Model</span>
     <span class="n">teststring</span> <span class="o">=</span> <span class="n">random_string</span><span class="p">()</span>
     <span class="n">fixtures</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">/fixtures/01_initial.yaml&quot;</span> <span class="o">%</span> <span class="s2">&quot;vendor&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">/fixtures/01_initial.yaml&quot;</span> <span class="o">%</span> <span class="s2">&quot;domain&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">/fixtures/01_initial.yaml&quot;</span> <span class="o">%</span> <span class="s2">&quot;location&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">/fixtures/01_initial.yaml&quot;</span> <span class="o">%</span> <span class="s2">&quot;status&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">/fixtures/01_initial.yaml&quot;</span> <span class="o">%</span> <span class="s2">&quot;operatingsystem&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">/fixtures/01_initial.yaml&quot;</span> <span class="o">%</span> <span class="s2">&quot;clustersoftware&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">/fixtures/01_initial.yaml&quot;</span> <span class="o">%</span> <span class="s2">&quot;patchtime&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">/fixtures/01_initial.yaml&quot;</span> <span class="o">%</span> <span class="s2">&quot;cluster&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">/fixtures/01_initial.yaml&quot;</span> <span class="o">%</span> <span class="s2">&quot;servermodel&quot;</span><span class="p">,</span>
+        <span class="s2">"</span><span class="si">%s</span><span class="s2">/fixtures/01_initial.yaml"</span> <span class="o">%</span> <span class="s2">"vendor"</span><span class="p">,</span>
+        <span class="s2">"</span><span class="si">%s</span><span class="s2">/fixtures/01_initial.yaml"</span> <span class="o">%</span> <span class="s2">"domain"</span><span class="p">,</span>
+        <span class="s2">"</span><span class="si">%s</span><span class="s2">/fixtures/01_initial.yaml"</span> <span class="o">%</span> <span class="s2">"location"</span><span class="p">,</span>
+        <span class="s2">"</span><span class="si">%s</span><span class="s2">/fixtures/01_initial.yaml"</span> <span class="o">%</span> <span class="s2">"status"</span><span class="p">,</span>
+        <span class="s2">"</span><span class="si">%s</span><span class="s2">/fixtures/01_initial.yaml"</span> <span class="o">%</span> <span class="s2">"operatingsystem"</span><span class="p">,</span>
+        <span class="s2">"</span><span class="si">%s</span><span class="s2">/fixtures/01_initial.yaml"</span> <span class="o">%</span> <span class="s2">"clustersoftware"</span><span class="p">,</span>
+        <span class="s2">"</span><span class="si">%s</span><span class="s2">/fixtures/01_initial.yaml"</span> <span class="o">%</span> <span class="s2">"patchtime"</span><span class="p">,</span>
+        <span class="s2">"</span><span class="si">%s</span><span class="s2">/fixtures/01_initial.yaml"</span> <span class="o">%</span> <span class="s2">"cluster"</span><span class="p">,</span>
+        <span class="s2">"</span><span class="si">%s</span><span class="s2">/fixtures/01_initial.yaml"</span> <span class="o">%</span> <span class="s2">"servermodel"</span><span class="p">,</span>
     <span class="p">]</span>
     <span class="n">testitem</span> <span class="o">=</span> <span class="kc">None</span></pre></div>
     </div>
@@ -132,8 +132,8 @@ need to manually prune the DB and create a testitem</p>
     <div class='code'>
       <div class="highlight"><pre>        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
         <span class="n">obj</span><span class="p">,</span> <span class="n">created</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_or_create_testitem</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">created</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;the object was already there?&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertIsInstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="s2">&quot;object not correct model!?&quot;</span><span class="p">)</span></pre></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">created</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">"the object was already there?"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIsInstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="s2">"object not correct model!?"</span><span class="p">)</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -146,7 +146,7 @@ need to manually prune the DB and create a testitem</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">test_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">testitem</span><span class="o">.</span><span class="n">hostname</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">teststring</span><span class="p">,</span> <span class="s2">&quot;name not correct&quot;</span><span class="p">)</span></pre></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">testitem</span><span class="o">.</span><span class="n">hostname</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">teststring</span><span class="p">,</span> <span class="s2">"name not correct"</span><span class="p">)</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -160,9 +160,9 @@ need to manually prune the DB and create a testitem</p>
     <div class='code'>
       <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">test__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span>
-            <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">teststring</span><span class="p">),</span>
-            <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">testitem</span><span class="o">.</span><span class="n">hostname</span><span class="p">),</span>
-            <span class="s2">&quot;string representation not correct&quot;</span><span class="p">,</span>
+            <span class="s2">"</span><span class="si">%s</span><span class="s2">"</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">teststring</span><span class="p">),</span>
+            <span class="s2">"</span><span class="si">%s</span><span class="s2">"</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">testitem</span><span class="o">.</span><span class="n">hostname</span><span class="p">),</span>
+            <span class="s2">"string representation not correct"</span><span class="p">,</span>
         <span class="p">)</span></pre></div>
     </div>
   </div>
@@ -177,9 +177,9 @@ need to manually prune the DB and create a testitem</p>
     <div class='code'>
       <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">test_absolute_url</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span>
-            <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">testitem</span><span class="o">.</span><span class="n">get_absolute_url</span><span class="p">()),</span>
-            <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">:detail&quot;</span> <span class="o">%</span> <span class="n">app_label</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;pk&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">testitem</span><span class="o">.</span><span class="n">pk</span><span class="p">})),</span>
-            <span class="s2">&quot;aboslute url not built correctly&quot;</span><span class="p">,</span>
+            <span class="s2">"</span><span class="si">%s</span><span class="s2">"</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">testitem</span><span class="o">.</span><span class="n">get_absolute_url</span><span class="p">()),</span>
+            <span class="s2">"</span><span class="si">%s</span><span class="s2">"</span> <span class="o">%</span> <span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">"</span><span class="si">%s</span><span class="s2">:detail"</span> <span class="o">%</span> <span class="n">app_label</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">=</span><span class="p">{</span><span class="s2">"pk"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">testitem</span><span class="o">.</span><span class="n">pk</span><span class="p">})),</span>
+            <span class="s2">"aboslute url not built correctly"</span><span class="p">,</span>
         <span class="p">)</span>
 
 </pre></div>

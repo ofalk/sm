@@ -34,19 +34,19 @@
     <div class='code'>
       <div class="highlight"><pre><span class="k">def</span><span class="w"> </span><span class="nf">theme_settings</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
     <span class="k">return</span> <span class="p">{</span>
-        <span class="s2">&quot;THEME_CONTACT_EMAIL&quot;</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span>
-            <span class="n">settings</span><span class="p">,</span> <span class="s2">&quot;THEME_CONTACT_EMAIL&quot;</span><span class="p">,</span> <span class="s2">&quot;oliver@linux-kernel.at&quot;</span>
+        <span class="s2">"THEME_CONTACT_EMAIL"</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span>
+            <span class="n">settings</span><span class="p">,</span> <span class="s2">"THEME_CONTACT_EMAIL"</span><span class="p">,</span> <span class="s2">"oliver@linux-kernel.at"</span>
         <span class="p">),</span>
-        <span class="s2">&quot;THEME_GITHUB_URL&quot;</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span>
-            <span class="n">settings</span><span class="p">,</span> <span class="s2">&quot;THEME_GITHUB_URL&quot;</span><span class="p">,</span> <span class="s2">&quot;https://github.com/ofalk/sm&quot;</span>
+        <span class="s2">"THEME_GITHUB_URL"</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span>
+            <span class="n">settings</span><span class="p">,</span> <span class="s2">"THEME_GITHUB_URL"</span><span class="p">,</span> <span class="s2">"https://github.com/ofalk/sm"</span>
         <span class="p">),</span>
-        <span class="s2">&quot;SOCIALACCOUNT_ENABLED&quot;</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">settings</span><span class="p">,</span> <span class="s2">&quot;SOCIALACCOUNT_ENABLED&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">),</span>
-        <span class="s2">&quot;APP_VERSION&quot;</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">settings</span><span class="p">,</span> <span class="s2">&quot;APP_VERSION&quot;</span><span class="p">,</span> <span class="s2">&quot;unknown&quot;</span><span class="p">),</span>
-        <span class="s2">&quot;APP_MODIFICATION_DATE&quot;</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">settings</span><span class="p">,</span> <span class="s2">&quot;APP_MODIFICATION_DATE&quot;</span><span class="p">,</span> <span class="s2">&quot;unknown&quot;</span><span class="p">),</span>
-        <span class="s2">&quot;ANALYTICS_ENABLED&quot;</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">settings</span><span class="p">,</span> <span class="s2">&quot;ANALYTICS_ENABLED&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">),</span>
-        <span class="s2">&quot;ANALYTICS_ID&quot;</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">settings</span><span class="p">,</span> <span class="s2">&quot;ANALYTICS_ID&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-        <span class="s2">&quot;ANALYTICS_BASE_URL&quot;</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span>
-            <span class="n">settings</span><span class="p">,</span> <span class="s2">&quot;ANALYTICS_BASE_URL&quot;</span><span class="p">,</span> <span class="s2">&quot;https://api.swetrix.com&quot;</span>
+        <span class="s2">"SOCIALACCOUNT_ENABLED"</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">settings</span><span class="p">,</span> <span class="s2">"SOCIALACCOUNT_ENABLED"</span><span class="p">,</span> <span class="kc">False</span><span class="p">),</span>
+        <span class="s2">"APP_VERSION"</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">settings</span><span class="p">,</span> <span class="s2">"APP_VERSION"</span><span class="p">,</span> <span class="s2">"unknown"</span><span class="p">),</span>
+        <span class="s2">"APP_MODIFICATION_DATE"</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">settings</span><span class="p">,</span> <span class="s2">"APP_MODIFICATION_DATE"</span><span class="p">,</span> <span class="s2">"unknown"</span><span class="p">),</span>
+        <span class="s2">"ANALYTICS_ENABLED"</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">settings</span><span class="p">,</span> <span class="s2">"ANALYTICS_ENABLED"</span><span class="p">,</span> <span class="kc">False</span><span class="p">),</span>
+        <span class="s2">"ANALYTICS_ID"</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">settings</span><span class="p">,</span> <span class="s2">"ANALYTICS_ID"</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+        <span class="s2">"ANALYTICS_BASE_URL"</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span>
+            <span class="n">settings</span><span class="p">,</span> <span class="s2">"ANALYTICS_BASE_URL"</span><span class="p">,</span> <span class="s2">"https://api.swetrix.com"</span>
         <span class="p">),</span>
     <span class="p">}</span>
 

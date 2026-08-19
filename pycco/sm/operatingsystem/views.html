@@ -38,7 +38,9 @@
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">django.utils.translation</span><span class="w"> </span><span class="kn">import</span> <span class="n">gettext</span> <span class="k">as</span> <span class="n">_</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">django.urls</span><span class="w"> </span><span class="kn">import</span> <span class="n">reverse_lazy</span></pre></div>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.urls</span><span class="w"> </span><span class="kn">import</span> <span class="n">reverse_lazy</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">vendor.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">Model</span> <span class="k">as</span> <span class="n">VendorModel</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -51,11 +53,7 @@
     </div>
     <div class='code'>
       <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">ListView</span><span class="p">(</span><span class="n">LoginRequiredMixin</span><span class="p">,</span> <span class="n">MultiTenantMixin</span><span class="p">,</span> <span class="n">GenericListView</span><span class="p">):</span>
-    <span class="n">template_name</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">/list.html&quot;</span> <span class="o">%</span> <span class="n">app_label</span>
-    <span class="n">model</span> <span class="o">=</span> <span class="n">Model</span>
-    <span class="n">paginate_by</span> <span class="o">=</span> <span class="mi">20</span>
-    <span class="n">paginate_orphans</span> <span class="o">=</span> <span class="n">paginate_by</span> <span class="o">/</span> <span class="mi">4</span>
-    <span class="n">ordering</span> <span class="o">=</span> <span class="s2">&quot;vendor&quot;</span></pre></div>
+    <span class="n">template_name</span> <span class="o">=</span> <span class="s2">"</span><span class="si">%s</span><span class="s2">/list.html"</span> <span class="o">%</span> <span class="n">app_label</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -64,11 +62,16 @@
       <div class='octowrap'>
         <a class='octothorpe' href='#section-2'>#</a>
       </div>
-      
+      <p>Grouped list: rows are Vendors (with their operating systems prefetched),
+so the queryset model is the Vendor model. Permission checks stay
+anchored to this app via <code>permission_model</code>.</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">get_queryset</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
-        <span class="kn">from</span><span class="w"> </span><span class="nn">vendor.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">Model</span> <span class="k">as</span> <span class="n">VendorModel</span></pre></div>
+      <div class="highlight"><pre>    <span class="n">model</span> <span class="o">=</span> <span class="n">VendorModel</span>
+    <span class="n">permission_model</span> <span class="o">=</span> <span class="n">Model</span>
+    <span class="n">paginate_by</span> <span class="o">=</span> <span class="mi">20</span>
+    <span class="n">paginate_orphans</span> <span class="o">=</span> <span class="n">paginate_by</span> <span class="o">/</span> <span class="mi">4</span>
+    <span class="n">ordering</span> <span class="o">=</span> <span class="s2">"vendor"</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -76,6 +79,18 @@
     <div class='docs'>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-3'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">get_queryset</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-4'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-4'>#</a>
       </div>
       <p>Filtering by group is handled by MultiTenantMixin
 (via super().get_queryset())
@@ -88,25 +103,10 @@ But we need the vendor grouping logic</p>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_superuser</span><span class="p">:</span>
             <span class="n">qs</span> <span class="o">=</span> <span class="n">VendorModel</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">is_software</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="s2">&quot;srvmanager-show_empty&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">COOKIES</span><span class="p">:</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">COOKIES</span><span class="p">[</span><span class="s2">&quot;srvmanager-show_empty&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;false&quot;</span><span class="p">:</span>
-                <span class="k">return</span> <span class="n">qs</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">operatingsystem</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">qs</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">)</span></pre></div>
-    </div>
-  </div>
-  <div class='clearall'></div>
-  <div class='section' id='section-4'>
-    <div class='docs'>
-      <div class='octowrap'>
-        <a class='octothorpe' href='#section-4'>#</a>
-      </div>
-      
-    </div>
-    <div class='code'>
-      <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">DetailView</span><span class="p">(</span><span class="n">LoginRequiredMixin</span><span class="p">,</span> <span class="n">MultiTenantMixin</span><span class="p">,</span> <span class="n">GenericUpdateView</span><span class="p">):</span>
-    <span class="n">template_name</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">/detail.html&quot;</span> <span class="o">%</span> <span class="n">app_label</span>
-    <span class="n">model</span> <span class="o">=</span> <span class="n">Model</span>
-    <span class="n">form_class</span> <span class="o">=</span> <span class="n">FormDisabled</span></pre></div>
+        <span class="k">if</span> <span class="s2">"srvmanager-show_empty"</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">COOKIES</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">COOKIES</span><span class="p">[</span><span class="s2">"srvmanager-show_empty"</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"false"</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">qs</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">operatingsystem</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">"name"</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">qs</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">"name"</span><span class="p">)</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -118,17 +118,10 @@ But we need the vendor grouping logic</p>
       
     </div>
     <div class='code'>
-      <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">UpdateView</span><span class="p">(</span>
-    <span class="n">SuccessMessageMixin</span><span class="p">,</span>
-    <span class="n">LoginRequiredMixin</span><span class="p">,</span>
-    <span class="n">MultiTenantMixin</span><span class="p">,</span>
-    <span class="n">GenericUpdateView</span><span class="p">,</span>
-<span class="p">):</span>
-    <span class="n">success_message</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%(version)s</span><span class="s2"> &quot;</span> <span class="o">+</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;was updated successfully&quot;</span><span class="p">)</span>
-    <span class="n">template_name</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">/edit.html&quot;</span> <span class="o">%</span> <span class="n">app_label</span>
+      <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">DetailView</span><span class="p">(</span><span class="n">LoginRequiredMixin</span><span class="p">,</span> <span class="n">MultiTenantMixin</span><span class="p">,</span> <span class="n">GenericUpdateView</span><span class="p">):</span>
+    <span class="n">template_name</span> <span class="o">=</span> <span class="s2">"</span><span class="si">%s</span><span class="s2">/detail.html"</span> <span class="o">%</span> <span class="n">app_label</span>
     <span class="n">model</span> <span class="o">=</span> <span class="n">Model</span>
-    <span class="n">form_class</span> <span class="o">=</span> <span class="n">Form</span>
-    <span class="n">success_url</span> <span class="o">=</span> <span class="n">reverse_lazy</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">:index&quot;</span> <span class="o">%</span> <span class="n">app_label</span><span class="p">)</span></pre></div>
+    <span class="n">form_class</span> <span class="o">=</span> <span class="n">FormDisabled</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -140,18 +133,17 @@ But we need the vendor grouping logic</p>
       
     </div>
     <div class='code'>
-      <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">CreateView</span><span class="p">(</span>
+      <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">UpdateView</span><span class="p">(</span>
     <span class="n">SuccessMessageMixin</span><span class="p">,</span>
     <span class="n">LoginRequiredMixin</span><span class="p">,</span>
     <span class="n">MultiTenantMixin</span><span class="p">,</span>
-    <span class="n">GenericCreateView</span><span class="p">,</span>
+    <span class="n">GenericUpdateView</span><span class="p">,</span>
 <span class="p">):</span>
-    <span class="n">success_message</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%(version)s</span><span class="s2"> &quot;</span> <span class="o">+</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;was created successfully&quot;</span><span class="p">)</span>
-
-    <span class="n">template_name</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">/edit.html&quot;</span> <span class="o">%</span> <span class="n">app_label</span>
-    <span class="n">form_class</span> <span class="o">=</span> <span class="n">Form</span>
+    <span class="n">success_message</span> <span class="o">=</span> <span class="s2">"</span><span class="si">%(version)s</span><span class="s2"> "</span> <span class="o">+</span> <span class="n">_</span><span class="p">(</span><span class="s2">"was updated successfully"</span><span class="p">)</span>
+    <span class="n">template_name</span> <span class="o">=</span> <span class="s2">"</span><span class="si">%s</span><span class="s2">/edit.html"</span> <span class="o">%</span> <span class="n">app_label</span>
     <span class="n">model</span> <span class="o">=</span> <span class="n">Model</span>
-    <span class="n">success_url</span> <span class="o">=</span> <span class="n">reverse_lazy</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">:index&quot;</span> <span class="o">%</span> <span class="n">app_label</span><span class="p">)</span></pre></div>
+    <span class="n">form_class</span> <span class="o">=</span> <span class="n">Form</span>
+    <span class="n">success_url</span> <span class="o">=</span> <span class="n">reverse_lazy</span><span class="p">(</span><span class="s2">"</span><span class="si">%s</span><span class="s2">:index"</span> <span class="o">%</span> <span class="n">app_label</span><span class="p">)</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -163,15 +155,18 @@ But we need the vendor grouping logic</p>
       
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">get_initial</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
-        <span class="kn">from</span><span class="w"> </span><span class="nn">vendor.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">Model</span> <span class="k">as</span> <span class="n">VendorModel</span>
+      <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">CreateView</span><span class="p">(</span>
+    <span class="n">SuccessMessageMixin</span><span class="p">,</span>
+    <span class="n">LoginRequiredMixin</span><span class="p">,</span>
+    <span class="n">MultiTenantMixin</span><span class="p">,</span>
+    <span class="n">GenericCreateView</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="n">success_message</span> <span class="o">=</span> <span class="s2">"</span><span class="si">%(version)s</span><span class="s2"> "</span> <span class="o">+</span> <span class="n">_</span><span class="p">(</span><span class="s2">"was created successfully"</span><span class="p">)</span>
 
-        <span class="n">initial</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_initial</span><span class="p">()</span>
-        <span class="k">if</span> <span class="s2">&quot;vendor&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span><span class="p">:</span>
-            <span class="n">initial</span><span class="p">[</span><span class="s2">&quot;vendor&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">VendorModel</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span>
-                <span class="n">pk</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;vendor&quot;</span><span class="p">]</span>
-            <span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
-        <span class="k">return</span> <span class="n">initial</span></pre></div>
+    <span class="n">template_name</span> <span class="o">=</span> <span class="s2">"</span><span class="si">%s</span><span class="s2">/edit.html"</span> <span class="o">%</span> <span class="n">app_label</span>
+    <span class="n">form_class</span> <span class="o">=</span> <span class="n">Form</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">Model</span>
+    <span class="n">success_url</span> <span class="o">=</span> <span class="n">reverse_lazy</span><span class="p">(</span><span class="s2">"</span><span class="si">%s</span><span class="s2">:index"</span> <span class="o">%</span> <span class="n">app_label</span><span class="p">)</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -183,16 +178,34 @@ But we need the vendor grouping logic</p>
       
     </div>
     <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">get_initial</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+        <span class="n">initial</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_initial</span><span class="p">()</span>
+        <span class="k">if</span> <span class="s2">"vendor"</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span><span class="p">:</span>
+            <span class="n">initial</span><span class="p">[</span><span class="s2">"vendor"</span><span class="p">]</span> <span class="o">=</span> <span class="n">VendorModel</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span>
+                <span class="n">pk</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span><span class="p">[</span><span class="s2">"vendor"</span><span class="p">]</span>
+            <span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">initial</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-9'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-9'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
       <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">DeleteView</span><span class="p">(</span>
     <span class="n">SafeDeleteMixin</span><span class="p">,</span>
     <span class="n">LoginRequiredMixin</span><span class="p">,</span>
     <span class="n">MultiTenantMixin</span><span class="p">,</span>
     <span class="n">GenericDeleteView</span><span class="p">,</span>
 <span class="p">):</span>
-    <span class="n">success_message</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%(version)s</span><span class="s2"> &quot;</span> <span class="o">+</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;was deleted successfully&quot;</span><span class="p">)</span>
-    <span class="n">template_name</span> <span class="o">=</span> <span class="s2">&quot;delete.html&quot;</span>
+    <span class="n">success_message</span> <span class="o">=</span> <span class="s2">"</span><span class="si">%(version)s</span><span class="s2"> "</span> <span class="o">+</span> <span class="n">_</span><span class="p">(</span><span class="s2">"was deleted successfully"</span><span class="p">)</span>
+    <span class="n">template_name</span> <span class="o">=</span> <span class="s2">"delete.html"</span>
     <span class="n">model</span> <span class="o">=</span> <span class="n">Model</span>
-    <span class="n">success_url</span> <span class="o">=</span> <span class="n">reverse_lazy</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">:index&quot;</span> <span class="o">%</span> <span class="n">app_label</span><span class="p">)</span>
+    <span class="n">success_url</span> <span class="o">=</span> <span class="n">reverse_lazy</span><span class="p">(</span><span class="s2">"</span><span class="si">%s</span><span class="s2">:index"</span> <span class="o">%</span> <span class="n">app_label</span><span class="p">)</span>
 
 </pre></div>
     </div>

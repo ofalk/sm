@@ -67,9 +67,9 @@
     <div class='code'>
       <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">UserListView</span><span class="p">(</span><span class="n">StaffRequiredMixin</span><span class="p">,</span> <span class="n">ListView</span><span class="p">):</span>
     <span class="n">model</span> <span class="o">=</span> <span class="n">User</span>
-    <span class="n">template_name</span> <span class="o">=</span> <span class="s2">&quot;admin/user_list.html&quot;</span>
-    <span class="n">context_object_name</span> <span class="o">=</span> <span class="s2">&quot;users&quot;</span>
-    <span class="n">ordering</span> <span class="o">=</span> <span class="s2">&quot;username&quot;</span></pre></div>
+    <span class="n">template_name</span> <span class="o">=</span> <span class="s2">"admin/user_list.html"</span>
+    <span class="n">context_object_name</span> <span class="o">=</span> <span class="s2">"users"</span>
+    <span class="n">ordering</span> <span class="o">=</span> <span class="s2">"username"</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -83,7 +83,7 @@
     <div class='code'>
       <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">get_context_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
         <span class="n">context</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_context_data</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="n">context</span><span class="p">[</span><span class="s2">&quot;groups&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Group</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">prefetch_related</span><span class="p">(</span><span class="s2">&quot;profile&quot;</span><span class="p">)</span>
+        <span class="n">context</span><span class="p">[</span><span class="s2">"groups"</span><span class="p">]</span> <span class="o">=</span> <span class="n">Group</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">prefetch_related</span><span class="p">(</span><span class="s2">"profile"</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">context</span></pre></div>
     </div>
   </div>
@@ -99,8 +99,8 @@
       <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">GroupProfileUpdateView</span><span class="p">(</span><span class="n">StaffRequiredMixin</span><span class="p">,</span> <span class="n">UpdateView</span><span class="p">):</span>
     <span class="n">model</span> <span class="o">=</span> <span class="n">GroupProfile</span>
     <span class="n">form_class</span> <span class="o">=</span> <span class="n">GroupProfileForm</span>
-    <span class="n">template_name</span> <span class="o">=</span> <span class="s2">&quot;admin/group_profile_edit.html&quot;</span>
-    <span class="n">success_url</span> <span class="o">=</span> <span class="n">reverse_lazy</span><span class="p">(</span><span class="s2">&quot;user_management_list&quot;</span><span class="p">)</span></pre></div>
+    <span class="n">template_name</span> <span class="o">=</span> <span class="s2">"admin/group_profile_edit.html"</span>
+    <span class="n">success_url</span> <span class="o">=</span> <span class="n">reverse_lazy</span><span class="p">(</span><span class="s2">"user_management_list"</span><span class="p">)</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -114,7 +114,7 @@
     <div class='code'>
       <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">form_valid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">form</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
         <span class="n">response</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">form_valid</span><span class="p">(</span><span class="n">form</span><span class="p">)</span>
-        <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Group profile updated successfully.&quot;</span><span class="p">))</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">"Group profile updated successfully."</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">response</span>
 
 </pre></div>

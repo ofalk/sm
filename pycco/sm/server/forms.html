@@ -64,10 +64,9 @@ value</p>
     <div class='code'>
       <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s2">&quot;status&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">initial</span> <span class="o">=</span> <span class="n">StatusModel</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;In use&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">id</span>
-        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>  <span class="c1"># noqa # flake8: noqa # NOQA # pragma: no cover</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;No status &quot;In Use&quot; found: </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">e</span><span class="p">)</span></pre></div>
+        <span class="n">status</span> <span class="o">=</span> <span class="n">StatusModel</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"In use"</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">status</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s2">"status"</span><span class="p">]</span><span class="o">.</span><span class="n">initial</span> <span class="o">=</span> <span class="n">status</span><span class="o">.</span><span class="n">id</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -82,8 +81,8 @@ value</p>
       <div class="highlight"><pre>    <span class="k">class</span><span class="w"> </span><span class="nc">Meta</span><span class="p">(</span><span class="n">SMForm</span><span class="o">.</span><span class="n">Meta</span><span class="p">):</span>
         <span class="n">model</span> <span class="o">=</span> <span class="n">ServerModel</span>
         <span class="n">widgets</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;delivery_date&quot;</span><span class="p">:</span> <span class="n">DateInput</span><span class="p">(</span><span class="n">attrs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;class&quot;</span><span class="p">:</span> <span class="s2">&quot;date-input&quot;</span><span class="p">}),</span>
-            <span class="s2">&quot;install_date&quot;</span><span class="p">:</span> <span class="n">DateInput</span><span class="p">(</span><span class="n">attrs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;class&quot;</span><span class="p">:</span> <span class="s2">&quot;date-input&quot;</span><span class="p">}),</span>
+            <span class="s2">"delivery_date"</span><span class="p">:</span> <span class="n">DateInput</span><span class="p">(</span><span class="n">attrs</span><span class="o">=</span><span class="p">{</span><span class="s2">"class"</span><span class="p">:</span> <span class="s2">"date-input"</span><span class="p">}),</span>
+            <span class="s2">"install_date"</span><span class="p">:</span> <span class="n">DateInput</span><span class="p">(</span><span class="n">attrs</span><span class="o">=</span><span class="p">{</span><span class="s2">"class"</span><span class="p">:</span> <span class="s2">"date-input"</span><span class="p">}),</span>
         <span class="p">}</span></pre></div>
     </div>
   </div>
@@ -113,10 +112,10 @@ value</p>
     <span class="n">status</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">ModelChoiceField</span><span class="p">(</span>
         <span class="n">queryset</span><span class="o">=</span><span class="n">StatusModel</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">(),</span>
         <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-        <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Change Status to&quot;</span><span class="p">,</span>
-        <span class="n">empty_label</span><span class="o">=</span><span class="s2">&quot;--- No Change ---&quot;</span><span class="p">,</span>
+        <span class="n">label</span><span class="o">=</span><span class="s2">"Change Status to"</span><span class="p">,</span>
+        <span class="n">empty_label</span><span class="o">=</span><span class="s2">"--- No Change ---"</span><span class="p">,</span>
     <span class="p">)</span>
-    <span class="n">delete</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span><span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Delete Selected Servers&quot;</span><span class="p">)</span>
+    <span class="n">delete</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span><span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Delete Selected Servers"</span><span class="p">)</span>
 
 </pre></div>
     </div>

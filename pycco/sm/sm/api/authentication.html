@@ -31,7 +31,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">sm.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">ApiKey</span>
 
 <span class="n">MALFORMED_MESSAGE</span> <span class="o">=</span> <span class="p">(</span>
-    <span class="s2">&quot;Invalid Authorization header. Expected format: &quot;</span> <span class="s2">&quot;ApiKey &lt;client_id&gt;:&lt;secret&gt;&quot;</span>
+    <span class="s2">"Invalid Authorization header. Expected format: "</span> <span class="s2">"ApiKey &lt;client_id&gt;:&lt;secret&gt;"</span>
 <span class="p">)</span></pre></div>
     </div>
   </div>
@@ -62,7 +62,7 @@ for that user.</p>
       
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="n">keyword</span> <span class="o">=</span> <span class="s2">&quot;ApiKey&quot;</span></pre></div>
+      <div class="highlight"><pre>    <span class="n">keyword</span> <span class="o">=</span> <span class="s2">"ApiKey"</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -82,22 +82,22 @@ for that user.</p>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">auth</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">AuthenticationFailed</span><span class="p">(</span><span class="n">MALFORMED_MESSAGE</span><span class="p">)</span>
 
-        <span class="n">token</span> <span class="o">=</span> <span class="n">auth</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="s2">&quot;:&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">token</span><span class="p">:</span>
+        <span class="n">token</span> <span class="o">=</span> <span class="n">auth</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">"utf-8"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s2">":"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">token</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">AuthenticationFailed</span><span class="p">(</span><span class="n">MALFORMED_MESSAGE</span><span class="p">)</span>
 
-        <span class="n">client_id</span><span class="p">,</span> <span class="n">secret</span> <span class="o">=</span> <span class="n">token</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">client_id</span><span class="p">,</span> <span class="n">secret</span> <span class="o">=</span> <span class="n">token</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">":"</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 
         <span class="n">key</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="n">ApiKey</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">select_related</span><span class="p">(</span><span class="s2">&quot;user&quot;</span><span class="p">)</span>
+            <span class="n">ApiKey</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">select_related</span><span class="p">(</span><span class="s2">"user"</span><span class="p">)</span>
             <span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">client_id</span><span class="o">=</span><span class="n">client_id</span><span class="p">,</span> <span class="n">is_active</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
             <span class="o">.</span><span class="n">first</span><span class="p">()</span>
         <span class="p">)</span>
         <span class="k">if</span> <span class="n">key</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">check_password</span><span class="p">(</span><span class="n">secret</span><span class="p">,</span> <span class="n">key</span><span class="o">.</span><span class="n">secret_hash</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="n">AuthenticationFailed</span><span class="p">(</span><span class="s2">&quot;Invalid API key credentials.&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">AuthenticationFailed</span><span class="p">(</span><span class="s2">"Invalid API key credentials."</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">key</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_active</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">AuthenticationFailed</span><span class="p">(</span><span class="s2">&quot;User account is disabled.&quot;</span><span class="p">)</span></pre></div>
+            <span class="k">raise</span> <span class="n">AuthenticationFailed</span><span class="p">(</span><span class="s2">"User account is disabled."</span><span class="p">)</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -141,7 +141,7 @@ for that user.</p>
     <div class='code'>
       <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">ApiKeyAuthenticationScheme</span><span class="p">(</span><span class="n">OpenApiAuthenticationExtension</span><span class="p">):</span>
     <span class="n">target_class</span> <span class="o">=</span> <span class="n">ApiKeyAuthentication</span>
-    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;ApiKeyAuth&quot;</span></pre></div>
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">"ApiKeyAuth"</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -168,12 +168,12 @@ for that user.</p>
     <div class='code'>
       <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">get_security_definition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">auto_schema</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">{</span>
-            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;apiKey&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;in&quot;</span><span class="p">:</span> <span class="s2">&quot;header&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Authorization&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="p">(</span>
-                <span class="s2">&quot;Client ID/secret pair. Send the credentials as &quot;</span>
-                <span class="s2">&quot;`ApiKey &lt;client_id&gt;:&lt;secret&gt;` in the Authorization header.&quot;</span>
+            <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"apiKey"</span><span class="p">,</span>
+            <span class="s2">"in"</span><span class="p">:</span> <span class="s2">"header"</span><span class="p">,</span>
+            <span class="s2">"name"</span><span class="p">:</span> <span class="s2">"Authorization"</span><span class="p">,</span>
+            <span class="s2">"description"</span><span class="p">:</span> <span class="p">(</span>
+                <span class="s2">"Client ID/secret pair. Send the credentials as "</span>
+                <span class="s2">"`ApiKey &lt;client_id&gt;:&lt;secret&gt;` in the Authorization header."</span>
             <span class="p">),</span>
         <span class="p">}</span>
 

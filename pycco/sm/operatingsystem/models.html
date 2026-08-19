@@ -80,7 +80,7 @@ to query for &lsquo;em. See also operatingsystem.models.Manager.<strong>doc</str
     </div>
     <div class='code'>
       <div class="highlight"><pre>        <span class="k">if</span> <span class="n">vendor</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">version</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">ObjectDoesNotExist</span><span class="p">(</span><span class="s2">&quot;Nothing to query&quot;</span><span class="p">)</span></pre></div>
+            <span class="k">raise</span> <span class="n">ObjectDoesNotExist</span><span class="p">(</span><span class="s2">"Nothing to query"</span><span class="p">)</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -130,20 +130,20 @@ For now, we search all vendors.</p>
             <span class="n">vendor</span> <span class="o">=</span> <span class="kc">None</span>
 
         <span class="k">if</span> <span class="nb">object</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">version</span><span class="p">,</span> <span class="p">(</span><span class="nb">tuple</span><span class="p">,</span> <span class="nb">list</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)):</span>
-            <span class="k">if</span> <span class="n">version</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">7</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Red Hat&quot;</span><span class="p">:</span>
-                <span class="n">vendorobj</span> <span class="o">=</span> <span class="n">VendorModel</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Red Hat&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">version</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">7</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"Red Hat"</span><span class="p">:</span>
+                <span class="n">vendorobj</span> <span class="o">=</span> <span class="n">VendorModel</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"Red Hat"</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
                 <span class="n">vers</span> <span class="o">=</span> <span class="n">version</span><span class="p">[</span><span class="mi">7</span><span class="p">:]</span><span class="o">.</span><span class="n">lstrip</span><span class="p">()</span>
                 <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">vers</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-                    <span class="n">vers</span> <span class="o">+=</span> <span class="s2">&quot;.0&quot;</span>
+                    <span class="n">vers</span> <span class="o">+=</span> <span class="s2">".0"</span>
                 <span class="nb">object</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">vendor</span><span class="o">=</span><span class="n">vendorobj</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="n">vers</span><span class="p">)</span>
-            <span class="k">elif</span> <span class="n">version</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">4</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;RHEL&quot;</span><span class="p">:</span>
-                <span class="n">vendorobj</span> <span class="o">=</span> <span class="n">VendorModel</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Red Hat&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">version</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">4</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"RHEL"</span><span class="p">:</span>
+                <span class="n">vendorobj</span> <span class="o">=</span> <span class="n">VendorModel</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"Red Hat"</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
                 <span class="n">vers</span> <span class="o">=</span> <span class="n">version</span><span class="p">[</span><span class="mi">4</span><span class="p">:]</span><span class="o">.</span><span class="n">lstrip</span><span class="p">()</span>
                 <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">vers</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-                    <span class="n">vers</span> <span class="o">+=</span> <span class="s2">&quot;.0&quot;</span>
+                    <span class="n">vers</span> <span class="o">+=</span> <span class="s2">".0"</span>
                 <span class="nb">object</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">vendor</span><span class="o">=</span><span class="n">vendorobj</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="n">vers</span><span class="p">)</span>
-            <span class="k">elif</span> <span class="n">version</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">4</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;SUSE&quot;</span> <span class="ow">or</span> <span class="n">version</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">4</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;SLES&quot;</span><span class="p">:</span>
-                <span class="n">vendorobj</span> <span class="o">=</span> <span class="n">VendorModel</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Novell&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">version</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">4</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"SUSE"</span> <span class="ow">or</span> <span class="n">version</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">4</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"SLES"</span><span class="p">:</span>
+                <span class="n">vendorobj</span> <span class="o">=</span> <span class="n">VendorModel</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"Novell"</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
                 <span class="nb">object</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">vendor</span><span class="o">=</span><span class="n">vendorobj</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="n">version</span><span class="p">[</span><span class="mi">4</span><span class="p">:]</span><span class="o">.</span><span class="n">lstrip</span><span class="p">())</span>
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">version</span><span class="p">,</span> <span class="p">(</span><span class="nb">tuple</span><span class="p">,</span> <span class="nb">list</span><span class="p">)):</span>
             <span class="k">try</span><span class="p">:</span>
@@ -151,10 +151,10 @@ For now, we search all vendors.</p>
                 <span class="nb">object</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">vendor</span><span class="o">=</span><span class="n">vendorobj</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="n">version</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
                 <span class="k">return</span> <span class="nb">object</span>
             <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Exception: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">e</span><span class="p">)</span>  <span class="c1"># pragma: no cover</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">"Exception: </span><span class="si">%s</span><span class="s2">"</span> <span class="o">%</span> <span class="n">e</span><span class="p">)</span>  <span class="c1"># pragma: no cover</span>
                 <span class="k">pass</span>  <span class="c1"># pragma: no cover</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;No idea how to handle query with </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">version</span><span class="o">.</span><span class="vm">__class__</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">"No idea how to handle query with </span><span class="si">%s</span><span class="s2">"</span> <span class="o">%</span> <span class="n">version</span><span class="o">.</span><span class="vm">__class__</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="nb">object</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">vendorobj</span> <span class="o">=</span> <span class="n">VendorModel</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">vendor</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
@@ -179,8 +179,8 @@ For now, we search all vendors.</p>
         <span class="n">VendorModel</span><span class="p">,</span>
         <span class="n">null</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">related_name</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">_set&quot;</span> <span class="o">%</span> <span class="n">app_label</span><span class="p">,</span>
-        <span class="n">related_query_name</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">app_label</span><span class="p">,</span>
+        <span class="n">related_name</span><span class="o">=</span><span class="s2">"</span><span class="si">%s</span><span class="s2">_set"</span> <span class="o">%</span> <span class="n">app_label</span><span class="p">,</span>
+        <span class="n">related_query_name</span><span class="o">=</span><span class="s2">"</span><span class="si">%s</span><span class="s2">"</span> <span class="o">%</span> <span class="n">app_label</span><span class="p">,</span>
         <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">PROTECT</span><span class="p">,</span>
     <span class="p">)</span>
 
@@ -190,7 +190,7 @@ For now, we search all vendors.</p>
         <span class="n">blank</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">PROTECT</span><span class="p">,</span>
-        <span class="n">related_name</span><span class="o">=</span><span class="s2">&quot;operatingsystems&quot;</span><span class="p">,</span>
+        <span class="n">related_name</span><span class="o">=</span><span class="s2">"operatingsystems"</span><span class="p">,</span>
     <span class="p">)</span>
 
     <span class="n">history</span> <span class="o">=</span> <span class="n">HistoricalRecords</span><span class="p">()</span></pre></div>
@@ -209,8 +209,8 @@ For now, we search all vendors.</p>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">vendor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vendor</span><span class="o">.</span><span class="n">name</span>
         <span class="k">except</span> <span class="n">ObjectDoesNotExist</span><span class="p">:</span>
-            <span class="n">vendor</span> <span class="o">=</span> <span class="s2">&quot;?&quot;</span>
-        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">vendor</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">version</span><span class="p">)</span></pre></div>
+            <span class="n">vendor</span> <span class="o">=</span> <span class="s2">"?"</span>
+        <span class="k">return</span> <span class="s2">"</span><span class="si">{}</span><span class="s2"> </span><span class="si">{}</span><span class="s2">"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">vendor</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">version</span><span class="p">)</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -225,7 +225,7 @@ For now, we search all vendors.</p>
       <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">natural_key</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">vendor</span><span class="o">.</span><span class="n">natural_key</span><span class="p">()</span> <span class="o">+</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">version</span><span class="p">,)</span>
 
-    <span class="n">natural_key</span><span class="o">.</span><span class="n">dependencies</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;vendor.Model&quot;</span><span class="p">]</span></pre></div>
+    <span class="n">natural_key</span><span class="o">.</span><span class="n">dependencies</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"vendor.Model"</span><span class="p">]</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -239,21 +239,21 @@ For now, we search all vendors.</p>
     <div class='code'>
       <div class="highlight"><pre>    <span class="nd">@classmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_natural_key_fields</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
-        <span class="k">return</span> <span class="p">[</span><span class="s2">&quot;vendor__name&quot;</span><span class="p">,</span> <span class="s2">&quot;version&quot;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="p">[</span><span class="s2">"vendor__name"</span><span class="p">,</span> <span class="s2">"version"</span><span class="p">]</span>
 
     <span class="nd">@classmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_natural_key_info</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
-        <span class="k">return</span> <span class="p">[(</span><span class="s2">&quot;vendor&quot;</span><span class="p">,</span> <span class="n">VendorModel</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;version&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)]</span>
+        <span class="k">return</span> <span class="p">[(</span><span class="s2">"vendor"</span><span class="p">,</span> <span class="n">VendorModel</span><span class="p">),</span> <span class="p">(</span><span class="s2">"version"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)]</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">get_absolute_url</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">:detail&quot;</span> <span class="o">%</span> <span class="n">app_label</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;pk&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">pk</span><span class="p">})</span>
+        <span class="k">return</span> <span class="n">reverse</span><span class="p">(</span><span class="s2">"</span><span class="si">%s</span><span class="s2">:detail"</span> <span class="o">%</span> <span class="n">app_label</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">=</span><span class="p">{</span><span class="s2">"pk"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">pk</span><span class="p">})</span>
 
     <span class="k">class</span><span class="w"> </span><span class="nc">Meta</span><span class="p">:</span>
-        <span class="n">db_table</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">_</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;sm&quot;</span><span class="p">,</span> <span class="n">app_label</span><span class="p">)</span>
+        <span class="n">db_table</span> <span class="o">=</span> <span class="s2">"</span><span class="si">{}</span><span class="s2">_</span><span class="si">{}</span><span class="s2">"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">"sm"</span><span class="p">,</span> <span class="n">app_label</span><span class="p">)</span>
         <span class="n">constraints</span> <span class="o">=</span> <span class="p">[</span>
             <span class="n">models</span><span class="o">.</span><span class="n">UniqueConstraint</span><span class="p">(</span>
-                <span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;vendor&quot;</span><span class="p">,</span> <span class="s2">&quot;version&quot;</span><span class="p">,</span> <span class="s2">&quot;group&quot;</span><span class="p">],</span>
-                <span class="n">name</span><span class="o">=</span><span class="s2">&quot;unique_sm_operatingsystem_vendor_version_group&quot;</span><span class="p">,</span>
+                <span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s2">"vendor"</span><span class="p">,</span> <span class="s2">"version"</span><span class="p">,</span> <span class="s2">"group"</span><span class="p">],</span>
+                <span class="n">name</span><span class="o">=</span><span class="s2">"unique_sm_operatingsystem_vendor_version_group"</span><span class="p">,</span>
             <span class="p">)</span>
         <span class="p">]</span>
 

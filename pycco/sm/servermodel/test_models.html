@@ -31,7 +31,7 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">django</span>
 
-<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;DJANGO_SETTINGS_MODULE&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;sm.settings&quot;</span>
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">"DJANGO_SETTINGS_MODULE"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"sm.settings"</span>
 <span class="n">django</span><span class="o">.</span><span class="n">setup</span><span class="p">()</span></pre></div>
     </div>
   </div>
@@ -48,8 +48,8 @@
     <span class="n">model</span> <span class="o">=</span> <span class="n">Model</span>
     <span class="n">teststring</span> <span class="o">=</span> <span class="n">random_string</span><span class="p">()</span>
     <span class="n">fixtures</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">/fixtures/01_initial.yaml&quot;</span> <span class="o">%</span> <span class="s2">&quot;vendor&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">/fixtures/01_initial.yaml&quot;</span> <span class="o">%</span> <span class="n">app_label</span><span class="p">,</span>
+        <span class="s2">"</span><span class="si">%s</span><span class="s2">/fixtures/01_initial.yaml"</span> <span class="o">%</span> <span class="s2">"vendor"</span><span class="p">,</span>
+        <span class="s2">"</span><span class="si">%s</span><span class="s2">/fixtures/01_initial.yaml"</span> <span class="o">%</span> <span class="n">app_label</span><span class="p">,</span>
     <span class="p">]</span>
     <span class="n">testitem</span> <span class="o">=</span> <span class="kc">None</span></pre></div>
     </div>
@@ -109,8 +109,8 @@ need to manually prune the DB and create a testitem</p>
     <div class='code'>
       <div class="highlight"><pre>        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
         <span class="n">obj</span><span class="p">,</span> <span class="n">created</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_or_create_testitem</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">created</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;the object was already there?&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertIsInstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="s2">&quot;object not correct model!?&quot;</span><span class="p">)</span></pre></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">created</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">"the object was already there?"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIsInstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="s2">"object not correct model!?"</span><span class="p">)</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -123,7 +123,7 @@ need to manually prune the DB and create a testitem</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">test_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">testitem</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">teststring</span><span class="p">,</span> <span class="s2">&quot;name not correct&quot;</span><span class="p">)</span></pre></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">testitem</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">teststring</span><span class="p">,</span> <span class="s2">"name not correct"</span><span class="p">)</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -137,9 +137,9 @@ need to manually prune the DB and create a testitem</p>
     <div class='code'>
       <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">test_name___str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span>
-            <span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vendor</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">teststring</span><span class="p">),</span>
-            <span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">testitem</span><span class="o">.</span><span class="n">vendor</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">testitem</span><span class="o">.</span><span class="n">name</span><span class="p">),</span>
-            <span class="s2">&quot;name not correct&quot;</span><span class="p">,</span>
+            <span class="s2">"</span><span class="si">{}</span><span class="s2"> </span><span class="si">{}</span><span class="s2">"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vendor</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">teststring</span><span class="p">),</span>
+            <span class="s2">"</span><span class="si">{}</span><span class="s2"> </span><span class="si">{}</span><span class="s2">"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">testitem</span><span class="o">.</span><span class="n">vendor</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">testitem</span><span class="o">.</span><span class="n">name</span><span class="p">),</span>
+            <span class="s2">"name not correct"</span><span class="p">,</span>
         <span class="p">)</span></pre></div>
     </div>
   </div>
@@ -154,9 +154,9 @@ need to manually prune the DB and create a testitem</p>
     <div class='code'>
       <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">test_get_absolute_url</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span>
-            <span class="s2">&quot;/</span><span class="si">%s</span><span class="s2">/detail/</span><span class="si">%i</span><span class="s2">/&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">app_label</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">testitem</span><span class="o">.</span><span class="n">id</span><span class="p">),</span>
+            <span class="s2">"/</span><span class="si">%s</span><span class="s2">/detail/</span><span class="si">%i</span><span class="s2">/"</span> <span class="o">%</span> <span class="p">(</span><span class="n">app_label</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">testitem</span><span class="o">.</span><span class="n">id</span><span class="p">),</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">testitem</span><span class="o">.</span><span class="n">get_absolute_url</span><span class="p">(),</span>
-            <span class="s2">&quot;reverse url not correct&quot;</span><span class="p">,</span>
+            <span class="s2">"reverse url not correct"</span><span class="p">,</span>
         <span class="p">)</span></pre></div>
     </div>
   </div>
@@ -172,8 +172,8 @@ need to manually prune the DB and create a testitem</p>
       <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">test_delete</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">testitem</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">1</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">.Model&quot;</span> <span class="o">%</span> <span class="n">app_label</span> <span class="ow">in</span> <span class="n">res</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">res</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">.Model&quot;</span> <span class="o">%</span> <span class="n">app_label</span><span class="p">],</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="s2">"</span><span class="si">%s</span><span class="s2">.Model"</span> <span class="o">%</span> <span class="n">app_label</span> <span class="ow">in</span> <span class="n">res</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">res</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="s2">"</span><span class="si">%s</span><span class="s2">.Model"</span> <span class="o">%</span> <span class="n">app_label</span><span class="p">],</span> <span class="mi">1</span><span class="p">)</span>
 
 </pre></div>
     </div>

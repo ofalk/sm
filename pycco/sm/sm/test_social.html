@@ -26,6 +26,9 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">django.test</span><span class="w"> </span><span class="kn">import</span> <span class="n">Client</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">unittest</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">types</span><span class="w"> </span><span class="kn">import</span> <span class="n">SimpleNamespace</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">unittest</span><span class="w"> </span><span class="kn">import</span> <span class="n">mock</span>
+
 <span class="kn">from</span><span class="w"> </span><span class="nn">django.conf</span><span class="w"> </span><span class="kn">import</span> <span class="n">settings</span></pre></div>
     </div>
   </div>
@@ -39,8 +42,8 @@
     </div>
     <div class='code'>
       <div class="highlight"><pre><span class="nd">@unittest</span><span class="o">.</span><span class="n">skipIf</span><span class="p">(</span>
-    <span class="ow">not</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">settings</span><span class="p">,</span> <span class="s2">&quot;SOCIALACCOUNT_ENABLED&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">),</span>
-    <span class="s2">&quot;Social auth is disabled&quot;</span><span class="p">,</span>
+    <span class="ow">not</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">settings</span><span class="p">,</span> <span class="s2">"SOCIALACCOUNT_ENABLED"</span><span class="p">,</span> <span class="kc">False</span><span class="p">),</span>
+    <span class="s2">"Social auth is disabled"</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">SocialAuthTestCase</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">setUp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -48,7 +51,7 @@
         <span class="kn">from</span><span class="w"> </span><span class="nn">allauth.socialaccount.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">SocialApp</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">user</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create_user</span><span class="p">(</span>
-            <span class="n">username</span><span class="o">=</span><span class="s2">&quot;testuser&quot;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s2">&quot;password123&quot;</span>
+            <span class="n">username</span><span class="o">=</span><span class="s2">"testuser"</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s2">"password123"</span>
         <span class="p">)</span></pre></div>
     </div>
   </div>
@@ -64,11 +67,11 @@ if SITE_ID is not matched</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre>        <span class="n">site</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">Site</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span>
-            <span class="nb">id</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">defaults</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;domain&quot;</span><span class="p">:</span> <span class="s2">&quot;example.com&quot;</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;example.com&quot;</span><span class="p">}</span>
+            <span class="nb">id</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">defaults</span><span class="o">=</span><span class="p">{</span><span class="s2">"domain"</span><span class="p">:</span> <span class="s2">"example.com"</span><span class="p">,</span> <span class="s2">"name"</span><span class="p">:</span> <span class="s2">"example.com"</span><span class="p">}</span>
         <span class="p">)</span>
         <span class="n">app</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">SocialApp</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span>
-            <span class="n">provider</span><span class="o">=</span><span class="s2">&quot;google&quot;</span><span class="p">,</span>
-            <span class="n">defaults</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Google&quot;</span><span class="p">,</span> <span class="s2">&quot;client_id&quot;</span><span class="p">:</span> <span class="s2">&quot;12345&quot;</span><span class="p">,</span> <span class="s2">&quot;secret&quot;</span><span class="p">:</span> <span class="s2">&quot;67890&quot;</span><span class="p">},</span>
+            <span class="n">provider</span><span class="o">=</span><span class="s2">"google"</span><span class="p">,</span>
+            <span class="n">defaults</span><span class="o">=</span><span class="p">{</span><span class="s2">"name"</span><span class="p">:</span> <span class="s2">"Google"</span><span class="p">,</span> <span class="s2">"client_id"</span><span class="p">:</span> <span class="s2">"12345"</span><span class="p">,</span> <span class="s2">"secret"</span><span class="p">:</span> <span class="s2">"67890"</span><span class="p">},</span>
         <span class="p">)</span>
         <span class="n">app</span><span class="o">.</span><span class="n">sites</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">site</span><span class="p">)</span></pre></div>
     </div>
@@ -94,9 +97,9 @@ if SITE_ID is not matched</p>
       <p>Allauth doesn&rsquo;t have social_tags, it uses socialaccount tags</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>        <span class="n">template_str</span> <span class="o">=</span> <span class="s2">&quot;{</span><span class="si">% lo</span><span class="s2">ad socialaccount %}&quot;</span>
+      <div class="highlight"><pre>        <span class="n">template_str</span> <span class="o">=</span> <span class="s2">"{</span><span class="si">% lo</span><span class="s2">ad socialaccount %}"</span>
         <span class="n">rendered</span> <span class="o">=</span> <span class="n">Template</span><span class="p">(</span><span class="n">template_str</span><span class="p">)</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">Context</span><span class="p">({}))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">rendered</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span></pre></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">rendered</span><span class="p">,</span> <span class="s2">""</span><span class="p">)</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -122,7 +125,7 @@ if SITE_ID is not matched</p>
       <p>Allauth social accounts list</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>        <span class="n">r</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/accounts/3rdparty/&quot;</span><span class="p">)</span>
+      <div class="highlight"><pre>        <span class="n">r</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"/accounts/3rdparty/"</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="n">r</span><span class="o">.</span><span class="n">status_code</span><span class="p">)</span></pre></div>
     </div>
   </div>
@@ -135,7 +138,104 @@ if SITE_ID is not matched</p>
       <p>Check if google login link is present</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>        <span class="bp">self</span><span class="o">.</span><span class="n">assertContains</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="s2">&quot;google&quot;</span><span class="p">)</span>
+      <div class="highlight"><pre>        <span class="bp">self</span><span class="o">.</span><span class="n">assertContains</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="s2">"google"</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-8'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-8'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">_call_pre_social_login</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">email_addresses</span><span class="p">):</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">sm.adapter</span><span class="w"> </span><span class="kn">import</span> <span class="n">MySocialAccountAdapter</span>
+
+        <span class="n">sociallogin</span> <span class="o">=</span> <span class="n">SimpleNamespace</span><span class="p">(</span>
+            <span class="n">is_existing</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">email_addresses</span><span class="o">=</span><span class="n">email_addresses</span><span class="p">,</span>
+            <span class="n">connect</span><span class="o">=</span><span class="n">mock</span><span class="o">.</span><span class="n">MagicMock</span><span class="p">(),</span>
+        <span class="p">)</span>
+        <span class="n">MySocialAccountAdapter</span><span class="p">()</span><span class="o">.</span><span class="n">pre_social_login</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">sociallogin</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">sociallogin</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-9'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-9'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">test_autolink_requires_verified_email</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create_user</span><span class="p">(</span>
+            <span class="n">username</span><span class="o">=</span><span class="s2">"victim"</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s2">"password123"</span><span class="p">,</span> <span class="n">email</span><span class="o">=</span><span class="s2">"victim@example.com"</span>
+        <span class="p">)</span>
+        <span class="n">unverified</span> <span class="o">=</span> <span class="n">SimpleNamespace</span><span class="p">(</span><span class="n">verified</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">email</span><span class="o">=</span><span class="s2">"victim@example.com"</span><span class="p">)</span>
+        <span class="n">sociallogin</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_call_pre_social_login</span><span class="p">([</span><span class="n">unverified</span><span class="p">])</span>
+        <span class="n">sociallogin</span><span class="o">.</span><span class="n">connect</span><span class="o">.</span><span class="n">assert_not_called</span><span class="p">()</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-10'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-10'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">test_autolink_connects_on_verified_email</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">victim</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create_user</span><span class="p">(</span>
+            <span class="n">username</span><span class="o">=</span><span class="s2">"victim"</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s2">"password123"</span><span class="p">,</span> <span class="n">email</span><span class="o">=</span><span class="s2">"victim@example.com"</span>
+        <span class="p">)</span>
+        <span class="n">verified</span> <span class="o">=</span> <span class="n">SimpleNamespace</span><span class="p">(</span><span class="n">verified</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">email</span><span class="o">=</span><span class="s2">"victim@example.com"</span><span class="p">)</span>
+        <span class="n">sociallogin</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_call_pre_social_login</span><span class="p">([</span><span class="n">verified</span><span class="p">])</span>
+        <span class="n">sociallogin</span><span class="o">.</span><span class="n">connect</span><span class="o">.</span><span class="n">assert_called_once_with</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">victim</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-11'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-11'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">test_autolink_skips_verified_email_without_matching_user</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">verified</span> <span class="o">=</span> <span class="n">SimpleNamespace</span><span class="p">(</span><span class="n">verified</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">email</span><span class="o">=</span><span class="s2">"nobody@example.com"</span><span class="p">)</span>
+        <span class="n">sociallogin</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_call_pre_social_login</span><span class="p">([</span><span class="n">verified</span><span class="p">])</span>
+        <span class="n">sociallogin</span><span class="o">.</span><span class="n">connect</span><span class="o">.</span><span class="n">assert_not_called</span><span class="p">()</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-12'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-12'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">test_autolink_skips_when_already_existing</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create_user</span><span class="p">(</span>
+            <span class="n">username</span><span class="o">=</span><span class="s2">"victim"</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s2">"password123"</span><span class="p">,</span> <span class="n">email</span><span class="o">=</span><span class="s2">"victim@example.com"</span>
+        <span class="p">)</span>
+        <span class="n">verified</span> <span class="o">=</span> <span class="n">SimpleNamespace</span><span class="p">(</span><span class="n">verified</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">email</span><span class="o">=</span><span class="s2">"victim@example.com"</span><span class="p">)</span>
+        <span class="n">sociallogin</span> <span class="o">=</span> <span class="n">SimpleNamespace</span><span class="p">(</span>
+            <span class="n">is_existing</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">email_addresses</span><span class="o">=</span><span class="p">[</span><span class="n">verified</span><span class="p">],</span>
+            <span class="n">connect</span><span class="o">=</span><span class="n">mock</span><span class="o">.</span><span class="n">MagicMock</span><span class="p">(),</span>
+        <span class="p">)</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">sm.adapter</span><span class="w"> </span><span class="kn">import</span> <span class="n">MySocialAccountAdapter</span>
+
+        <span class="n">MySocialAccountAdapter</span><span class="p">()</span><span class="o">.</span><span class="n">pre_social_login</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">sociallogin</span><span class="p">)</span>
+        <span class="n">sociallogin</span><span class="o">.</span><span class="n">connect</span><span class="o">.</span><span class="n">assert_not_called</span><span class="p">()</span>
 
 </pre></div>
     </div>

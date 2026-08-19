@@ -62,8 +62,8 @@ natural key resolution. This makes fixture loading more robust.</p>
         <span class="n">pk</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">Model</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">pk</span><span class="o">.</span><span class="n">attname</span><span class="p">)</span>
         <span class="k">if</span> <span class="p">(</span>
             <span class="n">pk</span> <span class="ow">is</span> <span class="kc">None</span>
-            <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">default_manager</span><span class="p">,</span> <span class="s2">&quot;get_by_natural_key&quot;</span><span class="p">)</span>
-            <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">Model</span><span class="p">,</span> <span class="s2">&quot;natural_key&quot;</span><span class="p">)</span>
+            <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">default_manager</span><span class="p">,</span> <span class="s2">"get_by_natural_key"</span><span class="p">)</span>
+            <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">Model</span><span class="p">,</span> <span class="s2">"natural_key"</span><span class="p">)</span>
         <span class="p">):</span>
             <span class="n">obj</span> <span class="o">=</span> <span class="n">Model</span><span class="p">(</span><span class="o">**</span><span class="n">data</span><span class="p">)</span>
             <span class="n">obj</span><span class="o">.</span><span class="n">_state</span><span class="o">.</span><span class="n">db</span> <span class="o">=</span> <span class="n">db</span>

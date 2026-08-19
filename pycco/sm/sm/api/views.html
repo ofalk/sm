@@ -74,7 +74,7 @@
       
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="n">queryset</span> <span class="o">=</span> <span class="n">Server</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;hostname&quot;</span><span class="p">)</span>
+      <div class="highlight"><pre>    <span class="n">queryset</span> <span class="o">=</span> <span class="n">Server</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">"hostname"</span><span class="p">)</span>
     <span class="n">serializer_class</span> <span class="o">=</span> <span class="n">ServerSerializer</span>
     <span class="n">permission_classes</span> <span class="o">=</span> <span class="p">[</span><span class="n">SmModelPermissions</span><span class="p">]</span></pre></div>
     </div>
@@ -100,7 +100,7 @@
       
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="n">queryset</span> <span class="o">=</span> <span class="n">Vendor</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">)</span>
+      <div class="highlight"><pre>    <span class="n">queryset</span> <span class="o">=</span> <span class="n">Vendor</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">"name"</span><span class="p">)</span>
     <span class="n">serializer_class</span> <span class="o">=</span> <span class="n">VendorSerializer</span>
     <span class="n">permission_classes</span> <span class="o">=</span> <span class="p">[</span><span class="n">SmModelPermissions</span><span class="p">]</span></pre></div>
     </div>
@@ -126,7 +126,7 @@
       
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="n">queryset</span> <span class="o">=</span> <span class="n">Status</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">)</span>
+      <div class="highlight"><pre>    <span class="n">queryset</span> <span class="o">=</span> <span class="n">Status</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">"name"</span><span class="p">)</span>
     <span class="n">serializer_class</span> <span class="o">=</span> <span class="n">StatusSerializer</span>
     <span class="n">permission_classes</span> <span class="o">=</span> <span class="p">[</span><span class="n">SmModelPermissions</span><span class="p">]</span></pre></div>
     </div>
@@ -141,7 +141,7 @@
     </div>
     <div class='code'>
       <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">LocationViewSet</span><span class="p">(</span><span class="n">APIMultiTenantMixin</span><span class="p">,</span> <span class="n">viewsets</span><span class="o">.</span><span class="n">ModelViewSet</span><span class="p">):</span>
-    <span class="n">queryset</span> <span class="o">=</span> <span class="n">Location</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">)</span>
+    <span class="n">queryset</span> <span class="o">=</span> <span class="n">Location</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">"name"</span><span class="p">)</span>
     <span class="n">serializer_class</span> <span class="o">=</span> <span class="n">LocationSerializer</span>
     <span class="n">permission_classes</span> <span class="o">=</span> <span class="p">[</span><span class="n">SmModelPermissions</span><span class="p">]</span></pre></div>
     </div>
@@ -156,7 +156,7 @@
     </div>
     <div class='code'>
       <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">DomainViewSet</span><span class="p">(</span><span class="n">APIMultiTenantMixin</span><span class="p">,</span> <span class="n">viewsets</span><span class="o">.</span><span class="n">ModelViewSet</span><span class="p">):</span>
-    <span class="n">queryset</span> <span class="o">=</span> <span class="n">Domain</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">)</span>
+    <span class="n">queryset</span> <span class="o">=</span> <span class="n">Domain</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">"name"</span><span class="p">)</span>
     <span class="n">serializer_class</span> <span class="o">=</span> <span class="n">DomainSerializer</span>
     <span class="n">permission_classes</span> <span class="o">=</span> <span class="p">[</span><span class="n">SmModelPermissions</span><span class="p">]</span></pre></div>
     </div>
@@ -171,7 +171,7 @@
     </div>
     <div class='code'>
       <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">PatchtimeViewSet</span><span class="p">(</span><span class="n">APIMultiTenantMixin</span><span class="p">,</span> <span class="n">viewsets</span><span class="o">.</span><span class="n">ModelViewSet</span><span class="p">):</span>
-    <span class="n">queryset</span> <span class="o">=</span> <span class="n">Patchtime</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">)</span>
+    <span class="n">queryset</span> <span class="o">=</span> <span class="n">Patchtime</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">"name"</span><span class="p">)</span>
     <span class="n">serializer_class</span> <span class="o">=</span> <span class="n">PatchtimeSerializer</span>
     <span class="n">permission_classes</span> <span class="o">=</span> <span class="p">[</span><span class="n">SmModelPermissions</span><span class="p">]</span></pre></div>
     </div>
@@ -186,7 +186,7 @@
     </div>
     <div class='code'>
       <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">OSViewSet</span><span class="p">(</span><span class="n">APIMultiTenantMixin</span><span class="p">,</span> <span class="n">viewsets</span><span class="o">.</span><span class="n">ModelViewSet</span><span class="p">):</span>
-    <span class="n">queryset</span> <span class="o">=</span> <span class="n">OS</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;version&quot;</span><span class="p">)</span>
+    <span class="n">queryset</span> <span class="o">=</span> <span class="n">OS</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">"version"</span><span class="p">)</span>
     <span class="n">serializer_class</span> <span class="o">=</span> <span class="n">OSSerializer</span>
     <span class="n">permission_classes</span> <span class="o">=</span> <span class="p">[</span><span class="n">SmModelPermissions</span><span class="p">]</span></pre></div>
     </div>
@@ -201,7 +201,7 @@
     </div>
     <div class='code'>
       <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">ServerModelViewSet</span><span class="p">(</span><span class="n">APIMultiTenantMixin</span><span class="p">,</span> <span class="n">viewsets</span><span class="o">.</span><span class="n">ModelViewSet</span><span class="p">):</span>
-    <span class="n">queryset</span> <span class="o">=</span> <span class="n">ServerModel</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">)</span>
+    <span class="n">queryset</span> <span class="o">=</span> <span class="n">ServerModel</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">"name"</span><span class="p">)</span>
     <span class="n">serializer_class</span> <span class="o">=</span> <span class="n">ServerModelSerializer</span>
     <span class="n">permission_classes</span> <span class="o">=</span> <span class="p">[</span><span class="n">SmModelPermissions</span><span class="p">]</span></pre></div>
     </div>
@@ -216,7 +216,7 @@
     </div>
     <div class='code'>
       <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">ClusterViewSet</span><span class="p">(</span><span class="n">APIMultiTenantMixin</span><span class="p">,</span> <span class="n">viewsets</span><span class="o">.</span><span class="n">ModelViewSet</span><span class="p">):</span>
-    <span class="n">queryset</span> <span class="o">=</span> <span class="n">Cluster</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">)</span>
+    <span class="n">queryset</span> <span class="o">=</span> <span class="n">Cluster</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">"name"</span><span class="p">)</span>
     <span class="n">serializer_class</span> <span class="o">=</span> <span class="n">ClusterSerializer</span>
     <span class="n">permission_classes</span> <span class="o">=</span> <span class="p">[</span><span class="n">SmModelPermissions</span><span class="p">]</span></pre></div>
     </div>
@@ -231,7 +231,7 @@
     </div>
     <div class='code'>
       <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">ClusterPackageViewSet</span><span class="p">(</span><span class="n">APIMultiTenantMixin</span><span class="p">,</span> <span class="n">viewsets</span><span class="o">.</span><span class="n">ModelViewSet</span><span class="p">):</span>
-    <span class="n">queryset</span> <span class="o">=</span> <span class="n">ClusterPackage</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">)</span>
+    <span class="n">queryset</span> <span class="o">=</span> <span class="n">ClusterPackage</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">"name"</span><span class="p">)</span>
     <span class="n">serializer_class</span> <span class="o">=</span> <span class="n">ClusterPackageSerializer</span>
     <span class="n">permission_classes</span> <span class="o">=</span> <span class="p">[</span><span class="n">SmModelPermissions</span><span class="p">]</span></pre></div>
     </div>
@@ -245,12 +245,10 @@
       
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">get_queryset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">queryset</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_queryset</span><span class="p">()</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_superuser</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">queryset</span>
-        <span class="n">user_groups</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">groups</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
-        <span class="k">return</span> <span class="n">queryset</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">cluster__group__in</span><span class="o">=</span><span class="n">user_groups</span><span class="p">)</span></pre></div>
+      <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">ClusterSoftwareViewSet</span><span class="p">(</span><span class="n">APIMultiTenantMixin</span><span class="p">,</span> <span class="n">viewsets</span><span class="o">.</span><span class="n">ModelViewSet</span><span class="p">):</span>
+    <span class="n">queryset</span> <span class="o">=</span> <span class="n">ClusterSoftware</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">"name"</span><span class="p">)</span>
+    <span class="n">serializer_class</span> <span class="o">=</span> <span class="n">ClusterSoftwareSerializer</span>
+    <span class="n">permission_classes</span> <span class="o">=</span> <span class="p">[</span><span class="n">SmModelPermissions</span><span class="p">]</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -262,23 +260,8 @@
       
     </div>
     <div class='code'>
-      <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">ClusterSoftwareViewSet</span><span class="p">(</span><span class="n">APIMultiTenantMixin</span><span class="p">,</span> <span class="n">viewsets</span><span class="o">.</span><span class="n">ModelViewSet</span><span class="p">):</span>
-    <span class="n">queryset</span> <span class="o">=</span> <span class="n">ClusterSoftware</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">)</span>
-    <span class="n">serializer_class</span> <span class="o">=</span> <span class="n">ClusterSoftwareSerializer</span>
-    <span class="n">permission_classes</span> <span class="o">=</span> <span class="p">[</span><span class="n">SmModelPermissions</span><span class="p">]</span></pre></div>
-    </div>
-  </div>
-  <div class='clearall'></div>
-  <div class='section' id='section-16'>
-    <div class='docs'>
-      <div class='octowrap'>
-        <a class='octothorpe' href='#section-16'>#</a>
-      </div>
-      
-    </div>
-    <div class='code'>
       <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">ClusterPackageTypeViewSet</span><span class="p">(</span><span class="n">APIMultiTenantMixin</span><span class="p">,</span> <span class="n">viewsets</span><span class="o">.</span><span class="n">ModelViewSet</span><span class="p">):</span>
-    <span class="n">queryset</span> <span class="o">=</span> <span class="n">ClusterPackageType</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">)</span>
+    <span class="n">queryset</span> <span class="o">=</span> <span class="n">ClusterPackageType</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">"name"</span><span class="p">)</span>
     <span class="n">serializer_class</span> <span class="o">=</span> <span class="n">ClusterPackageTypeSerializer</span>
     <span class="n">permission_classes</span> <span class="o">=</span> <span class="p">[</span><span class="n">SmModelPermissions</span><span class="p">]</span>
 

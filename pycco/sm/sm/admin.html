@@ -21,6 +21,9 @@
     </div>
     <div class='code'>
       <div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">django.contrib</span><span class="w"> </span><span class="kn">import</span> <span class="n">admin</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.contrib.auth.admin</span><span class="w"> </span><span class="kn">import</span> <span class="n">GroupAdmin</span><span class="p">,</span> <span class="n">UserAdmin</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.contrib.auth.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">Group</span><span class="p">,</span> <span class="n">User</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">simple_history.admin</span><span class="w"> </span><span class="kn">import</span> <span class="n">SimpleHistoryAdmin</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">patchtime.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">Model</span> <span class="k">as</span> <span class="n">PatchtimeModel</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">server.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">Model</span> <span class="k">as</span> <span class="n">ServerModel</span>
@@ -31,20 +34,229 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">vendor.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">Model</span> <span class="k">as</span> <span class="n">VendorModel</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">operatingsystem.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">Model</span> <span class="k">as</span> <span class="n">OperatingsystemModel</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">cluster.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">Model</span> <span class="k">as</span> <span class="n">ClusterModel</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">GroupProfile</span><span class="p">,</span> <span class="n">Invitation</span><span class="p">,</span> <span class="n">ApiKey</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">clusterpackage.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">Model</span> <span class="k">as</span> <span class="n">ClusterPackageModel</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">clustersoftware.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">Model</span> <span class="k">as</span> <span class="n">ClusterSoftwareModel</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">clusterpackagetype.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">Model</span> <span class="k">as</span> <span class="n">ClusterPackageTypeModel</span>
 
-<span class="n">admin</span><span class="o">.</span><span class="n">site</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">GroupProfile</span><span class="p">)</span>
-<span class="n">admin</span><span class="o">.</span><span class="n">site</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">Invitation</span><span class="p">)</span>
-<span class="n">admin</span><span class="o">.</span><span class="n">site</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">ApiKey</span><span class="p">)</span>
-<span class="n">admin</span><span class="o">.</span><span class="n">site</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">PatchtimeModel</span><span class="p">)</span>
-<span class="n">admin</span><span class="o">.</span><span class="n">site</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">ServerModel</span><span class="p">)</span>
-<span class="n">admin</span><span class="o">.</span><span class="n">site</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">ServermodelModel</span><span class="p">)</span>
-<span class="n">admin</span><span class="o">.</span><span class="n">site</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">StatusModel</span><span class="p">)</span>
-<span class="n">admin</span><span class="o">.</span><span class="n">site</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">DomainModel</span><span class="p">)</span>
-<span class="n">admin</span><span class="o">.</span><span class="n">site</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">LocationModel</span><span class="p">)</span>
-<span class="n">admin</span><span class="o">.</span><span class="n">site</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">VendorModel</span><span class="p">)</span>
-<span class="n">admin</span><span class="o">.</span><span class="n">site</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">OperatingsystemModel</span><span class="p">)</span>
-<span class="n">admin</span><span class="o">.</span><span class="n">site</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">ClusterModel</span><span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">GroupProfile</span><span class="p">,</span> <span class="n">Invitation</span><span class="p">,</span> <span class="n">ApiKey</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-1'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-1'>#</a>
+      </div>
+      <p>Base admin for tenant models that keep simple-history tracks.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">HistoryAdmin</span><span class="p">(</span><span class="n">SimpleHistoryAdmin</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-2'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-2'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">list_filter</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"group"</span><span class="p">,)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-3'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-3'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="nd">@admin</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">GroupProfile</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">GroupProfileAdmin</span><span class="p">(</span><span class="n">admin</span><span class="o">.</span><span class="n">ModelAdmin</span><span class="p">):</span>
+    <span class="n">list_display</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"group"</span><span class="p">,</span> <span class="s2">"owner"</span><span class="p">,</span> <span class="s2">"max_items"</span><span class="p">,</span> <span class="s2">"max_users"</span><span class="p">)</span>
+    <span class="n">search_fields</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"group__name"</span><span class="p">,</span> <span class="s2">"owner__username"</span><span class="p">)</span>
+    <span class="n">raw_id_fields</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"group"</span><span class="p">,</span> <span class="s2">"owner"</span><span class="p">)</span>
+
+
+<span class="nd">@admin</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">Invitation</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">InvitationAdmin</span><span class="p">(</span><span class="n">admin</span><span class="o">.</span><span class="n">ModelAdmin</span><span class="p">):</span>
+    <span class="n">list_display</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"email"</span><span class="p">,</span> <span class="s2">"group"</span><span class="p">,</span> <span class="s2">"created_at"</span><span class="p">,</span> <span class="s2">"accepted_at"</span><span class="p">,</span> <span class="s2">"is_expired"</span><span class="p">)</span>
+    <span class="n">search_fields</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"email"</span><span class="p">,)</span>
+    <span class="n">readonly_fields</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"token"</span><span class="p">,</span> <span class="s2">"created_at"</span><span class="p">,</span> <span class="s2">"created_by"</span><span class="p">)</span>
+    <span class="n">raw_id_fields</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"group"</span><span class="p">,)</span>
+
+
+<span class="nd">@admin</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">ApiKey</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ApiKeyAdmin</span><span class="p">(</span><span class="n">admin</span><span class="o">.</span><span class="n">ModelAdmin</span><span class="p">):</span>
+    <span class="n">list_display</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s2">"name"</span><span class="p">,</span>
+        <span class="s2">"client_id"</span><span class="p">,</span>
+        <span class="s2">"user"</span><span class="p">,</span>
+        <span class="s2">"is_active"</span><span class="p">,</span>
+        <span class="s2">"created_at"</span><span class="p">,</span>
+        <span class="s2">"last_used_at"</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">list_filter</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"is_active"</span><span class="p">,</span> <span class="s2">"created_at"</span><span class="p">)</span>
+    <span class="n">search_fields</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"name"</span><span class="p">,</span> <span class="s2">"client_id"</span><span class="p">,</span> <span class="s2">"user__username"</span><span class="p">)</span>
+    <span class="n">raw_id_fields</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"user"</span><span class="p">,)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-4'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-4'>#</a>
+      </div>
+      <p>The secret is one-way hashed; never let it be edited or displayed raw.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">readonly_fields</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"client_id"</span><span class="p">,</span> <span class="s2">"secret_hash"</span><span class="p">,</span> <span class="s2">"created_at"</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-5'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-5'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="nd">@admin</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">PatchtimeModel</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">PatchtimeAdmin</span><span class="p">(</span><span class="n">HistoryAdmin</span><span class="p">):</span>
+    <span class="n">list_display</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"name"</span><span class="p">,</span> <span class="s2">"group"</span><span class="p">)</span>
+    <span class="n">search_fields</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"name"</span><span class="p">,)</span>
+
+
+<span class="nd">@admin</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">ServerModel</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ServerAdmin</span><span class="p">(</span><span class="n">HistoryAdmin</span><span class="p">):</span>
+    <span class="n">list_display</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s2">"hostname"</span><span class="p">,</span>
+        <span class="s2">"status"</span><span class="p">,</span>
+        <span class="s2">"domain"</span><span class="p">,</span>
+        <span class="s2">"location"</span><span class="p">,</span>
+        <span class="s2">"operatingsystem"</span><span class="p">,</span>
+        <span class="s2">"primary_ip"</span><span class="p">,</span>
+        <span class="s2">"group"</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">list_filter</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"status"</span><span class="p">,</span> <span class="s2">"operatingsystem"</span><span class="p">,</span> <span class="s2">"cluster"</span><span class="p">,</span> <span class="s2">"location"</span><span class="p">,</span> <span class="s2">"group"</span><span class="p">)</span>
+    <span class="n">search_fields</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"hostname"</span><span class="p">,</span> <span class="s2">"primary_ip"</span><span class="p">,</span> <span class="s2">"management_hostname"</span><span class="p">)</span>
+
+
+<span class="nd">@admin</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">ServermodelModel</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ServermodelAdmin</span><span class="p">(</span><span class="n">HistoryAdmin</span><span class="p">):</span>
+    <span class="n">list_display</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"name"</span><span class="p">,</span> <span class="s2">"vendor"</span><span class="p">,</span> <span class="s2">"group"</span><span class="p">)</span>
+    <span class="n">list_filter</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"vendor"</span><span class="p">,</span> <span class="s2">"group"</span><span class="p">)</span>
+    <span class="n">search_fields</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"name"</span><span class="p">,)</span>
+
+
+<span class="nd">@admin</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">StatusModel</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">StatusAdmin</span><span class="p">(</span><span class="n">HistoryAdmin</span><span class="p">):</span>
+    <span class="n">list_display</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"name"</span><span class="p">,</span> <span class="s2">"group"</span><span class="p">)</span>
+    <span class="n">search_fields</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"name"</span><span class="p">,)</span>
+
+
+<span class="nd">@admin</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">DomainModel</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">DomainAdmin</span><span class="p">(</span><span class="n">HistoryAdmin</span><span class="p">):</span>
+    <span class="n">list_display</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"name"</span><span class="p">,</span> <span class="s2">"group"</span><span class="p">)</span>
+    <span class="n">search_fields</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"name"</span><span class="p">,)</span>
+
+
+<span class="nd">@admin</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">LocationModel</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">LocationAdmin</span><span class="p">(</span><span class="n">HistoryAdmin</span><span class="p">):</span>
+    <span class="n">list_display</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"name"</span><span class="p">,</span> <span class="s2">"country"</span><span class="p">,</span> <span class="s2">"group"</span><span class="p">)</span>
+    <span class="n">search_fields</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"name"</span><span class="p">,</span> <span class="s2">"country"</span><span class="p">)</span>
+
+
+<span class="nd">@admin</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">VendorModel</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">VendorAdmin</span><span class="p">(</span><span class="n">HistoryAdmin</span><span class="p">):</span>
+    <span class="n">list_display</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"name"</span><span class="p">,</span> <span class="s2">"is_hardware"</span><span class="p">,</span> <span class="s2">"is_software"</span><span class="p">,</span> <span class="s2">"group"</span><span class="p">)</span>
+    <span class="n">list_filter</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"is_hardware"</span><span class="p">,</span> <span class="s2">"is_software"</span><span class="p">,</span> <span class="s2">"group"</span><span class="p">)</span>
+    <span class="n">search_fields</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"name"</span><span class="p">,)</span>
+
+
+<span class="nd">@admin</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">OperatingsystemModel</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">OperatingsystemAdmin</span><span class="p">(</span><span class="n">HistoryAdmin</span><span class="p">):</span>
+    <span class="n">list_display</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"version"</span><span class="p">,</span> <span class="s2">"vendor"</span><span class="p">,</span> <span class="s2">"group"</span><span class="p">)</span>
+    <span class="n">list_filter</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"vendor"</span><span class="p">,</span> <span class="s2">"group"</span><span class="p">)</span>
+    <span class="n">search_fields</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"version"</span><span class="p">,)</span>
+
+
+<span class="nd">@admin</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">ClusterModel</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ClusterAdmin</span><span class="p">(</span><span class="n">HistoryAdmin</span><span class="p">):</span>
+    <span class="n">list_display</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"name"</span><span class="p">,</span> <span class="s2">"clustersoftware"</span><span class="p">,</span> <span class="s2">"group"</span><span class="p">)</span>
+    <span class="n">list_filter</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"clustersoftware"</span><span class="p">,</span> <span class="s2">"group"</span><span class="p">)</span>
+    <span class="n">search_fields</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"name"</span><span class="p">,)</span>
+
+
+<span class="nd">@admin</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">ClusterPackageModel</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ClusterPackageAdmin</span><span class="p">(</span><span class="n">HistoryAdmin</span><span class="p">):</span>
+    <span class="n">list_display</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"name"</span><span class="p">,</span> <span class="s2">"cluster"</span><span class="p">,</span> <span class="s2">"package_type"</span><span class="p">,</span> <span class="s2">"status"</span><span class="p">,</span> <span class="s2">"host"</span><span class="p">,</span> <span class="s2">"group"</span><span class="p">)</span>
+    <span class="n">list_filter</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"package_type"</span><span class="p">,</span> <span class="s2">"status"</span><span class="p">,</span> <span class="s2">"cluster"</span><span class="p">,</span> <span class="s2">"group"</span><span class="p">)</span>
+    <span class="n">search_fields</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"name"</span><span class="p">,</span> <span class="s2">"host"</span><span class="p">,</span> <span class="s2">"description"</span><span class="p">)</span>
+
+
+<span class="nd">@admin</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">ClusterSoftwareModel</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ClusterSoftwareAdmin</span><span class="p">(</span><span class="n">HistoryAdmin</span><span class="p">):</span>
+    <span class="n">list_display</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"name"</span><span class="p">,</span> <span class="s2">"version"</span><span class="p">,</span> <span class="s2">"vendor"</span><span class="p">,</span> <span class="s2">"group"</span><span class="p">)</span>
+    <span class="n">list_filter</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"vendor"</span><span class="p">,</span> <span class="s2">"group"</span><span class="p">)</span>
+    <span class="n">search_fields</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"name"</span><span class="p">,</span> <span class="s2">"version"</span><span class="p">)</span>
+
+
+<span class="nd">@admin</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">ClusterPackageTypeModel</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ClusterPackageTypeAdmin</span><span class="p">(</span><span class="n">HistoryAdmin</span><span class="p">):</span>
+    <span class="n">list_display</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"name"</span><span class="p">,</span> <span class="s2">"group"</span><span class="p">)</span>
+    <span class="n">search_fields</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"name"</span><span class="p">,)</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">GroupProfileInline</span><span class="p">(</span><span class="n">admin</span><span class="o">.</span><span class="n">StackedInline</span><span class="p">):</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">GroupProfile</span>
+    <span class="n">can_delete</span> <span class="o">=</span> <span class="kc">False</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">GroupAdminWithProfile</span><span class="p">(</span><span class="n">GroupAdmin</span><span class="p">):</span>
+    <span class="n">inlines</span> <span class="o">=</span> <span class="p">[</span><span class="n">GroupProfileInline</span><span class="p">]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">profile_owner</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
+        <span class="n">profile</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="s2">"profile"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">profile</span><span class="o">.</span><span class="n">owner</span> <span class="k">if</span> <span class="n">profile</span> <span class="ow">and</span> <span class="n">profile</span><span class="o">.</span><span class="n">owner</span> <span class="k">else</span> <span class="s2">"-"</span>
+
+    <span class="n">profile_owner</span><span class="o">.</span><span class="n">short_description</span> <span class="o">=</span> <span class="s2">"Owner"</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">profile_max_items</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
+        <span class="n">profile</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="s2">"profile"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">profile</span><span class="o">.</span><span class="n">max_items</span> <span class="k">if</span> <span class="n">profile</span> <span class="k">else</span> <span class="s2">"-"</span>
+
+    <span class="n">profile_max_items</span><span class="o">.</span><span class="n">short_description</span> <span class="o">=</span> <span class="s2">"Max items"</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">profile_max_users</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
+        <span class="n">profile</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="s2">"profile"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">profile</span><span class="o">.</span><span class="n">max_users</span> <span class="k">if</span> <span class="n">profile</span> <span class="k">else</span> <span class="s2">"-"</span>
+
+    <span class="n">profile_max_users</span><span class="o">.</span><span class="n">short_description</span> <span class="o">=</span> <span class="s2">"Max users"</span>
+
+    <span class="n">list_display</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"name"</span><span class="p">,</span> <span class="s2">"profile_owner"</span><span class="p">,</span> <span class="s2">"profile_max_items"</span><span class="p">,</span> <span class="s2">"profile_max_users"</span><span class="p">)</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">UserAdminWithGroups</span><span class="p">(</span><span class="n">UserAdmin</span><span class="p">):</span>
+    <span class="n">list_display</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s2">"username"</span><span class="p">,</span>
+        <span class="s2">"email"</span><span class="p">,</span>
+        <span class="s2">"first_name"</span><span class="p">,</span>
+        <span class="s2">"last_name"</span><span class="p">,</span>
+        <span class="s2">"is_staff"</span><span class="p">,</span>
+        <span class="s2">"is_active"</span><span class="p">,</span>
+    <span class="p">)</span>
+
+
+<span class="n">admin</span><span class="o">.</span><span class="n">site</span><span class="o">.</span><span class="n">unregister</span><span class="p">(</span><span class="n">Group</span><span class="p">)</span>
+<span class="n">admin</span><span class="o">.</span><span class="n">site</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">Group</span><span class="p">,</span> <span class="n">GroupAdminWithProfile</span><span class="p">)</span>
+
+<span class="n">admin</span><span class="o">.</span><span class="n">site</span><span class="o">.</span><span class="n">unregister</span><span class="p">(</span><span class="n">User</span><span class="p">)</span>
+<span class="n">admin</span><span class="o">.</span><span class="n">site</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">User</span><span class="p">,</span> <span class="n">UserAdminWithGroups</span><span class="p">)</span>
 
 </pre></div>
     </div>

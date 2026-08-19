@@ -103,9 +103,9 @@ in sm_theme_bootstrap_tags</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">test_00_load</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">string</span> <span class="o">=</span> <span class="s2">&quot;{</span><span class="si">% lo</span><span class="s2">ad sm_theme_bootstrap_tags %}&quot;</span>
+        <span class="n">string</span> <span class="o">=</span> <span class="s2">"{</span><span class="si">% lo</span><span class="s2">ad sm_theme_bootstrap_tags %}"</span>
         <span class="n">rendered</span> <span class="o">=</span> <span class="n">Template</span><span class="p">(</span><span class="n">string</span><span class="p">)</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">Context</span><span class="p">({}))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">rendered</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span></pre></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">rendered</span><span class="p">,</span> <span class="s2">""</span><span class="p">)</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -118,18 +118,18 @@ in sm_theme_bootstrap_tags</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">test_01_warning</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">string</span> <span class="o">=</span> <span class="s2">&quot;{</span><span class="si">% lo</span><span class="s2">ad sm_theme_bootstrap_tags %}&quot;</span>
-        <span class="n">string</span> <span class="o">+=</span> <span class="s2">&quot;{</span><span class="si">% g</span><span class="s2">et_message_tags message %}&quot;</span>
+        <span class="n">string</span> <span class="o">=</span> <span class="s2">"{</span><span class="si">% lo</span><span class="s2">ad sm_theme_bootstrap_tags %}"</span>
+        <span class="n">string</span> <span class="o">+=</span> <span class="s2">"{</span><span class="si">% g</span><span class="s2">et_message_tags message %}"</span>
         <span class="n">rendered</span> <span class="o">=</span> <span class="n">Template</span><span class="p">(</span><span class="n">string</span><span class="p">)</span><span class="o">.</span><span class="n">render</span><span class="p">(</span>
             <span class="n">Context</span><span class="p">(</span>
                 <span class="p">{</span>
-                    <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="n">TestCase</span><span class="o">.</span><span class="n">FakeMessage</span><span class="p">(</span>
-                        <span class="n">DEFAULT_MESSAGE_LEVELS</span><span class="o">.</span><span class="n">WARNING</span><span class="p">,</span> <span class="s2">&quot;warning message&quot;</span>
+                    <span class="s2">"message"</span><span class="p">:</span> <span class="n">TestCase</span><span class="o">.</span><span class="n">FakeMessage</span><span class="p">(</span>
+                        <span class="n">DEFAULT_MESSAGE_LEVELS</span><span class="o">.</span><span class="n">WARNING</span><span class="p">,</span> <span class="s2">"warning message"</span>
                     <span class="p">)</span>
                 <span class="p">}</span>
             <span class="p">)</span>
         <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">rendered</span><span class="p">,</span> <span class="s2">&quot;alert-warning&quot;</span><span class="p">)</span></pre></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">rendered</span><span class="p">,</span> <span class="s2">"alert-warning"</span><span class="p">)</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -142,13 +142,13 @@ in sm_theme_bootstrap_tags</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">test_02_error</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">string</span> <span class="o">=</span> <span class="s2">&quot;{</span><span class="si">% lo</span><span class="s2">ad sm_theme_bootstrap_tags %}&quot;</span>
-        <span class="n">string</span> <span class="o">+=</span> <span class="s2">&quot;{</span><span class="si">% g</span><span class="s2">et_message_tags message %}&quot;</span>
+        <span class="n">string</span> <span class="o">=</span> <span class="s2">"{</span><span class="si">% lo</span><span class="s2">ad sm_theme_bootstrap_tags %}"</span>
+        <span class="n">string</span> <span class="o">+=</span> <span class="s2">"{</span><span class="si">% g</span><span class="s2">et_message_tags message %}"</span>
         <span class="n">rendered</span> <span class="o">=</span> <span class="n">Template</span><span class="p">(</span><span class="n">string</span><span class="p">)</span><span class="o">.</span><span class="n">render</span><span class="p">(</span>
             <span class="n">Context</span><span class="p">(</span>
                 <span class="p">{</span>
-                    <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="n">TestCase</span><span class="o">.</span><span class="n">FakeMessage</span><span class="p">(</span>
-                        <span class="n">DEFAULT_MESSAGE_LEVELS</span><span class="o">.</span><span class="n">ERROR</span><span class="p">,</span> <span class="s2">&quot;error message&quot;</span>
+                    <span class="s2">"message"</span><span class="p">:</span> <span class="n">TestCase</span><span class="o">.</span><span class="n">FakeMessage</span><span class="p">(</span>
+                        <span class="n">DEFAULT_MESSAGE_LEVELS</span><span class="o">.</span><span class="n">ERROR</span><span class="p">,</span> <span class="s2">"error message"</span>
                     <span class="p">)</span>
                 <span class="p">}</span>
             <span class="p">)</span>
@@ -164,7 +164,7 @@ in sm_theme_bootstrap_tags</p>
       <p>error is danger in Bootstrap 3</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">rendered</span><span class="p">,</span> <span class="s2">&quot;alert-danger&quot;</span><span class="p">)</span></pre></div>
+      <div class="highlight"><pre>        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">rendered</span><span class="p">,</span> <span class="s2">"alert-danger"</span><span class="p">)</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -177,18 +177,18 @@ in sm_theme_bootstrap_tags</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">test_02_warning_with_extra_tag</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">string</span> <span class="o">=</span> <span class="s2">&quot;{</span><span class="si">% lo</span><span class="s2">ad sm_theme_bootstrap_tags %}&quot;</span>
-        <span class="n">string</span> <span class="o">+=</span> <span class="s2">&quot;{</span><span class="si">% g</span><span class="s2">et_message_tags message %}&quot;</span>
+        <span class="n">string</span> <span class="o">=</span> <span class="s2">"{</span><span class="si">% lo</span><span class="s2">ad sm_theme_bootstrap_tags %}"</span>
+        <span class="n">string</span> <span class="o">+=</span> <span class="s2">"{</span><span class="si">% g</span><span class="s2">et_message_tags message %}"</span>
         <span class="n">rendered</span> <span class="o">=</span> <span class="n">Template</span><span class="p">(</span><span class="n">string</span><span class="p">)</span><span class="o">.</span><span class="n">render</span><span class="p">(</span>
             <span class="n">Context</span><span class="p">(</span>
                 <span class="p">{</span>
-                    <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="n">TestCase</span><span class="o">.</span><span class="n">FakeMessage</span><span class="p">(</span>
-                        <span class="n">DEFAULT_MESSAGE_LEVELS</span><span class="o">.</span><span class="n">WARNING</span><span class="p">,</span> <span class="s2">&quot;message&quot;</span><span class="p">,</span> <span class="s2">&quot;testtag&quot;</span>
+                    <span class="s2">"message"</span><span class="p">:</span> <span class="n">TestCase</span><span class="o">.</span><span class="n">FakeMessage</span><span class="p">(</span>
+                        <span class="n">DEFAULT_MESSAGE_LEVELS</span><span class="o">.</span><span class="n">WARNING</span><span class="p">,</span> <span class="s2">"message"</span><span class="p">,</span> <span class="s2">"testtag"</span>
                     <span class="p">)</span>
                 <span class="p">}</span>
             <span class="p">)</span>
         <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">rendered</span><span class="p">,</span> <span class="s2">&quot;testtag alert-warning&quot;</span><span class="p">)</span></pre></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">rendered</span><span class="p">,</span> <span class="s2">"testtag alert-warning"</span><span class="p">)</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -201,12 +201,12 @@ in sm_theme_bootstrap_tags</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">test_03_extra_tag_only</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">string</span> <span class="o">=</span> <span class="s2">&quot;{</span><span class="si">% lo</span><span class="s2">ad sm_theme_bootstrap_tags %}&quot;</span>
-        <span class="n">string</span> <span class="o">+=</span> <span class="s2">&quot;{</span><span class="si">% g</span><span class="s2">et_message_tags message %}&quot;</span>
+        <span class="n">string</span> <span class="o">=</span> <span class="s2">"{</span><span class="si">% lo</span><span class="s2">ad sm_theme_bootstrap_tags %}"</span>
+        <span class="n">string</span> <span class="o">+=</span> <span class="s2">"{</span><span class="si">% g</span><span class="s2">et_message_tags message %}"</span>
         <span class="n">rendered</span> <span class="o">=</span> <span class="n">Template</span><span class="p">(</span><span class="n">string</span><span class="p">)</span><span class="o">.</span><span class="n">render</span><span class="p">(</span>
-            <span class="n">Context</span><span class="p">({</span><span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="n">TestCase</span><span class="o">.</span><span class="n">FakeMessage</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;message&quot;</span><span class="p">,</span> <span class="s2">&quot;testtag&quot;</span><span class="p">)})</span>
+            <span class="n">Context</span><span class="p">({</span><span class="s2">"message"</span><span class="p">:</span> <span class="n">TestCase</span><span class="o">.</span><span class="n">FakeMessage</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s2">"message"</span><span class="p">,</span> <span class="s2">"testtag"</span><span class="p">)})</span>
         <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">rendered</span><span class="p">,</span> <span class="s2">&quot;testtag&quot;</span><span class="p">)</span></pre></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">rendered</span><span class="p">,</span> <span class="s2">"testtag"</span><span class="p">)</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -219,12 +219,12 @@ in sm_theme_bootstrap_tags</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">test_04_empty</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">string</span> <span class="o">=</span> <span class="s2">&quot;{</span><span class="si">% lo</span><span class="s2">ad sm_theme_bootstrap_tags %}&quot;</span>
-        <span class="n">string</span> <span class="o">+=</span> <span class="s2">&quot;{</span><span class="si">% g</span><span class="s2">et_message_tags message %}&quot;</span>
+        <span class="n">string</span> <span class="o">=</span> <span class="s2">"{</span><span class="si">% lo</span><span class="s2">ad sm_theme_bootstrap_tags %}"</span>
+        <span class="n">string</span> <span class="o">+=</span> <span class="s2">"{</span><span class="si">% g</span><span class="s2">et_message_tags message %}"</span>
         <span class="n">rendered</span> <span class="o">=</span> <span class="n">Template</span><span class="p">(</span><span class="n">string</span><span class="p">)</span><span class="o">.</span><span class="n">render</span><span class="p">(</span>
-            <span class="n">Context</span><span class="p">({</span><span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="n">TestCase</span><span class="o">.</span><span class="n">FakeMessage</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)})</span>
+            <span class="n">Context</span><span class="p">({</span><span class="s2">"message"</span><span class="p">:</span> <span class="n">TestCase</span><span class="o">.</span><span class="n">FakeMessage</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s2">""</span><span class="p">)})</span>
         <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">rendered</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">rendered</span><span class="p">,</span> <span class="s2">""</span><span class="p">)</span>
 
 </pre></div>
     </div>

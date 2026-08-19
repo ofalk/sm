@@ -78,12 +78,12 @@ templates subdirectory.</p>
 This might be a dirty hack</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>        <span class="n">separator</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+      <div class="highlight"><pre>        <span class="n">separator</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">"."</span><span class="p">,</span> <span class="s2">""</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
         <span class="k">if</span> <span class="n">separator</span> <span class="ow">in</span> <span class="n">template_name</span><span class="p">:</span>
             <span class="n">template_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
                 <span class="n">BASE_DIR</span><span class="p">,</span>
                 <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">template_name</span><span class="p">),</span>
-                <span class="s2">&quot;templates&quot;</span><span class="p">,</span>
+                <span class="s2">"templates"</span><span class="p">,</span>
                 <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">template_name</span><span class="p">),</span>
             <span class="p">)</span>
             <span class="k">yield</span> <span class="n">Origin</span><span class="p">(</span>

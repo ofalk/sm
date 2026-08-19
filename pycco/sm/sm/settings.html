@@ -26,6 +26,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">sys</span><span class="w"> </span><span class="kn">import</span> <span class="n">platform</span><span class="p">,</span> <span class="n">argv</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">django.contrib.messages</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">messages</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.core.exceptions</span><span class="w"> </span><span class="kn">import</span> <span class="n">ImproperlyConfigured</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">decouple</span><span class="w"> </span><span class="kn">import</span> <span class="n">config</span><span class="p">,</span> <span class="n">Csv</span></pre></div>
     </div>
   </div>
@@ -50,15 +51,21 @@
       <p>Environment-based configuration</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre><span class="n">SECRET_KEY</span> <span class="o">=</span> <span class="n">config</span><span class="p">(</span><span class="s2">&quot;SECRET_KEY&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;django-insecure-default-key-for-dev&quot;</span><span class="p">)</span>
-<span class="n">DEBUG</span> <span class="o">=</span> <span class="n">config</span><span class="p">(</span><span class="s2">&quot;DEBUG&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">cast</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
-<span class="n">ALLOWED_HOSTS</span> <span class="o">=</span> <span class="n">config</span><span class="p">(</span><span class="s2">&quot;ALLOWED_HOSTS&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;localhost,127.0.0.1&quot;</span><span class="p">,</span> <span class="n">cast</span><span class="o">=</span><span class="n">Csv</span><span class="p">())</span>
+      <div class="highlight"><pre><span class="n">DEBUG</span> <span class="o">=</span> <span class="n">config</span><span class="p">(</span><span class="s2">"DEBUG"</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">cast</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+<span class="n">_cfg_secret</span> <span class="o">=</span> <span class="n">config</span><span class="p">(</span><span class="s2">"SECRET_KEY"</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">""</span><span class="p">)</span>
+<span class="k">if</span> <span class="ow">not</span> <span class="n">_cfg_secret</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">DEBUG</span><span class="p">:</span>
+        <span class="n">_cfg_secret</span> <span class="o">=</span> <span class="s2">"django-insecure-default-key-for-dev"</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">ImproperlyConfigured</span><span class="p">(</span><span class="s2">"SECRET_KEY must be set when DEBUG is False."</span><span class="p">)</span>
+<span class="n">SECRET_KEY</span> <span class="o">=</span> <span class="n">_cfg_secret</span>
+<span class="n">ALLOWED_HOSTS</span> <span class="o">=</span> <span class="n">config</span><span class="p">(</span><span class="s2">"ALLOWED_HOSTS"</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">"localhost,127.0.0.1"</span><span class="p">,</span> <span class="n">cast</span><span class="o">=</span><span class="n">Csv</span><span class="p">())</span>
 <span class="n">EMAIL_BACKEND</span> <span class="o">=</span> <span class="n">config</span><span class="p">(</span>
-    <span class="s2">&quot;EMAIL_BACKEND&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;django.core.mail.backends.console.EmailBackend&quot;</span>
+    <span class="s2">"EMAIL_BACKEND"</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">"django.core.mail.backends.console.EmailBackend"</span>
 <span class="p">)</span>
 
-<span class="n">THEME_CONTACT_EMAIL</span> <span class="o">=</span> <span class="n">config</span><span class="p">(</span><span class="s2">&quot;THEME_CONTACT_EMAIL&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;oliver@linux-kernel.at&quot;</span><span class="p">)</span>
-<span class="n">THEME_GITHUB_URL</span> <span class="o">=</span> <span class="n">config</span><span class="p">(</span><span class="s2">&quot;THEME_GITHUB_URL&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;https://github.com/ofalk/sm&quot;</span><span class="p">)</span></pre></div>
+<span class="n">THEME_CONTACT_EMAIL</span> <span class="o">=</span> <span class="n">config</span><span class="p">(</span><span class="s2">"THEME_CONTACT_EMAIL"</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">"oliver@linux-kernel.at"</span><span class="p">)</span>
+<span class="n">THEME_GITHUB_URL</span> <span class="o">=</span> <span class="n">config</span><span class="p">(</span><span class="s2">"THEME_GITHUB_URL"</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">"https://github.com/ofalk/sm"</span><span class="p">)</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -70,33 +77,33 @@
       <p>Version information</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre><span class="n">APP_VERSION</span> <span class="o">=</span> <span class="n">config</span><span class="p">(</span><span class="s2">&quot;APP_VERSION&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;unknown&quot;</span><span class="p">)</span>
-<span class="n">APP_MODIFICATION_DATE</span> <span class="o">=</span> <span class="n">config</span><span class="p">(</span><span class="s2">&quot;APP_MODIFICATION_DATE&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;unknown&quot;</span><span class="p">)</span>
+      <div class="highlight"><pre><span class="n">APP_VERSION</span> <span class="o">=</span> <span class="n">config</span><span class="p">(</span><span class="s2">"APP_VERSION"</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">"unknown"</span><span class="p">)</span>
+<span class="n">APP_MODIFICATION_DATE</span> <span class="o">=</span> <span class="n">config</span><span class="p">(</span><span class="s2">"APP_MODIFICATION_DATE"</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">"unknown"</span><span class="p">)</span>
 
-<span class="k">if</span> <span class="n">APP_VERSION</span> <span class="o">==</span> <span class="s2">&quot;unknown&quot;</span> <span class="ow">or</span> <span class="n">APP_MODIFICATION_DATE</span> <span class="o">==</span> <span class="s2">&quot;unknown&quot;</span><span class="p">:</span>
+<span class="k">if</span> <span class="n">APP_VERSION</span> <span class="o">==</span> <span class="s2">"unknown"</span> <span class="ow">or</span> <span class="n">APP_MODIFICATION_DATE</span> <span class="o">==</span> <span class="s2">"unknown"</span><span class="p">:</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="kn">import</span><span class="w"> </span><span class="nn">subprocess</span>
 
-        <span class="k">if</span> <span class="n">APP_VERSION</span> <span class="o">==</span> <span class="s2">&quot;unknown&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">APP_VERSION</span> <span class="o">==</span> <span class="s2">"unknown"</span><span class="p">:</span>
             <span class="n">APP_VERSION</span> <span class="o">=</span> <span class="p">(</span>
                 <span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">(</span>
-                    <span class="p">[</span><span class="s2">&quot;git&quot;</span><span class="p">,</span> <span class="s2">&quot;rev-parse&quot;</span><span class="p">,</span> <span class="s2">&quot;--short&quot;</span><span class="p">,</span> <span class="s2">&quot;HEAD&quot;</span><span class="p">],</span> <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">DEVNULL</span>
+                    <span class="p">[</span><span class="s2">"git"</span><span class="p">,</span> <span class="s2">"rev-parse"</span><span class="p">,</span> <span class="s2">"--short"</span><span class="p">,</span> <span class="s2">"HEAD"</span><span class="p">],</span> <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">DEVNULL</span>
                 <span class="p">)</span>
-                <span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+                <span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">"utf-8"</span><span class="p">)</span>
                 <span class="o">.</span><span class="n">strip</span><span class="p">()</span>
             <span class="p">)</span>
-        <span class="k">if</span> <span class="n">APP_MODIFICATION_DATE</span> <span class="o">==</span> <span class="s2">&quot;unknown&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">APP_MODIFICATION_DATE</span> <span class="o">==</span> <span class="s2">"unknown"</span><span class="p">:</span>
             <span class="n">APP_MODIFICATION_DATE</span> <span class="o">=</span> <span class="p">(</span>
                 <span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">(</span>
-                    <span class="p">[</span><span class="s2">&quot;git&quot;</span><span class="p">,</span> <span class="s2">&quot;log&quot;</span><span class="p">,</span> <span class="s2">&quot;-1&quot;</span><span class="p">,</span> <span class="s2">&quot;--format=</span><span class="si">%c</span><span class="s2">d&quot;</span><span class="p">],</span> <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">DEVNULL</span>
+                    <span class="p">[</span><span class="s2">"git"</span><span class="p">,</span> <span class="s2">"log"</span><span class="p">,</span> <span class="s2">"-1"</span><span class="p">,</span> <span class="s2">"--format=</span><span class="si">%c</span><span class="s2">d"</span><span class="p">],</span> <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">DEVNULL</span>
                 <span class="p">)</span>
-                <span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+                <span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">"utf-8"</span><span class="p">)</span>
                 <span class="o">.</span><span class="n">strip</span><span class="p">()</span>
             <span class="p">)</span>
     <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
         <span class="k">pass</span>
 
-<span class="n">DISABLE_SOCIAL_AUTH</span> <span class="o">=</span> <span class="n">config</span><span class="p">(</span><span class="s2">&quot;DISABLE_SOCIAL_AUTH&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">cast</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span></pre></div>
+<span class="n">DISABLE_SOCIAL_AUTH</span> <span class="o">=</span> <span class="n">config</span><span class="p">(</span><span class="s2">"DISABLE_SOCIAL_AUTH"</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">cast</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -108,9 +115,9 @@
       <p>Analytics settings</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre><span class="n">ANALYTICS_ENABLED</span> <span class="o">=</span> <span class="n">config</span><span class="p">(</span><span class="s2">&quot;ANALYTICS_ENABLED&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">cast</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
-<span class="n">ANALYTICS_ID</span> <span class="o">=</span> <span class="n">config</span><span class="p">(</span><span class="s2">&quot;ANALYTICS_ID&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
-<span class="n">ANALYTICS_BASE_URL</span> <span class="o">=</span> <span class="n">config</span><span class="p">(</span><span class="s2">&quot;ANALYTICS_BASE_URL&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;https://api.swetrix.com&quot;</span><span class="p">)</span></pre></div>
+      <div class="highlight"><pre><span class="n">ANALYTICS_ENABLED</span> <span class="o">=</span> <span class="n">config</span><span class="p">(</span><span class="s2">"ANALYTICS_ENABLED"</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">cast</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+<span class="n">ANALYTICS_ID</span> <span class="o">=</span> <span class="n">config</span><span class="p">(</span><span class="s2">"ANALYTICS_ID"</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<span class="n">ANALYTICS_BASE_URL</span> <span class="o">=</span> <span class="n">config</span><span class="p">(</span><span class="s2">"ANALYTICS_BASE_URL"</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">"https://api.swetrix.com"</span><span class="p">)</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -123,21 +130,21 @@
     </div>
     <div class='code'>
       <div class="highlight"><pre><span class="n">INSTALLED_APPS</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s2">&quot;whitenoise.runserver_nostatic&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;django.contrib.admin&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;django.contrib.auth&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;django.contrib.contenttypes&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;django.contrib.sessions&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;django.contrib.messages&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;django.contrib.staticfiles&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;django.contrib.sites&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;django.contrib.admindocs&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;rest_framework&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;django_bootstrap5&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;django_countries&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;taggit&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;simple_history&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;drf_spectacular&quot;</span><span class="p">,</span></pre></div>
+    <span class="s2">"whitenoise.runserver_nostatic"</span><span class="p">,</span>
+    <span class="s2">"django.contrib.admin"</span><span class="p">,</span>
+    <span class="s2">"django.contrib.auth"</span><span class="p">,</span>
+    <span class="s2">"django.contrib.contenttypes"</span><span class="p">,</span>
+    <span class="s2">"django.contrib.sessions"</span><span class="p">,</span>
+    <span class="s2">"django.contrib.messages"</span><span class="p">,</span>
+    <span class="s2">"django.contrib.staticfiles"</span><span class="p">,</span>
+    <span class="s2">"django.contrib.sites"</span><span class="p">,</span>
+    <span class="s2">"django.contrib.admindocs"</span><span class="p">,</span>
+    <span class="s2">"rest_framework"</span><span class="p">,</span>
+    <span class="s2">"django_bootstrap5"</span><span class="p">,</span>
+    <span class="s2">"django_countries"</span><span class="p">,</span>
+    <span class="s2">"taggit"</span><span class="p">,</span>
+    <span class="s2">"simple_history"</span><span class="p">,</span>
+    <span class="s2">"drf_spectacular"</span><span class="p">,</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -149,20 +156,20 @@
       <p>Allauth</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="s2">&quot;allauth&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;allauth.account&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;allauth.socialaccount&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;allauth.mfa&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;social_django&quot;</span><span class="p">,</span>
+      <div class="highlight"><pre>    <span class="s2">"allauth"</span><span class="p">,</span>
+    <span class="s2">"allauth.account"</span><span class="p">,</span>
+    <span class="s2">"allauth.socialaccount"</span><span class="p">,</span>
+    <span class="s2">"allauth.mfa"</span><span class="p">,</span>
+    <span class="s2">"social_django"</span><span class="p">,</span>
 <span class="p">]</span>
 
 <span class="k">if</span> <span class="n">DEBUG</span><span class="p">:</span>
-    <span class="n">INSTALLED_APPS</span> <span class="o">+=</span> <span class="p">[</span><span class="s2">&quot;debug_toolbar&quot;</span><span class="p">]</span>
+    <span class="n">INSTALLED_APPS</span> <span class="o">+=</span> <span class="p">[</span><span class="s2">"debug_toolbar"</span><span class="p">]</span>
 
 <span class="k">if</span> <span class="ow">not</span> <span class="n">DISABLE_SOCIAL_AUTH</span><span class="p">:</span>
     <span class="n">INSTALLED_APPS</span> <span class="o">+=</span> <span class="p">[</span>
-        <span class="s2">&quot;allauth.socialaccount.providers.google&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;allauth.socialaccount.providers.openid_connect&quot;</span><span class="p">,</span>
+        <span class="s2">"allauth.socialaccount.providers.google"</span><span class="p">,</span>
+        <span class="s2">"allauth.socialaccount.providers.openid_connect"</span><span class="p">,</span>
     <span class="p">]</span>
     <span class="n">SOCIALACCOUNT_ENABLED</span> <span class="o">=</span> <span class="kc">True</span>
 <span class="k">else</span><span class="p">:</span>
@@ -180,34 +187,34 @@
       <p>Project Apps</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="s2">&quot;cluster&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;operatingsystem&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;clusterpackage&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;patchtime&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;location&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;servermodel&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;server&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;status&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;domain&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;clustersoftware&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;clusterpackagetype&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;vendor&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;sm.apps.SmConfig&quot;</span><span class="p">,</span>
+      <div class="highlight"><pre>    <span class="s2">"cluster"</span><span class="p">,</span>
+    <span class="s2">"operatingsystem"</span><span class="p">,</span>
+    <span class="s2">"clusterpackage"</span><span class="p">,</span>
+    <span class="s2">"patchtime"</span><span class="p">,</span>
+    <span class="s2">"location"</span><span class="p">,</span>
+    <span class="s2">"servermodel"</span><span class="p">,</span>
+    <span class="s2">"server"</span><span class="p">,</span>
+    <span class="s2">"status"</span><span class="p">,</span>
+    <span class="s2">"domain"</span><span class="p">,</span>
+    <span class="s2">"clustersoftware"</span><span class="p">,</span>
+    <span class="s2">"clusterpackagetype"</span><span class="p">,</span>
+    <span class="s2">"vendor"</span><span class="p">,</span>
+    <span class="s2">"sm.apps.SmConfig"</span><span class="p">,</span>
 <span class="p">]</span>
 
 <span class="n">MIDDLEWARE</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s2">&quot;django.middleware.security.SecurityMiddleware&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;whitenoise.middleware.WhiteNoiseMiddleware&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;django.contrib.sessions.middleware.SessionMiddleware&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;django.middleware.common.CommonMiddleware&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;django.middleware.csrf.CsrfViewMiddleware&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;django.contrib.auth.middleware.AuthenticationMiddleware&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;django.contrib.messages.middleware.MessageMiddleware&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;django.middleware.clickjacking.XFrameOptionsMiddleware&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;htmlmin.middleware.HtmlMinifyMiddleware&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;htmlmin.middleware.MarkRequestMiddleware&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;django.contrib.sites.middleware.CurrentSiteMiddleware&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;simple_history.middleware.HistoryRequestMiddleware&quot;</span><span class="p">,</span></pre></div>
+    <span class="s2">"django.middleware.security.SecurityMiddleware"</span><span class="p">,</span>
+    <span class="s2">"whitenoise.middleware.WhiteNoiseMiddleware"</span><span class="p">,</span>
+    <span class="s2">"django.contrib.sessions.middleware.SessionMiddleware"</span><span class="p">,</span>
+    <span class="s2">"django.middleware.common.CommonMiddleware"</span><span class="p">,</span>
+    <span class="s2">"django.middleware.csrf.CsrfViewMiddleware"</span><span class="p">,</span>
+    <span class="s2">"django.contrib.auth.middleware.AuthenticationMiddleware"</span><span class="p">,</span>
+    <span class="s2">"django.contrib.messages.middleware.MessageMiddleware"</span><span class="p">,</span>
+    <span class="s2">"django.middleware.clickjacking.XFrameOptionsMiddleware"</span><span class="p">,</span>
+    <span class="s2">"htmlmin.middleware.HtmlMinifyMiddleware"</span><span class="p">,</span>
+    <span class="s2">"htmlmin.middleware.MarkRequestMiddleware"</span><span class="p">,</span>
+    <span class="s2">"django.contrib.sites.middleware.CurrentSiteMiddleware"</span><span class="p">,</span>
+    <span class="s2">"simple_history.middleware.HistoryRequestMiddleware"</span><span class="p">,</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -219,7 +226,7 @@
       <p>Allauth middleware</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="s2">&quot;allauth.account.middleware.AccountMiddleware&quot;</span><span class="p">,</span>
+      <div class="highlight"><pre>    <span class="s2">"allauth.account.middleware.AccountMiddleware"</span><span class="p">,</span>
 <span class="p">]</span>
 
 <span class="k">if</span> <span class="n">DEBUG</span><span class="p">:</span></pre></div>
@@ -236,42 +243,42 @@
     <div class='code'>
       <div class="highlight"><pre>    <span class="k">try</span><span class="p">:</span>
         <span class="n">session_idx</span> <span class="o">=</span> <span class="n">MIDDLEWARE</span><span class="o">.</span><span class="n">index</span><span class="p">(</span>
-            <span class="s2">&quot;django.contrib.sessions.middleware.SessionMiddleware&quot;</span>
+            <span class="s2">"django.contrib.sessions.middleware.SessionMiddleware"</span>
         <span class="p">)</span>
         <span class="n">MIDDLEWARE</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span>
-            <span class="n">session_idx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;debug_toolbar.middleware.DebugToolbarMiddleware&quot;</span>
+            <span class="n">session_idx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">"debug_toolbar.middleware.DebugToolbarMiddleware"</span>
         <span class="p">)</span>
     <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
-        <span class="n">MIDDLEWARE</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;debug_toolbar.middleware.DebugToolbarMiddleware&quot;</span><span class="p">)</span>
+        <span class="n">MIDDLEWARE</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">"debug_toolbar.middleware.DebugToolbarMiddleware"</span><span class="p">)</span>
 
-<span class="n">ROOT_URLCONF</span> <span class="o">=</span> <span class="s2">&quot;sm.urls&quot;</span>
+<span class="n">ROOT_URLCONF</span> <span class="o">=</span> <span class="s2">"sm.urls"</span>
 
 <span class="n">TEMPLATES</span> <span class="o">=</span> <span class="p">[</span>
     <span class="p">{</span>
-        <span class="s2">&quot;BACKEND&quot;</span><span class="p">:</span> <span class="s2">&quot;django.template.backends.django.DjangoTemplates&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;DIRS&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">BASE_DIR</span> <span class="o">/</span> <span class="s2">&quot;sm&quot;</span> <span class="o">/</span> <span class="s2">&quot;templates&quot;</span><span class="p">],</span>
-        <span class="s2">&quot;OPTIONS&quot;</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s2">&quot;context_processors&quot;</span><span class="p">:</span> <span class="p">[</span>
-                <span class="s2">&quot;django.template.context_processors.debug&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;django.template.context_processors.request&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;django.contrib.auth.context_processors.auth&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;django.contrib.messages.context_processors.messages&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;django.template.context_processors.i18n&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;django.template.context_processors.media&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;django.template.context_processors.static&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;django.template.context_processors.tz&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;sm.context_processors.theme_settings&quot;</span><span class="p">,</span>
+        <span class="s2">"BACKEND"</span><span class="p">:</span> <span class="s2">"django.template.backends.django.DjangoTemplates"</span><span class="p">,</span>
+        <span class="s2">"DIRS"</span><span class="p">:</span> <span class="p">[</span><span class="n">BASE_DIR</span> <span class="o">/</span> <span class="s2">"sm"</span> <span class="o">/</span> <span class="s2">"templates"</span><span class="p">],</span>
+        <span class="s2">"OPTIONS"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"context_processors"</span><span class="p">:</span> <span class="p">[</span>
+                <span class="s2">"django.template.context_processors.debug"</span><span class="p">,</span>
+                <span class="s2">"django.template.context_processors.request"</span><span class="p">,</span>
+                <span class="s2">"django.contrib.auth.context_processors.auth"</span><span class="p">,</span>
+                <span class="s2">"django.contrib.messages.context_processors.messages"</span><span class="p">,</span>
+                <span class="s2">"django.template.context_processors.i18n"</span><span class="p">,</span>
+                <span class="s2">"django.template.context_processors.media"</span><span class="p">,</span>
+                <span class="s2">"django.template.context_processors.static"</span><span class="p">,</span>
+                <span class="s2">"django.template.context_processors.tz"</span><span class="p">,</span>
+                <span class="s2">"sm.context_processors.theme_settings"</span><span class="p">,</span>
             <span class="p">],</span>
-            <span class="s2">&quot;loaders&quot;</span><span class="p">:</span> <span class="p">[</span>
-                <span class="s2">&quot;django.template.loaders.filesystem.Loader&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;sm.template.loaders.app_directories_enhanced.Loader&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;django.template.loaders.app_directories.Loader&quot;</span><span class="p">,</span>
+            <span class="s2">"loaders"</span><span class="p">:</span> <span class="p">[</span>
+                <span class="s2">"django.template.loaders.filesystem.Loader"</span><span class="p">,</span>
+                <span class="s2">"sm.template.loaders.app_directories_enhanced.Loader"</span><span class="p">,</span>
+                <span class="s2">"django.template.loaders.app_directories.Loader"</span><span class="p">,</span>
             <span class="p">],</span>
         <span class="p">},</span>
     <span class="p">},</span>
 <span class="p">]</span>
 
-<span class="n">WSGI_APPLICATION</span> <span class="o">=</span> <span class="s2">&quot;sm.wsgi.application&quot;</span></pre></div>
+<span class="n">WSGI_APPLICATION</span> <span class="o">=</span> <span class="s2">"sm.wsgi.application"</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -284,13 +291,13 @@
 https://docs.djangoproject.com/en/stable/ref/settings/#databases</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre><span class="n">DATABASE_URL</span> <span class="o">=</span> <span class="n">config</span><span class="p">(</span><span class="s2">&quot;DATABASE_URL&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+      <div class="highlight"><pre><span class="n">DATABASE_URL</span> <span class="o">=</span> <span class="n">config</span><span class="p">(</span><span class="s2">"DATABASE_URL"</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
 
 <span class="k">if</span> <span class="n">DATABASE_URL</span><span class="p">:</span>
     <span class="n">DATABASES</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="n">dj_database_url</span><span class="o">.</span><span class="n">config</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="n">DATABASE_URL</span><span class="p">,</span> <span class="n">conn_max_age</span><span class="o">=</span><span class="mi">600</span><span class="p">)</span>
+        <span class="s2">"default"</span><span class="p">:</span> <span class="n">dj_database_url</span><span class="o">.</span><span class="n">config</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="n">DATABASE_URL</span><span class="p">,</span> <span class="n">conn_max_age</span><span class="o">=</span><span class="mi">600</span><span class="p">)</span>
     <span class="p">}</span>
-<span class="k">elif</span> <span class="s2">&quot;test&quot;</span> <span class="ow">in</span> <span class="n">argv</span><span class="p">:</span></pre></div>
+<span class="k">elif</span> <span class="s2">"test"</span> <span class="ow">in</span> <span class="n">argv</span><span class="p">:</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -305,16 +312,16 @@ https://docs.djangoproject.com/en/stable/ref/settings/#databases</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre>    <span class="n">DATABASES</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s2">&quot;ENGINE&quot;</span><span class="p">:</span> <span class="s2">&quot;django.db.backends.sqlite3&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;NAME&quot;</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tempfile</span><span class="o">.</span><span class="n">gettempdir</span><span class="p">(),</span> <span class="s2">&quot;sm_test.sqlite3&quot;</span><span class="p">),</span>
+        <span class="s2">"default"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"ENGINE"</span><span class="p">:</span> <span class="s2">"django.db.backends.sqlite3"</span><span class="p">,</span>
+            <span class="s2">"NAME"</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tempfile</span><span class="o">.</span><span class="n">gettempdir</span><span class="p">(),</span> <span class="s2">"sm_test.sqlite3"</span><span class="p">),</span>
         <span class="p">}</span>
     <span class="p">}</span>
-<span class="k">elif</span> <span class="n">platform</span> <span class="o">==</span> <span class="s2">&quot;darwin&quot;</span><span class="p">:</span>
+<span class="k">elif</span> <span class="n">platform</span> <span class="o">==</span> <span class="s2">"darwin"</span><span class="p">:</span>
     <span class="n">DATABASES</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s2">&quot;ENGINE&quot;</span><span class="p">:</span> <span class="s2">&quot;django.db.backends.sqlite3&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;NAME&quot;</span><span class="p">:</span> <span class="n">BASE_DIR</span> <span class="o">/</span> <span class="s2">&quot;db.sqlite3&quot;</span><span class="p">,</span>
+        <span class="s2">"default"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"ENGINE"</span><span class="p">:</span> <span class="s2">"django.db.backends.sqlite3"</span><span class="p">,</span>
+            <span class="s2">"NAME"</span><span class="p">:</span> <span class="n">BASE_DIR</span> <span class="o">/</span> <span class="s2">"db.sqlite3"</span><span class="p">,</span>
         <span class="p">}</span>
     <span class="p">}</span>
 <span class="k">else</span><span class="p">:</span></pre></div>
@@ -330,9 +337,9 @@ https://docs.djangoproject.com/en/stable/ref/settings/#databases</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre>    <span class="n">DATABASES</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s2">&quot;ENGINE&quot;</span><span class="p">:</span> <span class="s2">&quot;django.db.backends.sqlite3&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;NAME&quot;</span><span class="p">:</span> <span class="n">BASE_DIR</span> <span class="o">/</span> <span class="s2">&quot;db.sqlite3&quot;</span><span class="p">,</span>
+        <span class="s2">"default"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"ENGINE"</span><span class="p">:</span> <span class="s2">"django.db.backends.sqlite3"</span><span class="p">,</span>
+            <span class="s2">"NAME"</span><span class="p">:</span> <span class="n">BASE_DIR</span> <span class="o">/</span> <span class="s2">"db.sqlite3"</span><span class="p">,</span>
         <span class="p">}</span>
     <span class="p">}</span></pre></div>
     </div>
@@ -349,14 +356,14 @@ https://docs.djangoproject.com/en/stable/ref/settings/#auth-password-validators<
     <div class='code'>
       <div class="highlight"><pre><span class="n">AUTH_PASSWORD_VALIDATORS</span> <span class="o">=</span> <span class="p">[</span>
     <span class="p">{</span>
-        <span class="s2">&quot;NAME&quot;</span><span class="p">:</span> <span class="p">(</span>
-            <span class="s2">&quot;django.contrib.auth.password_validation.&quot;</span>
-            <span class="s2">&quot;UserAttributeSimilarityValidator&quot;</span>
+        <span class="s2">"NAME"</span><span class="p">:</span> <span class="p">(</span>
+            <span class="s2">"django.contrib.auth.password_validation."</span>
+            <span class="s2">"UserAttributeSimilarityValidator"</span>
         <span class="p">)</span>
     <span class="p">},</span>
-    <span class="p">{</span><span class="s2">&quot;NAME&quot;</span><span class="p">:</span> <span class="s2">&quot;django.contrib.auth.password_validation.MinimumLengthValidator&quot;</span><span class="p">},</span>
-    <span class="p">{</span><span class="s2">&quot;NAME&quot;</span><span class="p">:</span> <span class="s2">&quot;django.contrib.auth.password_validation.CommonPasswordValidator&quot;</span><span class="p">},</span>
-    <span class="p">{</span><span class="s2">&quot;NAME&quot;</span><span class="p">:</span> <span class="s2">&quot;django.contrib.auth.password_validation.NumericPasswordValidator&quot;</span><span class="p">},</span>
+    <span class="p">{</span><span class="s2">"NAME"</span><span class="p">:</span> <span class="s2">"django.contrib.auth.password_validation.MinimumLengthValidator"</span><span class="p">},</span>
+    <span class="p">{</span><span class="s2">"NAME"</span><span class="p">:</span> <span class="s2">"django.contrib.auth.password_validation.CommonPasswordValidator"</span><span class="p">},</span>
+    <span class="p">{</span><span class="s2">"NAME"</span><span class="p">:</span> <span class="s2">"django.contrib.auth.password_validation.NumericPasswordValidator"</span><span class="p">},</span>
 <span class="p">]</span></pre></div>
     </div>
   </div>
@@ -370,8 +377,8 @@ https://docs.djangoproject.com/en/stable/ref/settings/#auth-password-validators<
 https://docs.djangoproject.com/en/stable/topics/i18n/</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre><span class="n">LANGUAGE_CODE</span> <span class="o">=</span> <span class="s2">&quot;en-us&quot;</span>
-<span class="n">TIME_ZONE</span> <span class="o">=</span> <span class="s2">&quot;UTC&quot;</span>
+      <div class="highlight"><pre><span class="n">LANGUAGE_CODE</span> <span class="o">=</span> <span class="s2">"en-us"</span>
+<span class="n">TIME_ZONE</span> <span class="o">=</span> <span class="s2">"UTC"</span>
 <span class="n">USE_I18N</span> <span class="o">=</span> <span class="kc">True</span>
 <span class="n">USE_TZ</span> <span class="o">=</span> <span class="kc">True</span></pre></div>
     </div>
@@ -386,18 +393,18 @@ https://docs.djangoproject.com/en/stable/topics/i18n/</p>
 https://docs.djangoproject.com/en/stable/howto/static-files/</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre><span class="n">STATIC_URL</span> <span class="o">=</span> <span class="s2">&quot;/static/&quot;</span>
-<span class="n">STATIC_ROOT</span> <span class="o">=</span> <span class="n">BASE_DIR</span> <span class="o">/</span> <span class="s2">&quot;static&quot;</span>
+      <div class="highlight"><pre><span class="n">STATIC_URL</span> <span class="o">=</span> <span class="s2">"/static/"</span>
+<span class="n">STATIC_ROOT</span> <span class="o">=</span> <span class="n">BASE_DIR</span> <span class="o">/</span> <span class="s2">"static"</span>
 <span class="n">STATICFILES_DIRS</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="n">BASE_DIR</span> <span class="o">/</span> <span class="s2">&quot;sm&quot;</span> <span class="o">/</span> <span class="s2">&quot;static&quot;</span><span class="p">,</span>
+    <span class="n">BASE_DIR</span> <span class="o">/</span> <span class="s2">"sm"</span> <span class="o">/</span> <span class="s2">"static"</span><span class="p">,</span>
 <span class="p">]</span>
 
 <span class="n">STORAGES</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;BACKEND&quot;</span><span class="p">:</span> <span class="s2">&quot;django.core.files.storage.FileSystemStorage&quot;</span><span class="p">,</span>
+    <span class="s2">"default"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">"BACKEND"</span><span class="p">:</span> <span class="s2">"django.core.files.storage.FileSystemStorage"</span><span class="p">,</span>
     <span class="p">},</span>
-    <span class="s2">&quot;staticfiles&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;BACKEND&quot;</span><span class="p">:</span> <span class="s2">&quot;whitenoise.storage.CompressedStaticFilesStorage&quot;</span><span class="p">,</span>
+    <span class="s2">"staticfiles"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">"BACKEND"</span><span class="p">:</span> <span class="s2">"whitenoise.storage.CompressedStaticFilesStorage"</span><span class="p">,</span>
     <span class="p">},</span>
 <span class="p">}</span></pre></div>
     </div>
@@ -412,7 +419,7 @@ https://docs.djangoproject.com/en/stable/howto/static-files/</p>
 https://docs.djangoproject.com/en/stable/ref/settings/#default-auto-field</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre><span class="n">DEFAULT_AUTO_FIELD</span> <span class="o">=</span> <span class="s2">&quot;django.db.models.BigAutoField&quot;</span></pre></div>
+      <div class="highlight"><pre><span class="n">DEFAULT_AUTO_FIELD</span> <span class="o">=</span> <span class="s2">"django.db.models.BigAutoField"</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -438,7 +445,7 @@ https://docs.djangoproject.com/en/stable/ref/settings/#default-auto-field</p>
       <p>Needed to login by username in Django admin, regardless of <code>allauth</code></p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="s2">&quot;django.contrib.auth.backends.ModelBackend&quot;</span><span class="p">,</span></pre></div>
+      <div class="highlight"><pre>    <span class="s2">"django.contrib.auth.backends.ModelBackend"</span><span class="p">,</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -450,7 +457,7 @@ https://docs.djangoproject.com/en/stable/ref/settings/#default-auto-field</p>
       <p><code>allauth</code> specific authentication methods, such as login by e-mail</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="s2">&quot;allauth.account.auth_backends.AuthenticationBackend&quot;</span><span class="p">,</span>
+      <div class="highlight"><pre>    <span class="s2">"allauth.account.auth_backends.AuthenticationBackend"</span><span class="p">,</span>
 <span class="p">]</span></pre></div>
     </div>
   </div>
@@ -463,14 +470,14 @@ https://docs.djangoproject.com/en/stable/ref/settings/#default-auto-field</p>
       <p>Allauth settings</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre><span class="n">LOGIN_REDIRECT_URL</span> <span class="o">=</span> <span class="s2">&quot;/&quot;</span>
-<span class="n">ACCOUNT_LOGIN_METHODS</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;username&quot;</span><span class="p">,</span> <span class="s2">&quot;email&quot;</span><span class="p">}</span>
-<span class="n">ACCOUNT_SIGNUP_FIELDS</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;email*&quot;</span><span class="p">,</span> <span class="s2">&quot;username*&quot;</span><span class="p">,</span> <span class="s2">&quot;password1*&quot;</span><span class="p">,</span> <span class="s2">&quot;password2*&quot;</span><span class="p">]</span>
-<span class="n">ACCOUNT_EMAIL_VERIFICATION</span> <span class="o">=</span> <span class="s2">&quot;optional&quot;</span>
-<span class="n">ACCOUNT_EMAIL_CONFIRMATION_ANONYMOUS_REDIRECT_URL</span> <span class="o">=</span> <span class="s2">&quot;/&quot;</span>
-<span class="n">ACCOUNT_EMAIL_CONFIRMATION_AUTHENTICATED_REDIRECT_URL</span> <span class="o">=</span> <span class="s2">&quot;/&quot;</span>
-<span class="n">ACCOUNT_LOGIN_REDIRECT_URL</span> <span class="o">=</span> <span class="s2">&quot;/&quot;</span>
-<span class="n">ACCOUNT_LOGOUT_REDIRECT_URL</span> <span class="o">=</span> <span class="s2">&quot;/&quot;</span></pre></div>
+      <div class="highlight"><pre><span class="n">LOGIN_REDIRECT_URL</span> <span class="o">=</span> <span class="s2">"/"</span>
+<span class="n">ACCOUNT_LOGIN_METHODS</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"username"</span><span class="p">,</span> <span class="s2">"email"</span><span class="p">}</span>
+<span class="n">ACCOUNT_SIGNUP_FIELDS</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"email*"</span><span class="p">,</span> <span class="s2">"username*"</span><span class="p">,</span> <span class="s2">"password1*"</span><span class="p">,</span> <span class="s2">"password2*"</span><span class="p">]</span>
+<span class="n">ACCOUNT_EMAIL_VERIFICATION</span> <span class="o">=</span> <span class="s2">"optional"</span>
+<span class="n">ACCOUNT_EMAIL_CONFIRMATION_ANONYMOUS_REDIRECT_URL</span> <span class="o">=</span> <span class="s2">"/"</span>
+<span class="n">ACCOUNT_EMAIL_CONFIRMATION_AUTHENTICATED_REDIRECT_URL</span> <span class="o">=</span> <span class="s2">"/"</span>
+<span class="n">ACCOUNT_LOGIN_REDIRECT_URL</span> <span class="o">=</span> <span class="s2">"/"</span>
+<span class="n">ACCOUNT_LOGOUT_REDIRECT_URL</span> <span class="o">=</span> <span class="s2">"/"</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -482,8 +489,8 @@ https://docs.djangoproject.com/en/stable/ref/settings/#default-auto-field</p>
       <p>Social Auth (Legacy/Transition)</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre><span class="n">SOCIAL_AUTH_STRATEGY</span> <span class="o">=</span> <span class="s2">&quot;social_django.strategy.DjangoStrategy&quot;</span>
-<span class="n">SOCIAL_AUTH_STORAGE</span> <span class="o">=</span> <span class="s2">&quot;social_django.models.DjangoStorage&quot;</span></pre></div>
+      <div class="highlight"><pre><span class="n">SOCIAL_AUTH_STRATEGY</span> <span class="o">=</span> <span class="s2">"social_django.strategy.DjangoStrategy"</span>
+<span class="n">SOCIAL_AUTH_STORAGE</span> <span class="o">=</span> <span class="s2">"social_django.models.DjangoStorage"</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -496,11 +503,11 @@ https://docs.djangoproject.com/en/stable/ref/settings/#default-auto-field</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre><span class="n">MFA_PASSKEY_LOGIN_ENABLED</span> <span class="o">=</span> <span class="kc">False</span>
-<span class="n">MFA_SUPPORTED_TYPES</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;totp&quot;</span><span class="p">,</span> <span class="s2">&quot;recovery_codes&quot;</span><span class="p">]</span>
+<span class="n">MFA_SUPPORTED_TYPES</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"totp"</span><span class="p">,</span> <span class="s2">"recovery_codes"</span><span class="p">]</span>
 
 <span class="k">if</span> <span class="ow">not</span> <span class="n">DISABLE_SOCIAL_AUTH</span><span class="p">:</span>
     <span class="n">SOCIALACCOUNT_AUTO_SIGNUP</span> <span class="o">=</span> <span class="kc">True</span>
-    <span class="n">SOCIALACCOUNT_ADAPTER</span> <span class="o">=</span> <span class="s2">&quot;sm.adapter.MySocialAccountAdapter&quot;</span>
+    <span class="n">SOCIALACCOUNT_ADAPTER</span> <span class="o">=</span> <span class="s2">"sm.adapter.MySocialAccountAdapter"</span>
 
     <span class="n">SOCIALACCOUNT_PROVIDERS</span> <span class="o">=</span> <span class="p">{}</span></pre></div>
     </div>
@@ -514,17 +521,17 @@ https://docs.djangoproject.com/en/stable/ref/settings/#default-auto-field</p>
       <p>Google Auth</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="n">google_id</span> <span class="o">=</span> <span class="n">config</span><span class="p">(</span><span class="s2">&quot;GOOGLE_CLIENT_ID&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
-    <span class="n">google_secret</span> <span class="o">=</span> <span class="n">config</span><span class="p">(</span><span class="s2">&quot;GOOGLE_SECRET&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+      <div class="highlight"><pre>    <span class="n">google_id</span> <span class="o">=</span> <span class="n">config</span><span class="p">(</span><span class="s2">"GOOGLE_CLIENT_ID"</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+    <span class="n">google_secret</span> <span class="o">=</span> <span class="n">config</span><span class="p">(</span><span class="s2">"GOOGLE_SECRET"</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">google_id</span> <span class="ow">and</span> <span class="n">google_secret</span><span class="p">:</span>
-        <span class="n">SOCIALACCOUNT_PROVIDERS</span><span class="p">[</span><span class="s2">&quot;google&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;APPS&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="n">SOCIALACCOUNT_PROVIDERS</span><span class="p">[</span><span class="s2">"google"</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">"APPS"</span><span class="p">:</span> <span class="p">[</span>
                 <span class="p">{</span>
-                    <span class="s2">&quot;client_id&quot;</span><span class="p">:</span> <span class="n">google_id</span><span class="p">,</span>
-                    <span class="s2">&quot;secret&quot;</span><span class="p">:</span> <span class="n">google_secret</span><span class="p">,</span>
-                    <span class="s2">&quot;settings&quot;</span><span class="p">:</span> <span class="p">{</span>
-                        <span class="s2">&quot;scope&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;profile&quot;</span><span class="p">,</span> <span class="s2">&quot;email&quot;</span><span class="p">],</span>
-                        <span class="s2">&quot;auth_params&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;access_type&quot;</span><span class="p">:</span> <span class="s2">&quot;online&quot;</span><span class="p">},</span>
+                    <span class="s2">"client_id"</span><span class="p">:</span> <span class="n">google_id</span><span class="p">,</span>
+                    <span class="s2">"secret"</span><span class="p">:</span> <span class="n">google_secret</span><span class="p">,</span>
+                    <span class="s2">"settings"</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="s2">"scope"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"profile"</span><span class="p">,</span> <span class="s2">"email"</span><span class="p">],</span>
+                        <span class="s2">"auth_params"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"access_type"</span><span class="p">:</span> <span class="s2">"online"</span><span class="p">},</span>
                     <span class="p">},</span>
                 <span class="p">}</span>
             <span class="p">]</span>
@@ -540,31 +547,31 @@ https://docs.djangoproject.com/en/stable/ref/settings/#default-auto-field</p>
       <p>Generic OIDC</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="n">oidc_id</span> <span class="o">=</span> <span class="n">config</span><span class="p">(</span><span class="s2">&quot;OIDC_CLIENT_ID&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
-    <span class="n">oidc_secret</span> <span class="o">=</span> <span class="n">config</span><span class="p">(</span><span class="s2">&quot;OIDC_SECRET&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
-    <span class="n">oidc_url</span> <span class="o">=</span> <span class="n">config</span><span class="p">(</span><span class="s2">&quot;OIDC_URL&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
-    <span class="n">oidc_name</span> <span class="o">=</span> <span class="n">config</span><span class="p">(</span><span class="s2">&quot;OIDC_NAME&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;Localghost SSO&quot;</span><span class="p">)</span>
+      <div class="highlight"><pre>    <span class="n">oidc_id</span> <span class="o">=</span> <span class="n">config</span><span class="p">(</span><span class="s2">"OIDC_CLIENT_ID"</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+    <span class="n">oidc_secret</span> <span class="o">=</span> <span class="n">config</span><span class="p">(</span><span class="s2">"OIDC_SECRET"</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+    <span class="n">oidc_url</span> <span class="o">=</span> <span class="n">config</span><span class="p">(</span><span class="s2">"OIDC_URL"</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+    <span class="n">oidc_name</span> <span class="o">=</span> <span class="n">config</span><span class="p">(</span><span class="s2">"OIDC_NAME"</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">"Localghost SSO"</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">oidc_id</span> <span class="ow">and</span> <span class="n">oidc_secret</span> <span class="ow">and</span> <span class="n">oidc_url</span><span class="p">:</span>
-        <span class="n">SOCIALACCOUNT_PROVIDERS</span><span class="p">[</span><span class="s2">&quot;openid_connect&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;APPS&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="n">SOCIALACCOUNT_PROVIDERS</span><span class="p">[</span><span class="s2">"openid_connect"</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">"APPS"</span><span class="p">:</span> <span class="p">[</span>
                 <span class="p">{</span>
-                    <span class="s2">&quot;provider_id&quot;</span><span class="p">:</span> <span class="s2">&quot;oidc&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">oidc_name</span><span class="p">,</span>
-                    <span class="s2">&quot;client_id&quot;</span><span class="p">:</span> <span class="n">oidc_id</span><span class="p">,</span>
-                    <span class="s2">&quot;secret&quot;</span><span class="p">:</span> <span class="n">oidc_secret</span><span class="p">,</span>
-                    <span class="s2">&quot;settings&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;server_url&quot;</span><span class="p">:</span> <span class="n">oidc_url</span><span class="p">},</span>
+                    <span class="s2">"provider_id"</span><span class="p">:</span> <span class="s2">"oidc"</span><span class="p">,</span>
+                    <span class="s2">"name"</span><span class="p">:</span> <span class="n">oidc_name</span><span class="p">,</span>
+                    <span class="s2">"client_id"</span><span class="p">:</span> <span class="n">oidc_id</span><span class="p">,</span>
+                    <span class="s2">"secret"</span><span class="p">:</span> <span class="n">oidc_secret</span><span class="p">,</span>
+                    <span class="s2">"settings"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"server_url"</span><span class="p">:</span> <span class="n">oidc_url</span><span class="p">},</span>
                 <span class="p">}</span>
             <span class="p">]</span>
         <span class="p">}</span>
 
 <span class="n">INTERNAL_IPS</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s2">&quot;127.0.0.1&quot;</span><span class="p">,</span>
+    <span class="s2">"127.0.0.1"</span><span class="p">,</span>
 <span class="p">]</span>
 
-<span class="n">MESSAGE_TAGS</span> <span class="o">=</span> <span class="p">{</span><span class="n">messages</span><span class="o">.</span><span class="n">ERROR</span><span class="p">:</span> <span class="s2">&quot;danger&quot;</span><span class="p">}</span>
+<span class="n">MESSAGE_TAGS</span> <span class="o">=</span> <span class="p">{</span><span class="n">messages</span><span class="o">.</span><span class="n">ERROR</span><span class="p">:</span> <span class="s2">"danger"</span><span class="p">}</span>
 
-<span class="n">MESSAGE_STORAGE</span> <span class="o">=</span> <span class="s2">&quot;django.contrib.messages.storage.fallback.FallbackStorage&quot;</span>
+<span class="n">MESSAGE_STORAGE</span> <span class="o">=</span> <span class="s2">"django.contrib.messages.storage.fallback.FallbackStorage"</span>
 
 <span class="n">TAGGIT_CASE_INSENSITIVE</span> <span class="o">=</span> <span class="kc">True</span></pre></div>
     </div>
@@ -579,18 +586,18 @@ https://docs.djangoproject.com/en/stable/ref/settings/#default-auto-field</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre><span class="n">REST_FRAMEWORK</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;DEFAULT_SCHEMA_CLASS&quot;</span><span class="p">:</span> <span class="s2">&quot;drf_spectacular.openapi.AutoSchema&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;DEFAULT_AUTHENTICATION_CLASSES&quot;</span><span class="p">:</span> <span class="p">[</span>
-        <span class="s2">&quot;sm.api.authentication.ApiKeyAuthentication&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;rest_framework.authentication.SessionAuthentication&quot;</span><span class="p">,</span>
+    <span class="s2">"DEFAULT_SCHEMA_CLASS"</span><span class="p">:</span> <span class="s2">"drf_spectacular.openapi.AutoSchema"</span><span class="p">,</span>
+    <span class="s2">"DEFAULT_AUTHENTICATION_CLASSES"</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s2">"sm.api.authentication.ApiKeyAuthentication"</span><span class="p">,</span>
+        <span class="s2">"rest_framework.authentication.SessionAuthentication"</span><span class="p">,</span>
     <span class="p">],</span>
 <span class="p">}</span>
 
 <span class="n">SPECTACULAR_SETTINGS</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;TITLE&quot;</span><span class="p">:</span> <span class="s2">&quot;ServerManager API&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;DESCRIPTION&quot;</span><span class="p">:</span> <span class="s2">&quot;API for managing servers, clusters, and infrastructure.&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;VERSION&quot;</span><span class="p">:</span> <span class="s2">&quot;1.0.0&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;SERVE_INCLUDE_SCHEMA&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="s2">"TITLE"</span><span class="p">:</span> <span class="s2">"ServerManager API"</span><span class="p">,</span>
+    <span class="s2">"DESCRIPTION"</span><span class="p">:</span> <span class="s2">"API for managing servers, clusters, and infrastructure."</span><span class="p">,</span>
+    <span class="s2">"VERSION"</span><span class="p">:</span> <span class="s2">"1.0.0"</span><span class="p">,</span>
+    <span class="s2">"SERVE_INCLUDE_SCHEMA"</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
 <span class="p">}</span></pre></div>
     </div>
   </div>
@@ -604,16 +611,13 @@ https://docs.djangoproject.com/en/stable/ref/settings/#default-auto-field</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre><span class="n">BOOTSTRAP5</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;error_css_class&quot;</span><span class="p">:</span> <span class="s2">&quot;bootstrap5-error&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;required_css_class&quot;</span><span class="p">:</span> <span class="s2">&quot;bootstrap5-required&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;javascript_in_head&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
-    <span class="s2">&quot;success_css_class&quot;</span><span class="p">:</span> <span class="s2">&quot;bootstrap5-bound&quot;</span><span class="p">,</span>
+    <span class="s2">"error_css_class"</span><span class="p">:</span> <span class="s2">"bootstrap5-error"</span><span class="p">,</span>
+    <span class="s2">"required_css_class"</span><span class="p">:</span> <span class="s2">"bootstrap5-required"</span><span class="p">,</span>
+    <span class="s2">"javascript_in_head"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="s2">"success_css_class"</span><span class="p">:</span> <span class="s2">"bootstrap5-bound"</span><span class="p">,</span>
 <span class="p">}</span>
 
-<span class="n">HTML_MINIFY</span> <span class="o">=</span> <span class="kc">True</span>
-
-<span class="k">if</span> <span class="ow">not</span> <span class="n">DISABLE_SOCIAL_AUTH</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">BASE_DIR</span> <span class="o">/</span> <span class="s2">&quot;config_local.py&quot;</span><span class="p">):</span>
-    <span class="kn">from</span><span class="w"> </span><span class="nn">config_local</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>  <span class="c1"># noqa</span></pre></div>
+<span class="n">HTML_MINIFY</span> <span class="o">=</span> <span class="kc">True</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -622,13 +626,39 @@ https://docs.djangoproject.com/en/stable/ref/settings/#default-auto-field</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-27'>#</a>
       </div>
+      <p>Security hardening (only applied when not in DEBUG so local HTTP dev works).
+Skipped while running the test suite, which always runs with DEBUG=False and
+uses plain-HTTP requests that SECURE_SSL_REDIRECT would redirect away.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">if</span> <span class="ow">not</span> <span class="n">DEBUG</span> <span class="ow">and</span> <span class="s2">"test"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">argv</span><span class="p">:</span>
+    <span class="n">SECURE_SSL_REDIRECT</span> <span class="o">=</span> <span class="n">config</span><span class="p">(</span><span class="s2">"SECURE_SSL_REDIRECT"</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">cast</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+    <span class="n">SESSION_COOKIE_SECURE</span> <span class="o">=</span> <span class="n">config</span><span class="p">(</span><span class="s2">"SESSION_COOKIE_SECURE"</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">cast</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+    <span class="n">CSRF_COOKIE_SECURE</span> <span class="o">=</span> <span class="n">config</span><span class="p">(</span><span class="s2">"CSRF_COOKIE_SECURE"</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">cast</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+    <span class="n">SECURE_HSTS_SECONDS</span> <span class="o">=</span> <span class="n">config</span><span class="p">(</span><span class="s2">"SECURE_HSTS_SECONDS"</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">31536000</span><span class="p">,</span> <span class="n">cast</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+    <span class="n">SECURE_HSTS_INCLUDE_SUBDOMAINS</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">SECURE_HSTS_PRELOAD</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">SECURE_CONTENT_TYPE_NOSNIFF</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">SECURE_REFERRER_POLICY</span> <span class="o">=</span> <span class="s2">"same-origin"</span>
+    <span class="n">X_FRAME_OPTIONS</span> <span class="o">=</span> <span class="s2">"DENY"</span>
+
+<span class="k">if</span> <span class="ow">not</span> <span class="n">DISABLE_SOCIAL_AUTH</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">BASE_DIR</span> <span class="o">/</span> <span class="s2">"config_local.py"</span><span class="p">):</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">config_local</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>  <span class="c1"># noqa</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-28'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-28'>#</a>
+      </div>
       <p>Redefine to ensure no social_core backends survive in quick test mode</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre><span class="k">if</span> <span class="n">DISABLE_SOCIAL_AUTH</span><span class="p">:</span>
     <span class="n">AUTHENTICATION_BACKENDS</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="s2">&quot;django.contrib.auth.backends.ModelBackend&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;allauth.account.auth_backends.AuthenticationBackend&quot;</span><span class="p">,</span>
+        <span class="s2">"django.contrib.auth.backends.ModelBackend"</span><span class="p">,</span>
+        <span class="s2">"allauth.account.auth_backends.AuthenticationBackend"</span><span class="p">,</span>
     <span class="p">]</span>
 
 </pre></div>

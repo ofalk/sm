@@ -38,7 +38,7 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">django</span>
 
-<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;DJANGO_SETTINGS_MODULE&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;sm.settings&quot;</span>
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">"DJANGO_SETTINGS_MODULE"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"sm.settings"</span>
 <span class="n">django</span><span class="o">.</span><span class="n">setup</span><span class="p">()</span></pre></div>
     </div>
   </div>
@@ -53,19 +53,19 @@
     <div class='code'>
       <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">Tester</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
     <span class="n">model</span> <span class="o">=</span> <span class="n">Model</span>
-    <span class="n">testdescription</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">random_string</span><span class="p">()</span>
-    <span class="n">testhost</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">random_string</span><span class="p">()</span>
+    <span class="n">testdescription</span> <span class="o">=</span> <span class="s2">"</span><span class="si">%s</span><span class="s2">"</span> <span class="o">%</span> <span class="n">random_string</span><span class="p">()</span>
+    <span class="n">testhost</span> <span class="o">=</span> <span class="s2">"</span><span class="si">%s</span><span class="s2">"</span> <span class="o">%</span> <span class="n">random_string</span><span class="p">()</span>
     <span class="n">teststring</span> <span class="o">=</span> <span class="n">random_string</span><span class="p">()</span>
     <span class="n">fixtures</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">/fixtures/01_initial.yaml&quot;</span> <span class="o">%</span> <span class="s2">&quot;vendor&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">/fixtures/01_initial.yaml&quot;</span> <span class="o">%</span> <span class="s2">&quot;servermodel&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">/fixtures/01_initial.yaml&quot;</span> <span class="o">%</span> <span class="s2">&quot;status&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">/fixtures/01_initial.yaml&quot;</span> <span class="o">%</span> <span class="s2">&quot;domain&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">/fixtures/01_initial.yaml&quot;</span> <span class="o">%</span> <span class="s2">&quot;patchtime&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">/fixtures/01_initial.yaml&quot;</span> <span class="o">%</span> <span class="s2">&quot;operatingsystem&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">/fixtures/01_initial.yaml&quot;</span> <span class="o">%</span> <span class="s2">&quot;clustersoftware&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">/fixtures/01_initial.yaml&quot;</span> <span class="o">%</span> <span class="s2">&quot;cluster&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">/fixtures/01_initial.yaml&quot;</span> <span class="o">%</span> <span class="s2">&quot;clusterpackagetype&quot;</span><span class="p">,</span>
+        <span class="s2">"</span><span class="si">%s</span><span class="s2">/fixtures/01_initial.yaml"</span> <span class="o">%</span> <span class="s2">"vendor"</span><span class="p">,</span>
+        <span class="s2">"</span><span class="si">%s</span><span class="s2">/fixtures/01_initial.yaml"</span> <span class="o">%</span> <span class="s2">"servermodel"</span><span class="p">,</span>
+        <span class="s2">"</span><span class="si">%s</span><span class="s2">/fixtures/01_initial.yaml"</span> <span class="o">%</span> <span class="s2">"status"</span><span class="p">,</span>
+        <span class="s2">"</span><span class="si">%s</span><span class="s2">/fixtures/01_initial.yaml"</span> <span class="o">%</span> <span class="s2">"domain"</span><span class="p">,</span>
+        <span class="s2">"</span><span class="si">%s</span><span class="s2">/fixtures/01_initial.yaml"</span> <span class="o">%</span> <span class="s2">"patchtime"</span><span class="p">,</span>
+        <span class="s2">"</span><span class="si">%s</span><span class="s2">/fixtures/01_initial.yaml"</span> <span class="o">%</span> <span class="s2">"operatingsystem"</span><span class="p">,</span>
+        <span class="s2">"</span><span class="si">%s</span><span class="s2">/fixtures/01_initial.yaml"</span> <span class="o">%</span> <span class="s2">"clustersoftware"</span><span class="p">,</span>
+        <span class="s2">"</span><span class="si">%s</span><span class="s2">/fixtures/01_initial.yaml"</span> <span class="o">%</span> <span class="s2">"cluster"</span><span class="p">,</span>
+        <span class="s2">"</span><span class="si">%s</span><span class="s2">/fixtures/01_initial.yaml"</span> <span class="o">%</span> <span class="s2">"clusterpackagetype"</span><span class="p">,</span>
     <span class="p">]</span>
     <span class="n">testitem</span> <span class="o">=</span> <span class="kc">None</span></pre></div>
     </div>
@@ -133,8 +133,8 @@ need to manually prune the DB and create a testitem</p>
     <div class='code'>
       <div class="highlight"><pre>        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
         <span class="n">obj</span><span class="p">,</span> <span class="n">created</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_or_create_testitem</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">created</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;the object was already there?&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertIsInstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="s2">&quot;object not correct model!?&quot;</span><span class="p">)</span></pre></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">created</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">"the object was already there?"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIsInstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="s2">"object not correct model!?"</span><span class="p">)</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -148,7 +148,7 @@ need to manually prune the DB and create a testitem</p>
     <div class='code'>
       <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">test_description</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">testitem</span><span class="o">.</span><span class="n">description</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">testdescription</span><span class="p">,</span> <span class="s2">&quot;description not correct&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">testitem</span><span class="o">.</span><span class="n">description</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">testdescription</span><span class="p">,</span> <span class="s2">"description not correct"</span>
         <span class="p">)</span></pre></div>
     </div>
   </div>
@@ -162,7 +162,7 @@ need to manually prune the DB and create a testitem</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">test_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">testitem</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">teststring</span><span class="p">,</span> <span class="s2">&quot;name not correct&quot;</span><span class="p">)</span></pre></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">testitem</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">teststring</span><span class="p">,</span> <span class="s2">"name not correct"</span><span class="p">)</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -184,7 +184,7 @@ need to manually prune the DB and create a testitem</p>
                 <span class="kc">None</span><span class="p">,</span>
             <span class="p">),</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">testitem</span><span class="o">.</span><span class="n">natural_key</span><span class="p">(),</span>
-            <span class="s2">&quot;natural key not correct&quot;</span><span class="p">,</span>
+            <span class="s2">"natural key not correct"</span><span class="p">,</span>
         <span class="p">)</span></pre></div>
     </div>
   </div>
@@ -219,9 +219,9 @@ need to manually prune the DB and create a testitem</p>
     <div class='code'>
       <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">test___str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span>
-            <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">testitem</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
-            <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">teststring</span><span class="p">,</span>
-            <span class="s2">&quot;string representation not correct&quot;</span><span class="p">,</span>
+            <span class="s2">"</span><span class="si">%s</span><span class="s2">"</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">testitem</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+            <span class="s2">"</span><span class="si">%s</span><span class="s2">"</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">teststring</span><span class="p">,</span>
+            <span class="s2">"string representation not correct"</span><span class="p">,</span>
         <span class="p">)</span></pre></div>
     </div>
   </div>
@@ -236,9 +236,9 @@ need to manually prune the DB and create a testitem</p>
     <div class='code'>
       <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">test_absolute_url</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span>
-            <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">testitem</span><span class="o">.</span><span class="n">get_absolute_url</span><span class="p">()),</span>
-            <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">:detail&quot;</span> <span class="o">%</span> <span class="n">app_label</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;pk&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">testitem</span><span class="o">.</span><span class="n">pk</span><span class="p">})),</span>
-            <span class="s2">&quot;absolute url not built correctly&quot;</span><span class="p">,</span>
+            <span class="s2">"</span><span class="si">%s</span><span class="s2">"</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">testitem</span><span class="o">.</span><span class="n">get_absolute_url</span><span class="p">()),</span>
+            <span class="s2">"</span><span class="si">%s</span><span class="s2">"</span> <span class="o">%</span> <span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">"</span><span class="si">%s</span><span class="s2">:detail"</span> <span class="o">%</span> <span class="n">app_label</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">=</span><span class="p">{</span><span class="s2">"pk"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">testitem</span><span class="o">.</span><span class="n">pk</span><span class="p">})),</span>
+            <span class="s2">"absolute url not built correctly"</span><span class="p">,</span>
         <span class="p">)</span></pre></div>
     </div>
   </div>
@@ -252,28 +252,28 @@ need to manually prune the DB and create a testitem</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">test_same_name_different_status_allowed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">group</span> <span class="o">=</span> <span class="n">Group</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;test-group&quot;</span><span class="p">)</span>
-        <span class="n">other_status</span> <span class="o">=</span> <span class="n">StatusModel</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;other&quot;</span><span class="p">,</span> <span class="n">group</span><span class="o">=</span><span class="n">group</span><span class="p">)</span>
+        <span class="n">group</span> <span class="o">=</span> <span class="n">Group</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"test-group"</span><span class="p">)</span>
+        <span class="n">other_status</span> <span class="o">=</span> <span class="n">StatusModel</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"other"</span><span class="p">,</span> <span class="n">group</span><span class="o">=</span><span class="n">group</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
-            <span class="n">name</span><span class="o">=</span><span class="s2">&quot;dup&quot;</span><span class="p">,</span>
+            <span class="n">name</span><span class="o">=</span><span class="s2">"dup"</span><span class="p">,</span>
             <span class="n">cluster</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cluster</span><span class="p">,</span>
             <span class="n">status</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">status</span><span class="p">,</span>
             <span class="n">package_type</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">package_type</span><span class="p">,</span>
-            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;desc&quot;</span><span class="p">,</span>
-            <span class="n">host</span><span class="o">=</span><span class="s2">&quot;10.0.0.1&quot;</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="s2">"desc"</span><span class="p">,</span>
+            <span class="n">host</span><span class="o">=</span><span class="s2">"10.0.0.1"</span><span class="p">,</span>
             <span class="n">group</span><span class="o">=</span><span class="n">group</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
-            <span class="n">name</span><span class="o">=</span><span class="s2">&quot;dup&quot;</span><span class="p">,</span>
+            <span class="n">name</span><span class="o">=</span><span class="s2">"dup"</span><span class="p">,</span>
             <span class="n">cluster</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cluster</span><span class="p">,</span>
             <span class="n">status</span><span class="o">=</span><span class="n">other_status</span><span class="p">,</span>
             <span class="n">package_type</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">package_type</span><span class="p">,</span>
-            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;desc&quot;</span><span class="p">,</span>
-            <span class="n">host</span><span class="o">=</span><span class="s2">&quot;10.0.0.2&quot;</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="s2">"desc"</span><span class="p">,</span>
+            <span class="n">host</span><span class="o">=</span><span class="s2">"10.0.0.2"</span><span class="p">,</span>
             <span class="n">group</span><span class="o">=</span><span class="n">group</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;dup&quot;</span><span class="p">,</span> <span class="n">cluster</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cluster</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">(),</span> <span class="mi">2</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"dup"</span><span class="p">,</span> <span class="n">cluster</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cluster</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">(),</span> <span class="mi">2</span>
         <span class="p">)</span></pre></div>
     </div>
   </div>
@@ -287,28 +287,28 @@ need to manually prune the DB and create a testitem</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">test_same_name_different_package_type_allowed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">group</span> <span class="o">=</span> <span class="n">Group</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;test-group&quot;</span><span class="p">)</span>
-        <span class="n">other_type</span> <span class="o">=</span> <span class="n">ClusterpackagetypeModel</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;other&quot;</span><span class="p">,</span> <span class="n">group</span><span class="o">=</span><span class="n">group</span><span class="p">)</span>
+        <span class="n">group</span> <span class="o">=</span> <span class="n">Group</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"test-group"</span><span class="p">)</span>
+        <span class="n">other_type</span> <span class="o">=</span> <span class="n">ClusterpackagetypeModel</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"other"</span><span class="p">,</span> <span class="n">group</span><span class="o">=</span><span class="n">group</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
-            <span class="n">name</span><span class="o">=</span><span class="s2">&quot;dup&quot;</span><span class="p">,</span>
+            <span class="n">name</span><span class="o">=</span><span class="s2">"dup"</span><span class="p">,</span>
             <span class="n">cluster</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cluster</span><span class="p">,</span>
             <span class="n">status</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">status</span><span class="p">,</span>
             <span class="n">package_type</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">package_type</span><span class="p">,</span>
-            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;desc&quot;</span><span class="p">,</span>
-            <span class="n">host</span><span class="o">=</span><span class="s2">&quot;10.0.0.1&quot;</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="s2">"desc"</span><span class="p">,</span>
+            <span class="n">host</span><span class="o">=</span><span class="s2">"10.0.0.1"</span><span class="p">,</span>
             <span class="n">group</span><span class="o">=</span><span class="n">group</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
-            <span class="n">name</span><span class="o">=</span><span class="s2">&quot;dup&quot;</span><span class="p">,</span>
+            <span class="n">name</span><span class="o">=</span><span class="s2">"dup"</span><span class="p">,</span>
             <span class="n">cluster</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cluster</span><span class="p">,</span>
             <span class="n">status</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">status</span><span class="p">,</span>
             <span class="n">package_type</span><span class="o">=</span><span class="n">other_type</span><span class="p">,</span>
-            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;desc&quot;</span><span class="p">,</span>
-            <span class="n">host</span><span class="o">=</span><span class="s2">&quot;10.0.0.2&quot;</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="s2">"desc"</span><span class="p">,</span>
+            <span class="n">host</span><span class="o">=</span><span class="s2">"10.0.0.2"</span><span class="p">,</span>
             <span class="n">group</span><span class="o">=</span><span class="n">group</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;dup&quot;</span><span class="p">,</span> <span class="n">cluster</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cluster</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">(),</span> <span class="mi">2</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"dup"</span><span class="p">,</span> <span class="n">cluster</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cluster</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">(),</span> <span class="mi">2</span>
         <span class="p">)</span></pre></div>
     </div>
   </div>
@@ -322,31 +322,31 @@ need to manually prune the DB and create a testitem</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">test_same_name_different_clusters_allowed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">group</span> <span class="o">=</span> <span class="n">Group</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;test-group&quot;</span><span class="p">)</span>
+        <span class="n">group</span> <span class="o">=</span> <span class="n">Group</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"test-group"</span><span class="p">)</span>
         <span class="n">cluster2</span> <span class="o">=</span> <span class="n">ClusterModel</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
-            <span class="n">name</span><span class="o">=</span><span class="s2">&quot;cluster-2&quot;</span><span class="p">,</span>
+            <span class="n">name</span><span class="o">=</span><span class="s2">"cluster-2"</span><span class="p">,</span>
             <span class="n">clustersoftware</span><span class="o">=</span><span class="n">ClustersoftwareModel</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">first</span><span class="p">(),</span>
             <span class="n">group</span><span class="o">=</span><span class="n">group</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
-            <span class="n">name</span><span class="o">=</span><span class="s2">&quot;dup&quot;</span><span class="p">,</span>
+            <span class="n">name</span><span class="o">=</span><span class="s2">"dup"</span><span class="p">,</span>
             <span class="n">cluster</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cluster</span><span class="p">,</span>
             <span class="n">status</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">status</span><span class="p">,</span>
             <span class="n">package_type</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">package_type</span><span class="p">,</span>
-            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;desc&quot;</span><span class="p">,</span>
-            <span class="n">host</span><span class="o">=</span><span class="s2">&quot;10.0.0.1&quot;</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="s2">"desc"</span><span class="p">,</span>
+            <span class="n">host</span><span class="o">=</span><span class="s2">"10.0.0.1"</span><span class="p">,</span>
             <span class="n">group</span><span class="o">=</span><span class="n">group</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
-            <span class="n">name</span><span class="o">=</span><span class="s2">&quot;dup&quot;</span><span class="p">,</span>
+            <span class="n">name</span><span class="o">=</span><span class="s2">"dup"</span><span class="p">,</span>
             <span class="n">cluster</span><span class="o">=</span><span class="n">cluster2</span><span class="p">,</span>
             <span class="n">status</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">status</span><span class="p">,</span>
             <span class="n">package_type</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">package_type</span><span class="p">,</span>
-            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;desc&quot;</span><span class="p">,</span>
-            <span class="n">host</span><span class="o">=</span><span class="s2">&quot;10.0.0.2&quot;</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="s2">"desc"</span><span class="p">,</span>
+            <span class="n">host</span><span class="o">=</span><span class="s2">"10.0.0.2"</span><span class="p">,</span>
             <span class="n">group</span><span class="o">=</span><span class="n">group</span><span class="p">,</span>
         <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;dup&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">(),</span> <span class="mi">2</span><span class="p">)</span></pre></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"dup"</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">(),</span> <span class="mi">2</span><span class="p">)</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -359,27 +359,27 @@ need to manually prune the DB and create a testitem</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">test_same_name_different_groups_allowed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">group_a</span> <span class="o">=</span> <span class="n">Group</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;group-a&quot;</span><span class="p">)</span>
-        <span class="n">group_b</span> <span class="o">=</span> <span class="n">Group</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;group-b&quot;</span><span class="p">)</span>
+        <span class="n">group_a</span> <span class="o">=</span> <span class="n">Group</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"group-a"</span><span class="p">)</span>
+        <span class="n">group_b</span> <span class="o">=</span> <span class="n">Group</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"group-b"</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
-            <span class="n">name</span><span class="o">=</span><span class="s2">&quot;dup&quot;</span><span class="p">,</span>
+            <span class="n">name</span><span class="o">=</span><span class="s2">"dup"</span><span class="p">,</span>
             <span class="n">cluster</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cluster</span><span class="p">,</span>
             <span class="n">status</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">status</span><span class="p">,</span>
             <span class="n">package_type</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">package_type</span><span class="p">,</span>
-            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;desc&quot;</span><span class="p">,</span>
-            <span class="n">host</span><span class="o">=</span><span class="s2">&quot;10.0.0.1&quot;</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="s2">"desc"</span><span class="p">,</span>
+            <span class="n">host</span><span class="o">=</span><span class="s2">"10.0.0.1"</span><span class="p">,</span>
             <span class="n">group</span><span class="o">=</span><span class="n">group_a</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
-            <span class="n">name</span><span class="o">=</span><span class="s2">&quot;dup&quot;</span><span class="p">,</span>
+            <span class="n">name</span><span class="o">=</span><span class="s2">"dup"</span><span class="p">,</span>
             <span class="n">cluster</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cluster</span><span class="p">,</span>
             <span class="n">status</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">status</span><span class="p">,</span>
             <span class="n">package_type</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">package_type</span><span class="p">,</span>
-            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;desc&quot;</span><span class="p">,</span>
-            <span class="n">host</span><span class="o">=</span><span class="s2">&quot;10.0.0.2&quot;</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="s2">"desc"</span><span class="p">,</span>
+            <span class="n">host</span><span class="o">=</span><span class="s2">"10.0.0.2"</span><span class="p">,</span>
             <span class="n">group</span><span class="o">=</span><span class="n">group_b</span><span class="p">,</span>
         <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;dup&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">(),</span> <span class="mi">2</span><span class="p">)</span></pre></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"dup"</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">(),</span> <span class="mi">2</span><span class="p">)</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -392,28 +392,28 @@ need to manually prune the DB and create a testitem</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">test_same_name_status_package_type_rejected</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">group</span> <span class="o">=</span> <span class="n">Group</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;test-group&quot;</span><span class="p">)</span>
+        <span class="n">group</span> <span class="o">=</span> <span class="n">Group</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"test-group"</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
-            <span class="n">name</span><span class="o">=</span><span class="s2">&quot;dup&quot;</span><span class="p">,</span>
+            <span class="n">name</span><span class="o">=</span><span class="s2">"dup"</span><span class="p">,</span>
             <span class="n">cluster</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cluster</span><span class="p">,</span>
             <span class="n">status</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">status</span><span class="p">,</span>
             <span class="n">package_type</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">package_type</span><span class="p">,</span>
-            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;desc&quot;</span><span class="p">,</span>
-            <span class="n">host</span><span class="o">=</span><span class="s2">&quot;10.0.0.1&quot;</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="s2">"desc"</span><span class="p">,</span>
+            <span class="n">host</span><span class="o">=</span><span class="s2">"10.0.0.1"</span><span class="p">,</span>
             <span class="n">group</span><span class="o">=</span><span class="n">group</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">assertRaises</span><span class="p">(</span><span class="n">IntegrityError</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
-                <span class="n">name</span><span class="o">=</span><span class="s2">&quot;dup&quot;</span><span class="p">,</span>
+                <span class="n">name</span><span class="o">=</span><span class="s2">"dup"</span><span class="p">,</span>
                 <span class="n">cluster</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cluster</span><span class="p">,</span>
                 <span class="n">status</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">status</span><span class="p">,</span>
                 <span class="n">package_type</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">package_type</span><span class="p">,</span>
-                <span class="n">description</span><span class="o">=</span><span class="s2">&quot;desc&quot;</span><span class="p">,</span>
-                <span class="n">host</span><span class="o">=</span><span class="s2">&quot;10.0.0.2&quot;</span><span class="p">,</span>
+                <span class="n">description</span><span class="o">=</span><span class="s2">"desc"</span><span class="p">,</span>
+                <span class="n">host</span><span class="o">=</span><span class="s2">"10.0.0.2"</span><span class="p">,</span>
                 <span class="n">group</span><span class="o">=</span><span class="n">group</span><span class="p">,</span>
             <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;dup&quot;</span><span class="p">,</span> <span class="n">cluster</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cluster</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">(),</span> <span class="mi">1</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"dup"</span><span class="p">,</span> <span class="n">cluster</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cluster</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">(),</span> <span class="mi">1</span>
         <span class="p">)</span>
 
 </pre></div>

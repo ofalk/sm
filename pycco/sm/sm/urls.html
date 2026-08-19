@@ -72,30 +72,30 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">rest_framework</span><span class="w"> </span><span class="kn">import</span> <span class="n">routers</span>
 
 <span class="n">router</span> <span class="o">=</span> <span class="n">routers</span><span class="o">.</span><span class="n">DefaultRouter</span><span class="p">()</span>
-<span class="n">router</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;servers&quot;</span><span class="p">,</span> <span class="n">ServerViewSet</span><span class="p">,</span> <span class="n">basename</span><span class="o">=</span><span class="s2">&quot;api-server&quot;</span><span class="p">)</span>
-<span class="n">router</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;vendors&quot;</span><span class="p">,</span> <span class="n">VendorViewSet</span><span class="p">,</span> <span class="n">basename</span><span class="o">=</span><span class="s2">&quot;api-vendor&quot;</span><span class="p">)</span>
-<span class="n">router</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;statuses&quot;</span><span class="p">,</span> <span class="n">StatusViewSet</span><span class="p">,</span> <span class="n">basename</span><span class="o">=</span><span class="s2">&quot;api-status&quot;</span><span class="p">)</span>
-<span class="n">router</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;locations&quot;</span><span class="p">,</span> <span class="n">LocationViewSet</span><span class="p">,</span> <span class="n">basename</span><span class="o">=</span><span class="s2">&quot;api-location&quot;</span><span class="p">)</span>
-<span class="n">router</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;domains&quot;</span><span class="p">,</span> <span class="n">DomainViewSet</span><span class="p">,</span> <span class="n">basename</span><span class="o">=</span><span class="s2">&quot;api-domain&quot;</span><span class="p">)</span>
-<span class="n">router</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;patchtimes&quot;</span><span class="p">,</span> <span class="n">PatchtimeViewSet</span><span class="p">,</span> <span class="n">basename</span><span class="o">=</span><span class="s2">&quot;api-patchtime&quot;</span><span class="p">)</span>
-<span class="n">router</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;operatingsystems&quot;</span><span class="p">,</span> <span class="n">OSViewSet</span><span class="p">,</span> <span class="n">basename</span><span class="o">=</span><span class="s2">&quot;api-operatingsystem&quot;</span><span class="p">)</span>
-<span class="n">router</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;servermodels&quot;</span><span class="p">,</span> <span class="n">ServerModelViewSet</span><span class="p">,</span> <span class="n">basename</span><span class="o">=</span><span class="s2">&quot;api-servermodel&quot;</span><span class="p">)</span>
-<span class="n">router</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;clusters&quot;</span><span class="p">,</span> <span class="n">ClusterViewSet</span><span class="p">,</span> <span class="n">basename</span><span class="o">=</span><span class="s2">&quot;api-cluster&quot;</span><span class="p">)</span>
+<span class="n">router</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="sa">r</span><span class="s2">"servers"</span><span class="p">,</span> <span class="n">ServerViewSet</span><span class="p">,</span> <span class="n">basename</span><span class="o">=</span><span class="s2">"api-server"</span><span class="p">)</span>
+<span class="n">router</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="sa">r</span><span class="s2">"vendors"</span><span class="p">,</span> <span class="n">VendorViewSet</span><span class="p">,</span> <span class="n">basename</span><span class="o">=</span><span class="s2">"api-vendor"</span><span class="p">)</span>
+<span class="n">router</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="sa">r</span><span class="s2">"statuses"</span><span class="p">,</span> <span class="n">StatusViewSet</span><span class="p">,</span> <span class="n">basename</span><span class="o">=</span><span class="s2">"api-status"</span><span class="p">)</span>
+<span class="n">router</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="sa">r</span><span class="s2">"locations"</span><span class="p">,</span> <span class="n">LocationViewSet</span><span class="p">,</span> <span class="n">basename</span><span class="o">=</span><span class="s2">"api-location"</span><span class="p">)</span>
+<span class="n">router</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="sa">r</span><span class="s2">"domains"</span><span class="p">,</span> <span class="n">DomainViewSet</span><span class="p">,</span> <span class="n">basename</span><span class="o">=</span><span class="s2">"api-domain"</span><span class="p">)</span>
+<span class="n">router</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="sa">r</span><span class="s2">"patchtimes"</span><span class="p">,</span> <span class="n">PatchtimeViewSet</span><span class="p">,</span> <span class="n">basename</span><span class="o">=</span><span class="s2">"api-patchtime"</span><span class="p">)</span>
+<span class="n">router</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="sa">r</span><span class="s2">"operatingsystems"</span><span class="p">,</span> <span class="n">OSViewSet</span><span class="p">,</span> <span class="n">basename</span><span class="o">=</span><span class="s2">"api-operatingsystem"</span><span class="p">)</span>
+<span class="n">router</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="sa">r</span><span class="s2">"servermodels"</span><span class="p">,</span> <span class="n">ServerModelViewSet</span><span class="p">,</span> <span class="n">basename</span><span class="o">=</span><span class="s2">"api-servermodel"</span><span class="p">)</span>
+<span class="n">router</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="sa">r</span><span class="s2">"clusters"</span><span class="p">,</span> <span class="n">ClusterViewSet</span><span class="p">,</span> <span class="n">basename</span><span class="o">=</span><span class="s2">"api-cluster"</span><span class="p">)</span>
 <span class="n">router</span><span class="o">.</span><span class="n">register</span><span class="p">(</span>
-    <span class="sa">r</span><span class="s2">&quot;clusterpackages&quot;</span><span class="p">,</span> <span class="n">ClusterPackageViewSet</span><span class="p">,</span> <span class="n">basename</span><span class="o">=</span><span class="s2">&quot;api-clusterpackage&quot;</span>
+    <span class="sa">r</span><span class="s2">"clusterpackages"</span><span class="p">,</span> <span class="n">ClusterPackageViewSet</span><span class="p">,</span> <span class="n">basename</span><span class="o">=</span><span class="s2">"api-clusterpackage"</span>
 <span class="p">)</span>
 <span class="n">router</span><span class="o">.</span><span class="n">register</span><span class="p">(</span>
-    <span class="sa">r</span><span class="s2">&quot;clustersoftware&quot;</span><span class="p">,</span> <span class="n">ClusterSoftwareViewSet</span><span class="p">,</span> <span class="n">basename</span><span class="o">=</span><span class="s2">&quot;api-clustersoftware&quot;</span>
+    <span class="sa">r</span><span class="s2">"clustersoftware"</span><span class="p">,</span> <span class="n">ClusterSoftwareViewSet</span><span class="p">,</span> <span class="n">basename</span><span class="o">=</span><span class="s2">"api-clustersoftware"</span>
 <span class="p">)</span>
 <span class="n">router</span><span class="o">.</span><span class="n">register</span><span class="p">(</span>
-    <span class="sa">r</span><span class="s2">&quot;clusterpackagetypes&quot;</span><span class="p">,</span>
+    <span class="sa">r</span><span class="s2">"clusterpackagetypes"</span><span class="p">,</span>
     <span class="n">ClusterPackageTypeViewSet</span><span class="p">,</span>
-    <span class="n">basename</span><span class="o">=</span><span class="s2">&quot;api-clusterpackagetype&quot;</span><span class="p">,</span>
+    <span class="n">basename</span><span class="o">=</span><span class="s2">"api-clusterpackagetype"</span><span class="p">,</span>
 <span class="p">)</span>
 
 <span class="n">urlpatterns</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="n">path</span><span class="p">(</span><span class="s2">&quot;admin/doc/&quot;</span><span class="p">,</span> <span class="n">include</span><span class="p">(</span><span class="s2">&quot;django.contrib.admindocs.urls&quot;</span><span class="p">)),</span>
-    <span class="n">path</span><span class="p">(</span><span class="s2">&quot;admin/&quot;</span><span class="p">,</span> <span class="n">admin</span><span class="o">.</span><span class="n">site</span><span class="o">.</span><span class="n">urls</span><span class="p">),</span></pre></div>
+    <span class="n">path</span><span class="p">(</span><span class="s2">"admin/doc/"</span><span class="p">,</span> <span class="n">include</span><span class="p">(</span><span class="s2">"django.contrib.admindocs.urls"</span><span class="p">)),</span>
+    <span class="n">path</span><span class="p">(</span><span class="s2">"admin/"</span><span class="p">,</span> <span class="n">admin</span><span class="o">.</span><span class="n">site</span><span class="o">.</span><span class="n">urls</span><span class="p">),</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -107,7 +107,7 @@
       <p>API</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="n">path</span><span class="p">(</span><span class="s2">&quot;api/&quot;</span><span class="p">,</span> <span class="n">include</span><span class="p">(</span><span class="n">router</span><span class="o">.</span><span class="n">urls</span><span class="p">)),</span></pre></div>
+      <div class="highlight"><pre>    <span class="n">path</span><span class="p">(</span><span class="s2">"api/"</span><span class="p">,</span> <span class="n">include</span><span class="p">(</span><span class="n">router</span><span class="o">.</span><span class="n">urls</span><span class="p">)),</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -119,16 +119,16 @@
       <p>API Schema &amp; Docs</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="n">path</span><span class="p">(</span><span class="s2">&quot;api/schema/&quot;</span><span class="p">,</span> <span class="n">SpectacularAPIView</span><span class="o">.</span><span class="n">as_view</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;schema&quot;</span><span class="p">),</span>
+      <div class="highlight"><pre>    <span class="n">path</span><span class="p">(</span><span class="s2">"api/schema/"</span><span class="p">,</span> <span class="n">SpectacularAPIView</span><span class="o">.</span><span class="n">as_view</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s2">"schema"</span><span class="p">),</span>
     <span class="n">path</span><span class="p">(</span>
-        <span class="s2">&quot;api/schema/swagger-ui/&quot;</span><span class="p">,</span>
-        <span class="n">SpectacularSwaggerView</span><span class="o">.</span><span class="n">as_view</span><span class="p">(</span><span class="n">url_name</span><span class="o">=</span><span class="s2">&quot;schema&quot;</span><span class="p">),</span>
-        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;swagger-ui&quot;</span><span class="p">,</span>
+        <span class="s2">"api/schema/swagger-ui/"</span><span class="p">,</span>
+        <span class="n">SpectacularSwaggerView</span><span class="o">.</span><span class="n">as_view</span><span class="p">(</span><span class="n">url_name</span><span class="o">=</span><span class="s2">"schema"</span><span class="p">),</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">"swagger-ui"</span><span class="p">,</span>
     <span class="p">),</span>
     <span class="n">path</span><span class="p">(</span>
-        <span class="s2">&quot;api/schema/redoc/&quot;</span><span class="p">,</span>
-        <span class="n">SpectacularRedocView</span><span class="o">.</span><span class="n">as_view</span><span class="p">(</span><span class="n">url_name</span><span class="o">=</span><span class="s2">&quot;schema&quot;</span><span class="p">),</span>
-        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;redoc&quot;</span><span class="p">,</span>
+        <span class="s2">"api/schema/redoc/"</span><span class="p">,</span>
+        <span class="n">SpectacularRedocView</span><span class="o">.</span><span class="n">as_view</span><span class="p">(</span><span class="n">url_name</span><span class="o">=</span><span class="s2">"schema"</span><span class="p">),</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">"redoc"</span><span class="p">,</span>
     <span class="p">),</span></pre></div>
     </div>
   </div>
@@ -141,11 +141,11 @@
       <p>API Key Management</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="n">path</span><span class="p">(</span><span class="s2">&quot;account/api-keys/&quot;</span><span class="p">,</span> <span class="n">ApiKeyListView</span><span class="o">.</span><span class="n">as_view</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;api_keys&quot;</span><span class="p">),</span>
+      <div class="highlight"><pre>    <span class="n">path</span><span class="p">(</span><span class="s2">"account/api-keys/"</span><span class="p">,</span> <span class="n">ApiKeyListView</span><span class="o">.</span><span class="n">as_view</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s2">"api_keys"</span><span class="p">),</span>
     <span class="n">path</span><span class="p">(</span>
-        <span class="s2">&quot;account/api-keys/revoke/&lt;int:pk&gt;/&quot;</span><span class="p">,</span>
+        <span class="s2">"account/api-keys/revoke/&lt;int:pk&gt;/"</span><span class="p">,</span>
         <span class="n">RevokeApiKeyView</span><span class="o">.</span><span class="n">as_view</span><span class="p">(),</span>
-        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;api_key_revoke&quot;</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">"api_key_revoke"</span><span class="p">,</span>
     <span class="p">),</span></pre></div>
     </div>
   </div>
@@ -158,7 +158,7 @@
       <p>Allauth URLs</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="n">path</span><span class="p">(</span><span class="s2">&quot;accounts/&quot;</span><span class="p">,</span> <span class="n">include</span><span class="p">(</span><span class="s2">&quot;allauth.urls&quot;</span><span class="p">)),</span></pre></div>
+      <div class="highlight"><pre>    <span class="n">path</span><span class="p">(</span><span class="s2">"accounts/"</span><span class="p">,</span> <span class="n">include</span><span class="p">(</span><span class="s2">"allauth.urls"</span><span class="p">)),</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -170,18 +170,18 @@
       <p>Dashboard &amp; Search</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="n">path</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">DashboardView</span><span class="o">.</span><span class="n">as_view</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;dashboard&quot;</span><span class="p">),</span>
-    <span class="n">path</span><span class="p">(</span><span class="s2">&quot;search/&quot;</span><span class="p">,</span> <span class="n">SearchView</span><span class="o">.</span><span class="n">as_view</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;search&quot;</span><span class="p">),</span>
+      <div class="highlight"><pre>    <span class="n">path</span><span class="p">(</span><span class="s2">""</span><span class="p">,</span> <span class="n">DashboardView</span><span class="o">.</span><span class="n">as_view</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s2">"dashboard"</span><span class="p">),</span>
+    <span class="n">path</span><span class="p">(</span><span class="s2">"search/"</span><span class="p">,</span> <span class="n">SearchView</span><span class="o">.</span><span class="n">as_view</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s2">"search"</span><span class="p">),</span>
     <span class="n">path</span><span class="p">(</span>
-        <span class="s2">&quot;starter-pack/import/&quot;</span><span class="p">,</span>
+        <span class="s2">"starter-pack/import/"</span><span class="p">,</span>
         <span class="n">ImportStarterPackView</span><span class="o">.</span><span class="n">as_view</span><span class="p">(),</span>
-        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;starter_pack_import&quot;</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">"starter_pack_import"</span><span class="p">,</span>
     <span class="p">),</span>
-    <span class="n">path</span><span class="p">(</span><span class="s2">&quot;avatar/&lt;str:email_hash&gt;/&quot;</span><span class="p">,</span> <span class="n">avatar_proxy</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;avatar_proxy&quot;</span><span class="p">),</span>
+    <span class="n">path</span><span class="p">(</span><span class="s2">"avatar/&lt;str:email_hash&gt;/"</span><span class="p">,</span> <span class="n">avatar_proxy</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"avatar_proxy"</span><span class="p">),</span>
     <span class="n">path</span><span class="p">(</span>
-        <span class="s2">&quot;history/&lt;str:app_label&gt;/&lt;str:model_name&gt;/&lt;int:history_id&gt;/&quot;</span><span class="p">,</span>
+        <span class="s2">"history/&lt;str:app_label&gt;/&lt;str:model_name&gt;/&lt;int:history_id&gt;/"</span><span class="p">,</span>
         <span class="n">HistoryDiffView</span><span class="o">.</span><span class="n">as_view</span><span class="p">(),</span>
-        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;history_diff&quot;</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">"history_diff"</span><span class="p">,</span>
     <span class="p">),</span></pre></div>
     </div>
   </div>
@@ -194,10 +194,10 @@
       <p>Legal Pages</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="n">path</span><span class="p">(</span><span class="s2">&quot;terms/&quot;</span><span class="p">,</span> <span class="n">TermsView</span><span class="o">.</span><span class="n">as_view</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;terms&quot;</span><span class="p">),</span>
-    <span class="n">path</span><span class="p">(</span><span class="s2">&quot;privacy/&quot;</span><span class="p">,</span> <span class="n">PrivacyView</span><span class="o">.</span><span class="n">as_view</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;privacy&quot;</span><span class="p">),</span>
-    <span class="n">path</span><span class="p">(</span><span class="s2">&quot;impressum/&quot;</span><span class="p">,</span> <span class="n">ImpressumView</span><span class="o">.</span><span class="n">as_view</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;impressum&quot;</span><span class="p">),</span>
-    <span class="n">path</span><span class="p">(</span><span class="s2">&quot;health/&quot;</span><span class="p">,</span> <span class="n">HealthView</span><span class="o">.</span><span class="n">as_view</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;health&quot;</span><span class="p">),</span></pre></div>
+      <div class="highlight"><pre>    <span class="n">path</span><span class="p">(</span><span class="s2">"terms/"</span><span class="p">,</span> <span class="n">TermsView</span><span class="o">.</span><span class="n">as_view</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s2">"terms"</span><span class="p">),</span>
+    <span class="n">path</span><span class="p">(</span><span class="s2">"privacy/"</span><span class="p">,</span> <span class="n">PrivacyView</span><span class="o">.</span><span class="n">as_view</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s2">"privacy"</span><span class="p">),</span>
+    <span class="n">path</span><span class="p">(</span><span class="s2">"impressum/"</span><span class="p">,</span> <span class="n">ImpressumView</span><span class="o">.</span><span class="n">as_view</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s2">"impressum"</span><span class="p">),</span>
+    <span class="n">path</span><span class="p">(</span><span class="s2">"health/"</span><span class="p">,</span> <span class="n">HealthView</span><span class="o">.</span><span class="n">as_view</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s2">"health"</span><span class="p">),</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -209,11 +209,11 @@
       <p>User Management (Staff)</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="n">path</span><span class="p">(</span><span class="s2">&quot;admin/users/&quot;</span><span class="p">,</span> <span class="n">UserListView</span><span class="o">.</span><span class="n">as_view</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;user_management_list&quot;</span><span class="p">),</span>
+      <div class="highlight"><pre>    <span class="n">path</span><span class="p">(</span><span class="s2">"admin/users/"</span><span class="p">,</span> <span class="n">UserListView</span><span class="o">.</span><span class="n">as_view</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s2">"user_management_list"</span><span class="p">),</span>
     <span class="n">path</span><span class="p">(</span>
-        <span class="s2">&quot;admin/groups/&lt;int:pk&gt;/&quot;</span><span class="p">,</span>
+        <span class="s2">"admin/groups/&lt;int:pk&gt;/"</span><span class="p">,</span>
         <span class="n">GroupProfileUpdateView</span><span class="o">.</span><span class="n">as_view</span><span class="p">(),</span>
-        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;group_profile_edit&quot;</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">"group_profile_edit"</span><span class="p">,</span>
     <span class="p">),</span></pre></div>
     </div>
   </div>
@@ -226,42 +226,42 @@
       <p>Group Management (Owner)</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="n">path</span><span class="p">(</span><span class="s2">&quot;group/members/&quot;</span><span class="p">,</span> <span class="n">GroupMemberListView</span><span class="o">.</span><span class="n">as_view</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;group_member_list&quot;</span><span class="p">),</span>
-    <span class="n">path</span><span class="p">(</span><span class="s2">&quot;group/create/&quot;</span><span class="p">,</span> <span class="n">GroupCreateView</span><span class="o">.</span><span class="n">as_view</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;group_create&quot;</span><span class="p">),</span>
+      <div class="highlight"><pre>    <span class="n">path</span><span class="p">(</span><span class="s2">"group/members/"</span><span class="p">,</span> <span class="n">GroupMemberListView</span><span class="o">.</span><span class="n">as_view</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s2">"group_member_list"</span><span class="p">),</span>
+    <span class="n">path</span><span class="p">(</span><span class="s2">"group/create/"</span><span class="p">,</span> <span class="n">GroupCreateView</span><span class="o">.</span><span class="n">as_view</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s2">"group_create"</span><span class="p">),</span>
     <span class="n">path</span><span class="p">(</span>
-        <span class="s2">&quot;group/members/add/&lt;int:group_id&gt;/&quot;</span><span class="p">,</span>
+        <span class="s2">"group/members/add/&lt;int:group_id&gt;/"</span><span class="p">,</span>
         <span class="n">AddGroupMemberView</span><span class="o">.</span><span class="n">as_view</span><span class="p">(),</span>
-        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;group_member_add&quot;</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">"group_member_add"</span><span class="p">,</span>
     <span class="p">),</span>
     <span class="n">path</span><span class="p">(</span>
-        <span class="s2">&quot;group/members/remove/&lt;int:group_id&gt;/&lt;int:user_id&gt;/&quot;</span><span class="p">,</span>
+        <span class="s2">"group/members/remove/&lt;int:group_id&gt;/&lt;int:user_id&gt;/"</span><span class="p">,</span>
         <span class="n">RemoveGroupMemberView</span><span class="o">.</span><span class="n">as_view</span><span class="p">(),</span>
-        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;group_member_remove&quot;</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">"group_member_remove"</span><span class="p">,</span>
     <span class="p">),</span>
     <span class="n">path</span><span class="p">(</span>
-        <span class="s2">&quot;group/permissions/&lt;int:group_id&gt;/&quot;</span><span class="p">,</span>
+        <span class="s2">"group/permissions/&lt;int:group_id&gt;/"</span><span class="p">,</span>
         <span class="n">GroupPermissionUpdateView</span><span class="o">.</span><span class="n">as_view</span><span class="p">(),</span>
-        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;group_permission_edit&quot;</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">"group_permission_edit"</span><span class="p">,</span>
     <span class="p">),</span>
     <span class="n">path</span><span class="p">(</span>
-        <span class="s2">&quot;group/permissions/&lt;int:group_id&gt;/user/&lt;int:user_id&gt;/&quot;</span><span class="p">,</span>
+        <span class="s2">"group/permissions/&lt;int:group_id&gt;/user/&lt;int:user_id&gt;/"</span><span class="p">,</span>
         <span class="n">UserPermissionUpdateView</span><span class="o">.</span><span class="n">as_view</span><span class="p">(),</span>
-        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;group_user_permission_edit&quot;</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">"group_user_permission_edit"</span><span class="p">,</span>
     <span class="p">),</span>
     <span class="n">path</span><span class="p">(</span>
-        <span class="s2">&quot;group/invite/&lt;int:group_id&gt;/&quot;</span><span class="p">,</span>
+        <span class="s2">"group/invite/&lt;int:group_id&gt;/"</span><span class="p">,</span>
         <span class="n">InviteGroupMemberView</span><span class="o">.</span><span class="n">as_view</span><span class="p">(),</span>
-        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;group_member_invite&quot;</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">"group_member_invite"</span><span class="p">,</span>
     <span class="p">),</span>
     <span class="n">path</span><span class="p">(</span>
-        <span class="s2">&quot;invitation/&lt;uuid:token&gt;/&quot;</span><span class="p">,</span>
+        <span class="s2">"invitation/&lt;uuid:token&gt;/"</span><span class="p">,</span>
         <span class="n">AcceptInvitationView</span><span class="o">.</span><span class="n">as_view</span><span class="p">(),</span>
-        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;accept_invitation&quot;</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">"accept_invitation"</span><span class="p">,</span>
     <span class="p">),</span>
     <span class="n">path</span><span class="p">(</span>
-        <span class="s2">&quot;group/filter/&quot;</span><span class="p">,</span>
+        <span class="s2">"group/filter/"</span><span class="p">,</span>
         <span class="n">GroupFilterView</span><span class="o">.</span><span class="n">as_view</span><span class="p">(),</span>
-        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;group_filter&quot;</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">"group_filter"</span><span class="p">,</span>
     <span class="p">),</span></pre></div>
     </div>
   </div>
@@ -274,24 +274,24 @@
       <p>Project Apps</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="n">path</span><span class="p">(</span><span class="s2">&quot;cluster/&quot;</span><span class="p">,</span> <span class="n">include</span><span class="p">(</span><span class="s2">&quot;cluster.urls&quot;</span><span class="p">)),</span>
-    <span class="n">path</span><span class="p">(</span><span class="s2">&quot;operatingsystem/&quot;</span><span class="p">,</span> <span class="n">include</span><span class="p">(</span><span class="s2">&quot;operatingsystem.urls&quot;</span><span class="p">)),</span>
-    <span class="n">path</span><span class="p">(</span><span class="s2">&quot;clusterpackage/&quot;</span><span class="p">,</span> <span class="n">include</span><span class="p">(</span><span class="s2">&quot;clusterpackage.urls&quot;</span><span class="p">)),</span>
-    <span class="n">path</span><span class="p">(</span><span class="s2">&quot;patchtime/&quot;</span><span class="p">,</span> <span class="n">include</span><span class="p">(</span><span class="s2">&quot;patchtime.urls&quot;</span><span class="p">)),</span>
-    <span class="n">path</span><span class="p">(</span><span class="s2">&quot;location/&quot;</span><span class="p">,</span> <span class="n">include</span><span class="p">(</span><span class="s2">&quot;location.urls&quot;</span><span class="p">)),</span>
-    <span class="n">path</span><span class="p">(</span><span class="s2">&quot;servermodel/&quot;</span><span class="p">,</span> <span class="n">include</span><span class="p">(</span><span class="s2">&quot;servermodel.urls&quot;</span><span class="p">)),</span>
-    <span class="n">path</span><span class="p">(</span><span class="s2">&quot;server/&quot;</span><span class="p">,</span> <span class="n">include</span><span class="p">(</span><span class="s2">&quot;server.urls&quot;</span><span class="p">)),</span>
-    <span class="n">path</span><span class="p">(</span><span class="s2">&quot;status/&quot;</span><span class="p">,</span> <span class="n">include</span><span class="p">(</span><span class="s2">&quot;status.urls&quot;</span><span class="p">)),</span>
-    <span class="n">path</span><span class="p">(</span><span class="s2">&quot;domain/&quot;</span><span class="p">,</span> <span class="n">include</span><span class="p">(</span><span class="s2">&quot;domain.urls&quot;</span><span class="p">)),</span>
-    <span class="n">path</span><span class="p">(</span><span class="s2">&quot;clustersoftware/&quot;</span><span class="p">,</span> <span class="n">include</span><span class="p">(</span><span class="s2">&quot;clustersoftware.urls&quot;</span><span class="p">)),</span>
-    <span class="n">path</span><span class="p">(</span><span class="s2">&quot;clusterpackagetype/&quot;</span><span class="p">,</span> <span class="n">include</span><span class="p">(</span><span class="s2">&quot;clusterpackagetype.urls&quot;</span><span class="p">)),</span>
-    <span class="n">path</span><span class="p">(</span><span class="s2">&quot;vendor/&quot;</span><span class="p">,</span> <span class="n">include</span><span class="p">(</span><span class="s2">&quot;vendor.urls&quot;</span><span class="p">)),</span>
+      <div class="highlight"><pre>    <span class="n">path</span><span class="p">(</span><span class="s2">"cluster/"</span><span class="p">,</span> <span class="n">include</span><span class="p">(</span><span class="s2">"cluster.urls"</span><span class="p">)),</span>
+    <span class="n">path</span><span class="p">(</span><span class="s2">"operatingsystem/"</span><span class="p">,</span> <span class="n">include</span><span class="p">(</span><span class="s2">"operatingsystem.urls"</span><span class="p">)),</span>
+    <span class="n">path</span><span class="p">(</span><span class="s2">"clusterpackage/"</span><span class="p">,</span> <span class="n">include</span><span class="p">(</span><span class="s2">"clusterpackage.urls"</span><span class="p">)),</span>
+    <span class="n">path</span><span class="p">(</span><span class="s2">"patchtime/"</span><span class="p">,</span> <span class="n">include</span><span class="p">(</span><span class="s2">"patchtime.urls"</span><span class="p">)),</span>
+    <span class="n">path</span><span class="p">(</span><span class="s2">"location/"</span><span class="p">,</span> <span class="n">include</span><span class="p">(</span><span class="s2">"location.urls"</span><span class="p">)),</span>
+    <span class="n">path</span><span class="p">(</span><span class="s2">"servermodel/"</span><span class="p">,</span> <span class="n">include</span><span class="p">(</span><span class="s2">"servermodel.urls"</span><span class="p">)),</span>
+    <span class="n">path</span><span class="p">(</span><span class="s2">"server/"</span><span class="p">,</span> <span class="n">include</span><span class="p">(</span><span class="s2">"server.urls"</span><span class="p">)),</span>
+    <span class="n">path</span><span class="p">(</span><span class="s2">"status/"</span><span class="p">,</span> <span class="n">include</span><span class="p">(</span><span class="s2">"status.urls"</span><span class="p">)),</span>
+    <span class="n">path</span><span class="p">(</span><span class="s2">"domain/"</span><span class="p">,</span> <span class="n">include</span><span class="p">(</span><span class="s2">"domain.urls"</span><span class="p">)),</span>
+    <span class="n">path</span><span class="p">(</span><span class="s2">"clustersoftware/"</span><span class="p">,</span> <span class="n">include</span><span class="p">(</span><span class="s2">"clustersoftware.urls"</span><span class="p">)),</span>
+    <span class="n">path</span><span class="p">(</span><span class="s2">"clusterpackagetype/"</span><span class="p">,</span> <span class="n">include</span><span class="p">(</span><span class="s2">"clusterpackagetype.urls"</span><span class="p">)),</span>
+    <span class="n">path</span><span class="p">(</span><span class="s2">"vendor/"</span><span class="p">,</span> <span class="n">include</span><span class="p">(</span><span class="s2">"vendor.urls"</span><span class="p">)),</span>
 <span class="p">]</span>
 
-<span class="k">if</span> <span class="s2">&quot;debug_toolbar&quot;</span> <span class="ow">in</span> <span class="n">settings</span><span class="o">.</span><span class="n">INSTALLED_APPS</span><span class="p">:</span>
+<span class="k">if</span> <span class="s2">"debug_toolbar"</span> <span class="ow">in</span> <span class="n">settings</span><span class="o">.</span><span class="n">INSTALLED_APPS</span><span class="p">:</span>
     <span class="kn">import</span><span class="w"> </span><span class="nn">debug_toolbar</span>
 
-    <span class="n">urlpatterns</span> <span class="o">=</span> <span class="p">[</span><span class="n">path</span><span class="p">(</span><span class="s2">&quot;__debug__/&quot;</span><span class="p">,</span> <span class="n">include</span><span class="p">(</span><span class="n">debug_toolbar</span><span class="o">.</span><span class="n">urls</span><span class="p">))]</span> <span class="o">+</span> <span class="n">urlpatterns</span>
+    <span class="n">urlpatterns</span> <span class="o">=</span> <span class="p">[</span><span class="n">path</span><span class="p">(</span><span class="s2">"__debug__/"</span><span class="p">,</span> <span class="n">include</span><span class="p">(</span><span class="n">debug_toolbar</span><span class="o">.</span><span class="n">urls</span><span class="p">))]</span> <span class="o">+</span> <span class="n">urlpatterns</span>
 
 <span class="n">urlpatterns</span> <span class="o">+=</span> <span class="n">static</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">STATIC_URL</span><span class="p">,</span> <span class="n">document_root</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">STATIC_ROOT</span><span class="p">)</span>
 

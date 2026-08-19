@@ -49,7 +49,7 @@
     </div>
     <div class='code'>
       <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">setUp</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">password</span> <span class="o">=</span> <span class="s2">&quot;password123&quot;</span></pre></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">password</span> <span class="o">=</span> <span class="s2">"password123"</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -61,8 +61,8 @@
       <p>Create two groups</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>        <span class="bp">self</span><span class="o">.</span><span class="n">group_a</span> <span class="o">=</span> <span class="n">Group</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Group A&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">group_b</span> <span class="o">=</span> <span class="n">Group</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Group B&quot;</span><span class="p">)</span></pre></div>
+      <div class="highlight"><pre>        <span class="bp">self</span><span class="o">.</span><span class="n">group_a</span> <span class="o">=</span> <span class="n">Group</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"Group A"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">group_b</span> <span class="o">=</span> <span class="n">Group</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"Group B"</span><span class="p">)</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -88,10 +88,10 @@
     </div>
     <div class='code'>
       <div class="highlight"><pre>        <span class="bp">self</span><span class="o">.</span><span class="n">user_a</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create_user</span><span class="p">(</span>
-            <span class="n">username</span><span class="o">=</span><span class="s2">&quot;user_a&quot;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">password</span>
+            <span class="n">username</span><span class="o">=</span><span class="s2">"user_a"</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">password</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">user_b</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create_user</span><span class="p">(</span>
-            <span class="n">username</span><span class="o">=</span><span class="s2">&quot;user_b&quot;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">password</span>
+            <span class="n">username</span><span class="o">=</span><span class="s2">"user_b"</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">password</span>
         <span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">user_a</span><span class="o">.</span><span class="n">groups</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">group_a</span><span class="p">)</span>
@@ -123,9 +123,9 @@
     </div>
     <div class='code'>
       <div class="highlight"><pre>        <span class="bp">self</span><span class="o">.</span><span class="n">client_a</span> <span class="o">=</span> <span class="n">Client</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">client_a</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s2">&quot;user_a&quot;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">password</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client_a</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s2">"user_a"</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">password</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">client_b</span> <span class="o">=</span> <span class="n">Client</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">client_b</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s2">&quot;user_b&quot;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">password</span><span class="p">)</span></pre></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client_b</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s2">"user_b"</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">password</span><span class="p">)</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -149,8 +149,8 @@
       
     </div>
     <div class='code'>
-      <div class="highlight"><pre>        <span class="n">Vendor</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Vendor A&quot;</span><span class="p">,</span> <span class="n">group</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">group_a</span><span class="p">)</span>
-        <span class="n">Vendor</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Vendor B&quot;</span><span class="p">,</span> <span class="n">group</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">group_b</span><span class="p">)</span></pre></div>
+      <div class="highlight"><pre>        <span class="n">Vendor</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"Vendor A"</span><span class="p">,</span> <span class="n">group</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">group_a</span><span class="p">)</span>
+        <span class="n">Vendor</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"Vendor B"</span><span class="p">,</span> <span class="n">group</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">group_b</span><span class="p">)</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -164,13 +164,13 @@ Give permission first</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre>        <span class="n">view_perm</span> <span class="o">=</span> <span class="n">Permission</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
-            <span class="n">codename</span><span class="o">=</span><span class="s2">&quot;view_model&quot;</span><span class="p">,</span> <span class="n">content_type__app_label</span><span class="o">=</span><span class="s2">&quot;vendor&quot;</span>
+            <span class="n">codename</span><span class="o">=</span><span class="s2">"view_model"</span><span class="p">,</span> <span class="n">content_type__app_label</span><span class="o">=</span><span class="s2">"vendor"</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">group_a</span><span class="o">.</span><span class="n">permissions</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">view_perm</span><span class="p">)</span>
 
-        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client_a</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;vendor:index&quot;</span><span class="p">))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertContains</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="s2">&quot;Vendor A&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertNotContains</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="s2">&quot;Vendor B&quot;</span><span class="p">)</span></pre></div>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client_a</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">"vendor:index"</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertContains</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="s2">"Vendor A"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertNotContains</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="s2">"Vendor B"</span><span class="p">)</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -197,11 +197,11 @@ Give permission first</p>
       <div class="highlight"><pre>        <span class="n">Vendor</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">group</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">group_a</span><span class="p">)</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
 
         <span class="n">results</span> <span class="o">=</span> <span class="n">import_starter_pack</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">group_a</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertGreater</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="s2">&quot;vendors&quot;</span><span class="p">],</span> <span class="mi">0</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertGreater</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="s2">&quot;os&quot;</span><span class="p">],</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertGreater</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="s2">"vendors"</span><span class="p">],</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertGreater</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="s2">"os"</span><span class="p">],</span> <span class="mi">0</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span>
-            <span class="n">Vendor</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">group</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">group_a</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Red Hat&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span>
+            <span class="n">Vendor</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">group</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">group_a</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"Red Hat"</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span>
         <span class="p">)</span></pre></div>
     </div>
   </div>
@@ -239,7 +239,7 @@ Give permission first</p>
       <p>Create one vendor</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>        <span class="n">Vendor</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Vendor 1&quot;</span><span class="p">,</span> <span class="n">group</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">group_a</span><span class="p">)</span></pre></div>
+      <div class="highlight"><pre>        <span class="n">Vendor</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"Vendor 1"</span><span class="p">,</span> <span class="n">group</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">group_a</span><span class="p">)</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -252,16 +252,16 @@ Give permission first</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre>        <span class="n">add_perm</span> <span class="o">=</span> <span class="n">Permission</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
-            <span class="n">codename</span><span class="o">=</span><span class="s2">&quot;add_model&quot;</span><span class="p">,</span> <span class="n">content_type__app_label</span><span class="o">=</span><span class="s2">&quot;vendor&quot;</span>
+            <span class="n">codename</span><span class="o">=</span><span class="s2">"add_model"</span><span class="p">,</span> <span class="n">content_type__app_label</span><span class="o">=</span><span class="s2">"vendor"</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">group_a</span><span class="o">.</span><span class="n">permissions</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">add_perm</span><span class="p">)</span>
 
         <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client_a</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
-            <span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;vendor:create&quot;</span><span class="p">),</span>
-            <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Vendor 2&quot;</span><span class="p">,</span> <span class="s2">&quot;is_hardware&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;is_software&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span>
+            <span class="n">reverse</span><span class="p">(</span><span class="s2">"vendor:create"</span><span class="p">),</span>
+            <span class="p">{</span><span class="s2">"name"</span><span class="p">:</span> <span class="s2">"Vendor 2"</span><span class="p">,</span> <span class="s2">"is_hardware"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">"is_software"</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span>
             <span class="n">follow</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertContains</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="s2">&quot;Quota exceeded&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertContains</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="s2">"Quota exceeded"</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">Vendor</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">group</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">group_a</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">(),</span> <span class="mi">1</span><span class="p">)</span></pre></div>
     </div>
   </div>
@@ -289,14 +289,14 @@ Give permission first</p>
       <div class="highlight"><pre>        <span class="bp">self</span><span class="o">.</span><span class="n">profile_a</span><span class="o">.</span><span class="n">max_users</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># Only user_a</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">profile_a</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
 
-        <span class="n">user_c</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create_user</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s2">&quot;user_c&quot;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">password</span><span class="p">)</span>
+        <span class="n">user_c</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create_user</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s2">"user_c"</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">password</span><span class="p">)</span>
 
         <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client_a</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
-            <span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;group_member_add&quot;</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">group_a</span><span class="o">.</span><span class="n">id</span><span class="p">]),</span>
-            <span class="p">{</span><span class="s2">&quot;username&quot;</span><span class="p">:</span> <span class="s2">&quot;user_c&quot;</span><span class="p">},</span>
+            <span class="n">reverse</span><span class="p">(</span><span class="s2">"group_member_add"</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">group_a</span><span class="o">.</span><span class="n">id</span><span class="p">]),</span>
+            <span class="p">{</span><span class="s2">"username"</span><span class="p">:</span> <span class="s2">"user_c"</span><span class="p">},</span>
             <span class="n">follow</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertContains</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="s2">&quot;User quota exceeded&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertContains</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="s2">"User quota exceeded"</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertNotIn</span><span class="p">(</span><span class="n">user_c</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">group_a</span><span class="o">.</span><span class="n">user_set</span><span class="o">.</span><span class="n">all</span><span class="p">())</span></pre></div>
     </div>
   </div>
@@ -323,9 +323,9 @@ Give permission first</p>
     <div class='code'>
       <div class="highlight"><pre>        <span class="kn">from</span><span class="w"> </span><span class="nn">django.contrib.contenttypes.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">ContentType</span>
 
-        <span class="n">server_ct</span> <span class="o">=</span> <span class="n">ContentType</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">app_label</span><span class="o">=</span><span class="s2">&quot;server&quot;</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="s2">&quot;model&quot;</span><span class="p">)</span>
+        <span class="n">server_ct</span> <span class="o">=</span> <span class="n">ContentType</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">app_label</span><span class="o">=</span><span class="s2">"server"</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="s2">"model"</span><span class="p">)</span>
         <span class="n">change_perm</span> <span class="o">=</span> <span class="n">Permission</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
-            <span class="n">content_type</span><span class="o">=</span><span class="n">server_ct</span><span class="p">,</span> <span class="n">codename</span><span class="o">=</span><span class="s2">&quot;change_model&quot;</span>
+            <span class="n">content_type</span><span class="o">=</span><span class="n">server_ct</span><span class="p">,</span> <span class="n">codename</span><span class="o">=</span><span class="s2">"change_model"</span>
         <span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">assertNotIn</span><span class="p">(</span><span class="n">change_perm</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">group_a</span><span class="o">.</span><span class="n">permissions</span><span class="o">.</span><span class="n">all</span><span class="p">())</span></pre></div>
@@ -342,8 +342,8 @@ The form field name is edit_<app_label></p>
     </div>
     <div class='code'>
       <div class="highlight"><pre>        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client_a</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
-            <span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;group_permission_edit&quot;</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">group_a</span><span class="o">.</span><span class="n">id</span><span class="p">]),</span>
-            <span class="p">{</span><span class="s2">&quot;edit_server&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span>
+            <span class="n">reverse</span><span class="p">(</span><span class="s2">"group_permission_edit"</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">group_a</span><span class="o">.</span><span class="n">id</span><span class="p">]),</span>
+            <span class="p">{</span><span class="s2">"edit_server"</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span>
             <span class="n">follow</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
@@ -361,8 +361,8 @@ The form field name is edit_<app_label></p>
     </div>
     <div class='code'>
       <div class="highlight"><pre>        <span class="bp">self</span><span class="o">.</span><span class="n">client_a</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
-            <span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;group_permission_edit&quot;</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">group_a</span><span class="o">.</span><span class="n">id</span><span class="p">]),</span>
-            <span class="p">{</span><span class="s2">&quot;edit_server&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">},</span>
+            <span class="n">reverse</span><span class="p">(</span><span class="s2">"group_permission_edit"</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">group_a</span><span class="o">.</span><span class="n">id</span><span class="p">]),</span>
+            <span class="p">{</span><span class="s2">"edit_server"</span><span class="p">:</span> <span class="kc">False</span><span class="p">},</span>
             <span class="n">follow</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertNotIn</span><span class="p">(</span><span class="n">change_perm</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">group_a</span><span class="o">.</span><span class="n">permissions</span><span class="o">.</span><span class="n">all</span><span class="p">())</span></pre></div>
@@ -390,7 +390,7 @@ The form field name is edit_<app_label></p>
     </div>
     <div class='code'>
       <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">setUp</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">password</span> <span class="o">=</span> <span class="s2">&quot;password123&quot;</span></pre></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">password</span> <span class="o">=</span> <span class="s2">"password123"</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -402,8 +402,8 @@ The form field name is edit_<app_label></p>
       <p>Create groups</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>        <span class="bp">self</span><span class="o">.</span><span class="n">group_a</span> <span class="o">=</span> <span class="n">Group</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Group A&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">group_b</span> <span class="o">=</span> <span class="n">Group</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Group B&quot;</span><span class="p">)</span></pre></div>
+      <div class="highlight"><pre>        <span class="bp">self</span><span class="o">.</span><span class="n">group_a</span> <span class="o">=</span> <span class="n">Group</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"Group A"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">group_b</span> <span class="o">=</span> <span class="n">Group</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"Group B"</span><span class="p">)</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -429,13 +429,13 @@ The form field name is edit_<app_label></p>
     </div>
     <div class='code'>
       <div class="highlight"><pre>        <span class="bp">self</span><span class="o">.</span><span class="n">user_a</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create_user</span><span class="p">(</span>
-            <span class="n">username</span><span class="o">=</span><span class="s2">&quot;user_a&quot;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">password</span>
+            <span class="n">username</span><span class="o">=</span><span class="s2">"user_a"</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">password</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">user_b</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create_user</span><span class="p">(</span>
-            <span class="n">username</span><span class="o">=</span><span class="s2">&quot;user_b&quot;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">password</span>
+            <span class="n">username</span><span class="o">=</span><span class="s2">"user_b"</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">password</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">superuser</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create_superuser</span><span class="p">(</span>
-            <span class="n">username</span><span class="o">=</span><span class="s2">&quot;superuser&quot;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">password</span><span class="p">,</span> <span class="n">email</span><span class="o">=</span><span class="s2">&quot;super@example.com&quot;</span>
+            <span class="n">username</span><span class="o">=</span><span class="s2">"superuser"</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">password</span><span class="p">,</span> <span class="n">email</span><span class="o">=</span><span class="s2">"super@example.com"</span>
         <span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">user_a</span><span class="o">.</span><span class="n">groups</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">group_a</span><span class="p">)</span>
@@ -467,11 +467,11 @@ The form field name is edit_<app_label></p>
     </div>
     <div class='code'>
       <div class="highlight"><pre>        <span class="bp">self</span><span class="o">.</span><span class="n">client_a</span> <span class="o">=</span> <span class="n">Client</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">client_a</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s2">&quot;user_a&quot;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">password</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client_a</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s2">"user_a"</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">password</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">client_b</span> <span class="o">=</span> <span class="n">Client</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">client_b</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s2">&quot;user_b&quot;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">password</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client_b</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s2">"user_b"</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">password</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">superuser_client</span> <span class="o">=</span> <span class="n">Client</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">superuser_client</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s2">&quot;superuser&quot;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">password</span><span class="p">)</span></pre></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">superuser_client</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s2">"superuser"</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">password</span><span class="p">)</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -495,8 +495,8 @@ The form field name is edit_<app_label></p>
       <p>Create items in different groups</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>        <span class="n">Vendor</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Vendor A&quot;</span><span class="p">,</span> <span class="n">group</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">group_a</span><span class="p">)</span>
-        <span class="n">Vendor</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Vendor B&quot;</span><span class="p">,</span> <span class="n">group</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">group_b</span><span class="p">)</span></pre></div>
+      <div class="highlight"><pre>        <span class="n">Vendor</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"Vendor A"</span><span class="p">,</span> <span class="n">group</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">group_a</span><span class="p">)</span>
+        <span class="n">Vendor</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"Vendor B"</span><span class="p">,</span> <span class="n">group</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">group_b</span><span class="p">)</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -508,9 +508,9 @@ The form field name is edit_<app_label></p>
       <p>Superuser should see all items</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">superuser_client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;vendor:index&quot;</span><span class="p">))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertContains</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="s2">&quot;Vendor A&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertContains</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="s2">&quot;Vendor B&quot;</span><span class="p">)</span></pre></div>
+      <div class="highlight"><pre>        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">superuser_client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">"vendor:index"</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertContains</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="s2">"Vendor A"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertContains</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="s2">"Vendor B"</span><span class="p">)</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -523,8 +523,8 @@ The form field name is edit_<app_label></p>
     </div>
     <div class='code'>
       <div class="highlight"><pre>        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">superuser_client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
-            <span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;vendor:create&quot;</span><span class="p">),</span>
-            <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Vendor Super&quot;</span><span class="p">,</span> <span class="s2">&quot;is_hardware&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;is_software&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span>
+            <span class="n">reverse</span><span class="p">(</span><span class="s2">"vendor:create"</span><span class="p">),</span>
+            <span class="p">{</span><span class="s2">"name"</span><span class="p">:</span> <span class="s2">"Vendor Super"</span><span class="p">,</span> <span class="s2">"is_hardware"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">"is_software"</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span>
             <span class="n">follow</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span></pre></div>
@@ -539,7 +539,7 @@ The form field name is edit_<app_label></p>
       <p>Item should be created without a group (global)</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>        <span class="n">vendor</span> <span class="o">=</span> <span class="n">Vendor</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Vendor Super&quot;</span><span class="p">)</span>
+      <div class="highlight"><pre>        <span class="n">vendor</span> <span class="o">=</span> <span class="n">Vendor</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"Vendor Super"</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertIsNone</span><span class="p">(</span><span class="n">vendor</span><span class="o">.</span><span class="n">group</span><span class="p">)</span></pre></div>
     </div>
   </div>
@@ -564,7 +564,7 @@ The form field name is edit_<app_label></p>
       <p>Create a global vendor (no group)</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>        <span class="n">global_vendor</span> <span class="o">=</span> <span class="n">Vendor</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Global Vendor&quot;</span><span class="p">)</span>
+      <div class="highlight"><pre>        <span class="n">global_vendor</span> <span class="o">=</span> <span class="n">Vendor</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"Global Vendor"</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertIsNone</span><span class="p">(</span><span class="n">global_vendor</span><span class="o">.</span><span class="n">group</span><span class="p">)</span></pre></div>
     </div>
   </div>
@@ -577,11 +577,11 @@ The form field name is edit_<app_label></p>
       <p>Both users should see the global vendor</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>        <span class="n">response_a</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client_a</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;vendor:index&quot;</span><span class="p">))</span>
-        <span class="n">response_b</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client_b</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;vendor:index&quot;</span><span class="p">))</span>
+      <div class="highlight"><pre>        <span class="n">response_a</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client_a</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">"vendor:index"</span><span class="p">))</span>
+        <span class="n">response_b</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client_b</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">"vendor:index"</span><span class="p">))</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertContains</span><span class="p">(</span><span class="n">response_a</span><span class="p">,</span> <span class="s2">&quot;Global Vendor&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertContains</span><span class="p">(</span><span class="n">response_b</span><span class="p">,</span> <span class="s2">&quot;Global Vendor&quot;</span><span class="p">)</span></pre></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertContains</span><span class="p">(</span><span class="n">response_a</span><span class="p">,</span> <span class="s2">"Global Vendor"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertContains</span><span class="p">(</span><span class="n">response_b</span><span class="p">,</span> <span class="s2">"Global Vendor"</span><span class="p">)</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -606,7 +606,7 @@ The form field name is edit_<app_label></p>
     </div>
     <div class='code'>
       <div class="highlight"><pre>        <span class="n">user_no_group</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create_user</span><span class="p">(</span>
-            <span class="n">username</span><span class="o">=</span><span class="s2">&quot;user_no_group&quot;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">password</span>
+            <span class="n">username</span><span class="o">=</span><span class="s2">"user_no_group"</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">password</span>
         <span class="p">)</span></pre></div>
     </div>
   </div>
@@ -622,7 +622,7 @@ The form field name is edit_<app_label></p>
       <div class="highlight"><pre>        <span class="n">user_no_group</span><span class="o">.</span><span class="n">groups</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
 
         <span class="n">client_no_group</span> <span class="o">=</span> <span class="n">Client</span><span class="p">()</span>
-        <span class="n">client_no_group</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s2">&quot;user_no_group&quot;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">password</span><span class="p">)</span></pre></div>
+        <span class="n">client_no_group</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s2">"user_no_group"</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">password</span><span class="p">)</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -635,10 +635,10 @@ The form field name is edit_<app_label></p>
     </div>
     <div class='code'>
       <div class="highlight"><pre>        <span class="n">add_perm</span> <span class="o">=</span> <span class="n">Permission</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
-            <span class="n">codename</span><span class="o">=</span><span class="s2">&quot;add_model&quot;</span><span class="p">,</span> <span class="n">content_type__app_label</span><span class="o">=</span><span class="s2">&quot;vendor&quot;</span>
+            <span class="n">codename</span><span class="o">=</span><span class="s2">"add_model"</span><span class="p">,</span> <span class="n">content_type__app_label</span><span class="o">=</span><span class="s2">"vendor"</span>
         <span class="p">)</span>
         <span class="n">view_perm</span> <span class="o">=</span> <span class="n">Permission</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
-            <span class="n">codename</span><span class="o">=</span><span class="s2">&quot;view_model&quot;</span><span class="p">,</span> <span class="n">content_type__app_label</span><span class="o">=</span><span class="s2">&quot;vendor&quot;</span>
+            <span class="n">codename</span><span class="o">=</span><span class="s2">"view_model"</span><span class="p">,</span> <span class="n">content_type__app_label</span><span class="o">=</span><span class="s2">"vendor"</span>
         <span class="p">)</span>
         <span class="n">user_no_group</span><span class="o">.</span><span class="n">user_permissions</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">add_perm</span><span class="p">,</span> <span class="n">view_perm</span><span class="p">)</span></pre></div>
     </div>
@@ -649,12 +649,12 @@ The form field name is edit_<app_label></p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-42'>#</a>
       </div>
-      <p>User should be able to create items but without group assignment</p>
+      <p>A group-less user must not be able to create global/shared rows</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre>        <span class="n">response</span> <span class="o">=</span> <span class="n">client_no_group</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
-            <span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;vendor:create&quot;</span><span class="p">),</span>
-            <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Vendor No Group&quot;</span><span class="p">,</span> <span class="s2">&quot;is_hardware&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;is_software&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span>
+            <span class="n">reverse</span><span class="p">(</span><span class="s2">"vendor:create"</span><span class="p">),</span>
+            <span class="p">{</span><span class="s2">"name"</span><span class="p">:</span> <span class="s2">"Vendor No Group"</span><span class="p">,</span> <span class="s2">"is_hardware"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">"is_software"</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span>
             <span class="n">follow</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="p">)</span></pre></div>
     </div>
@@ -665,13 +665,11 @@ The form field name is edit_<app_label></p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-43'>#</a>
       </div>
-      <p>Should succeed and create item without a group</p>
+      <p>Should be denied and create nothing without a group</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
-        <span class="n">vendor</span> <span class="o">=</span> <span class="n">Vendor</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Vendor No Group&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertIsNotNone</span><span class="p">(</span><span class="n">vendor</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertIsNone</span><span class="p">(</span><span class="n">vendor</span><span class="o">.</span><span class="n">group</span><span class="p">)</span></pre></div>
+      <div class="highlight"><pre>        <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="p">[</span><span class="mi">403</span><span class="p">,</span> <span class="mi">404</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="n">Vendor</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"Vendor No Group"</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">())</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -709,7 +707,7 @@ The form field name is edit_<app_label></p>
     </div>
     <div class='code'>
       <div class="highlight"><pre>        <span class="n">add_perm</span> <span class="o">=</span> <span class="n">Permission</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
-            <span class="n">codename</span><span class="o">=</span><span class="s2">&quot;add_model&quot;</span><span class="p">,</span> <span class="n">content_type__app_label</span><span class="o">=</span><span class="s2">&quot;vendor&quot;</span>
+            <span class="n">codename</span><span class="o">=</span><span class="s2">"add_model"</span><span class="p">,</span> <span class="n">content_type__app_label</span><span class="o">=</span><span class="s2">"vendor"</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">group_a</span><span class="o">.</span><span class="n">permissions</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">add_perm</span><span class="p">)</span></pre></div>
     </div>
@@ -723,7 +721,7 @@ The form field name is edit_<app_label></p>
       <p>Create one vendor to reach the limit</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>        <span class="n">Vendor</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Vendor 1&quot;</span><span class="p">,</span> <span class="n">group</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">group_a</span><span class="p">)</span></pre></div>
+      <div class="highlight"><pre>        <span class="n">Vendor</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"Vendor 1"</span><span class="p">,</span> <span class="n">group</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">group_a</span><span class="p">)</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -736,11 +734,11 @@ The form field name is edit_<app_label></p>
     </div>
     <div class='code'>
       <div class="highlight"><pre>        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client_a</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
-            <span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;vendor:create&quot;</span><span class="p">),</span>
-            <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Vendor 2&quot;</span><span class="p">,</span> <span class="s2">&quot;is_hardware&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;is_software&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span>
+            <span class="n">reverse</span><span class="p">(</span><span class="s2">"vendor:create"</span><span class="p">),</span>
+            <span class="p">{</span><span class="s2">"name"</span><span class="p">:</span> <span class="s2">"Vendor 2"</span><span class="p">,</span> <span class="s2">"is_hardware"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">"is_software"</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span>
             <span class="n">follow</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertContains</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="s2">&quot;Quota exceeded&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertContains</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="s2">"Quota exceeded"</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">Vendor</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">group</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">group_a</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">(),</span> <span class="mi">1</span><span class="p">)</span></pre></div>
     </div>
   </div>
@@ -765,8 +763,8 @@ The form field name is edit_<app_label></p>
       <p>Both groups should be able to have vendors with the same name</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>        <span class="n">Vendor</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Same Name&quot;</span><span class="p">,</span> <span class="n">group</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">group_a</span><span class="p">)</span>
-        <span class="n">Vendor</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Same Name&quot;</span><span class="p">,</span> <span class="n">group</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">group_b</span><span class="p">)</span></pre></div>
+      <div class="highlight"><pre>        <span class="n">Vendor</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"Same Name"</span><span class="p">,</span> <span class="n">group</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">group_a</span><span class="p">)</span>
+        <span class="n">Vendor</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"Same Name"</span><span class="p">,</span> <span class="n">group</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">group_b</span><span class="p">)</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -778,7 +776,7 @@ The form field name is edit_<app_label></p>
       <p>Should have 2 vendors total</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">Vendor</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Same Name&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">(),</span> <span class="mi">2</span><span class="p">)</span></pre></div>
+      <div class="highlight"><pre>        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">Vendor</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"Same Name"</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">(),</span> <span class="mi">2</span><span class="p">)</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -790,8 +788,8 @@ The form field name is edit_<app_label></p>
       <p>But each user should only see their own</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>        <span class="n">response_a</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client_a</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;vendor:index&quot;</span><span class="p">))</span>
-        <span class="n">response_b</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client_b</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;vendor:index&quot;</span><span class="p">))</span></pre></div>
+      <div class="highlight"><pre>        <span class="n">response_a</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client_a</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">"vendor:index"</span><span class="p">))</span>
+        <span class="n">response_b</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client_b</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">"vendor:index"</span><span class="p">))</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -803,8 +801,8 @@ The form field name is edit_<app_label></p>
       <p>Count occurrences in response (this is a simple check)</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>        <span class="bp">self</span><span class="o">.</span><span class="n">assertContains</span><span class="p">(</span><span class="n">response_a</span><span class="p">,</span> <span class="s2">&quot;Same Name&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertContains</span><span class="p">(</span><span class="n">response_b</span><span class="p">,</span> <span class="s2">&quot;Same Name&quot;</span><span class="p">)</span></pre></div>
+      <div class="highlight"><pre>        <span class="bp">self</span><span class="o">.</span><span class="n">assertContains</span><span class="p">(</span><span class="n">response_a</span><span class="p">,</span> <span class="s2">"Same Name"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertContains</span><span class="p">(</span><span class="n">response_b</span><span class="p">,</span> <span class="s2">"Same Name"</span><span class="p">)</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -828,8 +826,8 @@ The form field name is edit_<app_label></p>
       <p>Create some items in group A</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>        <span class="n">Vendor</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Vendor A1&quot;</span><span class="p">,</span> <span class="n">group</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">group_a</span><span class="p">)</span>
-        <span class="n">Vendor</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Vendor A2&quot;</span><span class="p">,</span> <span class="n">group</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">group_a</span><span class="p">)</span>
+      <div class="highlight"><pre>        <span class="n">Vendor</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"Vendor A1"</span><span class="p">,</span> <span class="n">group</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">group_a</span><span class="p">)</span>
+        <span class="n">Vendor</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"Vendor A2"</span><span class="p">,</span> <span class="n">group</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">group_a</span><span class="p">)</span>
 
         <span class="n">initial_count</span> <span class="o">=</span> <span class="n">Vendor</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">count</span><span class="p">()</span></pre></div>
     </div>
@@ -880,7 +878,7 @@ The form field name is edit_<app_label></p>
       <p>Create an item in group B</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>        <span class="n">vendor_b</span> <span class="o">=</span> <span class="n">Vendor</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Vendor B Private&quot;</span><span class="p">,</span> <span class="n">group</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">group_b</span><span class="p">)</span></pre></div>
+      <div class="highlight"><pre>        <span class="n">vendor_b</span> <span class="o">=</span> <span class="n">Vendor</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"Vendor B Private"</span><span class="p">,</span> <span class="n">group</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">group_b</span><span class="p">)</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -892,7 +890,7 @@ The form field name is edit_<app_label></p>
       <p>User A should not be able to access this item&rsquo;s detail page</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client_a</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;vendor:detail&quot;</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="n">vendor_b</span><span class="o">.</span><span class="n">pk</span><span class="p">]))</span></pre></div>
+      <div class="highlight"><pre>        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client_a</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">"vendor:detail"</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="n">vendor_b</span><span class="o">.</span><span class="n">pk</span><span class="p">]))</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -928,7 +926,7 @@ The form field name is edit_<app_label></p>
       <p>Create some existing data</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>        <span class="n">Vendor</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Existing Vendor&quot;</span><span class="p">,</span> <span class="n">group</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">group_a</span><span class="p">)</span></pre></div>
+      <div class="highlight"><pre>        <span class="n">Vendor</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"Existing Vendor"</span><span class="p">,</span> <span class="n">group</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">group_a</span><span class="p">)</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -952,7 +950,7 @@ The form field name is edit_<app_label></p>
       <p>Should still import new vendors but not duplicate existing ones</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>        <span class="bp">self</span><span class="o">.</span><span class="n">assertGreaterEqual</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="s2">&quot;vendors&quot;</span><span class="p">],</span> <span class="mi">0</span><span class="p">)</span></pre></div>
+      <div class="highlight"><pre>        <span class="bp">self</span><span class="o">.</span><span class="n">assertGreaterEqual</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="s2">"vendors"</span><span class="p">],</span> <span class="mi">0</span><span class="p">)</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -965,7 +963,7 @@ The form field name is edit_<app_label></p>
     </div>
     <div class='code'>
       <div class="highlight"><pre>        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span>
-            <span class="n">Vendor</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">group</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">group_a</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Existing Vendor&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span>
+            <span class="n">Vendor</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">group</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">group_a</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"Existing Vendor"</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span>
         <span class="p">)</span></pre></div>
     </div>
   </div>
@@ -1004,7 +1002,7 @@ The form field name is edit_<app_label></p>
     </div>
     <div class='code'>
       <div class="highlight"><pre>        <span class="n">add_perm</span> <span class="o">=</span> <span class="n">Permission</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
-            <span class="n">codename</span><span class="o">=</span><span class="s2">&quot;add_model&quot;</span><span class="p">,</span> <span class="n">content_type__app_label</span><span class="o">=</span><span class="s2">&quot;vendor&quot;</span>
+            <span class="n">codename</span><span class="o">=</span><span class="s2">"add_model"</span><span class="p">,</span> <span class="n">content_type__app_label</span><span class="o">=</span><span class="s2">"vendor"</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">group_a</span><span class="o">.</span><span class="n">permissions</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">add_perm</span><span class="p">)</span></pre></div>
     </div>
@@ -1019,11 +1017,11 @@ The form field name is edit_<app_label></p>
     </div>
     <div class='code'>
       <div class="highlight"><pre>        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client_a</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
-            <span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;vendor:create&quot;</span><span class="p">),</span>
-            <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Vendor Zero Quota&quot;</span><span class="p">,</span> <span class="s2">&quot;is_hardware&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;is_software&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span>
+            <span class="n">reverse</span><span class="p">(</span><span class="s2">"vendor:create"</span><span class="p">),</span>
+            <span class="p">{</span><span class="s2">"name"</span><span class="p">:</span> <span class="s2">"Vendor Zero Quota"</span><span class="p">,</span> <span class="s2">"is_hardware"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">"is_software"</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span>
             <span class="n">follow</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertContains</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="s2">&quot;Quota exceeded&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertContains</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="s2">"Quota exceeded"</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">Vendor</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">group</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">group_a</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">(),</span> <span class="mi">0</span><span class="p">)</span></pre></div>
     </div>
   </div>
@@ -1048,7 +1046,7 @@ The form field name is edit_<app_label></p>
       <p>Create a new group</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>        <span class="n">new_group</span> <span class="o">=</span> <span class="n">Group</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;New Group&quot;</span><span class="p">)</span></pre></div>
+      <div class="highlight"><pre>        <span class="n">new_group</span> <span class="o">=</span> <span class="n">Group</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"New Group"</span><span class="p">)</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -1060,7 +1058,7 @@ The form field name is edit_<app_label></p>
       <p>Should have a profile</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="nb">hasattr</span><span class="p">(</span><span class="n">new_group</span><span class="p">,</span> <span class="s2">&quot;profile&quot;</span><span class="p">))</span>
+      <div class="highlight"><pre>        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="nb">hasattr</span><span class="p">(</span><span class="n">new_group</span><span class="p">,</span> <span class="s2">"profile"</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertIsNotNone</span><span class="p">(</span><span class="n">new_group</span><span class="o">.</span><span class="n">profile</span><span class="p">)</span></pre></div>
     </div>
   </div>

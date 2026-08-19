@@ -21,9 +21,8 @@
     </div>
     <div class='code'>
       <div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">django.contrib.auth.mixins</span><span class="w"> </span><span class="kn">import</span> <span class="n">LoginRequiredMixin</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">django.contrib</span><span class="w"> </span><span class="kn">import</span> <span class="n">messages</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">django.http</span><span class="w"> </span><span class="kn">import</span> <span class="n">HttpResponseRedirect</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">sm.views</span><span class="w"> </span><span class="kn">import</span> <span class="n">SafeDeleteMixin</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sm.mixins</span><span class="w"> </span><span class="kn">import</span> <span class="n">MultiTenantMixin</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">Model</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.forms</span><span class="w"> </span><span class="kn">import</span> <span class="n">Form</span><span class="p">,</span> <span class="n">FormDisabled</span>
@@ -37,10 +36,7 @@
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">django.utils.translation</span><span class="w"> </span><span class="kn">import</span> <span class="n">gettext</span> <span class="k">as</span> <span class="n">_</span>
 
-<span class="k">try</span><span class="p">:</span>
-    <span class="kn">from</span><span class="w"> </span><span class="nn">django.urls</span><span class="w"> </span><span class="kn">import</span> <span class="n">reverse_lazy</span>
-<span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
-    <span class="kn">from</span><span class="w"> </span><span class="nn">django.urls</span><span class="w"> </span><span class="kn">import</span> <span class="n">reverse_lazy</span>  <span class="c1"># pragma: no cover</span></pre></div>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.urls</span><span class="w"> </span><span class="kn">import</span> <span class="n">reverse_lazy</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -52,12 +48,12 @@
       
     </div>
     <div class='code'>
-      <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">ListView</span><span class="p">(</span><span class="n">LoginRequiredMixin</span><span class="p">,</span> <span class="n">GenericListView</span><span class="p">):</span>
-    <span class="n">template_name</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">/list.html&quot;</span> <span class="o">%</span> <span class="n">app_label</span>
+      <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">ListView</span><span class="p">(</span><span class="n">LoginRequiredMixin</span><span class="p">,</span> <span class="n">MultiTenantMixin</span><span class="p">,</span> <span class="n">GenericListView</span><span class="p">):</span>
+    <span class="n">template_name</span> <span class="o">=</span> <span class="s2">"</span><span class="si">%s</span><span class="s2">/list.html"</span> <span class="o">%</span> <span class="n">app_label</span>
     <span class="n">model</span> <span class="o">=</span> <span class="n">Model</span>
     <span class="n">paginate_by</span> <span class="o">=</span> <span class="mi">20</span>
     <span class="n">paginate_orphans</span> <span class="o">=</span> <span class="n">paginate_by</span> <span class="o">/</span> <span class="mi">4</span>
-    <span class="n">ordering</span> <span class="o">=</span> <span class="s2">&quot;name&quot;</span></pre></div>
+    <span class="n">ordering</span> <span class="o">=</span> <span class="s2">"name"</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -69,8 +65,8 @@
       
     </div>
     <div class='code'>
-      <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">DetailView</span><span class="p">(</span><span class="n">LoginRequiredMixin</span><span class="p">,</span> <span class="n">GenericUpdateView</span><span class="p">):</span>
-    <span class="n">template_name</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">/detail.html&quot;</span> <span class="o">%</span> <span class="n">app_label</span>
+      <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">DetailView</span><span class="p">(</span><span class="n">LoginRequiredMixin</span><span class="p">,</span> <span class="n">MultiTenantMixin</span><span class="p">,</span> <span class="n">GenericUpdateView</span><span class="p">):</span>
+    <span class="n">template_name</span> <span class="o">=</span> <span class="s2">"</span><span class="si">%s</span><span class="s2">/detail.html"</span> <span class="o">%</span> <span class="n">app_label</span>
     <span class="n">model</span> <span class="o">=</span> <span class="n">Model</span>
     <span class="n">form_class</span> <span class="o">=</span> <span class="n">FormDisabled</span></pre></div>
     </div>
@@ -84,11 +80,15 @@
       
     </div>
     <div class='code'>
-      <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">UpdateView</span><span class="p">(</span><span class="n">SuccessMessageMixin</span><span class="p">,</span> <span class="n">LoginRequiredMixin</span><span class="p">,</span> <span class="n">GenericUpdateView</span><span class="p">):</span>
-    <span class="n">success_message</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%(name)s</span><span class="s2"> &quot;</span> <span class="o">+</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;was updated successfully&quot;</span><span class="p">)</span>
+      <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">UpdateView</span><span class="p">(</span>
+    <span class="n">SuccessMessageMixin</span><span class="p">,</span> <span class="n">LoginRequiredMixin</span><span class="p">,</span> <span class="n">MultiTenantMixin</span><span class="p">,</span> <span class="n">GenericUpdateView</span>
+<span class="p">):</span>
+    <span class="n">success_message</span> <span class="o">=</span> <span class="s2">"</span><span class="si">%(name)s</span><span class="s2"> "</span> <span class="o">+</span> <span class="n">_</span><span class="p">(</span><span class="s2">"was updated successfully"</span><span class="p">)</span>
     <span class="n">model</span> <span class="o">=</span> <span class="n">Model</span>
 
-    <span class="n">template_name</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">/edit.html&quot;</span> <span class="o">%</span> <span class="n">app_label</span></pre></div>
+    <span class="n">template_name</span> <span class="o">=</span> <span class="s2">"</span><span class="si">%s</span><span class="s2">/edit.html"</span> <span class="o">%</span> <span class="n">app_label</span>
+    <span class="n">form_class</span> <span class="o">=</span> <span class="n">Form</span>
+    <span class="n">success_url</span> <span class="o">=</span> <span class="n">reverse_lazy</span><span class="p">(</span><span class="s2">"</span><span class="si">%s</span><span class="s2">:index"</span> <span class="o">%</span> <span class="n">app_label</span><span class="p">)</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -100,14 +100,15 @@
       
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">form_valid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">form</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">object</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
-        <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">success_message</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">)</span>
+      <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">CreateView</span><span class="p">(</span>
+    <span class="n">SuccessMessageMixin</span><span class="p">,</span> <span class="n">LoginRequiredMixin</span><span class="p">,</span> <span class="n">MultiTenantMixin</span><span class="p">,</span> <span class="n">GenericCreateView</span>
+<span class="p">):</span>
+    <span class="n">success_message</span> <span class="o">=</span> <span class="s2">"</span><span class="si">%(name)s</span><span class="s2"> "</span> <span class="o">+</span> <span class="n">_</span><span class="p">(</span><span class="s2">"was created successfully"</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">HttpResponseRedirect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_success_url</span><span class="p">())</span>
-
+    <span class="n">template_name</span> <span class="o">=</span> <span class="s2">"</span><span class="si">%s</span><span class="s2">/edit.html"</span> <span class="o">%</span> <span class="n">app_label</span>
     <span class="n">form_class</span> <span class="o">=</span> <span class="n">Form</span>
-    <span class="n">success_url</span> <span class="o">=</span> <span class="n">reverse_lazy</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">:index&quot;</span> <span class="o">%</span> <span class="n">app_label</span><span class="p">)</span></pre></div>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">Model</span>
+    <span class="n">success_url</span> <span class="o">=</span> <span class="n">reverse_lazy</span><span class="p">(</span><span class="s2">"</span><span class="si">%s</span><span class="s2">:index"</span> <span class="o">%</span> <span class="n">app_label</span><span class="p">)</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -119,45 +120,13 @@
       
     </div>
     <div class='code'>
-      <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">CreateView</span><span class="p">(</span><span class="n">SuccessMessageMixin</span><span class="p">,</span> <span class="n">LoginRequiredMixin</span><span class="p">,</span> <span class="n">GenericCreateView</span><span class="p">):</span>
-    <span class="n">success_message</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%(name)s</span><span class="s2"> &quot;</span> <span class="o">+</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;was created successfully&quot;</span><span class="p">)</span>
-
-    <span class="n">template_name</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">/edit.html&quot;</span> <span class="o">%</span> <span class="n">app_label</span>
-    <span class="n">fields</span> <span class="o">=</span> <span class="s2">&quot;__all__&quot;</span>
+      <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">DeleteView</span><span class="p">(</span>
+    <span class="n">SafeDeleteMixin</span><span class="p">,</span> <span class="n">LoginRequiredMixin</span><span class="p">,</span> <span class="n">MultiTenantMixin</span><span class="p">,</span> <span class="n">GenericDeleteView</span>
+<span class="p">):</span>
+    <span class="n">success_message</span> <span class="o">=</span> <span class="s2">"</span><span class="si">%(name)s</span><span class="s2"> "</span> <span class="o">+</span> <span class="n">_</span><span class="p">(</span><span class="s2">"was deleted successfully"</span><span class="p">)</span>
+    <span class="n">template_name</span> <span class="o">=</span> <span class="s2">"delete.html"</span>
     <span class="n">model</span> <span class="o">=</span> <span class="n">Model</span>
-    <span class="n">success_url</span> <span class="o">=</span> <span class="n">reverse_lazy</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">:index&quot;</span> <span class="o">%</span> <span class="n">app_label</span><span class="p">)</span></pre></div>
-    </div>
-  </div>
-  <div class='clearall'></div>
-  <div class='section' id='section-6'>
-    <div class='docs'>
-      <div class='octowrap'>
-        <a class='octothorpe' href='#section-6'>#</a>
-      </div>
-      
-    </div>
-    <div class='code'>
-      <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">form_valid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">form</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">object</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
-        <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">success_message</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">)</span>
-
-        <span class="k">return</span> <span class="n">HttpResponseRedirect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_success_url</span><span class="p">())</span></pre></div>
-    </div>
-  </div>
-  <div class='clearall'></div>
-  <div class='section' id='section-7'>
-    <div class='docs'>
-      <div class='octowrap'>
-        <a class='octothorpe' href='#section-7'>#</a>
-      </div>
-      
-    </div>
-    <div class='code'>
-      <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">DeleteView</span><span class="p">(</span><span class="n">SafeDeleteMixin</span><span class="p">,</span> <span class="n">LoginRequiredMixin</span><span class="p">,</span> <span class="n">GenericDeleteView</span><span class="p">):</span>
-    <span class="n">success_message</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%(name)s</span><span class="s2"> &quot;</span> <span class="o">+</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;was deleted successfully&quot;</span><span class="p">)</span>
-    <span class="n">template_name</span> <span class="o">=</span> <span class="s2">&quot;delete.html&quot;</span>
-    <span class="n">model</span> <span class="o">=</span> <span class="n">Model</span>
-    <span class="n">success_url</span> <span class="o">=</span> <span class="n">reverse_lazy</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">:index&quot;</span> <span class="o">%</span> <span class="n">app_label</span><span class="p">)</span>
+    <span class="n">success_url</span> <span class="o">=</span> <span class="n">reverse_lazy</span><span class="p">(</span><span class="s2">"</span><span class="si">%s</span><span class="s2">:index"</span> <span class="o">%</span> <span class="n">app_label</span><span class="p">)</span>
 
 </pre></div>
     </div>
