@@ -10,6 +10,7 @@ from .forms import Form
 from . import app_label
 
 from django.contrib.auth.models import User
+from django.contrib.auth.models import Group
 
 from django.core.exceptions import ObjectDoesNotExist
 
@@ -228,3 +229,65 @@ class Tester(TestCase):
         )
         self.assertRedirects(response, reverse("%s:index" % app_label), status_code=302)
         self.assertEqual(Model.objects.filter(name=self.teststring).count(), 2)
+
+    def _create_grouped_cluster(self):
+        group = Group.objects.create(name="tenant-%s" % random_string())
+        cluster = ClusterModel.objects.create(
+            name="cluster-%s" % random_string(), group=group
+        )
+        return group, cluster
+
+    def test_update_preserves_group(self):
+        group, _ = self._create_grouped_cluster()
+        self.testitem.group = group
+        self.testitem.save()
+        self.login()
+        data = {
+            "name": self.teststring,
+            "cluster": self.testitem.cluster.pk,
+            "package_type": self.package_type.pk,
+            "status": self.status.pk,
+            "description": "updated description",
+            "host": self.testhost,
+        }
+        response = self.client.post(
+            reverse("%s:update" % app_label, args=[self.testitem.pk]),
+            data,
+            follow=True,
+        )
+        self.assertRedirects(response, reverse("%s:index" % app_label), status_code=302)
+        self.testitem.refresh_from_db()
+        self.assertEqual(self.testitem.group, group)
+        self.assertEqual(self.testitem.description, "updated description")
+
+    def test_update_preserves_global_group(self):
+        self.testitem.group = None
+        self.testitem.save()
+        self.login()
+        data = self._create_payload(self.teststring)
+        response = self.client.post(
+            reverse("%s:update" % app_label, args=[self.testitem.pk]),
+            data,
+            follow=True,
+        )
+        self.assertRedirects(response, reverse("%s:index" % app_label), status_code=302)
+        self.testitem.refresh_from_db()
+        self.assertIsNone(self.testitem.group)
+
+    def test_create_inherits_cluster_group(self):
+        group, cluster = self._create_grouped_cluster()
+        user = User.objects.create_user(
+            username=random_string(), password=self.password
+        )
+        user.groups.set([group])
+        self.client.login(username=user.username, password=self.password)
+        data = self._create_payload("brand-new-package")
+        data["cluster"] = cluster.pk
+        response = self.client.post(
+            reverse("%s:create" % app_label),
+            data,
+            follow=True,
+        )
+        self.assertRedirects(response, reverse("%s:index" % app_label), status_code=302)
+        item = Model.objects.get(name="brand-new-package")
+        self.assertEqual(item.group, group)

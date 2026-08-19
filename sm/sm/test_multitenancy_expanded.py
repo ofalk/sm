@@ -235,18 +235,16 @@ class MultiTenancyEdgeCasesTest(TestCase):
         )
         user_no_group.user_permissions.add(add_perm, view_perm)
 
-        # User should be able to create items but without group assignment
+        # A group-less user must not be able to create global/shared rows
         response = client_no_group.post(
             reverse("vendor:create"),
             {"name": "Vendor No Group", "is_hardware": True, "is_software": True},
             follow=True,
         )
 
-        # Should succeed and create item without a group
-        self.assertEqual(response.status_code, 200)
-        vendor = Vendor.objects.filter(name="Vendor No Group").first()
-        self.assertIsNotNone(vendor)
-        self.assertIsNone(vendor.group)
+        # Should be denied and create nothing without a group
+        self.assertIn(response.status_code, [403, 404])
+        self.assertFalse(Vendor.objects.filter(name="Vendor No Group").exists())
 
     def test_concurrent_quota_checks(self) -> None:
         """Test that concurrent quota checks are handled properly."""

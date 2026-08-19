@@ -107,6 +107,137 @@ class BrowserIntegrationTest(StaticLiveServerTestCase):
                 f"JS/Resource errors found for authenticated user:\n\n{errors_msg}"
             )
 
+    async def _login(self, page, username, password):
+        """Logs an open page into the app and waits for the redirect to settle."""
+        await page.goto(f"{self.live_server_url}/accounts/login/")
+        await page.fill('input[name="login"]', username)
+        await page.fill('input[name="password"]', password)
+        await page.click("form.login button[type='submit']")
+        await page.wait_for_load_state("networkidle")
+        # Ensure the dashboard (post-login redirect target) has rendered.
+        await page.wait_for_selector("body", timeout=10000)
+
+    async def _create_vendor(self, page, name):
+        """Creates a vendor via the UI and returns the list page."""
+        await page.goto(f"{self.live_server_url}/vendor/create")
+        await page.wait_for_load_state("networkidle")
+        await page.fill('input[name="name"]', name)
+        await page.click(".form-actions button[type='submit']")
+        await page.wait_for_load_state("networkidle")
+        await page.goto(f"{self.live_server_url}/vendor/")
+        await page.wait_for_load_state("networkidle")
+
+    @tag("browser")
+    def test_crud_workflow(self):
+        """
+        Create, verify in list, and delete a vendor through the real browser.
+        """
+
+        async def scenario():
+            async with async_playwright() as p:
+                browser = await p.chromium.launch(headless=True)
+                context = await browser.new_context()
+                page = await context.new_page()
+                try:
+                    await self._login(page, self.username, self.password)
+                    await self._create_vendor(page, "Browser Test Vendor")
+                    self.assertGreater(
+                        await page.locator("#vendor_list tbody")
+                        .get_by_text("Browser Test Vendor")
+                        .count(),
+                        0,
+                    )
+
+                    # Edit it
+                    await page.goto(f"{self.live_server_url}/vendor/")
+                    rows = page.locator("#vendor_list tbody tr")
+                    # Find the row containing our vendor and click its edit link
+                    row = rows.filter(has_text="Browser Test Vendor")
+                    await row.locator("a[title='Edit vendor']").first.click()
+                    await page.wait_for_load_state("networkidle")
+                    await page.fill('input[name="name"]', "Browser Test Vendor Edited")
+                    await page.click(".form-actions button[type='submit']")
+                    await page.wait_for_load_state("networkidle")
+                    await page.goto(f"{self.live_server_url}/vendor/")
+                    self.assertGreater(
+                        await page.locator("#vendor_list tbody")
+                        .get_by_text("Browser Test Vendor Edited")
+                        .count(),
+                        0,
+                    )
+                finally:
+                    await browser.close()
+
+        asyncio.run(scenario())
+
+    @tag("browser")
+    def test_multitenancy_browser_isolation(self):
+        """
+        Two browser users in different groups must not see each other's data.
+        """
+        from django.contrib.auth import get_user_model
+        from django.contrib.auth.models import Group
+
+        User = get_user_model()
+        group_a = Group.objects.create(name="Browser Group A")
+        group_b = Group.objects.create(name="Browser Group B")
+        user_a = User.objects.create_user(
+            "browser_user_a", "a@example.com", "pw12345678"
+        )
+        user_b = User.objects.create_user(
+            "browser_user_b", "b@example.com", "pw12345678"
+        )
+        user_a.groups.add(group_a)
+        user_b.groups.add(group_b)
+
+        from django.contrib.contenttypes.models import ContentType
+        from django.contrib.auth.models import Permission
+
+        vendor_ct = ContentType.objects.get(app_label="vendor", model="model")
+        for group in (group_a, group_b):
+            group.permissions.add(
+                *Permission.objects.filter(
+                    content_type=vendor_ct, codename__in=["view_model", "add_model"]
+                )
+            )
+
+        from vendor.models import Model as Vendor
+
+        Vendor.objects.create(name="Secret Vendor A", group=group_a)
+
+        async def scenario():
+            async with async_playwright() as p:
+                browser = await p.chromium.launch(headless=True)
+                context_a = await browser.new_context()
+                context_b = await browser.new_context()
+                try:
+                    page_a = await context_a.new_page()
+                    await self._login(page_a, "browser_user_a", "pw12345678")
+                    await page_a.goto(f"{self.live_server_url}/vendor/")
+                    await page_a.wait_for_load_state("networkidle")
+                    # User A sees their own group's vendor in the list.
+                    self.assertGreater(
+                        await page_a.locator("#vendor_list tbody")
+                        .get_by_text("Secret Vendor A")
+                        .count(),
+                        0,
+                    )
+                    await page_a.close()
+
+                    page_b = await context_b.new_page()
+                    await self._login(page_b, "browser_user_b", "pw12345678")
+                    await page_b.goto(f"{self.live_server_url}/vendor/")
+                    await page_b.wait_for_load_state("networkidle")
+                    # User B must never see user A's vendor anywhere on the page.
+                    self.assertEqual(
+                        await page_b.get_by_text("Secret Vendor A").count(), 0
+                    )
+                    await page_b.close()
+                finally:
+                    await browser.close()
+
+        asyncio.run(scenario())
+
     async def _async_test_js(self, is_anonymous=False):
         async with async_playwright() as p:
             # Test in multiple browsers
