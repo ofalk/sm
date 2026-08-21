@@ -1,11 +1,6 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
-<<<<<<< HEAD
-from sm.views import SafeDeleteMixin
-from sm.mixins import MultiTenantMixin, filter_queryset_by_tenant
-=======
 from sm.views import SafeDeleteMixin, GenericCSVExportView, GenericBulkDeleteView
-from sm.mixins import MultiTenantMixin, BulkActionMixin
->>>>>>> 0e14b74 (feat: bulk operations and CSV export across all models)
+from sm.mixins import MultiTenantMixin, BulkActionMixin, filter_queryset_by_tenant
 
 from .models import Model
 from .forms import Form, FormDisabled
