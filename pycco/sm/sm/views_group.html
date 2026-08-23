@@ -36,7 +36,11 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">django.core.exceptions</span><span class="w"> </span><span class="kn">import</span> <span class="n">ValidationError</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">django.template.loader</span><span class="w"> </span><span class="kn">import</span> <span class="n">render_to_string</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">.utils_permissions</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_group_permissions_for_model</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.utils_permissions</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">get_group_permissions_for_model</span><span class="p">,</span>
+    <span class="n">APP_MODELS</span><span class="p">,</span>
+    <span class="n">MODEL_LABELS</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">django.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">timezone</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">django.conf</span><span class="w"> </span><span class="kn">import</span> <span class="n">settings</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">django.http</span><span class="w"> </span><span class="kn">import</span> <span class="n">JsonResponse</span></pre></div>
@@ -327,11 +331,8 @@
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">models_to_manage</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="p">(</span><span class="s2">"server"</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">"Servers"</span><span class="p">)),</span>
-            <span class="p">(</span><span class="s2">"cluster"</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">"Clusters"</span><span class="p">)),</span>
-            <span class="p">(</span><span class="s2">"domain"</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">"Domains"</span><span class="p">)),</span>
-            <span class="p">(</span><span class="s2">"vendor"</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">"Vendors"</span><span class="p">)),</span>
-            <span class="p">(</span><span class="s2">"operatingsystem"</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">"Operating Systems"</span><span class="p">)),</span>
+            <span class="p">(</span><span class="n">app_label</span><span class="p">,</span> <span class="n">MODEL_LABELS</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">app_label</span><span class="p">,</span> <span class="n">app_label</span><span class="p">))</span>
+            <span class="k">for</span> <span class="n">app_label</span><span class="p">,</span> <span class="n">_model</span> <span class="ow">in</span> <span class="n">APP_MODELS</span>
         <span class="p">]</span>
 
         <span class="n">current_perms</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">group</span><span class="o">.</span><span class="n">permissions</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s2">"codename"</span><span class="p">,</span> <span class="n">flat</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -491,11 +492,8 @@ because we named our model &lsquo;Model&rsquo;</p>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">models_to_manage</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="p">(</span><span class="s2">"server"</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">"Servers"</span><span class="p">)),</span>
-            <span class="p">(</span><span class="s2">"cluster"</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">"Clusters"</span><span class="p">)),</span>
-            <span class="p">(</span><span class="s2">"domain"</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">"Domains"</span><span class="p">)),</span>
-            <span class="p">(</span><span class="s2">"vendor"</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">"Vendors"</span><span class="p">)),</span>
-            <span class="p">(</span><span class="s2">"operatingsystem"</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">"Operating Systems"</span><span class="p">)),</span>
+            <span class="p">(</span><span class="n">app_label</span><span class="p">,</span> <span class="n">MODEL_LABELS</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">app_label</span><span class="p">,</span> <span class="n">app_label</span><span class="p">))</span>
+            <span class="k">for</span> <span class="n">app_label</span><span class="p">,</span> <span class="n">_model</span> <span class="ow">in</span> <span class="n">APP_MODELS</span>
         <span class="p">]</span>
 
         <span class="n">group_perms</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">group</span><span class="o">.</span><span class="n">permissions</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s2">"codename"</span><span class="p">,</span> <span class="n">flat</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -719,7 +717,20 @@ the (global) user permissions of arbitrary users in other groups.</p>
                 <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">,</span>
                 <span class="n">_</span><span class="p">(</span><span class="s2">"An invitation has already been sent to this email address."</span><span class="p">),</span>
             <span class="p">)</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">form_invalid</span><span class="p">(</span><span class="n">form</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">form_invalid</span><span class="p">(</span><span class="n">form</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-39'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-39'>#</a>
+      </div>
+      <p>Replace any expired/used invitation for the same email+group so we
+don&rsquo;t trip the (email, group) unique constraint.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="n">Invitation</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">email__iexact</span><span class="o">=</span><span class="n">email</span><span class="p">,</span> <span class="n">group</span><span class="o">=</span><span class="n">group</span><span class="p">)</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
 
         <span class="n">invitation</span> <span class="o">=</span> <span class="n">Invitation</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
             <span class="n">email</span><span class="o">=</span><span class="n">email</span><span class="p">,</span>
@@ -737,10 +748,10 @@ the (global) user permissions of arbitrary users in other groups.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-39'>
+  <div class='section' id='section-40'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-39'>#</a>
+        <a class='octothorpe' href='#section-40'>#</a>
       </div>
       
     </div>
@@ -774,10 +785,10 @@ the (global) user permissions of arbitrary users in other groups.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-40'>
+  <div class='section' id='section-41'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-40'>#</a>
+        <a class='octothorpe' href='#section-41'>#</a>
       </div>
       
     </div>
@@ -787,10 +798,10 @@ the (global) user permissions of arbitrary users in other groups.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-41'>
+  <div class='section' id='section-42'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-41'>#</a>
+        <a class='octothorpe' href='#section-42'>#</a>
       </div>
       
     </div>
@@ -813,10 +824,10 @@ the (global) user permissions of arbitrary users in other groups.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-42'>
+  <div class='section' id='section-43'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-42'>#</a>
+        <a class='octothorpe' href='#section-43'>#</a>
       </div>
       
     </div>
@@ -844,10 +855,10 @@ the (global) user permissions of arbitrary users in other groups.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-43'>
+  <div class='section' id='section-44'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-43'>#</a>
+        <a class='octothorpe' href='#section-44'>#</a>
       </div>
       <p>The invitee must claim the invited account under the invited email,
 otherwise anyone with the link could register a new identity.</p>
@@ -891,21 +902,9 @@ otherwise anyone with the link could register a new identity.</p>
 
         <span class="kn">from</span><span class="w"> </span><span class="nn">django.contrib.auth</span><span class="w"> </span><span class="kn">import</span> <span class="n">login</span>
 
-        <span class="n">login</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">user</span><span class="p">)</span>
+        <span class="n">login</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="s2">"django.contrib.auth.backends.ModelBackend"</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">"dashboard"</span><span class="p">)</span></pre></div>
-    </div>
-  </div>
-  <div class='clearall'></div>
-  <div class='section' id='section-44'>
-    <div class='docs'>
-      <div class='octowrap'>
-        <a class='octothorpe' href='#section-44'>#</a>
-      </div>
-      
-    </div>
-    <div class='code'>
-      <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">GroupFilterView</span><span class="p">(</span><span class="n">View</span><span class="p">):</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -917,12 +916,7 @@ otherwise anyone with the link could register a new identity.</p>
       
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">post</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_authenticated</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">JsonResponse</span><span class="p">({</span><span class="s2">"error"</span><span class="p">:</span> <span class="s2">"Unauthorized"</span><span class="p">},</span> <span class="n">status</span><span class="o">=</span><span class="mi">401</span><span class="p">)</span>
-
-        <span class="n">groups_param</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"groups"</span><span class="p">,</span> <span class="s2">""</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">groups_param</span><span class="p">:</span></pre></div>
+      <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">GroupFilterView</span><span class="p">(</span><span class="n">View</span><span class="p">):</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -931,23 +925,12 @@ otherwise anyone with the link could register a new identity.</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-46'>#</a>
       </div>
-      <p>Only allow selecting groups the user actually belongs to, so a
-user can never filter into another tenant&rsquo;s data.</p>
+      
     </div>
     <div class='code'>
-      <div class="highlight"><pre>            <span class="n">user_group_ids</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">groups</span><span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s2">"id"</span><span class="p">,</span> <span class="n">flat</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
-            <span class="n">selected_groups</span> <span class="o">=</span> <span class="p">[</span>
-                <span class="n">g</span>
-                <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">groups_param</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">","</span><span class="p">)</span>
-                <span class="k">if</span> <span class="n">g</span><span class="o">.</span><span class="n">isdigit</span><span class="p">()</span> <span class="ow">and</span> <span class="nb">int</span><span class="p">(</span><span class="n">g</span><span class="p">)</span> <span class="ow">in</span> <span class="n">user_group_ids</span>
-            <span class="p">]</span>
-            <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="p">[</span><span class="s2">"selected_groups"</span><span class="p">]</span> <span class="o">=</span> <span class="n">selected_groups</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="p">[</span><span class="s2">"selected_groups"</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
-
-        <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">modified</span> <span class="o">=</span> <span class="kc">True</span>
-
-        <span class="k">return</span> <span class="n">JsonResponse</span><span class="p">({</span><span class="s2">"status"</span><span class="p">:</span> <span class="s2">"success"</span><span class="p">})</span></pre></div>
+      <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">post</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_authenticated</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">JsonResponse</span><span class="p">({</span><span class="s2">"error"</span><span class="p">:</span> <span class="s2">"Unauthorized"</span><span class="p">},</span> <span class="n">status</span><span class="o">=</span><span class="mi">401</span><span class="p">)</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -955,6 +938,52 @@ user can never filter into another tenant&rsquo;s data.</p>
     <div class='docs'>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-47'>#</a>
+      </div>
+      <p>Support both the checkbox format (&ldquo;1,2,3&rdquo; in <code>groups</code>) and the
+single-select format (a <code>group</code> field) used by the search filter.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="n">groups_param</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"groups"</span><span class="p">,</span> <span class="s2">""</span><span class="p">)</span>
+        <span class="n">single</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"group"</span><span class="p">,</span> <span class="s2">""</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">groups_param</span><span class="p">:</span>
+            <span class="n">selected_groups</span> <span class="o">=</span> <span class="p">[</span><span class="n">g</span> <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">groups_param</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">","</span><span class="p">)</span> <span class="k">if</span> <span class="n">g</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="n">single</span><span class="p">:</span>
+            <span class="n">selected_groups</span> <span class="o">=</span> <span class="p">[</span><span class="n">single</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">selected_groups</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">if</span> <span class="n">selected_groups</span><span class="p">:</span>
+            <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="p">[</span><span class="s2">"selected_groups"</span><span class="p">]</span> <span class="o">=</span> <span class="n">selected_groups</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="p">[</span><span class="s2">"selected_groups"</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">modified</span> <span class="o">=</span> <span class="kc">True</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-48'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-48'>#</a>
+      </div>
+      <p>If a <code>next</code> URL was provided, redirect there so the filter applies
+to the referring page (e.g. search results).</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="n">next_url</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"next"</span><span class="p">)</span> <span class="ow">or</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"next"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">next_url</span><span class="p">:</span>
+            <span class="kn">from</span><span class="w"> </span><span class="nn">django.shortcuts</span><span class="w"> </span><span class="kn">import</span> <span class="n">redirect</span>
+
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">next_url</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">JsonResponse</span><span class="p">({</span><span class="s2">"status"</span><span class="p">:</span> <span class="s2">"success"</span><span class="p">})</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-49'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-49'>#</a>
       </div>
       
     </div>
@@ -966,10 +995,10 @@ user can never filter into another tenant&rsquo;s data.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-48'>
+  <div class='section' id='section-50'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-48'>#</a>
+        <a class='octothorpe' href='#section-50'>#</a>
       </div>
       
     </div>
@@ -996,10 +1025,10 @@ user can never filter into another tenant&rsquo;s data.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-49'>
+  <div class='section' id='section-51'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-49'>#</a>
+        <a class='octothorpe' href='#section-51'>#</a>
       </div>
       <p>Profile is already created by create_group_profile signal</p>
     </div>
@@ -1020,10 +1049,10 @@ user can never filter into another tenant&rsquo;s data.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-50'>
+  <div class='section' id='section-52'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-50'>#</a>
+        <a class='octothorpe' href='#section-52'>#</a>
       </div>
       
     </div>

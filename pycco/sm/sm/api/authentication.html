@@ -96,6 +96,9 @@ for that user.</p>
         <span class="k">if</span> <span class="n">key</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">check_password</span><span class="p">(</span><span class="n">secret</span><span class="p">,</span> <span class="n">key</span><span class="o">.</span><span class="n">secret_hash</span><span class="p">):</span>
             <span class="k">raise</span> <span class="n">AuthenticationFailed</span><span class="p">(</span><span class="s2">"Invalid API key credentials."</span><span class="p">)</span>
 
+        <span class="k">if</span> <span class="n">key</span><span class="o">.</span><span class="n">is_expired</span><span class="p">():</span>
+            <span class="k">raise</span> <span class="n">AuthenticationFailed</span><span class="p">(</span><span class="s2">"API key has expired."</span><span class="p">)</span>
+
         <span class="k">if</span> <span class="ow">not</span> <span class="n">key</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_active</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">AuthenticationFailed</span><span class="p">(</span><span class="s2">"User account is disabled."</span><span class="p">)</span></pre></div>
     </div>

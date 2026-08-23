@@ -36,6 +36,7 @@
     <span class="n">SearchView</span><span class="p">,</span>
     <span class="n">ImportStarterPackView</span><span class="p">,</span>
     <span class="n">HistoryDiffView</span><span class="p">,</span>
+    <span class="n">PatchScheduleView</span><span class="p">,</span>
     <span class="n">TermsView</span><span class="p">,</span>
     <span class="n">PrivacyView</span><span class="p">,</span>
     <span class="n">ImpressumView</span><span class="p">,</span>
@@ -53,8 +54,15 @@
     <span class="n">GroupFilterView</span><span class="p">,</span>
     <span class="n">GroupCreateView</span><span class="p">,</span>
 <span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.views_onboarding</span><span class="w"> </span><span class="kn">import</span> <span class="n">GroupOnboardingView</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.views_avatars</span><span class="w"> </span><span class="kn">import</span> <span class="n">avatar_proxy</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">.views_api_keys</span><span class="w"> </span><span class="kn">import</span> <span class="n">ApiKeyListView</span><span class="p">,</span> <span class="n">RevokeApiKeyView</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.views_audit</span><span class="w"> </span><span class="kn">import</span> <span class="n">AuditLogView</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.views_api_keys</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">ApiKeyListView</span><span class="p">,</span>
+    <span class="n">RevokeApiKeyView</span><span class="p">,</span>
+    <span class="n">RotateApiKeyView</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.views_profile</span><span class="w"> </span><span class="kn">import</span> <span class="n">ProfileView</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.api.views</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">ServerViewSet</span><span class="p">,</span>
     <span class="n">VendorViewSet</span><span class="p">,</span>
@@ -94,8 +102,7 @@
 <span class="p">)</span>
 
 <span class="n">urlpatterns</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="n">path</span><span class="p">(</span><span class="s2">"admin/doc/"</span><span class="p">,</span> <span class="n">include</span><span class="p">(</span><span class="s2">"django.contrib.admindocs.urls"</span><span class="p">)),</span>
-    <span class="n">path</span><span class="p">(</span><span class="s2">"admin/"</span><span class="p">,</span> <span class="n">admin</span><span class="o">.</span><span class="n">site</span><span class="o">.</span><span class="n">urls</span><span class="p">),</span></pre></div>
+    <span class="n">path</span><span class="p">(</span><span class="s2">"admin/doc/"</span><span class="p">,</span> <span class="n">include</span><span class="p">(</span><span class="s2">"django.contrib.admindocs.urls"</span><span class="p">)),</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -104,10 +111,16 @@
       <div class='octowrap'>
         <a class='octothorpe' href='#section-1'>#</a>
       </div>
-      <p>API</p>
+      <p>User Management (Staff) - must come before admin/ catch-all</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="n">path</span><span class="p">(</span><span class="s2">"api/"</span><span class="p">,</span> <span class="n">include</span><span class="p">(</span><span class="n">router</span><span class="o">.</span><span class="n">urls</span><span class="p">)),</span></pre></div>
+      <div class="highlight"><pre>    <span class="n">path</span><span class="p">(</span><span class="s2">"admin/users/"</span><span class="p">,</span> <span class="n">UserListView</span><span class="o">.</span><span class="n">as_view</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s2">"user_management_list"</span><span class="p">),</span>
+    <span class="n">path</span><span class="p">(</span>
+        <span class="s2">"admin/groups/&lt;int:pk&gt;/"</span><span class="p">,</span>
+        <span class="n">GroupProfileUpdateView</span><span class="o">.</span><span class="n">as_view</span><span class="p">(),</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">"group_profile_edit"</span><span class="p">,</span>
+    <span class="p">),</span>
+    <span class="n">path</span><span class="p">(</span><span class="s2">"admin/"</span><span class="p">,</span> <span class="n">admin</span><span class="o">.</span><span class="n">site</span><span class="o">.</span><span class="n">urls</span><span class="p">),</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -115,6 +128,18 @@
     <div class='docs'>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-2'>#</a>
+      </div>
+      <p>API</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">path</span><span class="p">(</span><span class="s2">"api/"</span><span class="p">,</span> <span class="n">include</span><span class="p">(</span><span class="n">router</span><span class="o">.</span><span class="n">urls</span><span class="p">)),</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-3'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-3'>#</a>
       </div>
       <p>API Schema &amp; Docs</p>
     </div>
@@ -133,10 +158,10 @@
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-3'>
+  <div class='section' id='section-4'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-3'>#</a>
+        <a class='octothorpe' href='#section-4'>#</a>
       </div>
       <p>API Key Management</p>
     </div>
@@ -146,19 +171,12 @@
         <span class="s2">"account/api-keys/revoke/&lt;int:pk&gt;/"</span><span class="p">,</span>
         <span class="n">RevokeApiKeyView</span><span class="o">.</span><span class="n">as_view</span><span class="p">(),</span>
         <span class="n">name</span><span class="o">=</span><span class="s2">"api_key_revoke"</span><span class="p">,</span>
+    <span class="p">),</span>
+    <span class="n">path</span><span class="p">(</span>
+        <span class="s2">"account/api-keys/rotate/&lt;int:pk&gt;/"</span><span class="p">,</span>
+        <span class="n">RotateApiKeyView</span><span class="o">.</span><span class="n">as_view</span><span class="p">(),</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">"api_key_rotate"</span><span class="p">,</span>
     <span class="p">),</span></pre></div>
-    </div>
-  </div>
-  <div class='clearall'></div>
-  <div class='section' id='section-4'>
-    <div class='docs'>
-      <div class='octowrap'>
-        <a class='octothorpe' href='#section-4'>#</a>
-      </div>
-      <p>Allauth URLs</p>
-    </div>
-    <div class='code'>
-      <div class="highlight"><pre>    <span class="n">path</span><span class="p">(</span><span class="s2">"accounts/"</span><span class="p">,</span> <span class="n">include</span><span class="p">(</span><span class="s2">"allauth.urls"</span><span class="p">)),</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -167,11 +185,36 @@
       <div class='octowrap'>
         <a class='octothorpe' href='#section-5'>#</a>
       </div>
+      <p>Profile</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">path</span><span class="p">(</span><span class="s2">"account/profile/"</span><span class="p">,</span> <span class="n">ProfileView</span><span class="o">.</span><span class="n">as_view</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s2">"profile"</span><span class="p">),</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-6'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-6'>#</a>
+      </div>
+      <p>Allauth URLs</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">path</span><span class="p">(</span><span class="s2">"accounts/"</span><span class="p">,</span> <span class="n">include</span><span class="p">(</span><span class="s2">"allauth.urls"</span><span class="p">)),</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-7'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-7'>#</a>
+      </div>
       <p>Dashboard &amp; Search</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre>    <span class="n">path</span><span class="p">(</span><span class="s2">""</span><span class="p">,</span> <span class="n">DashboardView</span><span class="o">.</span><span class="n">as_view</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s2">"dashboard"</span><span class="p">),</span>
     <span class="n">path</span><span class="p">(</span><span class="s2">"search/"</span><span class="p">,</span> <span class="n">SearchView</span><span class="o">.</span><span class="n">as_view</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s2">"search"</span><span class="p">),</span>
+    <span class="n">path</span><span class="p">(</span><span class="s2">"patch-schedule/"</span><span class="p">,</span> <span class="n">PatchScheduleView</span><span class="o">.</span><span class="n">as_view</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s2">"patch_schedule"</span><span class="p">),</span>
     <span class="n">path</span><span class="p">(</span>
         <span class="s2">"starter-pack/import/"</span><span class="p">,</span>
         <span class="n">ImportStarterPackView</span><span class="o">.</span><span class="n">as_view</span><span class="p">(),</span>
@@ -186,10 +229,10 @@
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-6'>
+  <div class='section' id='section-8'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-6'>#</a>
+        <a class='octothorpe' href='#section-8'>#</a>
       </div>
       <p>Legal Pages</p>
     </div>
@@ -201,32 +244,28 @@
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-7'>
+  <div class='section' id='section-9'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-7'>#</a>
+        <a class='octothorpe' href='#section-9'>#</a>
       </div>
-      <p>User Management (Staff)</p>
+      <p>Audit Log</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="n">path</span><span class="p">(</span><span class="s2">"admin/users/"</span><span class="p">,</span> <span class="n">UserListView</span><span class="o">.</span><span class="n">as_view</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s2">"user_management_list"</span><span class="p">),</span>
-    <span class="n">path</span><span class="p">(</span>
-        <span class="s2">"admin/groups/&lt;int:pk&gt;/"</span><span class="p">,</span>
-        <span class="n">GroupProfileUpdateView</span><span class="o">.</span><span class="n">as_view</span><span class="p">(),</span>
-        <span class="n">name</span><span class="o">=</span><span class="s2">"group_profile_edit"</span><span class="p">,</span>
-    <span class="p">),</span></pre></div>
+      <div class="highlight"><pre>    <span class="n">path</span><span class="p">(</span><span class="s2">"audit/"</span><span class="p">,</span> <span class="n">AuditLogView</span><span class="o">.</span><span class="n">as_view</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s2">"audit_log"</span><span class="p">),</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-8'>
+  <div class='section' id='section-10'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-8'>#</a>
+        <a class='octothorpe' href='#section-10'>#</a>
       </div>
       <p>Group Management (Owner)</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre>    <span class="n">path</span><span class="p">(</span><span class="s2">"group/members/"</span><span class="p">,</span> <span class="n">GroupMemberListView</span><span class="o">.</span><span class="n">as_view</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s2">"group_member_list"</span><span class="p">),</span>
+    <span class="n">path</span><span class="p">(</span><span class="s2">"group/onboarding/"</span><span class="p">,</span> <span class="n">GroupOnboardingView</span><span class="o">.</span><span class="n">as_view</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s2">"group_onboarding"</span><span class="p">),</span>
     <span class="n">path</span><span class="p">(</span><span class="s2">"group/create/"</span><span class="p">,</span> <span class="n">GroupCreateView</span><span class="o">.</span><span class="n">as_view</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s2">"group_create"</span><span class="p">),</span>
     <span class="n">path</span><span class="p">(</span>
         <span class="s2">"group/members/add/&lt;int:group_id&gt;/"</span><span class="p">,</span>
@@ -266,10 +305,10 @@
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-9'>
+  <div class='section' id='section-11'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-9'>#</a>
+        <a class='octothorpe' href='#section-11'>#</a>
       </div>
       <p>Project Apps</p>
     </div>

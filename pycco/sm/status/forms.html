@@ -21,7 +21,7 @@
     </div>
     <div class='code'>
       <div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">Model</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">sm.forms</span><span class="w"> </span><span class="kn">import</span> <span class="n">SMForm</span><span class="p">,</span> <span class="n">SMFormDisabled</span></pre></div>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sm.forms</span><span class="w"> </span><span class="kn">import</span> <span class="n">SMForm</span><span class="p">,</span> <span class="n">SMFormDisabled</span><span class="p">,</span> <span class="n">UniquePerGroupMixin</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -33,7 +33,7 @@
       
     </div>
     <div class='code'>
-      <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">Form</span><span class="p">(</span><span class="n">SMForm</span><span class="p">):</span></pre></div>
+      <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">Form</span><span class="p">(</span><span class="n">UniquePerGroupMixin</span><span class="p">,</span> <span class="n">SMForm</span><span class="p">):</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>

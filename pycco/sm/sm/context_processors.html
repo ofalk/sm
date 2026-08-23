@@ -20,7 +20,8 @@
       
     </div>
     <div class='code'>
-      <div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">django.conf</span><span class="w"> </span><span class="kn">import</span> <span class="n">settings</span></pre></div>
+      <div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">django.conf</span><span class="w"> </span><span class="kn">import</span> <span class="n">settings</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.views_onboarding</span><span class="w"> </span><span class="kn">import</span> <span class="n">user_has_real_groups</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -47,6 +48,11 @@
         <span class="s2">"ANALYTICS_ID"</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">settings</span><span class="p">,</span> <span class="s2">"ANALYTICS_ID"</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
         <span class="s2">"ANALYTICS_BASE_URL"</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span>
             <span class="n">settings</span><span class="p">,</span> <span class="s2">"ANALYTICS_BASE_URL"</span><span class="p">,</span> <span class="s2">"https://api.swetrix.com"</span>
+        <span class="p">),</span>
+        <span class="s2">"ONBOARDING_NEEDED"</span><span class="p">:</span> <span class="p">(</span>
+            <span class="nb">getattr</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">"user"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="ow">and</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">,</span> <span class="s2">"is_authenticated"</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+            <span class="ow">and</span> <span class="ow">not</span> <span class="n">user_has_real_groups</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
         <span class="p">),</span>
     <span class="p">}</span>
 

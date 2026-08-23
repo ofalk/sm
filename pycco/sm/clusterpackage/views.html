@@ -23,7 +23,8 @@
       <div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">django.contrib.auth.mixins</span><span class="w"> </span><span class="kn">import</span> <span class="n">LoginRequiredMixin</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">django.contrib</span><span class="w"> </span><span class="kn">import</span> <span class="n">messages</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">django.http</span><span class="w"> </span><span class="kn">import</span> <span class="n">HttpResponseRedirect</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">sm.views</span><span class="w"> </span><span class="kn">import</span> <span class="n">SafeDeleteMixin</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sm.views</span><span class="w"> </span><span class="kn">import</span> <span class="n">SafeDeleteMixin</span><span class="p">,</span> <span class="n">GenericCSVExportView</span><span class="p">,</span> <span class="n">GenericBulkDeleteView</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sm.mixins</span><span class="w"> </span><span class="kn">import</span> <span class="n">MultiTenantMixin</span><span class="p">,</span> <span class="n">BulkActionMixin</span>
 
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">Model</span>
@@ -53,7 +54,7 @@
       
     </div>
     <div class='code'>
-      <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">ListView</span><span class="p">(</span><span class="n">LoginRequiredMixin</span><span class="p">,</span> <span class="n">GenericListView</span><span class="p">):</span>
+      <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">ListView</span><span class="p">(</span><span class="n">LoginRequiredMixin</span><span class="p">,</span> <span class="n">BulkActionMixin</span><span class="p">,</span> <span class="n">GenericListView</span><span class="p">):</span>
     <span class="n">template_name</span> <span class="o">=</span> <span class="s2">"</span><span class="si">%s</span><span class="s2">/list.html"</span> <span class="o">%</span> <span class="n">app_label</span>
     <span class="n">model</span> <span class="o">=</span> <span class="n">Model</span>
     <span class="n">paginate_by</span> <span class="o">=</span> <span class="mi">20</span>
@@ -272,7 +273,42 @@ their cluster&rsquo;s tenant group.</p>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_superuser</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">queryset</span>
         <span class="n">user_groups</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">groups</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
-        <span class="k">return</span> <span class="n">queryset</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">cluster__group__in</span><span class="o">=</span><span class="n">user_groups</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">queryset</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">cluster__group__in</span><span class="o">=</span><span class="n">user_groups</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-15'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-15'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">BulkDeleteView</span><span class="p">(</span><span class="n">GenericBulkDeleteView</span><span class="p">):</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">Model</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-16'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-16'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">CSVExportView</span><span class="p">(</span><span class="n">GenericCSVExportView</span><span class="p">):</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">Model</span>
+    <span class="n">filename</span> <span class="o">=</span> <span class="s2">"clusterpackage.csv"</span>
+    <span class="n">export_fields</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">(</span><span class="s2">"name"</span><span class="p">,</span> <span class="s2">"name"</span><span class="p">),</span>
+        <span class="p">(</span><span class="s2">"cluster"</span><span class="p">,</span> <span class="s2">"cluster__name"</span><span class="p">),</span>
+        <span class="p">(</span><span class="s2">"status"</span><span class="p">,</span> <span class="s2">"status__name"</span><span class="p">),</span>
+        <span class="p">(</span><span class="s2">"package_type"</span><span class="p">,</span> <span class="s2">"package_type__name"</span><span class="p">),</span>
+        <span class="p">(</span><span class="s2">"host"</span><span class="p">,</span> <span class="s2">"host"</span><span class="p">),</span>
+        <span class="p">(</span><span class="s2">"description"</span><span class="p">,</span> <span class="s2">"description"</span><span class="p">),</span>
+    <span class="p">]</span>
 
 </pre></div>
     </div>

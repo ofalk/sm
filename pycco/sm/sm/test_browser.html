@@ -648,7 +648,23 @@ Creates a vendor via the UI and returns the list page.</p>
       <p>Explicit wait for any late-firing JS</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>                        <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">1.0</span><span class="p">)</span>
+      <div class="highlight"><pre>                        <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">1.0</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-31'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-31'>#</a>
+      </div>
+      <p>Retry once on a transient 5xx (e.g. a momentary DB
+lock on the shared live-server connection).</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>                        <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="s2">"HTTP 5"</span> <span class="ow">in</span> <span class="n">e</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">errors</span><span class="p">):</span>
+                            <span class="n">errors</span> <span class="o">=</span> <span class="p">[]</span>
+                            <span class="k">await</span> <span class="n">new_page</span><span class="o">.</span><span class="n">reload</span><span class="p">(</span><span class="n">wait_until</span><span class="o">=</span><span class="s2">"networkidle"</span><span class="p">)</span>
+                            <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">1.0</span><span class="p">)</span>
 
                         <span class="k">if</span> <span class="n">errors</span><span class="p">:</span>
                             <span class="k">return</span> <span class="p">(</span><span class="sa">f</span><span class="s2">"[</span><span class="si">{</span><span class="n">browser_name</span><span class="si">}</span><span class="s2">] </span><span class="si">{</span><span class="n">url</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="n">errors</span><span class="p">)</span>
@@ -663,15 +679,19 @@ Creates a vendor via the UI and returns the list page.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-31'>
+  <div class='section' id='section-32'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-31'>#</a>
+        <a class='octothorpe' href='#section-32'>#</a>
       </div>
-      <p>Run up to 5 concurrent checks</p>
+      <p>Load pages with a small concurrency limit. The live server
+runs in a shared thread, and hammering it with too many
+concurrent loads (across two browsers) can cause transient
+500s under contention. Capping concurrency keeps the sweep
+reliable without serialising everything.</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>                <span class="n">semaphore</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">Semaphore</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+      <div class="highlight"><pre>                <span class="n">semaphore</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">Semaphore</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
 
                 <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">sem_check</span><span class="p">(</span><span class="n">url</span><span class="p">):</span>
                     <span class="k">async</span> <span class="k">with</span> <span class="n">semaphore</span><span class="p">:</span>

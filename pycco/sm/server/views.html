@@ -23,16 +23,17 @@
       <div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">django.contrib.auth.mixins</span><span class="w"> </span><span class="kn">import</span> <span class="n">LoginRequiredMixin</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">django.contrib</span><span class="w"> </span><span class="kn">import</span> <span class="n">messages</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">sm.views</span><span class="w"> </span><span class="kn">import</span> <span class="n">SafeDeleteMixin</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">sm.mixins</span><span class="w"> </span><span class="kn">import</span> <span class="n">filter_queryset_by_tenant</span><span class="p">,</span> <span class="n">MultiTenantMixin</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sm.views</span><span class="w"> </span><span class="kn">import</span> <span class="n">SafeDeleteMixin</span><span class="p">,</span> <span class="n">GenericCSVExportView</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sm.mixins</span><span class="w"> </span><span class="kn">import</span> <span class="n">filter_queryset_by_tenant</span><span class="p">,</span> <span class="n">MultiTenantMixin</span><span class="p">,</span> <span class="n">BulkActionMixin</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">Model</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.forms</span><span class="w"> </span><span class="kn">import</span> <span class="n">Form</span><span class="p">,</span> <span class="n">FormDisabled</span><span class="p">,</span> <span class="n">BulkActionForm</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.</span><span class="w"> </span><span class="kn">import</span> <span class="n">app_label</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">django.views</span><span class="w"> </span><span class="kn">import</span> <span class="n">View</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">django.shortcuts</span><span class="w"> </span><span class="kn">import</span> <span class="n">redirect</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.shortcuts</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_object_or_404</span><span class="p">,</span> <span class="n">redirect</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">django.db</span><span class="w"> </span><span class="kn">import</span> <span class="n">transaction</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">timezone</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">django.views.generic</span><span class="w"> </span><span class="kn">import</span> <span class="n">ListView</span> <span class="k">as</span> <span class="n">GenericListView</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">django.views.generic.edit</span><span class="w"> </span><span class="kn">import</span> <span class="n">UpdateView</span> <span class="k">as</span> <span class="n">GenericUpdateView</span>
@@ -55,7 +56,7 @@
       
     </div>
     <div class='code'>
-      <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">ListView</span><span class="p">(</span><span class="n">LoginRequiredMixin</span><span class="p">,</span> <span class="n">MultiTenantMixin</span><span class="p">,</span> <span class="n">GenericListView</span><span class="p">):</span>
+      <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">ListView</span><span class="p">(</span><span class="n">LoginRequiredMixin</span><span class="p">,</span> <span class="n">MultiTenantMixin</span><span class="p">,</span> <span class="n">BulkActionMixin</span><span class="p">,</span> <span class="n">GenericListView</span><span class="p">):</span>
     <span class="n">template_name</span> <span class="o">=</span> <span class="s2">"</span><span class="si">%s</span><span class="s2">/list.html"</span> <span class="o">%</span> <span class="n">app_label</span>
     <span class="n">model</span> <span class="o">=</span> <span class="n">Model</span>
     <span class="n">paginate_by</span> <span class="o">=</span> <span class="mi">20</span>
@@ -139,7 +140,7 @@
     </div>
     <div class='code'>
       <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">post</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="n">server_ids</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">getlist</span><span class="p">(</span><span class="s2">"selected_servers"</span><span class="p">)</span>
+        <span class="n">server_ids</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">getlist</span><span class="p">(</span><span class="s2">"selected_ids"</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">server_ids</span><span class="p">:</span>
             <span class="n">messages</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">"No servers selected."</span><span class="p">))</span>
             <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">"server:index"</span><span class="p">)</span>
@@ -196,6 +197,23 @@ group&rsquo;s servers.</p>
                     <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">"server:index"</span><span class="p">)</span>
                 <span class="n">servers</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
                 <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">"Successfully deleted </span><span class="si">%d</span><span class="s2"> servers."</span><span class="p">)</span> <span class="o">%</span> <span class="n">count</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s2">"decommission"</span><span class="p">]:</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">has_perm</span><span class="p">(</span><span class="s2">"server.change_model"</span><span class="p">):</span>
+                    <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                        <span class="n">request</span><span class="p">,</span>
+                        <span class="n">_</span><span class="p">(</span><span class="s2">"You don't have permission to change servers."</span><span class="p">),</span>
+                    <span class="p">)</span>
+                    <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">"server:index"</span><span class="p">)</span>
+                <span class="n">decommissioned</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="k">for</span> <span class="n">server</span> <span class="ow">in</span> <span class="n">servers</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">server</span><span class="o">.</span><span class="n">decommission_date</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                        <span class="n">server</span><span class="o">.</span><span class="n">decommission_date</span> <span class="o">=</span> <span class="n">timezone</span><span class="o">.</span><span class="n">localdate</span><span class="p">()</span>
+                        <span class="n">server</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+                        <span class="n">decommissioned</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span>
+                    <span class="n">request</span><span class="p">,</span>
+                    <span class="n">_</span><span class="p">(</span><span class="s2">"Successfully decommissioned </span><span class="si">%d</span><span class="s2"> servers."</span><span class="p">)</span> <span class="o">%</span> <span class="n">decommissioned</span><span class="p">,</span>
+                <span class="p">)</span>
             <span class="k">elif</span> <span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s2">"status"</span><span class="p">]:</span></pre></div>
     </div>
   </div>
@@ -236,6 +254,100 @@ group&rsquo;s servers.</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-11'>#</a>
       </div>
+      <p>Marks a single server as decommissioned (sets the decommission date).</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">DecommissionView</span><span class="p">(</span><span class="n">LoginRequiredMixin</span><span class="p">,</span> <span class="n">MultiTenantMixin</span><span class="p">,</span> <span class="n">View</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-12'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-12'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-13'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-13'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">post</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">server</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">Model</span><span class="p">,</span> <span class="n">pk</span><span class="o">=</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"pk"</span><span class="p">))</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">has_perm</span><span class="p">(</span><span class="s2">"server.change_model"</span><span class="p">):</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">"You don't have permission to change servers."</span><span class="p">))</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">"server:index"</span><span class="p">)</span>
+        <span class="n">server</span><span class="o">.</span><span class="n">decommission_date</span> <span class="o">=</span> <span class="n">timezone</span><span class="o">.</span><span class="n">localdate</span><span class="p">()</span>
+        <span class="n">server</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span>
+            <span class="n">request</span><span class="p">,</span>
+            <span class="n">_</span><span class="p">(</span><span class="s2">"</span><span class="si">%(hostname)s</span><span class="s2"> has been decommissioned."</span><span class="p">)</span> <span class="o">%</span> <span class="p">{</span><span class="s2">"hostname"</span><span class="p">:</span> <span class="n">server</span><span class="o">.</span><span class="n">hostname</span><span class="p">},</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">"server:index"</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-14'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-14'>#</a>
+      </div>
+      <p>Clears the decommission date, bringing a server back into use.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">RestoreView</span><span class="p">(</span><span class="n">LoginRequiredMixin</span><span class="p">,</span> <span class="n">MultiTenantMixin</span><span class="p">,</span> <span class="n">View</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-15'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-15'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-16'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-16'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">post</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">server</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">Model</span><span class="p">,</span> <span class="n">pk</span><span class="o">=</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"pk"</span><span class="p">))</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">has_perm</span><span class="p">(</span><span class="s2">"server.change_model"</span><span class="p">):</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">"You don't have permission to change servers."</span><span class="p">))</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">"server:index"</span><span class="p">)</span>
+        <span class="n">server</span><span class="o">.</span><span class="n">decommission_date</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">server</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span>
+            <span class="n">request</span><span class="p">,</span>
+            <span class="n">_</span><span class="p">(</span><span class="s2">"</span><span class="si">%(hostname)s</span><span class="s2"> has been restored."</span><span class="p">)</span> <span class="o">%</span> <span class="p">{</span><span class="s2">"hostname"</span><span class="p">:</span> <span class="n">server</span><span class="o">.</span><span class="n">hostname</span><span class="p">},</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">"server:index"</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-17'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-17'>#</a>
+      </div>
       
     </div>
     <div class='code'>
@@ -246,10 +358,10 @@ group&rsquo;s servers.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-12'>
+  <div class='section' id='section-18'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-12'>#</a>
+        <a class='octothorpe' href='#section-18'>#</a>
       </div>
       
     </div>
@@ -269,10 +381,10 @@ group&rsquo;s servers.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-13'>
+  <div class='section' id='section-19'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-13'>#</a>
+        <a class='octothorpe' href='#section-19'>#</a>
       </div>
       
     </div>
@@ -292,10 +404,10 @@ group&rsquo;s servers.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-14'>
+  <div class='section' id='section-20'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-14'>#</a>
+        <a class='octothorpe' href='#section-20'>#</a>
       </div>
       
     </div>
@@ -313,10 +425,10 @@ group&rsquo;s servers.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-15'>
+  <div class='section' id='section-21'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-15'>#</a>
+        <a class='octothorpe' href='#section-21'>#</a>
       </div>
       
     </div>
@@ -326,7 +438,34 @@ group&rsquo;s servers.</p>
     <span class="n">model</span> <span class="o">=</span> <span class="n">Model</span>
     <span class="n">paginate_by</span> <span class="o">=</span> <span class="mi">20</span>
     <span class="n">paginate_orphans</span> <span class="o">=</span> <span class="n">paginate_by</span> <span class="o">/</span> <span class="mi">4</span>
-    <span class="n">ordering</span> <span class="o">=</span> <span class="s2">"hostname"</span>
+    <span class="n">ordering</span> <span class="o">=</span> <span class="s2">"hostname"</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-22'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-22'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">CSVExportView</span><span class="p">(</span><span class="n">GenericCSVExportView</span><span class="p">):</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">Model</span>
+    <span class="n">filename</span> <span class="o">=</span> <span class="s2">"server.csv"</span>
+    <span class="n">export_fields</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">(</span><span class="s2">"hostname"</span><span class="p">,</span> <span class="s2">"hostname"</span><span class="p">),</span>
+        <span class="p">(</span><span class="s2">"status"</span><span class="p">,</span> <span class="s2">"status__name"</span><span class="p">),</span>
+        <span class="p">(</span><span class="s2">"domain"</span><span class="p">,</span> <span class="s2">"domain__name"</span><span class="p">),</span>
+        <span class="p">(</span><span class="s2">"location"</span><span class="p">,</span> <span class="s2">"location__name"</span><span class="p">),</span>
+        <span class="p">(</span><span class="s2">"application"</span><span class="p">,</span> <span class="s2">"application"</span><span class="p">),</span>
+        <span class="p">(</span><span class="s2">"rack"</span><span class="p">,</span> <span class="s2">"rack"</span><span class="p">),</span>
+        <span class="p">(</span><span class="s2">"primary_ip"</span><span class="p">,</span> <span class="s2">"primary_ip"</span><span class="p">),</span>
+        <span class="p">(</span><span class="s2">"management_ip"</span><span class="p">,</span> <span class="s2">"management_ip"</span><span class="p">),</span>
+        <span class="p">(</span><span class="s2">"description"</span><span class="p">,</span> <span class="s2">"description"</span><span class="p">),</span>
+        <span class="p">(</span><span class="s2">"decommission_date"</span><span class="p">,</span> <span class="s2">"decommission_date"</span><span class="p">),</span>
+        <span class="p">(</span><span class="s2">"tags"</span><span class="p">,</span> <span class="s2">"tags.names"</span><span class="p">),</span>
+    <span class="p">]</span>
 
 </pre></div>
     </div>
