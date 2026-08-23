@@ -157,20 +157,27 @@ class ApiIsolationTest(TestCase):
         client.force_authenticate(user=user)
         return client
 
+    def _get_hostnames(self, response):
+        data = response.json()
+        items = (
+            data["results"] if isinstance(data, dict) and "results" in data else data
+        )
+        return {item["hostname"] for item in items}
+
     def test_api_user_cannot_tamper_with_selected_groups(self):
         session = self.client.session
         session["selected_groups"] = [str(self.group_b.id)]  # user_a not in group_b
         session.save()
 
         response = self.api_as(self.user_a).get("/api/servers/")
-        names = {item["hostname"] for item in response.json()}
+        names = self._get_hostnames(response)
         self.assertEqual(response.status_code, 200)
         self.assertIn("alpha", names)
         self.assertNotIn("beta", names)
 
     def test_api_queries_only_own_group(self):
         response = self.api_as(self.user_a).get("/api/servers/")
-        names = {item["hostname"] for item in response.json()}
+        names = self._get_hostnames(response)
         self.assertIn("alpha", names)
         self.assertNotIn("beta", names)
 
@@ -180,7 +187,7 @@ class ApiIsolationTest(TestCase):
 
     def test_api_superuser_sees_all(self):
         response = self.api_as(self.superuser).get("/api/servers/")
-        names = {item["hostname"] for item in response.json()}
+        names = self._get_hostnames(response)
         self.assertIn("alpha", names)
         self.assertIn("beta", names)
 
@@ -188,7 +195,7 @@ class ApiIsolationTest(TestCase):
         response = APIClient().get(
             "/api/servers/", **self._auth_headers(self.key_b, self.secret_b)
         )
-        names = {item["hostname"] for item in response.json()}
+        names = self._get_hostnames(response)
         self.assertIn("beta", names)
         self.assertNotIn("alpha", names)
 

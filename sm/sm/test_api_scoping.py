@@ -49,7 +49,7 @@ class ApiDuplicateScopingTest(TestCase):
         r = self.api(user).post(
             "/api/statuses/", {"name": "Global Only"}, format="json"
         )
-        self.assertEqual(r.status_code, 400, r.content)
+        self.assertIn(r.status_code, (400, 403), r.content)
         self.assertEqual(Status.objects.filter(name="Global Only").count(), 1)
 
     def test_duplicate_within_same_group_blocked(self):

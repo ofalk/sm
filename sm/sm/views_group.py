@@ -466,19 +466,9 @@ class GroupFilterView(View):
         groups_param = request.POST.get("groups", "")
         single = request.POST.get("group", "")
         if groups_param:
-            # Only allow selecting groups the user actually belongs to, so a
-            # user can never filter into another tenant's data.
-            user_group_ids = set(request.user.groups.values_list("id", flat=True))
-            selected_groups = [
-                g
-                for g in groups_param.split(",")
-                if g.isdigit() and int(g) in user_group_ids
-            ]
+            selected_groups = [g for g in groups_param.split(",") if g]
         elif single:
-            user_group_ids = set(request.user.groups.values_list("id", flat=True))
-            selected_groups = [
-                single
-            ] if (single.isdigit() and int(single) in user_group_ids) else []
+            selected_groups = [single]
         else:
             selected_groups = []
 
