@@ -1,0 +1,12 @@
+[run]
+source = .
+omit =
+    */migrations/*
+    */test_*.py
+    manage.py
+
+[report]
+omit =
+    */migrations/*
+    */test_*.py
+    manage.py
