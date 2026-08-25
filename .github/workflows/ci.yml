@@ -49,7 +49,7 @@ jobs:
       run: |
         cd sm
         python manage.py collectstatic --noinput
-        coverage run manage.py test -v3 --exclude-tag=browser sm.test_audit sm.test_search sm.test_templates sm.test_wsgi sm.test_social sm.test_health sm.test_api cluster operatingsystem clusterpackage clusterpackagetype clustersoftware domain location patchtime server servermodel status vendor
+        coverage run manage.py test -v3 --exclude-tag=browser
         coverage report --fail-under=70
         coverage html
 
@@ -61,7 +61,7 @@ jobs:
         ALLOWED_HOSTS: "*"
       run: |
         cd sm
-        python manage.py test -v2 sm.test_browser
+        python manage.py test -v2 --tag=browser
 
     - name: Run Pycco
       run: |
