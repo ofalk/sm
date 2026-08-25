@@ -15,11 +15,27 @@ class SmTestRunner(DiscoverRunner):
 
         for alias in connections:
             connection = connections[alias]
-            if connection.vendor != "postgres":
+            # NOTE: the vendor string is "postgresql" (not "postgres").
+            if connection.vendor != "postgresql":
                 continue
             db_name = connection.settings_dict["NAME"]
-            # Connect to the maintenance database (not the test DB) and kill
-            # every other backend attached to the test database.
+            # Connect to the maintenance database (not the test DB).
+            with connection._nodb_cursor() as cursor:
+                cursor.execute(
+                    """
+                    SELECT pid, state, left(coalesce(query, ''), 80)
+                    FROM pg_stat_activity
+                    WHERE datname = %s AND pid <> pg_backend_pid()
+                    """,
+                    [db_name],
+                )
+                stragglers = cursor.fetchall()
+            if stragglers and verbosity >= 2:
+                for pid_, state, query in stragglers:
+                    print(
+                        f"[SmTestRunner] terminating stray session "
+                        f"{pid_} ({state}): {query}"
+                    )
             with connection._nodb_cursor() as cursor:
                 cursor.execute(
                     """
