@@ -1,16 +1,23 @@
 import os
 import asyncio
+import tempfile
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from django.contrib.auth import get_user_model
+from django.test import tag
 from playwright.async_api import async_playwright
 import random
 import string
 
 
+@tag("browser")
 class FullIntegrationTest(StaticLiveServerTestCase):
+    # Debug screenshots go to a temp directory so they never dirty the repo.
+    screenshot_dir = os.path.join(tempfile.gettempdir(), "sm-test-screens")
+
     @classmethod
     def setUpClass(cls):
         os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = "true"
+        os.makedirs(cls.screenshot_dir, exist_ok=True)
         from django.conf import settings
 
         settings.ACCOUNT_EMAIL_VERIFICATION = "none"
@@ -98,11 +105,15 @@ class FullIntegrationTest(StaticLiveServerTestCase):
             await page.goto(f"{self.live_server_url}/operatingsystem/create")
             await page.wait_for_load_state("networkidle")
             await asyncio.sleep(2)
-            await page.screenshot(path="os_form_ready.png")
+            await page.screenshot(
+                path=os.path.join(self.screenshot_dir, "os_form_ready.png")
+            )
 
             await page.fill('input[name="version"]', os_version)
             await page.select_option('select[name="vendor"]', label=vendor_name)
-            await page.screenshot(path="os_form_filled.png")
+            await page.screenshot(
+                path=os.path.join(self.screenshot_dir, "os_form_filled.png")
+            )
             async with page.expect_navigation():
                 await page.click('form.form button[type="submit"]')
 
@@ -111,7 +122,9 @@ class FullIntegrationTest(StaticLiveServerTestCase):
             try:
                 await page.click('button:has-text("Confirm Delete")')
             except Exception:
-                await page.screenshot(path="delete_confirm_fail.png")
+                await page.screenshot(
+                    path=os.path.join(self.screenshot_dir, "delete_confirm_fail.png")
+                )
                 print(f"Failed to find Confirm Delete on {page.url}")
                 print(f"PAGE CONTENT: {await page.content()}")
                 raise

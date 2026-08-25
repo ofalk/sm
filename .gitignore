@@ -10,3 +10,7 @@ sm/config_local.py
 sm/pycco/
 node_modules/
 .env
+
+# Browser test screenshot artifacts
+sm/os_form_*.png
+sm/delete_confirm_fail.png
