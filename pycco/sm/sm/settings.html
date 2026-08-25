@@ -51,6 +51,8 @@
     </div>
     <div class='code'>
       <div class="highlight"><pre><span class="n">DEBUG</span> <span class="o">=</span> <span class="n">config</span><span class="p">(</span><span class="s2">"DEBUG"</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">cast</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+
+<span class="n">TEST_RUNNER</span> <span class="o">=</span> <span class="s2">"sm.runner.SmTestRunner"</span>
 <span class="n">_cfg_secret</span> <span class="o">=</span> <span class="n">config</span><span class="p">(</span><span class="s2">"SECRET_KEY"</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">""</span><span class="p">)</span>
 <span class="k">if</span> <span class="ow">not</span> <span class="n">_cfg_secret</span><span class="p">:</span>
     <span class="k">if</span> <span class="n">DEBUG</span><span class="p">:</span>
@@ -355,7 +357,9 @@ busy timeout (set in sm/signals.py) further harden against locks.</p>
             <span class="s2">"ENGINE"</span><span class="p">:</span> <span class="s2">"django.db.backends.sqlite3"</span><span class="p">,</span>
             <span class="s2">"NAME"</span><span class="p">:</span> <span class="n">BASE_DIR</span> <span class="o">/</span> <span class="s2">"db.sqlite3"</span><span class="p">,</span>
         <span class="p">}</span>
-    <span class="p">}</span></pre></div>
+    <span class="p">}</span>
+
+<span class="k">if</span> <span class="s2">"test"</span> <span class="ow">in</span> <span class="n">argv</span><span class="p">:</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -363,6 +367,22 @@ busy timeout (set in sm/signals.py) further harden against locks.</p>
     <div class='docs'>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-14'>#</a>
+      </div>
+      <p>Persistent connections (CONN_MAX_AGE) make each live-server request
+thread keep an idle PostgreSQL session open, which then prevents
+dropping the test database (&ldquo;database is being accessed by other
+users&rdquo;). Force connection-per-request while testing.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">for</span> <span class="n">db_config</span> <span class="ow">in</span> <span class="n">DATABASES</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+        <span class="n">db_config</span><span class="p">[</span><span class="s2">"CONN_MAX_AGE"</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-15'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-15'>#</a>
       </div>
       <p>Password validation
 https://docs.djangoproject.com/en/stable/ref/settings/#auth-password-validators</p>
@@ -382,10 +402,10 @@ https://docs.djangoproject.com/en/stable/ref/settings/#auth-password-validators<
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-15'>
+  <div class='section' id='section-16'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-15'>#</a>
+        <a class='octothorpe' href='#section-16'>#</a>
       </div>
       <p>Internationalization
 https://docs.djangoproject.com/en/stable/topics/i18n/</p>
@@ -398,10 +418,10 @@ https://docs.djangoproject.com/en/stable/topics/i18n/</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-16'>
+  <div class='section' id='section-17'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-16'>#</a>
+        <a class='octothorpe' href='#section-17'>#</a>
       </div>
       <p>Path where application-level translations live (po/mo files).</p>
     </div>
@@ -412,10 +432,10 @@ https://docs.djangoproject.com/en/stable/topics/i18n/</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-17'>
+  <div class='section' id='section-18'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-17'>#</a>
+        <a class='octothorpe' href='#section-18'>#</a>
       </div>
       <p>Static files (CSS, JavaScript, Images)
 https://docs.djangoproject.com/en/stable/howto/static-files/</p>
@@ -438,10 +458,10 @@ https://docs.djangoproject.com/en/stable/howto/static-files/</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-18'>
+  <div class='section' id='section-19'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-18'>#</a>
+        <a class='octothorpe' href='#section-19'>#</a>
       </div>
       <p>Default primary key field type
 https://docs.djangoproject.com/en/stable/ref/settings/#default-auto-field</p>
@@ -451,10 +471,10 @@ https://docs.djangoproject.com/en/stable/ref/settings/#default-auto-field</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-19'>
+  <div class='section' id='section-20'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-19'>#</a>
+        <a class='octothorpe' href='#section-20'>#</a>
       </div>
       <p>Extra settings</p>
     </div>
@@ -465,10 +485,10 @@ https://docs.djangoproject.com/en/stable/ref/settings/#default-auto-field</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-20'>
+  <div class='section' id='section-21'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-20'>#</a>
+        <a class='octothorpe' href='#section-21'>#</a>
       </div>
       <p>Needed to login by username in Django admin, regardless of <code>allauth</code></p>
     </div>
@@ -477,10 +497,10 @@ https://docs.djangoproject.com/en/stable/ref/settings/#default-auto-field</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-21'>
+  <div class='section' id='section-22'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-21'>#</a>
+        <a class='octothorpe' href='#section-22'>#</a>
       </div>
       <p><code>allauth</code> specific authentication methods, such as login by e-mail</p>
     </div>
@@ -490,10 +510,10 @@ https://docs.djangoproject.com/en/stable/ref/settings/#default-auto-field</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-22'>
+  <div class='section' id='section-23'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-22'>#</a>
+        <a class='octothorpe' href='#section-23'>#</a>
       </div>
       <p>Allauth settings</p>
     </div>
@@ -509,10 +529,10 @@ https://docs.djangoproject.com/en/stable/ref/settings/#default-auto-field</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-23'>
+  <div class='section' id='section-24'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-23'>#</a>
+        <a class='octothorpe' href='#section-24'>#</a>
       </div>
       <p>Social Auth (Legacy/Transition)</p>
     </div>
@@ -522,10 +542,10 @@ https://docs.djangoproject.com/en/stable/ref/settings/#default-auto-field</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-24'>
+  <div class='section' id='section-25'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-24'>#</a>
+        <a class='octothorpe' href='#section-25'>#</a>
       </div>
       <p>Disable MFA features that might cause issues if allauth.mfa is not fully configured</p>
     </div>
@@ -541,10 +561,10 @@ https://docs.djangoproject.com/en/stable/ref/settings/#default-auto-field</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-25'>
+  <div class='section' id='section-26'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-25'>#</a>
+        <a class='octothorpe' href='#section-26'>#</a>
       </div>
       <p>Google Auth</p>
     </div>
@@ -567,10 +587,10 @@ https://docs.djangoproject.com/en/stable/ref/settings/#default-auto-field</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-26'>
+  <div class='section' id='section-27'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-26'>#</a>
+        <a class='octothorpe' href='#section-27'>#</a>
       </div>
       <p>Generic OIDC</p>
     </div>
@@ -605,10 +625,10 @@ https://docs.djangoproject.com/en/stable/ref/settings/#default-auto-field</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-27'>
+  <div class='section' id='section-28'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-27'>#</a>
+        <a class='octothorpe' href='#section-28'>#</a>
       </div>
       <p>REST Framework Settings</p>
     </div>
@@ -644,10 +664,10 @@ https://docs.djangoproject.com/en/stable/ref/settings/#default-auto-field</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-28'>
+  <div class='section' id='section-29'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-28'>#</a>
+        <a class='octothorpe' href='#section-29'>#</a>
       </div>
       <p>Bootstrap 5 settings</p>
     </div>
@@ -663,10 +683,10 @@ https://docs.djangoproject.com/en/stable/ref/settings/#default-auto-field</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-29'>
+  <div class='section' id='section-30'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-29'>#</a>
+        <a class='octothorpe' href='#section-30'>#</a>
       </div>
       <p>Security hardening (only applied when not in DEBUG so local HTTP dev works).
 Skipped while running the test suite, which always runs with DEBUG=False and
@@ -689,10 +709,10 @@ uses plain-HTTP requests that SECURE_SSL_REDIRECT would redirect away.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-30'>
+  <div class='section' id='section-31'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-30'>#</a>
+        <a class='octothorpe' href='#section-31'>#</a>
       </div>
       <p>Redefine to ensure no social_core backends survive in quick test mode</p>
     </div>
