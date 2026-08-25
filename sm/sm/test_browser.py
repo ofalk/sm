@@ -256,15 +256,18 @@ class BrowserIntegrationTest(StaticLiveServerTestCase):
                 if apps.is_installed("allauth.socialaccount"):
                     from allauth.socialaccount.models import SocialApp
 
-                    site = await asyncio.to_thread(Site.objects.get_current)
+                    # Sync ORM access is safe here (setUpClass enables
+                    # DJANGO_ALLOW_ASYNC_UNSAFE). Do NOT use asyncio.to_thread:
+                    # its worker threads keep test-database connections open,
+                    # which prevents dropping the Postgres test database.
+                    site = Site.objects.get_current()
                     for p_id in ["facebook", "google"]:
-                        app, _ = await asyncio.to_thread(
-                            SocialApp.objects.get_or_create,
+                        app, _ = SocialApp.objects.get_or_create(
                             provider=p_id,
                             name=p_id.title(),
                             defaults={"client_id": "123", "secret": "abc"},
                         )
-                        await asyncio.to_thread(app.sites.add, site)
+                        app.sites.add(site)
 
                 if not is_anonymous:
                     # Login
