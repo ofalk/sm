@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Q
 from django.urls import reverse
 from simple_history.models import HistoricalRecords
 from vendor.models import Model as VendorModel
@@ -68,5 +69,13 @@ class Model(models.Model):
             models.UniqueConstraint(
                 fields=["vendor", "name", "version", "group"],
                 name="unique_sm_clustersoftware_vendor_name_version_group",
+            ),
+            # PostgreSQL treats NULLs as distinct, so the constraint above
+            # cannot deduplicate global (group=NULL) rows. Keep reference data
+            # globally unique with a partial constraint.
+            models.UniqueConstraint(
+                fields=["vendor", "name", "version"],
+                condition=Q(group__isnull=True),
+                name="unique_sm_clustersoftware_global_vendor_name_version",
             ),
         ]

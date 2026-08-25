@@ -1,4 +1,6 @@
 from django.test import TransactionTestCase as TestCase
+from django.db import IntegrityError, transaction
+from django.contrib.auth.models import Group
 from django.urls import reverse
 
 from .models import Model
@@ -65,3 +67,42 @@ class Tester(TestCase):
             "%s" % (reverse("%s:detail" % app_label, kwargs={"pk": self.testitem.pk})),
             "absolute url not built correctly",
         )
+
+
+class GlobalUniquenessTest(TestCase):
+    """
+    Global (group=None) reference rows must stay globally unique: PostgreSQL
+    treats NULLs as distinct, so the group-inclusive constraint alone would
+    allow duplicate global rows (which also break natural-key lookups).
+    """
+
+    model = Model
+    fixtures = [
+        "%s/fixtures/01_initial.yaml" % "vendor",
+        "%s/fixtures/01_initial.yaml" % app_label,
+    ]
+
+    def setUp(self):
+        self.vendor = VendorModel.objects.all().first()
+        self.group_a = Group.objects.create(name="gA-%s" % random_string())
+        self.group_b = Group.objects.create(name="gB-%s" % random_string())
+
+    def _make(self, name, version, group):
+        return self.model.objects.create(
+            name=name, version=version, vendor=self.vendor, group=group
+        )
+
+    def test_duplicate_global_row_rejected(self):
+        name = "global-%s" % random_string()
+        version = "v%s" % random_number()
+        self._make(name, version, None)
+        with transaction.atomic():
+            with self.assertRaises(IntegrityError):
+                self._make(name, version, None)
+
+    def test_same_identity_allowed_across_groups(self):
+        name = "tenant-%s" % random_string()
+        version = "v%s" % random_number()
+        a = self._make(name, version, self.group_a)
+        b = self._make(name, version, self.group_b)
+        self.assertNotEqual(a.pk, b.pk)
