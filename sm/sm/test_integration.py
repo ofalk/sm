@@ -56,6 +56,10 @@ class FullIntegrationTest(StaticLiveServerTestCase):
         return "".join(random.choices(string.ascii_lowercase + string.digits, k=length))
 
     async def _async_test_crud(self):
+        # Sync ORM access is safe here (setUpClass enables
+        # DJANGO_ALLOW_ASYNC_UNSAFE). Do NOT wrap ORM calls in
+        # asyncio.to_thread: its worker threads keep test-database
+        # connections open, which prevents dropping the Postgres test DB.
         async with async_playwright() as p:
             browser = await p.chromium.launch(headless=True)
             context = await browser.new_context()
@@ -89,7 +93,7 @@ class FullIntegrationTest(StaticLiveServerTestCase):
 
             from vendor.models import Model as Vendor
 
-            vendor1 = await asyncio.to_thread(Vendor.objects.get, name=vendor_name)
+            vendor1 = Vendor.objects.get(name=vendor_name)
 
             # 2. Create a second Vendor
             vendor_name2 = f"Vendor-Safe-{self.random_string()}"
@@ -98,7 +102,7 @@ class FullIntegrationTest(StaticLiveServerTestCase):
             await page.set_checked("#id_is_software", True)
             async with page.expect_navigation():
                 await page.click('form.form button[type="submit"]')
-            vendor2 = await asyncio.to_thread(Vendor.objects.get, name=vendor_name2)
+            vendor2 = Vendor.objects.get(name=vendor_name2)
 
             # 3. Create an OS
             os_version = f"OS-{self.random_string()}"
@@ -132,9 +136,7 @@ class FullIntegrationTest(StaticLiveServerTestCase):
                 "text=cannot be deleted because it is referenced by"
             )
 
-            exists = await asyncio.to_thread(
-                Vendor.objects.filter(pk=vendor1.pk).exists
-            )
+            exists = Vendor.objects.filter(pk=vendor1.pk).exists()
             self.assertTrue(exists, "Vendor 1 was deleted despite being referenced!")
 
             # 5. Test successful deletion of an unreferenced vendor
@@ -144,15 +146,13 @@ class FullIntegrationTest(StaticLiveServerTestCase):
             await page.set_checked("#id_is_software", True)
             async with page.expect_navigation():
                 await page.click('form.form button[type="submit"]')
-            vendor2 = await asyncio.to_thread(Vendor.objects.get, name=v2_name)
+            vendor2 = Vendor.objects.get(name=v2_name)
 
             await page.goto(f"{self.live_server_url}/vendor/delete/{vendor2.pk}/")
             async with page.expect_navigation():
                 await page.click('button:has-text("Confirm Delete")')
 
-            exists = await asyncio.to_thread(
-                Vendor.objects.filter(pk=vendor2.pk).exists
-            )
+            exists = Vendor.objects.filter(pk=vendor2.pk).exists()
             self.assertFalse(exists, "Vendor 2 was not deleted!")
 
             await browser.close()
