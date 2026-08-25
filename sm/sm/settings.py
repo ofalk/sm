@@ -214,6 +214,14 @@ else:
         }
     }
 
+if "test" in argv:
+    # Persistent connections (CONN_MAX_AGE) make each live-server request
+    # thread keep an idle PostgreSQL session open, which then prevents
+    # dropping the test database ("database is being accessed by other
+    # users"). Force connection-per-request while testing.
+    for db_config in DATABASES.values():
+        db_config["CONN_MAX_AGE"] = 0
+
 # Password validation
 # https://docs.djangoproject.com/en/stable/ref/settings/#auth-password-validators
 
