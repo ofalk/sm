@@ -11,6 +11,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Environment-based configuration
 DEBUG = config("DEBUG", default=False, cast=bool)
+
+TEST_RUNNER = "sm.runner.SmTestRunner"
 _cfg_secret = config("SECRET_KEY", default="")
 if not _cfg_secret:
     if DEBUG:
