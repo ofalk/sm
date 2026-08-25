@@ -59,6 +59,22 @@ class Meta:
     ]
 ```
 
+**Global reference data:** PostgreSQL treats NULLs as distinct, so the constraint
+above cannot deduplicate global (`group=None`) rows. If your model holds shared
+reference data (seeded globally, visible to every tenant), also add a partial
+constraint so superusers cannot create duplicate globals — duplicates would
+break `get_by_natural_key()` fixture loading:
+
+```python
+models.UniqueConstraint(
+    fields=["name"],
+    condition=Q(group__isnull=True),
+    name="unique_app_mymodel_global_name",
+)
+```
+
+See `servermodel` and `clustersoftware` for working examples.
+
 ### 3. Mixins
 
 Two main mixins handle filtering and quota enforcement:
@@ -352,6 +368,12 @@ Ensure your tests cover:
 4. **Global Items**: Items with no group are visible to all
 5. **Superuser Access**: Superusers can see and edit all data
 6. **API Endpoints**: All API endpoints respect multi-tenancy
+
+### Running the Suite
+
+- Unit/API tests: `manage.py test --exclude-tag=browser` (auto-discovers all test modules).
+- Browser tests: `manage.py test --tag=browser` (Playwright, Chromium + Firefox).
+- CI runs against PostgreSQL with `DEBUG=False`; `SmTestRunner` (`sm/sm/runner.py`) clears stray sessions before the test database is dropped, and settings disable persistent connections (`CONN_MAX_AGE=0`) during tests. Keep both in place when adding live-server tests.
 
 ## Best Practices
 
