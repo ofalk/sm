@@ -550,17 +550,20 @@ which prevents dropping the Postgres test database.</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-25'>#</a>
       </div>
-      <p>Capture ALL console messages (errors AND warnings)</p>
+      <p>Fail on console <em>errors</em> only. Warnings (third-party
+deprecation notices etc.) are logged for visibility but
+must not fail CI spuriously; real breakage still trips
+the pageerror/requestfailed/HTTP-4xx/MIME checks below.</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>                    <span class="n">new_page</span><span class="o">.</span><span class="n">on</span><span class="p">(</span>
-                        <span class="s2">"console"</span><span class="p">,</span>
-                        <span class="k">lambda</span> <span class="n">msg</span><span class="p">:</span> <span class="p">(</span>
-                            <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Console </span><span class="si">{</span><span class="n">msg</span><span class="o">.</span><span class="n">type</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">msg</span><span class="o">.</span><span class="n">text</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-                            <span class="k">if</span> <span class="n">msg</span><span class="o">.</span><span class="n">type</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">"error"</span><span class="p">,</span> <span class="s2">"warning"</span><span class="p">]</span>
-                            <span class="k">else</span> <span class="kc">None</span>
-                        <span class="p">),</span>
-                    <span class="p">)</span></pre></div>
+      <div class="highlight"><pre>                    <span class="k">def</span><span class="w"> </span><span class="nf">on_console</span><span class="p">(</span><span class="n">msg</span><span class="p">):</span>
+                        <span class="k">if</span> <span class="n">msg</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">"error"</span><span class="p">:</span>
+                            <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Console ERROR: </span><span class="si">{</span><span class="n">msg</span><span class="o">.</span><span class="n">text</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+                        <span class="k">elif</span> <span class="n">msg</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">"warning"</span><span class="p">:</span>
+                            <span class="nb">print</span><span class="p">(</span>
+                                <span class="sa">f</span><span class="s2">"[</span><span class="si">{</span><span class="n">browser_name</span><span class="si">}</span><span class="s2">] console warning at </span><span class="si">{</span><span class="n">url</span><span class="si">}</span><span class="s2">: "</span>
+                                <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">msg</span><span class="o">.</span><span class="n">text</span><span class="si">}</span><span class="s2">"</span>
+                            <span class="p">)</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -568,6 +571,18 @@ which prevents dropping the Postgres test database.</p>
     <div class='docs'>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-26'>#</a>
+      </div>
+      <p>Capture ALL console messages</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>                    <span class="n">new_page</span><span class="o">.</span><span class="n">on</span><span class="p">(</span><span class="s2">"console"</span><span class="p">,</span> <span class="n">on_console</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-27'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-27'>#</a>
       </div>
       <p>Capture unhandled exceptions</p>
     </div>
@@ -579,10 +594,10 @@ which prevents dropping the Postgres test database.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-27'>
+  <div class='section' id='section-28'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-27'>#</a>
+        <a class='octothorpe' href='#section-28'>#</a>
       </div>
       <p>Capture failed network requests</p>
     </div>
@@ -601,10 +616,10 @@ which prevents dropping the Postgres test database.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-28'>
+  <div class='section' id='section-29'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-28'>#</a>
+        <a class='octothorpe' href='#section-29'>#</a>
       </div>
       <p>Capture non-OK responses and MIME mismatches</p>
     </div>
@@ -613,10 +628,10 @@ which prevents dropping the Postgres test database.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-29'>
+  <div class='section' id='section-30'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-29'>#</a>
+        <a class='octothorpe' href='#section-30'>#</a>
       </div>
       <p>3xx are fine (redirects), but 4xx and 5xx are errors</p>
     </div>
@@ -626,10 +641,10 @@ which prevents dropping the Postgres test database.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-30'>
+  <div class='section' id='section-31'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-30'>#</a>
+        <a class='octothorpe' href='#section-31'>#</a>
       </div>
       <p>Check for MIME type conflicts on scripts</p>
     </div>
@@ -652,10 +667,10 @@ which prevents dropping the Postgres test database.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-31'>
+  <div class='section' id='section-32'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-31'>#</a>
+        <a class='octothorpe' href='#section-32'>#</a>
       </div>
       <p>Explicit wait for any late-firing JS</p>
     </div>
@@ -664,10 +679,10 @@ which prevents dropping the Postgres test database.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-32'>
+  <div class='section' id='section-33'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-32'>#</a>
+        <a class='octothorpe' href='#section-33'>#</a>
       </div>
       <p>Retry once on a transient 5xx (e.g. a momentary DB
 lock on the shared live-server connection).</p>
@@ -691,10 +706,10 @@ lock on the shared live-server connection).</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-33'>
+  <div class='section' id='section-34'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-33'>#</a>
+        <a class='octothorpe' href='#section-34'>#</a>
       </div>
       <p>Load pages with a small concurrency limit. The live server
 runs in a shared thread, and hammering it with too many
