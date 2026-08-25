@@ -475,19 +475,7 @@ Creates a vendor via the UI and returns the list page.</p>
                 <span class="kn">from</span><span class="w"> </span><span class="nn">django.apps</span><span class="w"> </span><span class="kn">import</span> <span class="n">apps</span>
 
                 <span class="k">if</span> <span class="n">apps</span><span class="o">.</span><span class="n">is_installed</span><span class="p">(</span><span class="s2">"allauth.socialaccount"</span><span class="p">):</span>
-                    <span class="kn">from</span><span class="w"> </span><span class="nn">allauth.socialaccount.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">SocialApp</span>
-
-                    <span class="n">site</span> <span class="o">=</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">to_thread</span><span class="p">(</span><span class="n">Site</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_current</span><span class="p">)</span>
-                    <span class="k">for</span> <span class="n">p_id</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">"facebook"</span><span class="p">,</span> <span class="s2">"google"</span><span class="p">]:</span>
-                        <span class="n">app</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">to_thread</span><span class="p">(</span>
-                            <span class="n">SocialApp</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">,</span>
-                            <span class="n">provider</span><span class="o">=</span><span class="n">p_id</span><span class="p">,</span>
-                            <span class="n">name</span><span class="o">=</span><span class="n">p_id</span><span class="o">.</span><span class="n">title</span><span class="p">(),</span>
-                            <span class="n">defaults</span><span class="o">=</span><span class="p">{</span><span class="s2">"client_id"</span><span class="p">:</span> <span class="s2">"123"</span><span class="p">,</span> <span class="s2">"secret"</span><span class="p">:</span> <span class="s2">"abc"</span><span class="p">},</span>
-                        <span class="p">)</span>
-                        <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">to_thread</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">sites</span><span class="o">.</span><span class="n">add</span><span class="p">,</span> <span class="n">site</span><span class="p">)</span>
-
-                <span class="k">if</span> <span class="ow">not</span> <span class="n">is_anonymous</span><span class="p">:</span></pre></div>
+                    <span class="kn">from</span><span class="w"> </span><span class="nn">allauth.socialaccount.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">SocialApp</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -495,6 +483,30 @@ Creates a vendor via the UI and returns the list page.</p>
     <div class='docs'>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-22'>#</a>
+      </div>
+      <p>Sync ORM access is safe here (setUpClass enables
+DJANGO_ALLOW_ASYNC_UNSAFE). Do NOT use asyncio.to_thread:
+its worker threads keep test-database connections open,
+which prevents dropping the Postgres test database.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>                    <span class="n">site</span> <span class="o">=</span> <span class="n">Site</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_current</span><span class="p">()</span>
+                    <span class="k">for</span> <span class="n">p_id</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">"facebook"</span><span class="p">,</span> <span class="s2">"google"</span><span class="p">]:</span>
+                        <span class="n">app</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">SocialApp</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span>
+                            <span class="n">provider</span><span class="o">=</span><span class="n">p_id</span><span class="p">,</span>
+                            <span class="n">name</span><span class="o">=</span><span class="n">p_id</span><span class="o">.</span><span class="n">title</span><span class="p">(),</span>
+                            <span class="n">defaults</span><span class="o">=</span><span class="p">{</span><span class="s2">"client_id"</span><span class="p">:</span> <span class="s2">"123"</span><span class="p">,</span> <span class="s2">"secret"</span><span class="p">:</span> <span class="s2">"abc"</span><span class="p">},</span>
+                        <span class="p">)</span>
+                        <span class="n">app</span><span class="o">.</span><span class="n">sites</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">site</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">is_anonymous</span><span class="p">:</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-23'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-23'>#</a>
       </div>
       <p>Login</p>
     </div>
@@ -512,10 +524,10 @@ Creates a vendor via the UI and returns the list page.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-23'>
+  <div class='section' id='section-24'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-23'>#</a>
+        <a class='octothorpe' href='#section-24'>#</a>
       </div>
       <p>For anonymous, only test root and login-related pages</p>
     </div>
@@ -533,10 +545,10 @@ Creates a vendor via the UI and returns the list page.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-24'>
+  <div class='section' id='section-25'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-24'>#</a>
+        <a class='octothorpe' href='#section-25'>#</a>
       </div>
       <p>Capture ALL console messages (errors AND warnings)</p>
     </div>
@@ -552,10 +564,10 @@ Creates a vendor via the UI and returns the list page.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-25'>
+  <div class='section' id='section-26'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-25'>#</a>
+        <a class='octothorpe' href='#section-26'>#</a>
       </div>
       <p>Capture unhandled exceptions</p>
     </div>
@@ -567,10 +579,10 @@ Creates a vendor via the UI and returns the list page.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-26'>
+  <div class='section' id='section-27'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-26'>#</a>
+        <a class='octothorpe' href='#section-27'>#</a>
       </div>
       <p>Capture failed network requests</p>
     </div>
@@ -589,10 +601,10 @@ Creates a vendor via the UI and returns the list page.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-27'>
+  <div class='section' id='section-28'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-27'>#</a>
+        <a class='octothorpe' href='#section-28'>#</a>
       </div>
       <p>Capture non-OK responses and MIME mismatches</p>
     </div>
@@ -601,10 +613,10 @@ Creates a vendor via the UI and returns the list page.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-28'>
+  <div class='section' id='section-29'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-28'>#</a>
+        <a class='octothorpe' href='#section-29'>#</a>
       </div>
       <p>3xx are fine (redirects), but 4xx and 5xx are errors</p>
     </div>
@@ -614,10 +626,10 @@ Creates a vendor via the UI and returns the list page.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-29'>
+  <div class='section' id='section-30'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-29'>#</a>
+        <a class='octothorpe' href='#section-30'>#</a>
       </div>
       <p>Check for MIME type conflicts on scripts</p>
     </div>
@@ -640,10 +652,10 @@ Creates a vendor via the UI and returns the list page.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-30'>
+  <div class='section' id='section-31'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-30'>#</a>
+        <a class='octothorpe' href='#section-31'>#</a>
       </div>
       <p>Explicit wait for any late-firing JS</p>
     </div>
@@ -652,10 +664,10 @@ Creates a vendor via the UI and returns the list page.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-31'>
+  <div class='section' id='section-32'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-31'>#</a>
+        <a class='octothorpe' href='#section-32'>#</a>
       </div>
       <p>Retry once on a transient 5xx (e.g. a momentary DB
 lock on the shared live-server connection).</p>
@@ -679,10 +691,10 @@ lock on the shared live-server connection).</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-32'>
+  <div class='section' id='section-33'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-32'>#</a>
+        <a class='octothorpe' href='#section-33'>#</a>
       </div>
       <p>Load pages with a small concurrency limit. The live server
 runs in a shared thread, and hammering it with too many
