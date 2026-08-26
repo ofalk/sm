@@ -10,7 +10,7 @@ This document provides context for AI agents working on the modernization of thi
 - **Serialization:** Native Django Natural Keys (migrated from django-natural-keys)
 - **Configuration:** python-decouple with `.env` support and dj-database-url
 - **CI/CD:** GitHub Actions (replaced GitLab CI)
-- **Database:** SQLite (local development), PostgreSQL (GitHub Actions CI)
+- **Database:** SQLite (local development), PostgreSQL (GitHub Actions CI). Locally, `./pg-test.sh` runs the suite against PostgreSQL in a rootless podman container, mirroring CI.
 
 ## Major Achievements
 
