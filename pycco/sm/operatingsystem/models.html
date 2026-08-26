@@ -21,6 +21,7 @@
     </div>
     <div class='code'>
       <div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">django.db</span><span class="w"> </span><span class="kn">import</span> <span class="n">models</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.db.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">Q</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">django.urls</span><span class="w"> </span><span class="kn">import</span> <span class="n">reverse</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">simple_history.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">HistoricalRecords</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">vendor.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">Model</span> <span class="k">as</span> <span class="n">VendorModel</span>
@@ -257,7 +258,25 @@ For now, we search all vendors.</p>
             <span class="n">models</span><span class="o">.</span><span class="n">UniqueConstraint</span><span class="p">(</span>
                 <span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s2">"vendor"</span><span class="p">,</span> <span class="s2">"version"</span><span class="p">,</span> <span class="s2">"group"</span><span class="p">],</span>
                 <span class="n">name</span><span class="o">=</span><span class="s2">"unique_sm_operatingsystem_vendor_version_group"</span><span class="p">,</span>
-            <span class="p">)</span>
+            <span class="p">),</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-11'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-11'>#</a>
+      </div>
+      <p>PostgreSQL treats NULLs as distinct, so the constraint above
+cannot deduplicate global (group=NULL) rows. Keep reference
+data globally unique with a partial constraint.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>            <span class="n">models</span><span class="o">.</span><span class="n">UniqueConstraint</span><span class="p">(</span>
+                <span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s2">"vendor"</span><span class="p">,</span> <span class="s2">"version"</span><span class="p">],</span>
+                <span class="n">condition</span><span class="o">=</span><span class="n">Q</span><span class="p">(</span><span class="n">group__isnull</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+                <span class="n">name</span><span class="o">=</span><span class="s2">"unique_sm_operatingsystem_global_vendor_version"</span><span class="p">,</span>
+            <span class="p">),</span>
         <span class="p">]</span>
 
 </pre></div>
