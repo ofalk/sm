@@ -47,12 +47,18 @@ class VendorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Vendor
         fields = ["id", "name", "is_hardware", "is_software"]
+        # DRF maps the model's partial global-uniqueness constraint to an
+        # auto UniqueValidator here, which would wrongly reject tenant items
+        # sharing a global row's name. DB constraints plus the API mixin's
+        # scope guard remain authoritative.
+        extra_kwargs = {"name": {"validators": []}}
 
 
 class StatusSerializer(serializers.ModelSerializer):
     class Meta:
         model = Status
         fields = ["id", "name"]
+        extra_kwargs = {"name": {"validators": []}}
 
 
 class OSSerializer(serializers.ModelSerializer):
@@ -160,6 +166,7 @@ class DomainSerializer(TaggitSerializer, serializers.ModelSerializer):
     class Meta:
         model = Domain
         fields = "__all__"
+        extra_kwargs = {"name": {"validators": []}}
 
 
 class PatchtimeSerializer(TaggitSerializer, serializers.ModelSerializer):
@@ -168,6 +175,7 @@ class PatchtimeSerializer(TaggitSerializer, serializers.ModelSerializer):
     class Meta:
         model = Patchtime
         fields = "__all__"
+        extra_kwargs = {"name": {"validators": []}}
 
 
 class ClusterSerializer(TaggitSerializer, serializers.ModelSerializer):
@@ -251,3 +259,4 @@ class ClusterPackageTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = ClusterPackageType
         fields = ["id", "name"]
+        extra_kwargs = {"name": {"validators": []}}

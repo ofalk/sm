@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Q
 from django_countries.fields import CountryField
 from django.urls import reverse
 from simple_history.models import HistoricalRecords
@@ -57,5 +58,13 @@ class Model(models.Model):
             models.UniqueConstraint(
                 fields=["name", "country", "group"],
                 name="unique_sm_location_name_country_group",
-            )
+            ),
+            # PostgreSQL treats NULLs as distinct, so the constraint above
+            # cannot deduplicate global (group=NULL) rows. Keep reference
+            # data globally unique with a partial constraint.
+            models.UniqueConstraint(
+                fields=["name", "country"],
+                condition=Q(group__isnull=True),
+                name="unique_sm_location_global_name_country",
+            ),
         ]
