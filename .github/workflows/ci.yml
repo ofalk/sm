@@ -50,7 +50,7 @@ jobs:
         cd sm
         python manage.py collectstatic --noinput
         coverage run manage.py test -v3 --exclude-tag=browser
-        coverage report --fail-under=70
+        coverage report --fail-under=85
         coverage html
 
     - name: Run Browser Tests
