@@ -39,7 +39,7 @@ The fastest way to test the application is using Docker. This setup uses a local
 
 ### Prerequisites
 
-- Python 3.14+
+- Python 3.13+
 - SQLite (default) or PostgreSQL
 
 ### Setup

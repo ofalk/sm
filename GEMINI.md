@@ -4,7 +4,7 @@ This document provides context for AI agents working on the modernization of thi
 
 ## Current Environment
 
-- **Core:** Python 3.14, Django 6.1 (latest stable; 6.0 reached end of mainstream support Aug 2026)
+- **Core:** Python 3.13 (canonical project runtime), Django 6.1 (latest stable; 6.0 reached end of mainstream support Aug 2026)
 - **Frontend:** Bootstrap 5.3.3, Bootswatch Cosmo 5, Font Awesome 6.7.2, jQuery 3.7.1, Chart.js 4.4.7 (Popper 2 is bundled in `bootstrap.bundle.min.js`)
 - **Auth:** django-allauth (replaced legacy django-user-accounts/urlauth)
 - **Serialization:** Native Django Natural Keys (migrated from django-natural-keys)
