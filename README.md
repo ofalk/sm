@@ -113,7 +113,7 @@ bundled helper, which manages a rootless **podman** container for you:
 This project uses **GitHub Actions** for continuous integration. The pipeline:
 
 1. Runs a PostgreSQL sidecar container.
-2. Executes the full test suite via auto-discovery (`--exclude-tag=browser`), coverage-gated at 70%.
+2. Executes the full test suite via auto-discovery (`--exclude-tag=browser`), coverage-gated at 85%.
 3. Runs the Playwright browser tests (Chromium + Firefox) against PostgreSQL.
 4. Generates Pycco documentation.
 5. Deploys reports to GitHub Pages on pushes to the `main` branch.
