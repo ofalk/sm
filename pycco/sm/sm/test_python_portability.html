@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <title>test_python_portability.py</title>
+  <link rel="stylesheet" href="../../pycco.css">
+</head>
+<body>
+<div id='container'>
+  <div id="background"></div>
+  <div class='section'>
+    <div class='docs'><h1>test_python_portability.py</h1></div>
+  </div>
+  <div class='clearall'>
+  <div class='section' id='section-0'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-0'>#</a>
+      </div>
+      <p>Regression guards for Python-version-portability defects.</p>
+<p>The defect these guard: <code>sm/sm/models.py</code> carried a self-referential return
+annotation, <code>-&gt; tuple[ApiKey, str]</code>, inside <code>class ApiKey</code>.  Resolving that
+annotation needs PEP 649 lazy evaluation, which only became the default in
+Python 3.14.  On 3.13 the name <code>ApiKey</code> is not yet bound while the class body
+is executing, so importing the module raises</p>
+<pre><code>NameError: name 'ApiKey' is not defined
+</code></pre>
+<p>during <em>app-registry population</em> &ndash; meaning every single test in the project
+errors out before it runs.  These tests assert the real behaviour that prevents
+a recurrence, so the guard stays meaningful on whichever interpreter runs CI.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">ast</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">importlib</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pathlib</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.test</span><span class="w"> </span><span class="kn">import</span> <span class="n">SimpleTestCase</span>
+
+<span class="n">MODELS_PY</span> <span class="o">=</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s2">"models.py"</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-1'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-1'>#</a>
+      </div>
+      <p>sm.sm.models must not rely on PEP 649 lazy annotation evaluation.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">ModelsModuleIsPortableTest</span><span class="p">(</span><span class="n">SimpleTestCase</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-2'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-2'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-3'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-3'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">test_models_module_has_future_annotations_import</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">tree</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">MODELS_PY</span><span class="o">.</span><span class="n">read_text</span><span class="p">(</span><span class="n">encoding</span><span class="o">=</span><span class="s2">"utf-8"</span><span class="p">))</span>
+        <span class="n">imports_future</span> <span class="o">=</span> <span class="nb">any</span><span class="p">(</span>
+            <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">ImportFrom</span><span class="p">)</span>
+            <span class="ow">and</span> <span class="n">node</span><span class="o">.</span><span class="n">module</span> <span class="o">==</span> <span class="s2">"__future__"</span>
+            <span class="ow">and</span> <span class="nb">any</span><span class="p">(</span><span class="n">alias</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">"annotations"</span> <span class="k">for</span> <span class="n">alias</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">names</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">tree</span><span class="o">.</span><span class="n">body</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span>
+            <span class="n">imports_future</span><span class="p">,</span>
+            <span class="s2">"sm/sm/models.py must import `from __future__ import annotations`; "</span>
+            <span class="s2">"without it the self-referential `-&gt; tuple[ApiKey, str]` annotation "</span>
+            <span class="s2">"on ApiKey.create_for_user / ApiKey.rotate raises NameError on "</span>
+            <span class="s2">"Python &lt; 3.14 (PEP 649 is only default-on from 3.14)."</span><span class="p">,</span>
+        <span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-4'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-4'>#</a>
+      </div>
+      <p>The annotations must remain lazy strings, not eagerly-built aliases.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">test_apikey_self_referential_annotations_stay_unresolved</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-5'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-5'>#</a>
+      </div>
+      <p>Under <code>from __future__ import annotations</code> these are plain <code>str</code>
+objects that nothing ever resolves, which is exactly what lets Python
+3.13 import the module at all.  Drop the future import and CPython
+builds a real <code>types.GenericAlias</code> here on 3.12+, which brings the
+NameError back on 3.13.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="n">models</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="s2">"sm.models"</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"create_for_user"</span><span class="p">,</span> <span class="s2">"rotate"</span><span class="p">):</span>
+            <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">subTest</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="sa">f</span><span class="s2">"ApiKey.</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">"</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span>
+                    <span class="nb">callable</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">ApiKey</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="kc">None</span><span class="p">)),</span>
+                    <span class="sa">f</span><span class="s2">"ApiKey.</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> no longer exists; update the portability guard"</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="n">annotation</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">ApiKey</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="vm">__annotations__</span><span class="p">[</span><span class="s2">"return"</span><span class="p">]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">assertIsInstance</span><span class="p">(</span>
+                    <span class="n">annotation</span><span class="p">,</span>
+                    <span class="nb">str</span><span class="p">,</span>
+                    <span class="sa">f</span><span class="s2">"ApiKey.</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> return annotation was resolved eagerly as "</span>
+                    <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">annotation</span><span class="si">!r}</span><span class="s2">; that is what breaks Python &lt; 3.14."</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span>
+                    <span class="s2">"ApiKey"</span><span class="p">,</span>
+                    <span class="n">annotation</span><span class="p">,</span>
+                    <span class="sa">f</span><span class="s2">"ApiKey.</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> should keep its self-reference in the "</span>
+                    <span class="sa">f</span><span class="s2">"annotation, got </span><span class="si">{</span><span class="n">annotation</span><span class="si">!r}</span><span class="s2">"</span><span class="p">,</span>
+                <span class="p">)</span>
+
+</pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+</div>
+</body>
