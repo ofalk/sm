@@ -10,6 +10,18 @@ jobs:
   test:
     runs-on: ubuntu-latest
 
+    strategy:
+      # Both legs must pass. 3.13 is the canonical/base interpreter - it is the version
+      # that catches PEP 649 annotation defects (a self-referential `-> tuple[ApiKey, str]`
+      # resolves lazily from 3.14 on, so a 3.14-only leg cannot see it). 3.14 is the
+      # deployment target and its leg is BLOCKING - never allow_failure
+      # ("Es muss brechen, damit es auffaellt"). fail-fast is off so one red leg cannot
+      # hide the other's result, and both legs run the identical recipe below so the two
+      # cannot drift apart.
+      fail-fast: false
+      matrix:
+        python-version: ['3.13', '3.14']
+
     services:
       postgres:
         image: postgres:latest
@@ -28,10 +40,10 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: Set up Python
+    - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v5
       with:
-        python-version: '3.13'
+        python-version: ${{ matrix.python-version }}
 
     - name: Install Dependencies
       run: |
@@ -67,13 +79,18 @@ jobs:
       run: |
         find sm/ -type f -name "*.py"|grep -v __pycache__|grep -v __init__.py|grep -v /migrations/ | xargs pycco -p -d pycco -i -s
 
+    # Uploaded from the canonical leg only: the Pages `deploy` job below downloads the
+    # artifact by this exact name, and `upload-artifact@v4` requires unique names, so a
+    # second leg uploading the same name would fail the job rather than merge the reports.
     - name: Upload coverage reports
+      if: matrix.python-version == '3.13'
       uses: actions/upload-artifact@v4
       with:
         name: coverage-report
         path: sm/htmlcov/
 
     - name: Upload pycco documentation
+      if: matrix.python-version == '3.13'
       uses: actions/upload-artifact@v4
       with:
         name: pycco-docs
