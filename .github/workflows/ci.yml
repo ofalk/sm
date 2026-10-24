@@ -1,10 +1,13 @@
 name: CI
 
+# Run on main (release) and devel (integration) pushes, and on PRs targeting
+# either. Merging devel into main additionally requires a green pipeline via
+# branch protection on main (required checks: the two matrix legs).
 on:
   push:
-    branches: [ main ]
+    branches: [ main, devel ]
   pull_request:
-    branches: [ main ]
+    branches: [ main, devel ]
 
 jobs:
   test:
