@@ -1,26 +1,31 @@
-beautifulsoup4
-coverage
-dj-database-url
-django>=6.0,<7.0
-django-allauth
-django-bootstrap5
-django-countries
-django-debug-toolbar
-django-extensions
-django-htmlmin
-django-mfa
-django-simple-history
-django-taggit
-djangorestframework
-drf-spectacular
-fido2
-gunicorn
-playwright
-psycopg[binary]
-pycco
-pyLibravatar
-python-decouple
-python3-openid
-social-auth-app-django
-social-auth-core
-whitenoise
+# Bounded ranges: patch/minor updates flow through CI, a new major requires a
+# vetted upgrade. For 0.x packages the minor version is the breaking boundary.
+# Versions reflect the set the test suite was verified against (2026-10-24,
+# Python 3.13 + 3.14; see .github/workflows/ci.yml).
+
+beautifulsoup4>=4.15,<5
+coverage>=7.17,<8
+dj-database-url>=3.1,<4
+django>=6.1,<7.0
+django-allauth>=65.20,<66
+django-bootstrap5>=26.4,<27
+django-countries>=9.1,<10
+django-debug-toolbar>=8.0,<9
+django-extensions>=4.1,<5
+django-htmlmin>=0.11,<0.12
+django-mfa>=4.6,<5
+django-simple-history>=3.13,<4
+django-taggit>=6.1,<7
+djangorestframework>=3.18,<4
+drf-spectacular>=0.30,<0.31
+fido2>=2.2,<3
+gunicorn>=26.2,<27
+playwright>=1.64,<2
+psycopg[binary]>=3.3,<4
+pycco>=0.6,<0.7
+pyLibravatar>=2.0,<3
+python-decouple>=3.8,<4
+python3-openid>=3.2,<4
+social-auth-app-django>=7.2,<8
+social-auth-core>=6.2,<7
+whitenoise>=6.12,<7
