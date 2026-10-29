@@ -22,18 +22,24 @@ Multi-tenancy is supported: servers, clusters, and reference data are scoped to 
 
 ## Quick Start with Docker
 
-The fastest way to test the application is using Docker. This setup uses a local SQLite database and pre-loads reasonable defaults.
+The fastest way to test the application is using Docker. This setup uses a local SQLite database.
 
-1. **Build and run the container:**
+1. **Build and run the container.** A `SECRET_KEY` is required — the image no
+   longer ships an insecure default. For local HTTP, also disable the HTTPS
+   redirect (keep it enabled behind a TLS-terminating proxy):
 
    ```bash
    docker build -t sm .
-   docker run -p 8000:8000 sm
+   docker run -p 8000:8000 \
+     -e SECRET_KEY="$(python3 -c 'import secrets; print(secrets.token_urlsafe(64))')" \
+     -e SECURE_SSL_REDIRECT=False \
+     sm
    ```
 
 2. **Access the application:**
    Open [http://localhost:8000](http://localhost:8000) in your browser.
-   The container will display a **randomly generated password** for the `admin` user upon startup.
+   The admin account is created by the `ensure_admin` entrypoint command; set
+   `ADMIN_USERNAME` / `ADMIN_PASSWORD` (see `.env.example`) when running it.
 
 ## Local Development
 

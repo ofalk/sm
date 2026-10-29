@@ -133,9 +133,29 @@ class GroupCreateAndFilterTest(TestCase):
         self.assertEqual(Group.objects.filter(name="Too Many").count(), 0)
 
     def test_group_filter_sets_session(self):
-        response = self.client.post(reverse("group_filter"), {"groups": "1,2,3"})
+        first = Group.objects.create(name="Team A")
+        second = Group.objects.create(name="Team B")
+        self.user.groups.add(first, second)
+        response = self.client.post(
+            reverse("group_filter"),
+            {"groups": f"{first.pk},{second.pk}"},
+        )
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(self.client.session["selected_groups"], ["1", "2", "3"])
+        self.assertEqual(
+            self.client.session["selected_groups"],
+            [str(first.pk), str(second.pk)],
+        )
+
+    def test_group_filter_drops_foreign_group_ids(self):
+        first = Group.objects.create(name="Team A")
+        foreign = Group.objects.create(name="Foreign Team")
+        self.user.groups.add(first)
+        response = self.client.post(
+            reverse("group_filter"),
+            {"groups": f"{first.pk},{foreign.pk}"},
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(self.client.session["selected_groups"], [str(first.pk)])
 
     def test_group_filter_clears_session(self):
         self.client.post(reverse("group_filter"), {"groups": "1"})

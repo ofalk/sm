@@ -29,6 +29,7 @@ from django.shortcuts import redirect
 from django.views import View
 from typing import Any, List
 from .mixins import filter_queryset_by_tenant, filter_history_queryset_by_tenant
+from .utils import json_for_script
 from .utils_starterpack import import_starter_pack
 
 logger = logging.getLogger(__name__)
@@ -88,19 +89,12 @@ class GenericBulkDeleteView(LoginRequiredMixin, View):
 
     def get_queryset(self) -> Any:
         queryset = self.model.objects.all()
-        if self.request.user.is_superuser:
+        if not hasattr(self.model, "group"):
             return queryset
-        user_groups = self.request.user.groups.all()
-        selected_groups = self.request.session.get("selected_groups", [])
-        if hasattr(self.model, "group"):
-            if selected_groups:
-                group_ids = [int(g) for g in selected_groups if g.isdigit()]
-                if group_ids:
-                    return queryset.filter(
-                        Q(group__id__in=group_ids) | Q(group__isnull=True)
-                    )
-            return queryset.filter(Q(group__in=user_groups) | Q(group__isnull=True))
-        return queryset
+        # Delegates to the shared tenant filter, which drops session-selected
+        # groups the user is not a member of. Do not reimplement this here:
+        # doing so previously allowed cross-tenant reads/deletes.
+        return filter_queryset_by_tenant(queryset, self.request)
 
     def get_success_url(self) -> str:
         return reverse("%s:index" % self.model._meta.app_label)
@@ -154,22 +148,28 @@ class GenericCSVExportView(LoginRequiredMixin, View):
 
     def get_queryset(self) -> Any:
         queryset = self.model.objects.all()
-        if self.request.user.is_superuser:
+        if not hasattr(self.model, "group"):
             return queryset
-        user_groups = self.request.user.groups.all()
-        selected_groups = self.request.session.get("selected_groups", [])
-        if hasattr(self.model, "group"):
-            if selected_groups:
-                group_ids = [int(g) for g in selected_groups if g.isdigit()]
-                if group_ids:
-                    return queryset.filter(
-                        Q(group__id__in=group_ids) | Q(group__isnull=True)
-                    )
-            return queryset.filter(Q(group__in=user_groups) | Q(group__isnull=True))
-        return queryset
+        # Shared tenant filter (also sanitizes a tampered session selection).
+        return filter_queryset_by_tenant(queryset, self.request)
 
     def get_filename(self) -> str:
         return self.filename
+
+    @staticmethod
+    def csv_safe(value: Any) -> Any:
+        """
+        Neutralize spreadsheet formula injection.
+
+        Excel/LibreOffice execute cells beginning with ``=``, ``+``, ``-``,
+        ``@``, TAB or CR. Prefixing with a single quote keeps the value
+        readable while forcing it to be treated as text.
+        """
+        if isinstance(value, str) and value.startswith(
+            ("=", "+", "-", "@", "\t", "\r")
+        ):
+            return "'" + value
+        return value
 
     def resolve_value(self, obj: Any, path: str) -> Any:
         value: Any = obj
@@ -187,6 +187,14 @@ class GenericCSVExportView(LoginRequiredMixin, View):
 
         from django.http import HttpResponse
 
+        # CSV export is a read endpoint: require the same view permission as
+        # the web list/API views instead of relying on login alone.
+        if not request.user.is_superuser:
+            opts = self.model._meta
+            codename = f"view_{opts.model_name}"
+            if not request.user.has_perm(f"{opts.app_label}.{codename}"):
+                raise PermissionDenied
+
         response = HttpResponse(content_type="text/csv; charset=utf-8")
         response["Content-Disposition"] = (
             'attachment; filename="%s"' % self.get_filename()
@@ -196,7 +204,10 @@ class GenericCSVExportView(LoginRequiredMixin, View):
         writer.writerow([header for header, _ in self.export_fields])
         for obj in self.get_queryset():
             writer.writerow(
-                [self.resolve_value(obj, path) for _, path in self.export_fields]
+                [
+                    self.csv_safe(self.resolve_value(obj, path))
+                    for _, path in self.export_fields
+                ]
             )
         return response
 
@@ -227,12 +238,14 @@ class DashboardView(LoginRequiredMixin, TemplateView):
             .order_by("-count")[:5]
         )
 
-        context["os_labels"] = [
-            f"{item['operatingsystem__vendor__name']} "
-            f"{item['operatingsystem__version']}"
-            for item in os_dist
-        ]
-        context["os_data"] = [item["count"] for item in os_dist]
+        context["os_labels"] = json_for_script(
+            [
+                f"{item['operatingsystem__vendor__name']} "
+                f"{item['operatingsystem__version']}"
+                for item in os_dist
+            ]
+        )
+        context["os_data"] = json_for_script([item["count"] for item in os_dist])
 
         # Status Distribution
         status_dist = (
@@ -242,8 +255,12 @@ class DashboardView(LoginRequiredMixin, TemplateView):
             .order_by("-count")
         )
 
-        context["status_labels"] = [item["status__name"] for item in status_dist]
-        context["status_data"] = [item["count"] for item in status_dist]
+        context["status_labels"] = json_for_script(
+            [item["status__name"] for item in status_dist]
+        )
+        context["status_data"] = json_for_script(
+            [item["count"] for item in status_dist]
+        )
 
         # Recent Activity (Filtered)
         context["recent_servers"] = (
@@ -470,17 +487,7 @@ class PatchScheduleView(LoginRequiredMixin, TemplateView):
     template_name = "patch_schedule.html"
 
     def get_servers(self) -> Any:
-        if self.request.user.is_superuser:
-            return Server.objects.all()
-        user_groups = self.request.user.groups.all()
-        selected_groups = self.request.session.get("selected_groups", [])
-        if selected_groups:
-            group_ids = [int(g) for g in selected_groups if g.isdigit()]
-            if group_ids:
-                return Server.objects.filter(
-                    Q(group__id__in=group_ids) | Q(group__isnull=True)
-                )
-        return Server.objects.filter(Q(group__in=user_groups) | Q(group__isnull=True))
+        return filter_queryset_by_tenant(Server.objects.all(), self.request)
 
     def get_context_data(self, **kwargs: Any) -> Any:
         context = super().get_context_data(**kwargs)
