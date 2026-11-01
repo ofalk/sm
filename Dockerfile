@@ -5,8 +5,8 @@ ENV PYTHONUNBUFFERED=1
 ENV PIP_NO_CACHE_DIR=1
 ENV PIP_DISABLE_PIP_VERSION_CHECK=1
 ENV DJANGO_SETTINGS_MODULE=sm.settings
-# Override these at build/run time for production deployments.
-ENV SECRET_KEY="docker-insecure-key-for-quick-test"
+# SECRET_KEY is intentionally NOT baked into the image: supply it at runtime
+# (docker run -e SECRET_KEY=...). Settings refuse to start without it.
 ENV DEBUG=False
 ENV ALLOWED_HOSTS="localhost,127.0.0.1"
 
@@ -33,8 +33,10 @@ RUN chmod +x /app/entrypoint.sh
 
 WORKDIR /app/sm
 
-# Bake static files into the image
-RUN python3 manage.py collectstatic --noinput
+# Bake static files into the image. A throwaway key is generated only for this
+# build step; it is never written to the image environment.
+RUN SECRET_KEY="$(python3 -c 'import secrets; print(secrets.token_urlsafe(64))')" \
+    python3 manage.py collectstatic --noinput
 
 EXPOSE 8000
 

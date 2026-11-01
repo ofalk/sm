@@ -472,10 +472,18 @@ class GroupFilterView(View):
         else:
             selected_groups = []
 
-        if selected_groups:
-            request.session["selected_groups"] = selected_groups
-        else:
-            request.session["selected_groups"] = []
+        # Only accept numeric IDs, and for non-superusers only groups they are
+        # actually a member of. This is the write-side half of the tenant
+        # isolation fix; the read-side filters also sanitize defensively.
+        selected_groups = [g for g in selected_groups if g.isdigit()]
+        if not request.user.is_superuser:
+            allowed_group_ids = {
+                str(pk) for pk in request.user.groups.values_list("pk", flat=True)
+            }
+            selected_groups = [g for g in selected_groups if g in allowed_group_ids]
+        selected_groups = list(dict.fromkeys(selected_groups))
+
+        request.session["selected_groups"] = selected_groups
 
         request.session.modified = True
 
