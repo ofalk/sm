@@ -1,0 +1,14 @@
+# Development, test, and documentation tooling.
+#
+# Install with:
+#   pip install -r requirements-dev.txt
+#
+# The production image installs requirements.txt only, so these packages are
+# not present at runtime.
+
+-r requirements.txt
+
+beautifulsoup4>=4.15,<5
+coverage>=7.17,<8
+playwright>=1.64,<2
+pycco>=0.6,<0.7

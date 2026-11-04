@@ -38,6 +38,13 @@ WORKDIR /app/sm
 RUN SECRET_KEY="$(python3 -c 'import secrets; print(secrets.token_urlsafe(64))')" \
     python3 manage.py collectstatic --noinput
 
+# Run as an unprivileged user. /app stays writable for the SQLite database and
+# the generated admin-password file.
+RUN useradd --create-home --uid 1000 app \
+    && chown -R app:app /app
+
+USER app
+
 EXPOSE 8000
 
 CMD ["/app/entrypoint.sh"]
