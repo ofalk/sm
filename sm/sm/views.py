@@ -29,7 +29,6 @@ from django.shortcuts import redirect
 from django.views import View
 from typing import Any, List
 from .mixins import filter_queryset_by_tenant, filter_history_queryset_by_tenant
-from .utils import json_for_script
 from .utils_starterpack import import_starter_pack
 
 logger = logging.getLogger(__name__)
@@ -238,14 +237,12 @@ class DashboardView(LoginRequiredMixin, TemplateView):
             .order_by("-count")[:5]
         )
 
-        context["os_labels"] = json_for_script(
-            [
-                f"{item['operatingsystem__vendor__name']} "
-                f"{item['operatingsystem__version']}"
-                for item in os_dist
-            ]
-        )
-        context["os_data"] = json_for_script([item["count"] for item in os_dist])
+        context["os_labels"] = [
+            f"{item['operatingsystem__vendor__name']} "
+            f"{item['operatingsystem__version']}"
+            for item in os_dist
+        ]
+        context["os_data"] = [item["count"] for item in os_dist]
 
         # Status Distribution
         status_dist = (
@@ -255,12 +252,8 @@ class DashboardView(LoginRequiredMixin, TemplateView):
             .order_by("-count")
         )
 
-        context["status_labels"] = json_for_script(
-            [item["status__name"] for item in status_dist]
-        )
-        context["status_data"] = json_for_script(
-            [item["count"] for item in status_dist]
-        )
+        context["status_labels"] = [item["status__name"] for item in status_dist]
+        context["status_data"] = [item["count"] for item in status_dist]
 
         # Recent Activity (Filtered)
         context["recent_servers"] = (

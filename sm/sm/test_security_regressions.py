@@ -117,4 +117,38 @@ class DashboardChartXssTest(TestCase):
         response = self.client.get(reverse("dashboard"))
         body = response.content.decode()
         self.assertNotIn(self.PAYLOAD, body)
-        self.assertIn("\\u003c/script\\u003e", body)
+        self.assertIn("\\u003C/script\\u003E", body)
+
+
+@override_settings(PASSWORD_HASHERS=FAST_HASHERS)
+class GroupFilterRedirectTest(TestCase):
+    """The group filter must not redirect to attacker-supplied hosts."""
+
+    def setUp(self):
+        self.user = User.objects.create_user("redirectuser", password=PASSWORD)
+        self.group = Group.objects.create(name="Redirect Group")
+        self.user.groups.add(self.group)
+        self.client.force_login(self.user)
+
+    def test_rejects_offsite_next(self):
+        response = self.client.post(
+            reverse("group_filter"),
+            {"groups": str(self.group.pk), "next": "https://evil.example/phish"},
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertNotIn("Location", response)
+
+    def test_rejects_scheme_relative_next(self):
+        response = self.client.post(
+            reverse("group_filter"),
+            {"groups": str(self.group.pk), "next": "//evil.example/phish"},
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertNotIn("Location", response)
+
+    def test_allows_local_next(self):
+        response = self.client.post(
+            reverse("group_filter"),
+            {"groups": str(self.group.pk), "next": "/search/?q=x"},
+        )
+        self.assertRedirects(response, "/search/?q=x", fetch_redirect_response=False)

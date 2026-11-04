@@ -13,6 +13,7 @@ from django.core.mail import send_mail
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 from django.template.loader import render_to_string
+from django.utils.http import url_has_allowed_host_and_scheme
 from typing import Any
 from .utils_permissions import (
     get_group_permissions_for_model,
@@ -490,9 +491,11 @@ class GroupFilterView(View):
         # If a `next` URL was provided, redirect there so the filter applies
         # to the referring page (e.g. search results).
         next_url = request.POST.get("next") or request.GET.get("next")
-        if next_url:
-            from django.shortcuts import redirect
-
+        if next_url and url_has_allowed_host_and_scheme(
+            next_url,
+            allowed_hosts={request.get_host()},
+            require_https=request.is_secure(),
+        ):
             return redirect(next_url)
 
         return JsonResponse({"status": "success"})
