@@ -30,16 +30,28 @@ The fastest way to test the application is using Docker. This setup uses a local
 
    ```bash
    docker build -t sm .
-   docker run -p 8000:8000 \
+   docker run -d --name sm -p 8000:8000 \
      -e SECRET_KEY="$(python3 -c 'import secrets; print(secrets.token_urlsafe(64))')" \
      -e SECURE_SSL_REDIRECT=False \
      sm
    ```
 
-2. **Access the application:**
-   Open [http://localhost:8000](http://localhost:8000) in your browser.
-   The admin account is created by the `ensure_admin` entrypoint command; set
-   `ADMIN_USERNAME` / `ADMIN_PASSWORD` (see `.env.example`) when running it.
+2. **Initialise the database and admin user** (one-off, inside the running
+   container):
+
+   ```bash
+   docker exec sm /app/entrypoint.sh migrate
+   docker exec sm /app/entrypoint.sh loaddata
+   docker exec sm /app/entrypoint.sh ensure_admin
+   docker exec sm cat /app/.admin_password
+   ```
+
+   `ensure_admin` writes the generated password to `/app/.admin_password`
+   unless `ADMIN_PASSWORD` was supplied when the container was started.
+
+3. **Access the application:**
+   Open [http://localhost:8000](http://localhost:8000) in your browser and log
+   in as `admin` with the password printed above.
 
 ## Local Development
 
@@ -67,7 +79,7 @@ The fastest way to test the application is using Docker. This setup uses a local
 3. **Install dependencies:**
 
    ```bash
-   pip install -r requirements.txt
+   pip install -r requirements-dev.txt
    ```
 
 4. **Configuration:**
@@ -123,3 +135,7 @@ This project uses **GitHub Actions** for continuous integration. The pipeline:
 3. Runs the Playwright browser tests (Chromium + Firefox) against PostgreSQL.
 4. Generates Pycco documentation.
 5. Deploys reports to GitHub Pages on pushes to the `main` branch.
+
+## License
+
+MIT — see [LICENSE](LICENSE).
