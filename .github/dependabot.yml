@@ -1,0 +1,25 @@
+version: 2
+
+# Keep dependencies and pinned GitHub Actions current, targeting the
+# integration branch used by the project's PR workflow.
+updates:
+  - package-ecosystem: "pip"
+    directory: "/"
+    target-branch: "devel"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    target-branch: "devel"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+
+  - package-ecosystem: "docker"
+    directory: "/"
+    target-branch: "devel"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5

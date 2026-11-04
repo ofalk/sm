@@ -401,6 +401,11 @@ HTML_MINIFY = True
 # uses plain-HTTP requests that SECURE_SSL_REDIRECT would redirect away.
 if not DEBUG and "test" not in argv:
     SECURE_SSL_REDIRECT = config("SECURE_SSL_REDIRECT", default=True, cast=bool)
+    # Only trust X-Forwarded-Proto when explicitly enabled and a trusted proxy
+    # overwrites (not appends to) the header. Without this, HTTPS detection
+    # behind a TLS-terminating proxy fails and SECURE_SSL_REDIRECT can loop.
+    if config("TRUST_X_FORWARDED_PROTO", default=False, cast=bool):
+        SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
     SESSION_COOKIE_SECURE = config("SESSION_COOKIE_SECURE", default=True, cast=bool)
     CSRF_COOKIE_SECURE = config("CSRF_COOKIE_SECURE", default=True, cast=bool)
     SECURE_HSTS_SECONDS = config("SECURE_HSTS_SECONDS", default=31536000, cast=int)
