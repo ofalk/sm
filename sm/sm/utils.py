@@ -1,25 +1,6 @@
 import hashlib
-import json
 import random
 import string
-
-from django.utils.safestring import mark_safe
-
-
-def json_for_script(value):
-    """
-    Serialize ``value`` for embedding in an inline ``<script>`` block.
-
-    Escapes the characters that could terminate the surrounding ``<script>``
-    element (``<``, ``>`` and ``&``), so a value such as
-    ``</script><script>alert(1)</script>`` cannot break out of the block.
-    """
-    return mark_safe(
-        json.dumps(value)
-        .replace("<", "\\u003c")
-        .replace(">", "\\u003e")
-        .replace("&", "\\u0026")
-    )
 
 
 def get_email_hash(email):
@@ -28,7 +9,7 @@ def get_email_hash(email):
     """
     if not email:
         return "00000000000000000000000000000000"
-    return hashlib.md5(email.lower().encode("utf-8")).hexdigest()
+    return hashlib.md5(email.lower().encode("utf-8"), usedforsecurity=False).hexdigest()
 
 
 def random_string(len=10):

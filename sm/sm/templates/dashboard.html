@@ -147,14 +147,24 @@
     </div>
 </div>
 
+{{ os_labels|json_script:"os-labels" }}
+{{ os_data|json_script:"os-data" }}
+{{ status_labels|json_script:"status-labels" }}
+{{ status_data|json_script:"status-data" }}
+
 <script>
+    const osLabels = JSON.parse(document.getElementById('os-labels').textContent);
+    const osData = JSON.parse(document.getElementById('os-data').textContent);
+    const statusLabels = JSON.parse(document.getElementById('status-labels').textContent);
+    const statusData = JSON.parse(document.getElementById('status-data').textContent);
+
     const ctx = document.getElementById('osChart').getContext('2d');
     new Chart(ctx, {
         type: 'doughnut',
         data: {
-            labels: {{ os_labels|safe }},
+            labels: osLabels,
             datasets: [{
-                data: {{ os_data|safe }},
+                data: osData,
                 backgroundColor: [
                     '#2780e3',
                     '#3fb618',
@@ -181,9 +191,9 @@
     new Chart(statusCtx, {
         type: 'pie',
         data: {
-            labels: {{ status_labels|safe }},
+            labels: statusLabels,
             datasets: [{
-                data: {{ status_data|safe }},
+                data: statusData,
                 backgroundColor: [
                     '#3fb618',
                     '#2780e3',
