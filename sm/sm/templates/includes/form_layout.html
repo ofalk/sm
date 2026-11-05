@@ -1,0 +1,40 @@
+{% load i18n %}
+{% load django_bootstrap5 %}
+
+{% for hidden in form.hidden_fields %}{{ hidden }}{% endfor %}
+
+{% if form.non_field_errors %}
+<div class="alert alert-danger" role="alert">
+    {{ form.non_field_errors }}
+</div>
+{% endif %}
+
+{% if form.layout %}
+    {% for group in form.layout %}
+    <fieldset class="form-section">
+        {% if group.title %}
+        <legend class="form-section-title">{{ group.title }}</legend>
+        {% endif %}
+        {% if group.description %}
+        <p class="form-section-description">{{ group.description }}</p>
+        {% endif %}
+        <div class="row g-3">
+            {% for item in group.fields %}
+            <div class="{{ item.col_class }}">
+                {% bootstrap_field item.field %}
+            </div>
+            {% endfor %}
+        </div>
+    </fieldset>
+    {% endfor %}
+{% else %}
+    <div class="row g-3">
+        {% for field in form %}
+            {% if not field.is_hidden %}
+            <div class="col-md-6">
+                {% bootstrap_field field %}
+            </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+{% endif %}

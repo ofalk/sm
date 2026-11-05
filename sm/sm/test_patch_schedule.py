@@ -90,7 +90,7 @@ class MonitoringBadgeTest(TestCase):
 
         self.status = Status.objects.create(name="Active")
         self.domain = Domain.objects.create(name="m.example.com")
-        Server.objects.create(
+        self.monitored = Server.objects.create(
             hostname="monitored",
             status=self.status,
             domain=self.domain,
@@ -102,11 +102,44 @@ class MonitoringBadgeTest(TestCase):
             domain=self.domain,
         )
 
-    def test_list_shows_monitoring_badges(self):
+    def test_list_shows_monitoring_toggles(self):
         response = self.client.get(reverse("server:index"))
         self.assertContains(response, "Monitoring")
-        self.assertContains(response, "Yes")
-        self.assertContains(response, "No")
+        self.assertContains(
+            response,
+            reverse("server:monitoring_toggle", args=[self.monitored.pk]),
+        )
+        self.assertContains(response, 'id="monitoring-toggle-%s"' % self.monitored.pk)
+        self.assertContains(response, "checked")
+
+    def test_toggle_monitoring_from_list(self):
+        response = self.client.post(
+            reverse("server:monitoring_toggle", args=[self.monitored.pk]),
+            {"next": reverse("server:index")},
+            follow=True,
+        )
+        self.assertEqual(response.status_code, 200)
+        self.monitored.refresh_from_db()
+        self.assertFalse(self.monitored.monitoring_from_puppet)
+
+        self.client.post(
+            reverse("server:monitoring_toggle", args=[self.monitored.pk]),
+            {"next": reverse("server:index")},
+            follow=True,
+        )
+        self.monitored.refresh_from_db()
+        self.assertTrue(self.monitored.monitoring_from_puppet)
+
+    def test_toggle_monitoring_from_detail(self):
+        response = self.client.post(
+            reverse("server:monitoring_toggle", args=[self.monitored.pk]),
+            {"next": reverse("server:detail", args=[self.monitored.pk])},
+            follow=True,
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Monitoring")
+        self.monitored.refresh_from_db()
+        self.assertFalse(self.monitored.monitoring_from_puppet)
 
 
 @override_settings(PASSWORD_HASHERS=FAST_HASHERS)

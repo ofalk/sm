@@ -118,6 +118,7 @@ class ServerSerializer(TaggitSerializer, serializers.ModelSerializer):
         source="monitoring_from_puppet", required=False
     )
     monitoring_from_puppet = serializers.BooleanField(read_only=True)
+    sm_name = serializers.CharField(read_only=True)
 
     class Meta:
         model = Server
@@ -139,6 +140,14 @@ class ServerSerializer(TaggitSerializer, serializers.ModelSerializer):
             "rack",
             "monitoring",
             "monitoring_from_puppet",
+            "monitoring_profile",
+            "criticality",
+            "owner_team",
+            "runbook_url",
+            "monitoring_labels",
+            "exporter_endpoints",
+            "maintenance_window",
+            "sm_name",
             "management_ip",
             "management_hostname",
             "tags",
@@ -162,6 +171,7 @@ class LocationSerializer(TaggitSerializer, serializers.ModelSerializer):
 
 class DomainSerializer(TaggitSerializer, serializers.ModelSerializer):
     tags = TagListSerializerField(required=False)
+    sm_name = serializers.CharField(read_only=True)
 
     class Meta:
         model = Domain
@@ -193,6 +203,7 @@ class ClusterSerializer(TaggitSerializer, serializers.ModelSerializer):
 
 class ClusterPackageSerializer(TaggitSerializer, serializers.ModelSerializer):
     status_name = serializers.CharField(source="status.name", read_only=True)
+    sm_name = serializers.CharField(read_only=True)
     package_type_name = serializers.CharField(
         source="package_type.name", read_only=True
     )

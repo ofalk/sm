@@ -1,6 +1,7 @@
 from django.db import models
 from django.db.models import Q
 from django.urls import reverse
+from django.utils.translation import gettext_lazy as _
 from simple_history.models import HistoricalRecords
 from django.contrib.auth.models import Group
 from taggit.managers import TaggableManager
@@ -16,6 +17,23 @@ class ModelManager(models.Manager):
 class Model(models.Model):
 
     name = models.CharField(max_length=45, verbose_name="Domain name")
+    monitoring = models.BooleanField(default=False, verbose_name="Monitoring")
+    check_http = models.BooleanField(default=True, verbose_name=_("HTTP check"))
+    check_tls = models.BooleanField(default=True, verbose_name=_("TLS check"))
+    expected_status = models.CharField(
+        max_length=64,
+        blank=True,
+        default="",
+        verbose_name=_("Expected status"),
+        help_text=_("One or more status codes, e.g. 200,301,302."),
+    )
+    tls_sni = models.CharField(
+        max_length=253,
+        blank=True,
+        default="",
+        verbose_name=_("TLS SNI"),
+        help_text=_("TLS server name if it differs from the domain."),
+    )
 
     group = models.ForeignKey(
         Group,
@@ -44,6 +62,11 @@ class Model(models.Model):
 
     def __str__(self):
         return "%s" % self.name
+
+    @property
+    def sm_name(self) -> str:
+        """Stable monitoring name: the domain name itself."""
+        return self.name
 
     def get_absolute_url(self):
         return reverse("%s:detail" % app_label, kwargs={"pk": self.pk})

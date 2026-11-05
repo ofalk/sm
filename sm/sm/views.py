@@ -15,7 +15,7 @@ from patchtime.models import Model as Patchtime
 from servermodel.models import Model as ServerModel
 from status.models import Model as Status
 from vendor.models import Model as Vendor
-from django.db.models import Count, Q
+from django.db.models import Count, Q, QuerySet
 from django.core.exceptions import ObjectDoesNotExist
 from django.apps import apps
 from django.http import Http404, JsonResponse
@@ -24,8 +24,9 @@ from django.urls import reverse
 from django.core.exceptions import PermissionDenied
 
 from django.db.models import ProtectedError
+from django.utils.http import url_has_allowed_host_and_scheme
 from django.utils.translation import gettext as _
-from django.shortcuts import redirect
+from django.shortcuts import get_object_or_404, redirect
 from django.views import View
 from typing import Any, List
 from .mixins import filter_queryset_by_tenant, filter_history_queryset_by_tenant
@@ -130,6 +131,58 @@ class GenericBulkDeleteView(LoginRequiredMixin, View):
                 % instances,
             )
         return redirect(self.get_success_url())
+
+
+class MonitoringToggleView(LoginRequiredMixin, View):
+    """
+    Flips the monitoring flag on a single tenant object.
+
+    The target object is resolved through the shared tenant filter, so a user
+    can never toggle an item from another group (or a global seed fixture).
+    Subclasses set ``model`` and, where the field name differs, the
+    ``monitoring_field`` attribute.
+    """
+
+    model = None
+    monitoring_field = "monitoring"
+
+    def get_queryset(self) -> QuerySet:
+        return filter_queryset_by_tenant(self.model.objects.all(), self.request)
+
+    def get_object(self) -> Any:
+        return get_object_or_404(self.get_queryset(), pk=self.kwargs["pk"])
+
+    def post(self, request: Any, *args: Any, **kwargs: Any) -> Any:
+        obj = self.get_object()
+        model = self.model
+
+        if not request.user.is_superuser:
+            # Global (group-less) seed fixtures are read-only for tenant users.
+            if getattr(obj, "group", None) is None:
+                raise PermissionDenied
+            perm = "{}.change_{}".format(model._meta.app_label, model._meta.model_name)
+            if not request.user.has_perm(perm):
+                raise PermissionDenied
+
+        field = self.monitoring_field
+        enabled = not getattr(obj, field)
+        setattr(obj, field, enabled)
+        obj.save()
+
+        if enabled:
+            message = _("Monitoring enabled for %(name)s.")
+        else:
+            message = _("Monitoring disabled for %(name)s.")
+        messages.success(request, message % {"name": obj})
+
+        next_url = request.POST.get("next")
+        if next_url and url_has_allowed_host_and_scheme(
+            next_url,
+            allowed_hosts={request.get_host()},
+            require_https=request.is_secure(),
+        ):
+            return redirect(next_url)
+        return redirect("%s:index" % model._meta.app_label)
 
 
 class GenericCSVExportView(LoginRequiredMixin, View):

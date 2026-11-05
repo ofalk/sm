@@ -11,6 +11,11 @@ urlpatterns = [
     url(r"^update/(?P<pk>[-\w]+)/$", views.UpdateView.as_view(), name="update"),
     url(r"^delete/(?P<pk>[-\w]+)/$", views.DeleteView.as_view(), name="delete"),
     url(
+        r"^monitoring/(?P<pk>[-\w]+)/$",
+        views.MonitoringToggleView.as_view(),
+        name="monitoring_toggle",
+    ),
+    url(
         r"^decommission/(?P<pk>[-\w]+)/$",
         views.DecommissionView.as_view(),
         name="decommission",
