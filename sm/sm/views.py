@@ -173,7 +173,13 @@ class MonitoringToggleView(LoginRequiredMixin, View):
             message = _("Monitoring enabled for %(name)s.")
         else:
             message = _("Monitoring disabled for %(name)s.")
-        messages.success(request, message % {"name": obj})
+        message = message % {"name": obj}
+
+        # Async toggles get a small JSON payload so the page can stay put.
+        if request.headers.get("x-requested-with") == "XMLHttpRequest":
+            return JsonResponse({"monitoring": enabled, "message": message})
+
+        messages.success(request, message)
 
         next_url = request.POST.get("next")
         if next_url and url_has_allowed_host_and_scheme(

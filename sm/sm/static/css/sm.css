@@ -398,31 +398,174 @@ a.google-btn:hover {
 /* Monitoring switch -------------------------------------------------- */
 .monitoring-toggle {
   display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
   margin: 0;
 }
 
-.monitoring-toggle-label {
-  font-size: 0.7rem;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  color: #888;
-}
-
-.monitoring-toggle .form-check-input {
-  margin-top: 0;
+.monitoring-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #6c757d;
+  text-align: left;
+  line-height: 1;
   cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
 }
 
-.monitoring-toggle .form-check-input:disabled {
+.monitoring-switch-track {
+  position: relative;
+  display: inline-block;
+  flex: 0 0 auto;
+  width: 2.85rem;
+  height: 1.5rem;
+  border: 1px solid #dee2e6;
+  border-radius: 999px;
+  background: #f1f3f5;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.06);
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.monitoring-switch-thumb {
+  position: absolute;
+  z-index: 2;
+  top: 50%;
+  left: 3px;
+  width: 1.1rem;
+  height: 1.1rem;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.28);
+  transform: translateY(-50%);
+  transition:
+    left 0.22s cubic-bezier(0.2, 0.8, 0.2, 1),
+    width 0.12s ease;
+}
+
+.monitoring-switch-icon {
+  position: absolute;
+  z-index: 1;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.55rem;
+  line-height: 1;
+  transition: opacity 0.18s ease;
+}
+
+.monitoring-switch-icon-on {
+  right: 0.45rem;
+  color: #fff;
+  opacity: 0;
+}
+
+.monitoring-switch-icon-off {
+  left: 0.48rem;
+  color: #adb5bd;
+  opacity: 1;
+}
+
+.monitoring-switch.is-on .monitoring-switch-track {
+  background: linear-gradient(135deg, #2fb344, #157347);
+  border-color: #157347;
+  box-shadow: 0 0 0 0.18rem rgba(25, 135, 84, 0.12);
+}
+
+.monitoring-switch.is-on .monitoring-switch-thumb {
+  left: calc(100% - 1.1rem - 3px);
+}
+
+.monitoring-switch.is-on .monitoring-switch-icon-on {
+  opacity: 1;
+}
+
+.monitoring-switch.is-on .monitoring-switch-icon-off {
+  opacity: 0;
+}
+
+.monitoring-switch-text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.12rem;
+}
+
+.monitoring-switch-title {
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #8a939b;
+}
+
+.monitoring-switch-state {
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: #adb5bd;
+  transition: color 0.2s ease;
+}
+
+.monitoring-switch.is-on .monitoring-switch-state {
+  color: #198754;
+}
+
+.monitoring-switch:hover:not(:disabled) .monitoring-switch-track {
+  border-color: #adb5bd;
+}
+
+.monitoring-switch.is-on:hover:not(:disabled) .monitoring-switch-track {
+  border-color: #0f5132;
+}
+
+.monitoring-switch:focus-visible {
+  outline: none;
+}
+
+.monitoring-switch:focus-visible .monitoring-switch-track {
+  box-shadow: 0 0 0 0.22rem rgba(39, 128, 227, 0.25);
+}
+
+.monitoring-switch:disabled {
+  opacity: 0.5;
   cursor: not-allowed;
 }
 
-.monitoring-toggle .form-check-label {
-  font-size: 0.8rem;
-  color: #6c757d;
+.monitoring-switch.is-loading {
+  cursor: progress;
+}
+
+.monitoring-switch.is-loading .monitoring-switch-track {
+  animation: monitoring-pulse 0.9s ease-in-out infinite;
+}
+
+.monitoring-switch.is-loading .monitoring-switch-thumb {
+  width: 0.8rem;
+}
+
+.monitoring-switch.is-error .monitoring-switch-track {
+  animation: monitoring-shake 0.3s ease;
+}
+
+@keyframes monitoring-pulse {
+  50% {
+    opacity: 0.55;
+  }
+}
+
+@keyframes monitoring-shake {
+  25% {
+    transform: translateX(-2px);
+  }
+  50% {
+    transform: translateX(2px);
+  }
+  75% {
+    transform: translateX(-1px);
+  }
 }
 
 #server_list .monitoring-toggle,
@@ -431,10 +574,53 @@ a.google-btn:hover {
   justify-content: center;
 }
 
-#server_list .monitoring-toggle .form-check-label,
-#cluster_list .monitoring-toggle .form-check-label,
-#clusterpackage_list .monitoring-toggle .form-check-label {
-  display: none;
+/* Monitoring toast --------------------------------------------------- */
+#monitoring-toast-container {
+  position: fixed;
+  z-index: 1080;
+  right: 1.25rem;
+  bottom: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  pointer-events: none;
+}
+
+.monitoring-toast {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  min-width: 15rem;
+  max-width: 24rem;
+  padding: 0.65rem 0.9rem;
+  border-left: 4px solid #198754;
+  border-radius: 0.55rem;
+  background: #fff;
+  box-shadow: 0 0.45rem 1.4rem rgba(0, 0, 0, 0.16);
+  color: #343a40;
+  font-size: 0.85rem;
+  opacity: 0;
+  transform: translateY(0.5rem);
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
+}
+
+.monitoring-toast.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.monitoring-toast i {
+  color: #198754;
+}
+
+.monitoring-toast-danger {
+  border-left-color: #dc3545;
+}
+
+.monitoring-toast-danger i {
+  color: #dc3545;
 }
 
 /* Utilities */

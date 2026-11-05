@@ -192,6 +192,120 @@ $(function () {
       }
     }
   });
+
+  // Async monitoring toggles: submit in the background and update the switch
+  // without reloading the page. Non-JS clients still submit the form normally.
+  document.addEventListener("submit", function (event) {
+    var form = event.target.closest("form[data-monitoring-toggle]");
+    if (!form) return;
+    event.preventDefault();
+
+    var button = form.querySelector(".monitoring-switch");
+    if (!button || button.disabled || button.classList.contains("is-loading")) {
+      return;
+    }
+
+    var wasOn = button.classList.contains("is-on");
+    button.classList.add("is-loading");
+    button.disabled = true;
+
+    fetch(form.action, {
+      method: "POST",
+      body: new FormData(form),
+      headers: {
+        "X-Requested-With": "XMLHttpRequest",
+        Accept: "application/json",
+      },
+      credentials: "same-origin",
+    })
+      .then(function (response) {
+        return response.text().then(function (body) {
+          var data = {};
+          try {
+            data = JSON.parse(body);
+          } catch (parseError) {
+            data = {};
+          }
+          if (!response.ok) {
+            throw new Error(
+              data.message || data.detail || form.dataset.errorMessage,
+            );
+          }
+          return data;
+        });
+      })
+      .then(function (data) {
+        setMonitoringState(button, data.monitoring);
+        showMonitoringToast(data.message, "success");
+      })
+      .catch(function (error) {
+        setMonitoringState(button, wasOn);
+        button.classList.add("is-error");
+        window.setTimeout(function () {
+          button.classList.remove("is-error");
+        }, 350);
+        showMonitoringToast(
+          error.message || form.dataset.errorMessage,
+          "danger",
+        );
+      })
+      .finally(function () {
+        button.classList.remove("is-loading");
+        button.disabled = false;
+      });
+  });
+
+  function setMonitoringState(button, enabled) {
+    button.classList.toggle("is-on", enabled);
+    button.classList.toggle("is-off", !enabled);
+    button.setAttribute("aria-checked", enabled ? "true" : "false");
+    var state = button.querySelector(".monitoring-switch-state");
+    if (state) {
+      state.textContent = enabled
+        ? button.dataset.onLabel
+        : button.dataset.offLabel;
+    }
+  }
+
+  function showMonitoringToast(message, variant) {
+    if (!message) return;
+
+    var container = document.getElementById("monitoring-toast-container");
+    if (!container) {
+      container = document.createElement("div");
+      container.id = "monitoring-toast-container";
+      container.setAttribute("aria-live", "polite");
+      document.body.appendChild(container);
+    }
+
+    var toast = document.createElement("div");
+    toast.className =
+      "monitoring-toast monitoring-toast-" + (variant || "success");
+    toast.setAttribute("role", "status");
+
+    var icon = document.createElement("i");
+    icon.className =
+      variant === "danger"
+        ? "fa-solid fa-circle-exclamation"
+        : "fa-solid fa-circle-check";
+
+    var text = document.createElement("span");
+    text.textContent = message;
+
+    toast.appendChild(icon);
+    toast.appendChild(text);
+    container.appendChild(toast);
+
+    window.requestAnimationFrame(function () {
+      toast.classList.add("show");
+    });
+    window.setTimeout(function () {
+      toast.classList.remove("show");
+      window.setTimeout(function () {
+        toast.remove();
+      }, 250);
+    }, 2800);
+  }
 });
 
 $(document).ajaxSend(function (event, xhr, settings) {

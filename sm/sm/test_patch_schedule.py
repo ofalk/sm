@@ -110,7 +110,7 @@ class MonitoringBadgeTest(TestCase):
             reverse("server:monitoring_toggle", args=[self.monitored.pk]),
         )
         self.assertContains(response, 'id="monitoring-toggle-%s"' % self.monitored.pk)
-        self.assertContains(response, "checked")
+        self.assertContains(response, 'aria-checked="true"')
 
     def test_toggle_monitoring_from_list(self):
         response = self.client.post(
@@ -140,6 +140,27 @@ class MonitoringBadgeTest(TestCase):
         self.assertContains(response, "Monitoring")
         self.monitored.refresh_from_db()
         self.assertFalse(self.monitored.monitoring_from_puppet)
+
+    def test_toggle_monitoring_async_returns_json(self):
+        response = self.client.post(
+            reverse("server:monitoring_toggle", args=[self.monitored.pk]),
+            HTTP_X_REQUESTED_WITH="XMLHttpRequest",
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse(response.json()["monitoring"])
+        self.assertIn("Monitoring disabled", response.json()["message"])
+        self.monitored.refresh_from_db()
+        self.assertFalse(self.monitored.monitoring_from_puppet)
+
+        response = self.client.post(
+            reverse("server:monitoring_toggle", args=[self.monitored.pk]),
+            HTTP_X_REQUESTED_WITH="XMLHttpRequest",
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(response.json()["monitoring"])
+        self.assertIn("Monitoring enabled", response.json()["message"])
+        self.monitored.refresh_from_db()
+        self.assertTrue(self.monitored.monitoring_from_puppet)
 
 
 @override_settings(PASSWORD_HASHERS=FAST_HASHERS)
