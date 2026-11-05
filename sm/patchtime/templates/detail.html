@@ -13,7 +13,7 @@
 {% block body %}
 <div class="wide-container mt-4">
 
-{% bootstrap_form form %}
+{% include "includes/form_layout.html" with form=form %}
 
   <div class="card">
     {% if not object.server_set.all %}

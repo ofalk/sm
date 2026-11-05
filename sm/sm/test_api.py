@@ -716,6 +716,110 @@ class ApiMonitoringFieldTest(TestCase):
 
 
 @override_settings(PASSWORD_HASHERS=FAST_HASHERS)
+class ApiMonitoringSchemaTest(TestCase):
+    """Fields required by the monitoring coverage exporter."""
+
+    def setUp(self):
+        self.user = User.objects.create_superuser("schemaadmin", "s@e.c", PASSWORD)
+        self.client = APIClient()
+        self.client.force_authenticate(self.user)
+
+    def test_server_monitoring_schema_fields_and_sm_name(self):
+        status = Status.objects.create(name="In use")
+        domain = Domain.objects.create(name="localghost.com")
+        Server.objects.create(
+            hostname="knode03",
+            domain=domain,
+            status=status,
+            monitoring_from_puppet=True,
+            monitoring_profile="k8s-node",
+            criticality="critical",
+            owner_team="monitoring",
+            runbook_url="https://runbooks.example.com/knode03",
+            monitoring_labels={"env": "prod"},
+            exporter_endpoints={"node_exporter": 9100},
+            maintenance_window="Sun 02:00-04:00 UTC",
+        )
+        response = self.client.get("/api/servers/")
+        self.assertEqual(response.status_code, 200)
+        data = unwrap(response)[0]
+        self.assertEqual(data["sm_name"], "knode03.localghost.com")
+        self.assertEqual(data["monitoring_profile"], "k8s-node")
+        self.assertEqual(data["criticality"], "critical")
+        self.assertEqual(data["owner_team"], "monitoring")
+        self.assertEqual(data["runbook_url"], "https://runbooks.example.com/knode03")
+        self.assertEqual(data["monitoring_labels"], {"env": "prod"})
+        self.assertEqual(data["exporter_endpoints"], {"node_exporter": 9100})
+        self.assertEqual(data["maintenance_window"], "Sun 02:00-04:00 UTC")
+        self.assertIs(data["monitoring"], True)
+
+    def test_clusterpackage_monitoring_schema_fields_and_sm_name(self):
+        from cluster.models import Model as Cluster
+        from clusterpackage.models import Model as ClusterPackage
+        from clusterpackagetype.models import Model as ClusterPackageType
+        from clustersoftware.models import Model as ClusterSoftware
+
+        vendor = Vendor.objects.create(name="AlmaLinux")
+        software = ClusterSoftware.objects.create(
+            name="PostgreSQL", version="17", vendor=vendor
+        )
+        cluster = Cluster.objects.create(
+            name="k.localghost.com", clustersoftware=software
+        )
+        self.assertIs(cluster.monitoring, True)
+        status = Status.objects.create(name="In use")
+        pkg_type = ClusterPackageType.objects.create(name="PostgreSQL R/W")
+        ClusterPackage.objects.create(
+            name="central-postgres-rw",
+            cluster=cluster,
+            package_type=pkg_type,
+            status=status,
+            host="10.0.0.2",
+            port="5432",
+            protocol="postgres",
+            check_path="/-/readiness",
+            expected_status="200,301,302,401",
+            tls_sni="db.example.com",
+            check_module="http_2xx",
+            metrics_host="metrics.example.com",
+            metrics_port=9187,
+            runbook_url="https://runbooks.example.com/postgres",
+        )
+        response = self.client.get("/api/clusterpackages/")
+        self.assertEqual(response.status_code, 200)
+        data = unwrap(response)[0]
+        self.assertEqual(data["sm_name"], "k.localghost.com/central-postgres-rw")
+        self.assertIs(data["monitoring"], True)
+        self.assertEqual(data["protocol"], "postgres")
+        self.assertEqual(data["check_path"], "/-/readiness")
+        self.assertEqual(data["expected_status"], "200,301,302,401")
+        self.assertEqual(data["tls_sni"], "db.example.com")
+        self.assertEqual(data["check_module"], "http_2xx")
+        self.assertEqual(data["metrics_host"], "metrics.example.com")
+        self.assertEqual(data["metrics_port"], 9187)
+        self.assertEqual(data["runbook_url"], "https://runbooks.example.com/postgres")
+
+    def test_domain_monitoring_schema_fields_and_sm_name(self):
+        Domain.objects.create(
+            name="git.linux-kernel.de",
+            monitoring=True,
+            check_http=True,
+            check_tls=True,
+            expected_status="200",
+            tls_sni="git.linux-kernel.de",
+        )
+        response = self.client.get("/api/domains/")
+        self.assertEqual(response.status_code, 200)
+        data = unwrap(response)[0]
+        self.assertEqual(data["sm_name"], "git.linux-kernel.de")
+        self.assertIs(data["monitoring"], True)
+        self.assertIs(data["check_http"], True)
+        self.assertIs(data["check_tls"], True)
+        self.assertEqual(data["expected_status"], "200")
+        self.assertEqual(data["tls_sni"], "git.linux-kernel.de")
+
+
+@override_settings(PASSWORD_HASHERS=FAST_HASHERS)
 class ApiKeyLifecycleTest(TestCase):
     """API key expiry, rotation, and revocation lifecycle."""
 

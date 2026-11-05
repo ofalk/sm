@@ -1,6 +1,11 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-from sm.views import SafeDeleteMixin, GenericCSVExportView, GenericBulkDeleteView
+from sm.views import (
+    SafeDeleteMixin,
+    GenericCSVExportView,
+    GenericBulkDeleteView,
+    MonitoringToggleView as GenericMonitoringToggleView,
+)
 from sm.mixins import MultiTenantMixin, BulkActionMixin
 
 from .models import Model
@@ -24,6 +29,12 @@ class ListView(LoginRequiredMixin, MultiTenantMixin, BulkActionMixin, GenericLis
     paginate_by = 20
     paginate_orphans = paginate_by / 4
     ordering = "name"
+
+
+class MonitoringToggleView(GenericMonitoringToggleView):
+    """Toggle the cluster monitoring flag from the list or detail page."""
+
+    model = Model
 
 
 class DetailView(LoginRequiredMixin, MultiTenantMixin, GenericUpdateView):
@@ -81,4 +92,5 @@ class CSVExportView(GenericCSVExportView):
     export_fields = [
         ("name", "name"),
         ("clustersoftware", "clustersoftware__name"),
+        ("monitoring", "monitoring"),
     ]

@@ -1,7 +1,7 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 
-from sm.views import SafeDeleteMixin, GenericCSVExportView
+from sm.views import SafeDeleteMixin, GenericCSVExportView, MonitoringToggleView
 from sm.mixins import filter_queryset_by_tenant, MultiTenantMixin, BulkActionMixin
 
 from .models import Model
@@ -162,6 +162,13 @@ class RestoreView(LoginRequiredMixin, MultiTenantMixin, View):
         return redirect("server:index")
 
 
+class MonitoringToggleView(MonitoringToggleView):
+    """Toggle the server monitoring flag from the list or detail page."""
+
+    model = Model
+    monitoring_field = "monitoring_from_puppet"
+
+
 class DetailView(LoginRequiredMixin, MultiTenantMixin, GenericUpdateView):
     template_name = "%s/detail.html" % app_label
     model = Model
@@ -229,6 +236,7 @@ class CSVExportView(GenericCSVExportView):
         ("primary_ip", "primary_ip"),
         ("management_ip", "management_ip"),
         ("description", "description"),
+        ("monitoring", "monitoring_from_puppet"),
         ("decommission_date", "decommission_date"),
         ("tags", "tags.names"),
     ]

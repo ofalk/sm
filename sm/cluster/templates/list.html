@@ -30,7 +30,7 @@
     {% csrf_token %}
 
     {% include "includes/bulk_toolbar.html" %}
-
+    </form>
 
     <table class="table table-hover" id="cluster_list">
       <thead>
@@ -38,6 +38,7 @@
         {% include "includes/bulk_select_all.html" %}
           <th>{% trans 'Name' %}</th>
           <th>{% trans 'Software' %}</th>
+          <th class="text-center">{% trans 'Monitoring' %}</th>
           <th>{% trans 'Tags' %}</th>
           <th>{% trans "Actions" %}</th>
         </tr>
@@ -45,7 +46,7 @@
       <tbody>
         {% for object in object_list %}
           <tr>
-            {% include "includes/bulk_checkbox.html" with bulk_object=object %}
+            {% include "includes/bulk_checkbox.html" with bulk_object=object bulk_form_id="bulk_action_form" %}
             <td>
               <a href="{% url 'cluster:detail' object.pk %}" title="{{ object.name }}">
                 {{ object.name }}
@@ -58,6 +59,18 @@
               </a>
               {% else %}
                 None
+              {% endif %}
+            </td>
+            <td class="text-center">
+              {% url 'cluster:monitoring_toggle' object.pk as toggle_url %}
+              {% if perms.cluster.change_model %}
+                {% if user.is_superuser or object.group in user.groups.all %}
+                  {% include "includes/monitoring_toggle.html" with toggle_url=toggle_url is_monitored=object.monitoring can_toggle=True %}
+                {% else %}
+                  {% include "includes/monitoring_toggle.html" with toggle_url=toggle_url is_monitored=object.monitoring can_toggle=False %}
+                {% endif %}
+              {% else %}
+                {% include "includes/monitoring_toggle.html" with toggle_url=toggle_url is_monitored=object.monitoring can_toggle=False %}
               {% endif %}
             </td>
             <td>{% include "includes/tags.html" %}</td>
@@ -84,7 +97,6 @@
         {% endfor %}
       </tbody>
     </table>
-    </form>
     {% endif %}
     {% include "pagination/pagination.html" %}
   </div> <!-- card -->

@@ -107,6 +107,33 @@ class Tester(TestCase):
         for field in ["name", "clustersoftware"]:
             self.assertTrue(form.fields[field].widget.attrs["disabled"])
 
+    def test_monitoring_toggle_from_list_and_detail(self):
+        self.login()
+        self.assertTrue(self.testitem.monitoring)
+        response = self.client.get(reverse("%s:index" % app_label))
+        self.assertContains(
+            response,
+            reverse("%s:monitoring_toggle" % app_label, args=[self.testitem.pk]),
+        )
+
+        response = self.client.post(
+            reverse("%s:monitoring_toggle" % app_label, args=[self.testitem.pk]),
+            {"next": reverse("%s:index" % app_label)},
+            follow=True,
+        )
+        self.assertEqual(response.status_code, 200)
+        self.testitem.refresh_from_db()
+        self.assertFalse(self.testitem.monitoring)
+
+        response = self.client.post(
+            reverse("%s:monitoring_toggle" % app_label, args=[self.testitem.pk]),
+            {"next": reverse("%s:detail" % app_label, args=[self.testitem.pk])},
+            follow=True,
+        )
+        self.assertEqual(response.status_code, 200)
+        self.testitem.refresh_from_db()
+        self.assertTrue(self.testitem.monitoring)
+
     def test_deleteview(self):
         self.login()
         url = reverse("%s:delete" % app_label, args=[self.testitem.pk])

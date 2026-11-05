@@ -1,5 +1,6 @@
 from django.db import models
 from django.urls import reverse
+from django.utils.translation import gettext_lazy as _
 from simple_history.models import HistoricalRecords
 from status.models import Model as StatusModel
 from cluster.models import Model as ClusterModel
@@ -9,6 +10,14 @@ from django.contrib.auth.models import Group
 from taggit.managers import TaggableManager
 
 from . import app_label
+
+
+class Protocol(models.TextChoices):
+    HTTP = "http", _("HTTP")
+    HTTPS = "https", _("HTTPS")
+    TCP = "tcp", _("TCP")
+    POSTGRES = "postgres", _("PostgreSQL")
+    DNS = "dns", _("DNS")
 
 
 class ClusterPackageManager(models.Manager):
@@ -48,6 +57,59 @@ class Model(models.Model):
         on_delete=models.PROTECT,
     )
     description = models.CharField(max_length=256)
+    monitoring = models.BooleanField(default=True, verbose_name="Monitoring")
+    protocol = models.CharField(
+        max_length=16,
+        choices=Protocol.choices,
+        default=Protocol.HTTP,
+        verbose_name=_("Protocol"),
+    )
+    check_path = models.CharField(
+        max_length=255,
+        blank=True,
+        default="",
+        verbose_name=_("Check path"),
+        help_text=_("HTTP path to probe, e.g. / or /-/readiness."),
+    )
+    expected_status = models.CharField(
+        max_length=64,
+        blank=True,
+        default="",
+        verbose_name=_("Expected status"),
+        help_text=_("One or more status codes, e.g. 200,301,302,401."),
+    )
+    tls_sni = models.CharField(
+        max_length=253,
+        blank=True,
+        default="",
+        verbose_name=_("TLS SNI"),
+        help_text=_("TLS server name if it differs from the host."),
+    )
+    check_module = models.CharField(
+        max_length=64,
+        blank=True,
+        default="",
+        verbose_name=_("Check module"),
+        help_text=_("Blackbox module, e.g. http_2xx."),
+    )
+    metrics_host = models.CharField(
+        max_length=253,
+        blank=True,
+        default="",
+        verbose_name=_("Metrics host"),
+        help_text=_("Metrics host if it differs from the check host."),
+    )
+    metrics_port = models.PositiveIntegerField(
+        null=True,
+        blank=True,
+        verbose_name=_("Metrics port"),
+    )
+    runbook_url = models.URLField(
+        max_length=2083,
+        blank=True,
+        null=True,
+        verbose_name=_("Runbook URL"),
+    )
     host = models.CharField(max_length=253, verbose_name="IP/Hostname")
     port = models.CharField(
         max_length=10, verbose_name="Port or ID", blank=True, null=True
@@ -71,6 +133,11 @@ class Model(models.Model):
 
     def __str__(self):
         return "{}-{}".format(self.cluster, self.name)
+
+    @property
+    def sm_name(self) -> str:
+        """Stable monitoring name: <cluster>/<package>."""
+        return "{}/{}".format(self.cluster.name, self.name)
 
     def natural_key(self):
         return (

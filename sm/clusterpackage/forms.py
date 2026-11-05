@@ -1,10 +1,48 @@
 from django.utils.translation import gettext as _
+from django.utils.translation import gettext_lazy
 
-from .models import Model
+from .models import Model, Protocol
 from sm.forms import SMForm, SMFormDisabled
 
 
 class Form(SMForm):
+    field_groups = [
+        {
+            "title": gettext_lazy("Package"),
+            "fields": [
+                "name",
+                "status",
+                "cluster",
+                "package_type",
+                "monitoring",
+            ],
+        },
+        {
+            "title": gettext_lazy("Endpoint"),
+            "fields": [
+                "host",
+                "port",
+                "protocol",
+                "metrics_host",
+                "metrics_port",
+            ],
+        },
+        {
+            "title": gettext_lazy("HTTP / TLS check"),
+            "fields": [
+                "check_path",
+                "expected_status",
+                "tls_sni",
+                "check_module",
+            ],
+        },
+        {
+            "title": gettext_lazy("Details"),
+            "fields": ["description", "runbook_url", "tags"],
+            "wide": ["description", "runbook_url", "tags"],
+        },
+    ]
+
     class Meta(SMForm.Meta):
         model = Model
 
@@ -12,6 +50,12 @@ class Form(SMForm):
         self.user = user
         kwargs["user"] = user  # let SMForm scope FK choices to the user
         super().__init__(*args, **kwargs)
+        # New endpoint metadata has model defaults; keep it optional for older
+        # clients/forms that do not submit it.
+        self.fields["protocol"].required = False
+
+    def clean_protocol(self):
+        return self.cleaned_data.get("protocol") or Protocol.HTTP
 
     def clean(self):
         cleaned_data = super().clean()
@@ -51,4 +95,9 @@ class Form(SMForm):
 
 
 class FormDisabled(Form, SMFormDisabled):
-    pass
+    """Read-only variant; monitoring has a dedicated toggle in the header."""
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields.pop("monitoring", None)
+        self.layout = self.build_layout()

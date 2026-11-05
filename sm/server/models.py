@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils.translation import gettext_lazy as _
 from patchtime.models import Model as PatchtimeModel
 from status.models import Model as StatusModel
 from domain.models import Model as DomainModel
@@ -13,6 +14,21 @@ from django.contrib.auth.models import Group
 from taggit.managers import TaggableManager
 
 from . import app_label
+
+
+class MonitoringProfile(models.TextChoices):
+    NONE = "none", _("None")
+    LINUX_BASIC = "linux-basic", _("Linux basic")
+    K8S_NODE = "k8s-node", _("Kubernetes node")
+    HTTP_ONLY = "http-only", _("HTTP only")
+    CUSTOM = "custom", _("Custom")
+
+
+class Criticality(models.TextChoices):
+    CRITICAL = "critical", _("Critical")
+    HIGH = "high", _("High")
+    NORMAL = "normal", _("Normal")
+    LOW = "low", _("Low")
 
 
 class ServerManager(models.Manager):
@@ -34,6 +50,49 @@ class Model(models.Model):
     memory_in_mb = models.IntegerField(blank=True, null=True)
     monitoring_from_puppet = models.BooleanField(
         default=False, verbose_name="Monitoring"
+    )
+    monitoring_profile = models.CharField(
+        max_length=32,
+        choices=MonitoringProfile.choices,
+        default=MonitoringProfile.NONE,
+        verbose_name=_("Monitoring profile"),
+    )
+    criticality = models.CharField(
+        max_length=16,
+        choices=Criticality.choices,
+        default=Criticality.NORMAL,
+        verbose_name=_("Criticality"),
+    )
+    owner_team = models.CharField(
+        max_length=100,
+        blank=True,
+        default="",
+        verbose_name=_("Owner team"),
+    )
+    runbook_url = models.URLField(
+        max_length=2083,
+        blank=True,
+        null=True,
+        verbose_name=_("Runbook URL"),
+    )
+    monitoring_labels = models.JSONField(
+        default=dict,
+        blank=True,
+        verbose_name=_("Monitoring labels"),
+        help_text=_('Additional Prometheus labels, e.g. {"env": "prod"}.'),
+    )
+    exporter_endpoints = models.JSONField(
+        default=dict,
+        blank=True,
+        verbose_name=_("Exporter endpoints"),
+        help_text=_('Exporter ports by name, e.g. {"node_exporter": 9100}.'),
+    )
+    maintenance_window = models.CharField(
+        max_length=255,
+        blank=True,
+        default="",
+        verbose_name=_("Maintenance window"),
+        help_text=_('Human-readable window, e.g. "Sun 02:00-04:00 UTC".'),
     )
     location = models.ForeignKey(
         LocationModel,
@@ -114,6 +173,13 @@ class Model(models.Model):
 
     def __str__(self):
         return "%s" % self.hostname
+
+    @property
+    def sm_name(self) -> str:
+        """Stable monitoring name: fully qualified hostname."""
+        if self.domain_id:
+            return "{}.{}".format(self.hostname, self.domain.name)
+        return self.hostname
 
     @property
     def is_decommissioned(self) -> bool:
