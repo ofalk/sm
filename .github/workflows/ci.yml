@@ -14,6 +14,20 @@ permissions:
   contents: read
 
 jobs:
+  # Cheap, blocking guard: the interpreter the production image ships must be
+  # one a test leg actually runs. Added after a `build(deps)` bump of the
+  # Dockerfile base to python:3.15-slim landed green while the matrix tested
+  # only 3.13/3.14.
+  docker-base-in-matrix:
+    name: docker base is a tested interpreter
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+    - name: Assert the image's Python base is covered by the test matrix
+      run: python3 .github/scripts/check_docker_base_in_matrix.py
+
   test:
     runs-on: ubuntu-latest
 
