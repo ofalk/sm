@@ -22,7 +22,7 @@
 {% endif %}
 
 {% csrf_token %}
-{% bootstrap_form form %}
+{% include "includes/form_layout.html" with form=form %}
 <div class="form-actions">
 {% bootstrap_button "Save" button_type="submit" button_class="btn-sm btn-primary pill" %}
 </div>

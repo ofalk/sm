@@ -13,15 +13,73 @@ class SMForm(forms.ModelForm):
     Base model form. Accepts a ``user`` kwarg so FK choice fields are scoped to
     the user's accessible groups (prevents a user from referencing another
     tenant's related objects through the web UI).
+
+    Forms may declare a ``field_groups`` layout to render related fields in
+    titled sections. Each group is a dict with ``title``, ``fields`` and an
+    optional ``wide`` list for fields that should span the full row. Forms
+    without this metadata fall back to the shared two-column layout.
     """
 
     class Meta:
         fields = "__all__"
 
+    #: Optional list of section definitions, e.g.
+    #: [{"title": _("Identity"), "fields": ["name", "status"], "wide": ["tags"]}]
+    field_groups = None
+
     def __init__(self, *args, user=None, **kwargs):
         self.user = user
         super().__init__(*args, **kwargs)
         self.scope_querysets()
+        self.layout = self.build_layout()
+
+    def build_layout(self):
+        if not self.field_groups:
+            return None
+
+        layout = []
+        grouped_fields = set()
+        for group in self.field_groups:
+            wide_fields = set(group.get("wide", ()))
+            fields = []
+            for name in group.get("fields", ()):
+                if name not in self.fields:
+                    continue
+                grouped_fields.add(name)
+                fields.append(
+                    {
+                        "field": self[name],
+                        "col_class": "col-12" if name in wide_fields else "col-md-6",
+                    }
+                )
+            if fields:
+                layout.append(
+                    {
+                        "title": group.get("title"),
+                        "description": group.get("description"),
+                        "fields": fields,
+                    }
+                )
+
+        # Never silently drop a field: put anything not explicitly grouped into
+        # a final section so newly added model fields remain editable.
+        leftovers = [
+            self[name]
+            for name in self.fields
+            if name not in grouped_fields and not self[name].is_hidden
+        ]
+        if leftovers:
+            layout.append(
+                {
+                    "title": _("Other"),
+                    "description": None,
+                    "fields": [
+                        {"field": field, "col_class": "col-md-6"} for field in leftovers
+                    ],
+                }
+            )
+
+        return layout
 
     def scope_querysets(self):
         for field in self.fields.values():

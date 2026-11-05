@@ -1,8 +1,13 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 from django.http import HttpResponseRedirect
-from sm.views import SafeDeleteMixin, GenericCSVExportView, GenericBulkDeleteView
-from sm.mixins import MultiTenantMixin, BulkActionMixin
+from sm.views import (
+    SafeDeleteMixin,
+    GenericCSVExportView,
+    GenericBulkDeleteView,
+    MonitoringToggleView as GenericMonitoringToggleView,
+)
+from sm.mixins import BulkActionMixin
 
 
 from .models import Model
@@ -36,6 +41,19 @@ class ListView(LoginRequiredMixin, BulkActionMixin, GenericListView):
             return queryset.order_by(self.ordering)
         user_groups = self.request.user.groups.all()
         return queryset.filter(cluster__group__in=user_groups).order_by(self.ordering)
+
+
+class MonitoringToggleView(GenericMonitoringToggleView):
+    """Toggle the cluster package monitoring flag from list or detail."""
+
+    model = Model
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        if self.request.user.is_superuser:
+            return queryset
+        user_groups = self.request.user.groups.all()
+        return queryset.filter(cluster__group__in=user_groups)
 
 
 class DetailView(LoginRequiredMixin, GenericUpdateView):
@@ -133,4 +151,5 @@ class CSVExportView(GenericCSVExportView):
         ("package_type", "package_type__name"),
         ("host", "host"),
         ("description", "description"),
+        ("monitoring", "monitoring"),
     ]

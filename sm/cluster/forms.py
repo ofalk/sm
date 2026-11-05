@@ -4,6 +4,7 @@ from sm.mixins import filter_queryset_for_user
 from server.models import Model as ServerModel
 
 from django.forms import ModelMultipleChoiceField
+from django.utils.translation import gettext_lazy as _
 
 
 class Form(SMForm):
@@ -11,6 +12,23 @@ class Form(SMForm):
     Form providing an extra field; All ServerModels ordered by cluster and
     hostname, additionally sets the initial list in __init__()
     """
+
+    field_groups = [
+        {
+            "title": _("Cluster"),
+            "fields": ["name", "clustersoftware", "monitoring"],
+        },
+        {
+            "title": _("Servers"),
+            "fields": ["server_set"],
+            "wide": ["server_set"],
+        },
+        {
+            "title": _("Tags"),
+            "fields": ["tags"],
+            "wide": ["tags"],
+        },
+    ]
 
     server_set = ModelMultipleChoiceField(
         label="Server",
@@ -40,4 +58,11 @@ class Form(SMForm):
 
 
 class FormDisabled(Form, SMFormDisabled):
-    pass
+    """Read-only variant; monitoring has a dedicated toggle in the header."""
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields.pop("monitoring", None)
+        # The detail page renders the member servers as its own table.
+        self.fields.pop("server_set", None)
+        self.layout = self.build_layout()

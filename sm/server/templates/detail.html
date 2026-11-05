@@ -16,8 +16,14 @@
 {% block body %}
 <div class="wide-container mt-4">
     <div class="card">
-        <div class="card-header bg-white">
+        <div class="card-header bg-white d-flex justify-content-between align-items-center">
             <h4 class="mb-0">{% trans 'Server' %}</h4>
+            {% url 'server:monitoring_toggle' object.pk as toggle_url %}
+            {% if perms.server.change_model and object.group or user.is_superuser and perms.server.change_model %}
+                {% include "includes/monitoring_toggle.html" with toggle_url=toggle_url is_monitored=object.monitoring_from_puppet can_toggle=True show_label=True %}
+            {% else %}
+                {% include "includes/monitoring_toggle.html" with toggle_url=toggle_url is_monitored=object.monitoring_from_puppet can_toggle=False show_label=True %}
+            {% endif %}
         </div>
         <div class="card-body">
             {% if object %}
@@ -28,7 +34,7 @@
 
 {% csrf_token %}
 
-{% bootstrap_form form %}
+{% include "includes/form_layout.html" with form=form %}
 <div class="form-actions">
 {% if request.path == object.get_update_url %}
 {% bootstrap_button "Save" button_type="submit" button_class="btn-sm btn-primary pill" %}

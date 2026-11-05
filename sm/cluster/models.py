@@ -33,6 +33,7 @@ class Model(models.Model):
     """
 
     name = models.CharField(max_length=45)
+    monitoring = models.BooleanField(default=True, verbose_name="Monitoring")
     clustersoftware = models.ForeignKey(
         ClustersoftwareModel,
         related_name="%s_set" % app_label,

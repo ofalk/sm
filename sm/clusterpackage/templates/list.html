@@ -28,7 +28,7 @@
     {% csrf_token %}
 
     {% include "includes/bulk_toolbar.html" %}
-
+    </form>
 
     <table class="table table-hover" id="clusterpackage_list">
       <thead>
@@ -37,6 +37,7 @@
           <th>{% trans "Name" %}</th>
           <th>{% trans "Type" %}</th>
           <th>{% trans "Cluster" %}</th>
+          <th class="text-center">{% trans "Monitoring" %}</th>
           <th>{% trans "Group" %}</th>
           <th>{% trans "Actions" %}</th>
         </tr>
@@ -44,7 +45,7 @@
       <tbody>
         {% for clusterpackage in object_list.all %}
           <tr>
-            {% include "includes/bulk_checkbox.html" with bulk_object=clusterpackage %}
+            {% include "includes/bulk_checkbox.html" with bulk_object=clusterpackage bulk_form_id="bulk_action_form" %}
             <td>
               <a href="{% url 'clusterpackage:detail' clusterpackage.pk %}" title="{{ clusterpackage.name }}">
                 {{ clusterpackage.name }}
@@ -60,6 +61,18 @@
                 {{ clusterpackage.cluster.name }}
               </a>
             </td>
+            <td class="text-center">
+              {% url 'clusterpackage:monitoring_toggle' clusterpackage.pk as toggle_url %}
+              {% if perms.clusterpackage.change_model %}
+                {% if user.is_superuser or clusterpackage.group in user.groups.all %}
+                  {% include "includes/monitoring_toggle.html" with object=clusterpackage toggle_url=toggle_url is_monitored=clusterpackage.monitoring can_toggle=True %}
+                {% else %}
+                  {% include "includes/monitoring_toggle.html" with object=clusterpackage toggle_url=toggle_url is_monitored=clusterpackage.monitoring can_toggle=False %}
+                {% endif %}
+              {% else %}
+                {% include "includes/monitoring_toggle.html" with object=clusterpackage toggle_url=toggle_url is_monitored=clusterpackage.monitoring can_toggle=False %}
+              {% endif %}
+            </td>
             <td>{% include "includes/group_badge.html" with object=clusterpackage %}</td>
             <td>
               <a href="{% url 'clusterpackage:update' clusterpackage.pk %}" title="{% trans 'Edit clusterpackage' %}">
@@ -73,7 +86,6 @@
         {% endfor %}
       </tbody>
     </table>
-    </form>
     {% endif %}
     {% include "pagination/pagination.html" %}
   </div> <!-- card -->

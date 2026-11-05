@@ -9,6 +9,10 @@ on:
   pull_request:
     branches: [ main, devel ]
 
+# Least privilege by default; the deploy job overrides this with contents: write.
+permissions:
+  contents: read
+
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -41,17 +45,17 @@ jobs:
           --health-retries 5
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
 
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v5
+      uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
       with:
         python-version: ${{ matrix.python-version }}
 
     - name: Install Dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install -r requirements.txt
+        pip install -r requirements-dev.txt
         # Only the browsers the browser tests actually use (skips WebKit)
         playwright install chromium firefox --with-deps
 
@@ -87,14 +91,14 @@ jobs:
     # second leg uploading the same name would fail the job rather than merge the reports.
     - name: Upload coverage reports
       if: matrix.python-version == '3.13'
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
       with:
         name: coverage-report
         path: sm/htmlcov/
 
     - name: Upload pycco documentation
       if: matrix.python-version == '3.13'
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
       with:
         name: pycco-docs
         path: pycco/
@@ -107,19 +111,19 @@ jobs:
       contents: write
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Download coverage report
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
         with:
           name: coverage-report
           path: public/coverage
 
       - name: Download pycco documentation
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
         with:
           name: pycco-docs
           path: public/pycco
@@ -245,7 +249,7 @@ jobs:
           HTMLEOF
 
       - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v4
+        uses: peaceiris/actions-gh-pages@84c30a85c19949d7eee79c4ff27748b70285e453 # v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./public
