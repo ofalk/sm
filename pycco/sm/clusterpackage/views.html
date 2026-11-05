@@ -23,8 +23,13 @@
       <div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">django.contrib.auth.mixins</span><span class="w"> </span><span class="kn">import</span> <span class="n">LoginRequiredMixin</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">django.contrib</span><span class="w"> </span><span class="kn">import</span> <span class="n">messages</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">django.http</span><span class="w"> </span><span class="kn">import</span> <span class="n">HttpResponseRedirect</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">sm.views</span><span class="w"> </span><span class="kn">import</span> <span class="n">SafeDeleteMixin</span><span class="p">,</span> <span class="n">GenericCSVExportView</span><span class="p">,</span> <span class="n">GenericBulkDeleteView</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">sm.mixins</span><span class="w"> </span><span class="kn">import</span> <span class="n">MultiTenantMixin</span><span class="p">,</span> <span class="n">BulkActionMixin</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sm.views</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">SafeDeleteMixin</span><span class="p">,</span>
+    <span class="n">GenericCSVExportView</span><span class="p">,</span>
+    <span class="n">GenericBulkDeleteView</span><span class="p">,</span>
+    <span class="n">MonitoringToggleView</span> <span class="k">as</span> <span class="n">GenericMonitoringToggleView</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sm.mixins</span><span class="w"> </span><span class="kn">import</span> <span class="n">BulkActionMixin</span>
 
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">Model</span>
@@ -85,13 +90,10 @@
       <div class='octowrap'>
         <a class='octothorpe' href='#section-3'>#</a>
       </div>
-      
+      <p>Toggle the cluster package monitoring flag from list or detail.</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">DetailView</span><span class="p">(</span><span class="n">LoginRequiredMixin</span><span class="p">,</span> <span class="n">GenericUpdateView</span><span class="p">):</span>
-    <span class="n">template_name</span> <span class="o">=</span> <span class="s2">"</span><span class="si">%s</span><span class="s2">/detail.html"</span> <span class="o">%</span> <span class="n">app_label</span>
-    <span class="n">model</span> <span class="o">=</span> <span class="n">Model</span>
-    <span class="n">form_class</span> <span class="o">=</span> <span class="n">FormDisabled</span></pre></div>
+      <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">MonitoringToggleView</span><span class="p">(</span><span class="n">GenericMonitoringToggleView</span><span class="p">):</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -99,6 +101,18 @@
     <div class='docs'>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-4'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">model</span> <span class="o">=</span> <span class="n">Model</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-5'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-5'>#</a>
       </div>
       
     </div>
@@ -112,10 +126,42 @@
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-5'>
+  <div class='section' id='section-6'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-5'>#</a>
+        <a class='octothorpe' href='#section-6'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">DetailView</span><span class="p">(</span><span class="n">LoginRequiredMixin</span><span class="p">,</span> <span class="n">GenericUpdateView</span><span class="p">):</span>
+    <span class="n">template_name</span> <span class="o">=</span> <span class="s2">"</span><span class="si">%s</span><span class="s2">/detail.html"</span> <span class="o">%</span> <span class="n">app_label</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">Model</span>
+    <span class="n">form_class</span> <span class="o">=</span> <span class="n">FormDisabled</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-7'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-7'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">get_queryset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">queryset</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_queryset</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_superuser</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">queryset</span>
+        <span class="n">user_groups</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">groups</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">queryset</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">cluster__group__in</span><span class="o">=</span><span class="n">user_groups</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-8'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-8'>#</a>
       </div>
       
     </div>
@@ -128,10 +174,10 @@
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-6'>
+  <div class='section' id='section-9'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-6'>#</a>
+        <a class='octothorpe' href='#section-9'>#</a>
       </div>
       
     </div>
@@ -143,10 +189,10 @@
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-7'>
+  <div class='section' id='section-10'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-7'>#</a>
+        <a class='octothorpe' href='#section-10'>#</a>
       </div>
       
     </div>
@@ -160,10 +206,10 @@
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-8'>
+  <div class='section' id='section-11'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-8'>#</a>
+        <a class='octothorpe' href='#section-11'>#</a>
       </div>
       
     </div>
@@ -180,10 +226,10 @@
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-9'>
+  <div class='section' id='section-12'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-9'>#</a>
+        <a class='octothorpe' href='#section-12'>#</a>
       </div>
       
     </div>
@@ -198,10 +244,10 @@
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-10'>
+  <div class='section' id='section-13'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-10'>#</a>
+        <a class='octothorpe' href='#section-13'>#</a>
       </div>
       
     </div>
@@ -213,10 +259,10 @@
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-11'>
+  <div class='section' id='section-14'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-11'>#</a>
+        <a class='octothorpe' href='#section-14'>#</a>
       </div>
       
     </div>
@@ -226,10 +272,10 @@
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-12'>
+  <div class='section' id='section-15'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-12'>#</a>
+        <a class='octothorpe' href='#section-15'>#</a>
       </div>
       <p>Group is not a form field (editable=False); new packages inherit
 their cluster&rsquo;s tenant group.</p>
@@ -244,10 +290,10 @@ their cluster&rsquo;s tenant group.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-13'>
+  <div class='section' id='section-16'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-13'>#</a>
+        <a class='octothorpe' href='#section-16'>#</a>
       </div>
       
     </div>
@@ -260,10 +306,10 @@ their cluster&rsquo;s tenant group.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-14'>
+  <div class='section' id='section-17'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-14'>#</a>
+        <a class='octothorpe' href='#section-17'>#</a>
       </div>
       
     </div>
@@ -277,10 +323,10 @@ their cluster&rsquo;s tenant group.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-15'>
+  <div class='section' id='section-18'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-15'>#</a>
+        <a class='octothorpe' href='#section-18'>#</a>
       </div>
       
     </div>
@@ -290,10 +336,10 @@ their cluster&rsquo;s tenant group.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-16'>
+  <div class='section' id='section-19'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-16'>#</a>
+        <a class='octothorpe' href='#section-19'>#</a>
       </div>
       
     </div>
@@ -308,6 +354,7 @@ their cluster&rsquo;s tenant group.</p>
         <span class="p">(</span><span class="s2">"package_type"</span><span class="p">,</span> <span class="s2">"package_type__name"</span><span class="p">),</span>
         <span class="p">(</span><span class="s2">"host"</span><span class="p">,</span> <span class="s2">"host"</span><span class="p">),</span>
         <span class="p">(</span><span class="s2">"description"</span><span class="p">,</span> <span class="s2">"description"</span><span class="p">),</span>
+        <span class="p">(</span><span class="s2">"monitoring"</span><span class="p">,</span> <span class="s2">"monitoring"</span><span class="p">),</span>
     <span class="p">]</span>
 
 </pre></div>

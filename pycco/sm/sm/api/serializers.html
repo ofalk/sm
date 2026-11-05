@@ -331,7 +331,8 @@ API consumers that read the field keep working.</p>
       <div class="highlight"><pre>    <span class="n">monitoring</span> <span class="o">=</span> <span class="n">serializers</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span>
         <span class="n">source</span><span class="o">=</span><span class="s2">"monitoring_from_puppet"</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span>
     <span class="p">)</span>
-    <span class="n">monitoring_from_puppet</span> <span class="o">=</span> <span class="n">serializers</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span><span class="n">read_only</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></pre></div>
+    <span class="n">monitoring_from_puppet</span> <span class="o">=</span> <span class="n">serializers</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span><span class="n">read_only</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">sm_name</span> <span class="o">=</span> <span class="n">serializers</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">read_only</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -363,6 +364,14 @@ API consumers that read the field keep working.</p>
             <span class="s2">"rack"</span><span class="p">,</span>
             <span class="s2">"monitoring"</span><span class="p">,</span>
             <span class="s2">"monitoring_from_puppet"</span><span class="p">,</span>
+            <span class="s2">"monitoring_profile"</span><span class="p">,</span>
+            <span class="s2">"criticality"</span><span class="p">,</span>
+            <span class="s2">"owner_team"</span><span class="p">,</span>
+            <span class="s2">"runbook_url"</span><span class="p">,</span>
+            <span class="s2">"monitoring_labels"</span><span class="p">,</span>
+            <span class="s2">"exporter_endpoints"</span><span class="p">,</span>
+            <span class="s2">"maintenance_window"</span><span class="p">,</span>
+            <span class="s2">"sm_name"</span><span class="p">,</span>
             <span class="s2">"management_ip"</span><span class="p">,</span>
             <span class="s2">"management_hostname"</span><span class="p">,</span>
             <span class="s2">"tags"</span><span class="p">,</span>
@@ -433,7 +442,8 @@ without the new &ldquo;monitoring&rdquo; key, honour it.</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">DomainSerializer</span><span class="p">(</span><span class="n">TaggitSerializer</span><span class="p">,</span> <span class="n">serializers</span><span class="o">.</span><span class="n">ModelSerializer</span><span class="p">):</span>
-    <span class="n">tags</span> <span class="o">=</span> <span class="n">TagListSerializerField</span><span class="p">(</span><span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></pre></div>
+    <span class="n">tags</span> <span class="o">=</span> <span class="n">TagListSerializerField</span><span class="p">(</span><span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">sm_name</span> <span class="o">=</span> <span class="n">serializers</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">read_only</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -522,6 +532,7 @@ without the new &ldquo;monitoring&rdquo; key, honour it.</p>
     <div class='code'>
       <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">ClusterPackageSerializer</span><span class="p">(</span><span class="n">TaggitSerializer</span><span class="p">,</span> <span class="n">serializers</span><span class="o">.</span><span class="n">ModelSerializer</span><span class="p">):</span>
     <span class="n">status_name</span> <span class="o">=</span> <span class="n">serializers</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">source</span><span class="o">=</span><span class="s2">"status.name"</span><span class="p">,</span> <span class="n">read_only</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">sm_name</span> <span class="o">=</span> <span class="n">serializers</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">read_only</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">package_type_name</span> <span class="o">=</span> <span class="n">serializers</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span>
         <span class="n">source</span><span class="o">=</span><span class="s2">"package_type.name"</span><span class="p">,</span> <span class="n">read_only</span><span class="o">=</span><span class="kc">True</span>
     <span class="p">)</span>

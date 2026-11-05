@@ -22,7 +22,12 @@
     <div class='code'>
       <div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">django.contrib.auth.mixins</span><span class="w"> </span><span class="kn">import</span> <span class="n">LoginRequiredMixin</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">sm.views</span><span class="w"> </span><span class="kn">import</span> <span class="n">SafeDeleteMixin</span><span class="p">,</span> <span class="n">GenericCSVExportView</span><span class="p">,</span> <span class="n">GenericBulkDeleteView</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sm.views</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">SafeDeleteMixin</span><span class="p">,</span>
+    <span class="n">GenericCSVExportView</span><span class="p">,</span>
+    <span class="n">GenericBulkDeleteView</span><span class="p">,</span>
+    <span class="n">MonitoringToggleView</span> <span class="k">as</span> <span class="n">GenericMonitoringToggleView</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">sm.mixins</span><span class="w"> </span><span class="kn">import</span> <span class="n">MultiTenantMixin</span><span class="p">,</span> <span class="n">BulkActionMixin</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">Model</span>
@@ -63,6 +68,30 @@
       <div class='octowrap'>
         <a class='octothorpe' href='#section-2'>#</a>
       </div>
+      <p>Toggle the cluster monitoring flag from the list or detail page.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">MonitoringToggleView</span><span class="p">(</span><span class="n">GenericMonitoringToggleView</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-3'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-3'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">model</span> <span class="o">=</span> <span class="n">Model</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-4'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-4'>#</a>
+      </div>
       
     </div>
     <div class='code'>
@@ -73,10 +102,10 @@
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-3'>
+  <div class='section' id='section-5'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-3'>#</a>
+        <a class='octothorpe' href='#section-5'>#</a>
       </div>
       
     </div>
@@ -95,10 +124,10 @@
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-4'>
+  <div class='section' id='section-6'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-4'>#</a>
+        <a class='octothorpe' href='#section-6'>#</a>
       </div>
       
     </div>
@@ -118,10 +147,10 @@
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-5'>
+  <div class='section' id='section-7'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-5'>#</a>
+        <a class='octothorpe' href='#section-7'>#</a>
       </div>
       
     </div>
@@ -139,10 +168,10 @@
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-6'>
+  <div class='section' id='section-8'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-6'>#</a>
+        <a class='octothorpe' href='#section-8'>#</a>
       </div>
       
     </div>
@@ -152,10 +181,10 @@
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-7'>
+  <div class='section' id='section-9'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-7'>#</a>
+        <a class='octothorpe' href='#section-9'>#</a>
       </div>
       
     </div>
@@ -166,6 +195,7 @@
     <span class="n">export_fields</span> <span class="o">=</span> <span class="p">[</span>
         <span class="p">(</span><span class="s2">"name"</span><span class="p">,</span> <span class="s2">"name"</span><span class="p">),</span>
         <span class="p">(</span><span class="s2">"clustersoftware"</span><span class="p">,</span> <span class="s2">"clustersoftware__name"</span><span class="p">),</span>
+        <span class="p">(</span><span class="s2">"monitoring"</span><span class="p">,</span> <span class="s2">"monitoring"</span><span class="p">),</span>
     <span class="p">]</span>
 
 </pre></div>

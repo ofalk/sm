@@ -35,6 +35,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">django.contrib.auth.password_validation</span><span class="w"> </span><span class="kn">import</span> <span class="n">validate_password</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">django.core.exceptions</span><span class="w"> </span><span class="kn">import</span> <span class="n">ValidationError</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">django.template.loader</span><span class="w"> </span><span class="kn">import</span> <span class="n">render_to_string</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.utils.http</span><span class="w"> </span><span class="kn">import</span> <span class="n">url_has_allowed_host_and_scheme</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.utils_permissions</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">get_group_permissions_for_model</span><span class="p">,</span>
@@ -988,9 +989,11 @@ to the referring page (e.g. search results).</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre>        <span class="n">next_url</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"next"</span><span class="p">)</span> <span class="ow">or</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"next"</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">next_url</span><span class="p">:</span>
-            <span class="kn">from</span><span class="w"> </span><span class="nn">django.shortcuts</span><span class="w"> </span><span class="kn">import</span> <span class="n">redirect</span>
-
+        <span class="k">if</span> <span class="n">next_url</span> <span class="ow">and</span> <span class="n">url_has_allowed_host_and_scheme</span><span class="p">(</span>
+            <span class="n">next_url</span><span class="p">,</span>
+            <span class="n">allowed_hosts</span><span class="o">=</span><span class="p">{</span><span class="n">request</span><span class="o">.</span><span class="n">get_host</span><span class="p">()},</span>
+            <span class="n">require_https</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">is_secure</span><span class="p">(),</span>
+        <span class="p">):</span>
             <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">next_url</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">JsonResponse</span><span class="p">({</span><span class="s2">"status"</span><span class="p">:</span> <span class="s2">"success"</span><span class="p">})</span></pre></div>

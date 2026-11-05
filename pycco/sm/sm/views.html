@@ -37,7 +37,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">servermodel.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">Model</span> <span class="k">as</span> <span class="n">ServerModel</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">status.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">Model</span> <span class="k">as</span> <span class="n">Status</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">vendor.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">Model</span> <span class="k">as</span> <span class="n">Vendor</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">django.db.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">Count</span><span class="p">,</span> <span class="n">Q</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.db.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">Count</span><span class="p">,</span> <span class="n">Q</span><span class="p">,</span> <span class="n">QuerySet</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">django.core.exceptions</span><span class="w"> </span><span class="kn">import</span> <span class="n">ObjectDoesNotExist</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">django.apps</span><span class="w"> </span><span class="kn">import</span> <span class="n">apps</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">django.http</span><span class="w"> </span><span class="kn">import</span> <span class="n">Http404</span><span class="p">,</span> <span class="n">JsonResponse</span>
@@ -46,12 +46,12 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">django.core.exceptions</span><span class="w"> </span><span class="kn">import</span> <span class="n">PermissionDenied</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">django.db.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">ProtectedError</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.utils.http</span><span class="w"> </span><span class="kn">import</span> <span class="n">url_has_allowed_host_and_scheme</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">django.utils.translation</span><span class="w"> </span><span class="kn">import</span> <span class="n">gettext</span> <span class="k">as</span> <span class="n">_</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">django.shortcuts</span><span class="w"> </span><span class="kn">import</span> <span class="n">redirect</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.shortcuts</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_object_or_404</span><span class="p">,</span> <span class="n">redirect</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">django.views</span><span class="w"> </span><span class="kn">import</span> <span class="n">View</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">List</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.mixins</span><span class="w"> </span><span class="kn">import</span> <span class="n">filter_queryset_by_tenant</span><span class="p">,</span> <span class="n">filter_history_queryset_by_tenant</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">json_for_script</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.utils_starterpack</span><span class="w"> </span><span class="kn">import</span> <span class="n">import_starter_pack</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span></pre></div>
@@ -264,13 +264,14 @@ doing so previously allowed cross-tenant reads/deletes.</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-12'>#</a>
       </div>
-      <p>Exports the model&rsquo;s rows (tenant-filtered) as CSV.</p>
-<p>Subclasses define <code>model</code> and <code>export_fields</code> — an ordered list of
-<code>(header, attribute_path)</code> tuples. Attribute paths may traverse related
-objects with <code>__</code>.</p>
+      <p>Flips the monitoring flag on a single tenant object.</p>
+<p>The target object is resolved through the shared tenant filter, so a user
+can never toggle an item from another group (or a global seed fixture).
+Subclasses set <code>model</code> and, where the field name differs, the
+<code>monitoring_field</code> attribute.</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">GenericCSVExportView</span><span class="p">(</span><span class="n">LoginRequiredMixin</span><span class="p">,</span> <span class="n">View</span><span class="p">):</span></pre></div>
+      <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">MonitoringToggleView</span><span class="p">(</span><span class="n">LoginRequiredMixin</span><span class="p">,</span> <span class="n">View</span><span class="p">):</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -283,8 +284,7 @@ objects with <code>__</code>.</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre>    <span class="n">model</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="n">export_fields</span><span class="p">:</span> <span class="n">List</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="n">filename</span> <span class="o">=</span> <span class="s2">"export.csv"</span></pre></div>
+    <span class="n">monitoring_field</span> <span class="o">=</span> <span class="s2">"monitoring"</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -296,10 +296,8 @@ objects with <code>__</code>.</p>
       
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">get_queryset</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
-        <span class="n">queryset</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="s2">"group"</span><span class="p">):</span>
-            <span class="k">return</span> <span class="n">queryset</span></pre></div>
+      <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">get_queryset</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">QuerySet</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">filter_queryset_by_tenant</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">)</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -308,10 +306,11 @@ objects with <code>__</code>.</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-15'>#</a>
       </div>
-      <p>Shared tenant filter (also sanitizes a tampered session selection).</p>
+      
     </div>
     <div class='code'>
-      <div class="highlight"><pre>        <span class="k">return</span> <span class="n">filter_queryset_by_tenant</span><span class="p">(</span><span class="n">queryset</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">)</span></pre></div>
+      <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">get_object</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_queryset</span><span class="p">(),</span> <span class="n">pk</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span><span class="p">[</span><span class="s2">"pk"</span><span class="p">])</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -323,8 +322,11 @@ objects with <code>__</code>.</p>
       
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">get_filename</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">filename</span></pre></div>
+      <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">post</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+        <span class="n">obj</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_object</span><span class="p">()</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_superuser</span><span class="p">:</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -332,6 +334,111 @@ objects with <code>__</code>.</p>
     <div class='docs'>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-17'>#</a>
+      </div>
+      <p>Global (group-less) seed fixtures are read-only for tenant users.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>            <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="s2">"group"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">PermissionDenied</span>
+            <span class="n">perm</span> <span class="o">=</span> <span class="s2">"</span><span class="si">{}</span><span class="s2">.change_</span><span class="si">{}</span><span class="s2">"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">app_label</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">model_name</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">has_perm</span><span class="p">(</span><span class="n">perm</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="n">PermissionDenied</span>
+
+        <span class="n">field</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">monitoring_field</span>
+        <span class="n">enabled</span> <span class="o">=</span> <span class="ow">not</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">field</span><span class="p">)</span>
+        <span class="nb">setattr</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">enabled</span><span class="p">)</span>
+        <span class="n">obj</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">enabled</span><span class="p">:</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="n">_</span><span class="p">(</span><span class="s2">"Monitoring enabled for </span><span class="si">%(name)s</span><span class="s2">."</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="n">_</span><span class="p">(</span><span class="s2">"Monitoring disabled for </span><span class="si">%(name)s</span><span class="s2">."</span><span class="p">)</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">message</span> <span class="o">%</span> <span class="p">{</span><span class="s2">"name"</span><span class="p">:</span> <span class="n">obj</span><span class="p">})</span>
+
+        <span class="n">next_url</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"next"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">next_url</span> <span class="ow">and</span> <span class="n">url_has_allowed_host_and_scheme</span><span class="p">(</span>
+            <span class="n">next_url</span><span class="p">,</span>
+            <span class="n">allowed_hosts</span><span class="o">=</span><span class="p">{</span><span class="n">request</span><span class="o">.</span><span class="n">get_host</span><span class="p">()},</span>
+            <span class="n">require_https</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">is_secure</span><span class="p">(),</span>
+        <span class="p">):</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">next_url</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">"</span><span class="si">%s</span><span class="s2">:index"</span> <span class="o">%</span> <span class="n">model</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">app_label</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-18'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-18'>#</a>
+      </div>
+      <p>Exports the model&rsquo;s rows (tenant-filtered) as CSV.</p>
+<p>Subclasses define <code>model</code> and <code>export_fields</code> — an ordered list of
+<code>(header, attribute_path)</code> tuples. Attribute paths may traverse related
+objects with <code>__</code>.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">GenericCSVExportView</span><span class="p">(</span><span class="n">LoginRequiredMixin</span><span class="p">,</span> <span class="n">View</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-19'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-19'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">model</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">export_fields</span><span class="p">:</span> <span class="n">List</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">filename</span> <span class="o">=</span> <span class="s2">"export.csv"</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-20'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-20'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">get_queryset</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+        <span class="n">queryset</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="s2">"group"</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">queryset</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-21'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-21'>#</a>
+      </div>
+      <p>Shared tenant filter (also sanitizes a tampered session selection).</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="k">return</span> <span class="n">filter_queryset_by_tenant</span><span class="p">(</span><span class="n">queryset</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-22'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-22'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">get_filename</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">filename</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-23'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-23'>#</a>
       </div>
       <p>Neutralize spreadsheet formula injection.</p>
 <p>Excel/LibreOffice execute cells beginning with <code>=</code>, <code>+</code>, <code>-</code>,
@@ -344,10 +451,10 @@ readable while forcing it to be treated as text.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-18'>
+  <div class='section' id='section-24'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-18'>#</a>
+        <a class='octothorpe' href='#section-24'>#</a>
       </div>
       
     </div>
@@ -360,10 +467,10 @@ readable while forcing it to be treated as text.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-19'>
+  <div class='section' id='section-25'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-19'>#</a>
+        <a class='octothorpe' href='#section-25'>#</a>
       </div>
       
     </div>
@@ -381,10 +488,10 @@ readable while forcing it to be treated as text.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-20'>
+  <div class='section' id='section-26'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-20'>#</a>
+        <a class='octothorpe' href='#section-26'>#</a>
       </div>
       
     </div>
@@ -396,10 +503,10 @@ readable while forcing it to be treated as text.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-21'>
+  <div class='section' id='section-27'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-21'>#</a>
+        <a class='octothorpe' href='#section-27'>#</a>
       </div>
       <p>CSV export is a read endpoint: require the same view permission as
 the web list/API views instead of relying on login alone.</p>
@@ -429,10 +536,10 @@ the web list/API views instead of relying on login alone.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-22'>
+  <div class='section' id='section-28'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-22'>#</a>
+        <a class='octothorpe' href='#section-28'>#</a>
       </div>
       
     </div>
@@ -442,10 +549,10 @@ the web list/API views instead of relying on login alone.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-23'>
+  <div class='section' id='section-29'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-23'>#</a>
+        <a class='octothorpe' href='#section-29'>#</a>
       </div>
       
     </div>
@@ -457,10 +564,10 @@ the web list/API views instead of relying on login alone.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-24'>
+  <div class='section' id='section-30'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-24'>#</a>
+        <a class='octothorpe' href='#section-30'>#</a>
       </div>
       
     </div>
@@ -470,10 +577,10 @@ the web list/API views instead of relying on login alone.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-25'>
+  <div class='section' id='section-31'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-25'>#</a>
+        <a class='octothorpe' href='#section-31'>#</a>
       </div>
       <p>Basic Stats (Filtered)</p>
     </div>
@@ -485,10 +592,10 @@ the web list/API views instead of relying on login alone.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-26'>
+  <div class='section' id='section-32'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-26'>#</a>
+        <a class='octothorpe' href='#section-32'>#</a>
       </div>
       <p>Data for Charts (Filtered)
 OS Distribution</p>
@@ -501,21 +608,19 @@ OS Distribution</p>
             <span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">"-count"</span><span class="p">)[:</span><span class="mi">5</span><span class="p">]</span>
         <span class="p">)</span>
 
-        <span class="n">context</span><span class="p">[</span><span class="s2">"os_labels"</span><span class="p">]</span> <span class="o">=</span> <span class="n">json_for_script</span><span class="p">(</span>
-            <span class="p">[</span>
-                <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">item</span><span class="p">[</span><span class="s1">'operatingsystem__vendor__name'</span><span class="p">]</span><span class="si">}</span><span class="s2"> "</span>
-                <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">item</span><span class="p">[</span><span class="s1">'operatingsystem__version'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span>
-                <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">os_dist</span>
-            <span class="p">]</span>
-        <span class="p">)</span>
-        <span class="n">context</span><span class="p">[</span><span class="s2">"os_data"</span><span class="p">]</span> <span class="o">=</span> <span class="n">json_for_script</span><span class="p">([</span><span class="n">item</span><span class="p">[</span><span class="s2">"count"</span><span class="p">]</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">os_dist</span><span class="p">])</span></pre></div>
+        <span class="n">context</span><span class="p">[</span><span class="s2">"os_labels"</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">item</span><span class="p">[</span><span class="s1">'operatingsystem__vendor__name'</span><span class="p">]</span><span class="si">}</span><span class="s2"> "</span>
+            <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">item</span><span class="p">[</span><span class="s1">'operatingsystem__version'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span>
+            <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">os_dist</span>
+        <span class="p">]</span>
+        <span class="n">context</span><span class="p">[</span><span class="s2">"os_data"</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">item</span><span class="p">[</span><span class="s2">"count"</span><span class="p">]</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">os_dist</span><span class="p">]</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-27'>
+  <div class='section' id='section-33'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-27'>#</a>
+        <a class='octothorpe' href='#section-33'>#</a>
       </div>
       <p>Status Distribution</p>
     </div>
@@ -527,19 +632,15 @@ OS Distribution</p>
             <span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">"-count"</span><span class="p">)</span>
         <span class="p">)</span>
 
-        <span class="n">context</span><span class="p">[</span><span class="s2">"status_labels"</span><span class="p">]</span> <span class="o">=</span> <span class="n">json_for_script</span><span class="p">(</span>
-            <span class="p">[</span><span class="n">item</span><span class="p">[</span><span class="s2">"status__name"</span><span class="p">]</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">status_dist</span><span class="p">]</span>
-        <span class="p">)</span>
-        <span class="n">context</span><span class="p">[</span><span class="s2">"status_data"</span><span class="p">]</span> <span class="o">=</span> <span class="n">json_for_script</span><span class="p">(</span>
-            <span class="p">[</span><span class="n">item</span><span class="p">[</span><span class="s2">"count"</span><span class="p">]</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">status_dist</span><span class="p">]</span>
-        <span class="p">)</span></pre></div>
+        <span class="n">context</span><span class="p">[</span><span class="s2">"status_labels"</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">item</span><span class="p">[</span><span class="s2">"status__name"</span><span class="p">]</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">status_dist</span><span class="p">]</span>
+        <span class="n">context</span><span class="p">[</span><span class="s2">"status_data"</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">item</span><span class="p">[</span><span class="s2">"count"</span><span class="p">]</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">status_dist</span><span class="p">]</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-28'>
+  <div class='section' id='section-34'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-28'>#</a>
+        <a class='octothorpe' href='#section-34'>#</a>
       </div>
       <p>Recent Activity (Filtered)</p>
     </div>
@@ -552,10 +653,10 @@ OS Distribution</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-29'>
+  <div class='section' id='section-35'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-29'>#</a>
+        <a class='octothorpe' href='#section-35'>#</a>
       </div>
       
     </div>
@@ -565,10 +666,10 @@ OS Distribution</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-30'>
+  <div class='section' id='section-36'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-30'>#</a>
+        <a class='octothorpe' href='#section-36'>#</a>
       </div>
       
     </div>
@@ -580,10 +681,10 @@ OS Distribution</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-31'>
+  <div class='section' id='section-37'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-31'>#</a>
+        <a class='octothorpe' href='#section-37'>#</a>
       </div>
       
     </div>
@@ -595,10 +696,10 @@ OS Distribution</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-32'>
+  <div class='section' id='section-38'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-32'>#</a>
+        <a class='octothorpe' href='#section-38'>#</a>
       </div>
       
     </div>
@@ -610,10 +711,10 @@ OS Distribution</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-33'>
+  <div class='section' id='section-39'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-33'>#</a>
+        <a class='octothorpe' href='#section-39'>#</a>
       </div>
       <p>Navigation Quick Jumps</p>
     </div>
@@ -659,10 +760,10 @@ OS Distribution</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-34'>
+  <div class='section' id='section-40'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-34'>#</a>
+        <a class='octothorpe' href='#section-40'>#</a>
       </div>
       <p>Filter navigation targets</p>
     </div>
@@ -673,10 +774,10 @@ OS Distribution</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-35'>
+  <div class='section' id='section-41'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-35'>#</a>
+        <a class='octothorpe' href='#section-41'>#</a>
       </div>
       <p>Servers: match hostname, IPs, serial, description, application,
 rack, and related fields. Exact hostname matches rank first.</p>
@@ -702,10 +803,10 @@ rack, and related fields. Exact hostname matches rank first.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-36'>
+  <div class='section' id='section-42'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-36'>#</a>
+        <a class='octothorpe' href='#section-42'>#</a>
       </div>
       <p>Manual relevance: exact hostname match ranks above substring,
 then alphabetical.</p>
@@ -774,10 +875,10 @@ then alphabetical.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-37'>
+  <div class='section' id='section-43'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-37'>#</a>
+        <a class='octothorpe' href='#section-43'>#</a>
       </div>
       <p>Simple check if anything was found</p>
     </div>
@@ -804,10 +905,10 @@ then alphabetical.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-38'>
+  <div class='section' id='section-44'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-38'>#</a>
+        <a class='octothorpe' href='#section-44'>#</a>
       </div>
       <p>Group filter for the results page</p>
     </div>
@@ -826,10 +927,10 @@ then alphabetical.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-39'>
+  <div class='section' id='section-45'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-39'>#</a>
+        <a class='octothorpe' href='#section-45'>#</a>
       </div>
       
     </div>
@@ -839,10 +940,10 @@ then alphabetical.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-40'>
+  <div class='section' id='section-46'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-40'>#</a>
+        <a class='octothorpe' href='#section-46'>#</a>
       </div>
       
     </div>
@@ -874,10 +975,10 @@ then alphabetical.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-41'>
+  <div class='section' id='section-47'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-41'>#</a>
+        <a class='octothorpe' href='#section-47'>#</a>
       </div>
       <p>Overview of servers grouped by their patch-time window, so operators can
 see at a glance what is patched when.</p>
@@ -887,10 +988,10 @@ see at a glance what is patched when.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-42'>
+  <div class='section' id='section-48'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-42'>#</a>
+        <a class='octothorpe' href='#section-48'>#</a>
       </div>
       
     </div>
@@ -899,10 +1000,10 @@ see at a glance what is patched when.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-43'>
+  <div class='section' id='section-49'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-43'>#</a>
+        <a class='octothorpe' href='#section-49'>#</a>
       </div>
       
     </div>
@@ -912,10 +1013,10 @@ see at a glance what is patched when.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-44'>
+  <div class='section' id='section-50'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-44'>#</a>
+        <a class='octothorpe' href='#section-50'>#</a>
       </div>
       
     </div>
@@ -937,10 +1038,10 @@ see at a glance what is patched when.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-45'>
+  <div class='section' id='section-51'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-45'>#</a>
+        <a class='octothorpe' href='#section-51'>#</a>
       </div>
       
     </div>
@@ -949,10 +1050,10 @@ see at a glance what is patched when.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-46'>
+  <div class='section' id='section-52'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-46'>#</a>
+        <a class='octothorpe' href='#section-52'>#</a>
       </div>
       
     </div>
@@ -975,10 +1076,10 @@ see at a glance what is patched when.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-47'>
+  <div class='section' id='section-53'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-47'>#</a>
+        <a class='octothorpe' href='#section-53'>#</a>
       </div>
       
     </div>
@@ -988,10 +1089,10 @@ see at a glance what is patched when.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-48'>
+  <div class='section' id='section-54'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-48'>#</a>
+        <a class='octothorpe' href='#section-54'>#</a>
       </div>
       
     </div>
@@ -1001,10 +1102,10 @@ see at a glance what is patched when.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-49'>
+  <div class='section' id='section-55'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-49'>#</a>
+        <a class='octothorpe' href='#section-55'>#</a>
       </div>
       
     </div>
@@ -1014,10 +1115,10 @@ see at a glance what is patched when.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-50'>
+  <div class='section' id='section-56'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-50'>#</a>
+        <a class='octothorpe' href='#section-56'>#</a>
       </div>
       
     </div>
@@ -1026,10 +1127,10 @@ see at a glance what is patched when.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-51'>
+  <div class='section' id='section-57'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-51'>#</a>
+        <a class='octothorpe' href='#section-57'>#</a>
       </div>
       
     </div>
@@ -1044,10 +1145,10 @@ see at a glance what is patched when.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-52'>
+  <div class='section' id='section-58'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-52'>#</a>
+        <a class='octothorpe' href='#section-58'>#</a>
       </div>
       <p>Check database connection</p>
     </div>
@@ -1061,10 +1162,10 @@ see at a glance what is patched when.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-53'>
+  <div class='section' id='section-59'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-53'>#</a>
+        <a class='octothorpe' href='#section-59'>#</a>
       </div>
       <p>Log the real error server-side; never leak connection internals
 (host/port/user) to unauthenticated callers.</p>

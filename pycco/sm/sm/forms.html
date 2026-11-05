@@ -48,6 +48,10 @@
       <p>Base model form. Accepts a <code>user</code> kwarg so FK choice fields are scoped to
 the user&rsquo;s accessible groups (prevents a user from referencing another
 tenant&rsquo;s related objects through the web UI).</p>
+<p>Forms may declare a <code>field_groups</code> layout to render related fields in
+titled sections. Each group is a dict with <code>title</code>, <code>fields</code> and an
+optional <code>wide</code> list for fields that should span the full row. Forms
+without this metadata fall back to the shared two-column layout.</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">SMForm</span><span class="p">(</span><span class="n">forms</span><span class="o">.</span><span class="n">ModelForm</span><span class="p">):</span></pre></div>
@@ -84,13 +88,11 @@ tenant&rsquo;s related objects through the web UI).</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-5'>#</a>
       </div>
-      
+      <p>: Optional list of section definitions, e.g.
+: [{&ldquo;title&rdquo;: _(&ldquo;Identity&rdquo;), &ldquo;fields&rdquo;: [&ldquo;name&rdquo;, &ldquo;status&rdquo;], &ldquo;wide&rdquo;: [&ldquo;tags&rdquo;]}]</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">user</span> <span class="o">=</span> <span class="n">user</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">scope_querysets</span><span class="p">()</span></pre></div>
+      <div class="highlight"><pre>    <span class="n">field_groups</span> <span class="o">=</span> <span class="kc">None</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -98,6 +100,89 @@ tenant&rsquo;s related objects through the web UI).</p>
     <div class='docs'>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-6'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">user</span> <span class="o">=</span> <span class="n">user</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">scope_querysets</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">layout</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">build_layout</span><span class="p">()</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-7'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-7'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">build_layout</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">field_groups</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="n">layout</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">grouped_fields</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">group</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">field_groups</span><span class="p">:</span>
+            <span class="n">wide_fields</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">group</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"wide"</span><span class="p">,</span> <span class="p">()))</span>
+            <span class="n">fields</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">group</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"fields"</span><span class="p">,</span> <span class="p">()):</span>
+                <span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">:</span>
+                    <span class="k">continue</span>
+                <span class="n">grouped_fields</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+                <span class="n">fields</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="p">{</span>
+                        <span class="s2">"field"</span><span class="p">:</span> <span class="bp">self</span><span class="p">[</span><span class="n">name</span><span class="p">],</span>
+                        <span class="s2">"col_class"</span><span class="p">:</span> <span class="s2">"col-12"</span> <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">wide_fields</span> <span class="k">else</span> <span class="s2">"col-md-6"</span><span class="p">,</span>
+                    <span class="p">}</span>
+                <span class="p">)</span>
+            <span class="k">if</span> <span class="n">fields</span><span class="p">:</span>
+                <span class="n">layout</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="p">{</span>
+                        <span class="s2">"title"</span><span class="p">:</span> <span class="n">group</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"title"</span><span class="p">),</span>
+                        <span class="s2">"description"</span><span class="p">:</span> <span class="n">group</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"description"</span><span class="p">),</span>
+                        <span class="s2">"fields"</span><span class="p">:</span> <span class="n">fields</span><span class="p">,</span>
+                    <span class="p">}</span>
+                <span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-8'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-8'>#</a>
+      </div>
+      <p>Never silently drop a field: put anything not explicitly grouped into
+a final section so newly added model fields remain editable.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="n">leftovers</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="bp">self</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">fields</span>
+            <span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">grouped_fields</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">is_hidden</span>
+        <span class="p">]</span>
+        <span class="k">if</span> <span class="n">leftovers</span><span class="p">:</span>
+            <span class="n">layout</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="p">{</span>
+                    <span class="s2">"title"</span><span class="p">:</span> <span class="n">_</span><span class="p">(</span><span class="s2">"Other"</span><span class="p">),</span>
+                    <span class="s2">"description"</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+                    <span class="s2">"fields"</span><span class="p">:</span> <span class="p">[</span>
+                        <span class="p">{</span><span class="s2">"field"</span><span class="p">:</span> <span class="n">field</span><span class="p">,</span> <span class="s2">"col_class"</span><span class="p">:</span> <span class="s2">"col-md-6"</span><span class="p">}</span> <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">leftovers</span>
+                    <span class="p">],</span>
+                <span class="p">}</span>
+            <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">layout</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-9'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-9'>#</a>
       </div>
       
     </div>
@@ -111,10 +196,10 @@ tenant&rsquo;s related objects through the web UI).</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-7'>
+  <div class='section' id='section-10'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-7'>#</a>
+        <a class='octothorpe' href='#section-10'>#</a>
       </div>
       <p>Enforces name uniqueness per scope at the form level. The scope is the
 instance&rsquo;s group (pre-assigned by <code>MultiTenantMixin.get_form</code>) or the
@@ -127,10 +212,10 @@ needed to prevent duplicate <em>global</em> items.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-8'>
+  <div class='section' id='section-11'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-8'>#</a>
+        <a class='octothorpe' href='#section-11'>#</a>
       </div>
       
     </div>
@@ -139,10 +224,10 @@ needed to prevent duplicate <em>global</em> items.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-9'>
+  <div class='section' id='section-12'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-9'>#</a>
+        <a class='octothorpe' href='#section-12'>#</a>
       </div>
       <p>: Model fields that must be unique together within a scope.</p>
     </div>
@@ -151,10 +236,10 @@ needed to prevent duplicate <em>global</em> items.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-10'>
+  <div class='section' id='section-13'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-10'>#</a>
+        <a class='octothorpe' href='#section-13'>#</a>
       </div>
       
     </div>
@@ -181,10 +266,10 @@ needed to prevent duplicate <em>global</em> items.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-11'>
+  <div class='section' id='section-14'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-11'>#</a>
+        <a class='octothorpe' href='#section-14'>#</a>
       </div>
       <p>Generic bulk-action form used by the shared list templates. Subclasses can
 add extra fields (e.g. a status dropdown for models with a status FK).</p>
@@ -194,10 +279,10 @@ add extra fields (e.g. a status dropdown for models with a status FK).</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-12'>
+  <div class='section' id='section-15'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-12'>#</a>
+        <a class='octothorpe' href='#section-15'>#</a>
       </div>
       
     </div>
@@ -206,10 +291,10 @@ add extra fields (e.g. a status dropdown for models with a status FK).</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-13'>
+  <div class='section' id='section-16'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-13'>#</a>
+        <a class='octothorpe' href='#section-16'>#</a>
       </div>
       <p>Form for the detail view, disables all user input</p>
     </div>
@@ -218,10 +303,10 @@ add extra fields (e.g. a status dropdown for models with a status FK).</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-14'>
+  <div class='section' id='section-17'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-14'>#</a>
+        <a class='octothorpe' href='#section-17'>#</a>
       </div>
       
     </div>
@@ -230,10 +315,10 @@ add extra fields (e.g. a status dropdown for models with a status FK).</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-15'>
+  <div class='section' id='section-18'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-15'>#</a>
+        <a class='octothorpe' href='#section-18'>#</a>
       </div>
       
     </div>
@@ -247,10 +332,10 @@ add extra fields (e.g. a status dropdown for models with a status FK).</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-16'>
+  <div class='section' id='section-19'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-16'>#</a>
+        <a class='octothorpe' href='#section-19'>#</a>
       </div>
       <p>self.fields[field].widget = TextInput()</p>
     </div>
@@ -260,10 +345,10 @@ add extra fields (e.g. a status dropdown for models with a status FK).</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-17'>
+  <div class='section' id='section-20'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-17'>#</a>
+        <a class='octothorpe' href='#section-20'>#</a>
       </div>
       
     </div>

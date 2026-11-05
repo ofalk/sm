@@ -1391,14 +1391,119 @@
 <span class="s2">        self.assertIs(server["monitoring_from_puppet"], True)</span>
 <span class="s2">#DIVIDER</span>
 <span class="s2">@override_settings(PASSWORD_HASHERS=FAST_HASHERS)</span>
-<span class="s2">class ApiKeyLifecycleTest(TestCase):</span>
-<span class="s2">    """</span><span class="n">API</span> <span class="n">key</span> <span class="n">expiry</span><span class="p">,</span> <span class="n">rotation</span><span class="p">,</span> <span class="ow">and</span> <span class="n">revocation</span> <span class="n">lifecycle</span><span class="o">.</span><span class="s2">"""</span>
+<span class="s2">class ApiMonitoringSchemaTest(TestCase):</span>
+<span class="s2">    """</span><span class="n">Fields</span> <span class="n">required</span> <span class="n">by</span> <span class="n">the</span> <span class="n">monitoring</span> <span class="n">coverage</span> <span class="n">exporter</span><span class="o">.</span><span class="s2">"""</span>
 
+<span class="s2">    def setUp(self):</span>
+<span class="s2">        self.user = User.objects.create_superuser("schemaadmin", "s@e.c", PASSWORD)</span>
+<span class="s2">        self.client = APIClient()</span>
+<span class="s2">        self.client.force_authenticate(self.user)</span>
+
+<span class="s2">    def test_server_monitoring_schema_fields_and_sm_name(self):</span>
+<span class="s2">        status = Status.objects.create(name="In use")</span>
+<span class="s2">        domain = Domain.objects.create(name="localghost.com")</span>
+<span class="s2">        Server.objects.create(</span>
+<span class="s2">            hostname="knode03",</span>
+<span class="s2">            domain=domain,</span>
+<span class="s2">            status=status,</span>
+<span class="s2">            monitoring_from_puppet=True,</span>
+<span class="s2">            monitoring_profile="k8s-node",</span>
+<span class="s2">            criticality="critical",</span>
+<span class="s2">            owner_team="monitoring",</span>
+<span class="s2">            runbook_url="https://runbooks.example.com/knode03",</span>
+<span class="s2">            monitoring_labels={"env": "prod"},</span>
+<span class="s2">            exporter_endpoints={"node_exporter": 9100},</span>
+<span class="s2">            maintenance_window="Sun 02:00-04:00 UTC",</span>
+<span class="s2">        )</span>
+<span class="s2">        response = self.client.get("/api/servers/")</span>
+<span class="s2">        self.assertEqual(response.status_code, 200)</span>
+<span class="s2">        data = unwrap(response)[0]</span>
+<span class="s2">        self.assertEqual(data["sm_name"], "knode03.localghost.com")</span>
+<span class="s2">        self.assertEqual(data["monitoring_profile"], "k8s-node")</span>
+<span class="s2">        self.assertEqual(data["criticality"], "critical")</span>
+<span class="s2">        self.assertEqual(data["owner_team"], "monitoring")</span>
+<span class="s2">        self.assertEqual(data["runbook_url"], "https://runbooks.example.com/knode03")</span>
+<span class="s2">        self.assertEqual(data["monitoring_labels"], {"env": "prod"})</span>
+<span class="s2">        self.assertEqual(data["exporter_endpoints"], {"node_exporter": 9100})</span>
+<span class="s2">        self.assertEqual(data["maintenance_window"], "Sun 02:00-04:00 UTC")</span>
+<span class="s2">        self.assertIs(data["monitoring"], True)</span>
+
+<span class="s2">    def test_clusterpackage_monitoring_schema_fields_and_sm_name(self):</span>
+<span class="s2">        from cluster.models import Model as Cluster</span>
+<span class="s2">        from clusterpackage.models import Model as ClusterPackage</span>
+<span class="s2">        from clusterpackagetype.models import Model as ClusterPackageType</span>
+<span class="s2">        from clustersoftware.models import Model as ClusterSoftware</span>
+
+<span class="s2">        vendor = Vendor.objects.create(name="AlmaLinux")</span>
+<span class="s2">        software = ClusterSoftware.objects.create(</span>
+<span class="s2">            name="PostgreSQL", version="17", vendor=vendor</span>
+<span class="s2">        )</span>
+<span class="s2">        cluster = Cluster.objects.create(</span>
+<span class="s2">            name="k.localghost.com", clustersoftware=software</span>
+<span class="s2">        )</span>
+<span class="s2">        self.assertIs(cluster.monitoring, True)</span>
+<span class="s2">        status = Status.objects.create(name="In use")</span>
+<span class="s2">        pkg_type = ClusterPackageType.objects.create(name="PostgreSQL R/W")</span>
+<span class="s2">        ClusterPackage.objects.create(</span>
+<span class="s2">            name="central-postgres-rw",</span>
+<span class="s2">            cluster=cluster,</span>
+<span class="s2">            package_type=pkg_type,</span>
+<span class="s2">            status=status,</span>
+<span class="s2">            host="10.0.0.2",</span>
+<span class="s2">            port="5432",</span>
+<span class="s2">            protocol="postgres",</span>
+<span class="s2">            check_path="/-/readiness",</span>
+<span class="s2">            expected_status="200,301,302,401",</span>
+<span class="s2">            tls_sni="db.example.com",</span>
+<span class="s2">            check_module="http_2xx",</span>
+<span class="s2">            metrics_host="metrics.example.com",</span>
+<span class="s2">            metrics_port=9187,</span>
+<span class="s2">            runbook_url="https://runbooks.example.com/postgres",</span>
+<span class="s2">        )</span>
+<span class="s2">        response = self.client.get("/api/clusterpackages/")</span>
+<span class="s2">        self.assertEqual(response.status_code, 200)</span>
+<span class="s2">        data = unwrap(response)[0]</span>
+<span class="s2">        self.assertEqual(data["sm_name"], "k.localghost.com/central-postgres-rw")</span>
+<span class="s2">        self.assertIs(data["monitoring"], True)</span>
+<span class="s2">        self.assertEqual(data["protocol"], "postgres")</span>
+<span class="s2">        self.assertEqual(data["check_path"], "/-/readiness")</span>
+<span class="s2">        self.assertEqual(data["expected_status"], "200,301,302,401")</span>
+<span class="s2">        self.assertEqual(data["tls_sni"], "db.example.com")</span>
+<span class="s2">        self.assertEqual(data["check_module"], "http_2xx")</span>
+<span class="s2">        self.assertEqual(data["metrics_host"], "metrics.example.com")</span>
+<span class="s2">        self.assertEqual(data["metrics_port"], 9187)</span>
+<span class="s2">        self.assertEqual(data["runbook_url"], "https://runbooks.example.com/postgres")</span>
+
+<span class="s2">    def test_domain_monitoring_schema_fields_and_sm_name(self):</span>
+<span class="s2">        Domain.objects.create(</span>
+<span class="s2">            name="git.linux-kernel.de",</span>
+<span class="s2">            monitoring=True,</span>
+<span class="s2">            check_http=True,</span>
+<span class="s2">            check_tls=True,</span>
+<span class="s2">            expected_status="200",</span>
+<span class="s2">            tls_sni="git.linux-kernel.de",</span>
+<span class="s2">        )</span>
+<span class="s2">        response = self.client.get("/api/domains/")</span>
+<span class="s2">        self.assertEqual(response.status_code, 200)</span>
+<span class="s2">        data = unwrap(response)[0]</span>
+<span class="s2">        self.assertEqual(data["sm_name"], "git.linux-kernel.de")</span>
+<span class="s2">        self.assertIs(data["monitoring"], True)</span>
+<span class="s2">        self.assertIs(data["check_http"], True)</span>
+<span class="s2">        self.assertIs(data["check_tls"], True)</span>
+<span class="s2">        self.assertEqual(data["expected_status"], "200")</span>
+<span class="s2">        self.assertEqual(data["tls_sni"], "git.linux-kernel.de")</span>
+
+
+<span class="s2">@override_settings(PASSWORD_HASHERS=FAST_HASHERS)</span>
+<span class="s2">class ApiKeyLifecycleTest(TestCase):</span>
+<span class="s2">#DIVIDER</span>
+
+<span class="s2">#DIVIDER</span>
 <span class="s2">    def setUp(self):</span>
 <span class="s2">        self.user = User.objects.create_user("lifeuser", password=PASSWORD)</span>
 <span class="s2">        self.user.groups.clear()</span>
 <span class="s2">        self.client.login(username="lifeuser", password=PASSWORD)</span>
-
+<span class="s2">#DIVIDER</span>
 <span class="s2">    def test_key_expiry_rejected_by_auth(self):</span>
 <span class="s2">        from datetime import timedelta</span>
 <span class="s2">        from django.utils import timezone</span>
@@ -1412,7 +1517,7 @@
 <span class="s2">        client.credentials(HTTP_AUTHORIZATION=f"ApiKey </span><span class="si">{key.client_id}</span><span class="s2">:</span><span class="si">{secret}</span><span class="s2">")</span>
 <span class="s2">        response = client.get("/api/servers/")</span>
 <span class="s2">        self.assertEqual(response.status_code, 401)</span>
-
+<span class="s2">#DIVIDER</span>
 <span class="s2">    def test_key_not_yet_expired_accepted(self):</span>
 <span class="s2">        from datetime import timedelta</span>
 <span class="s2">        from django.utils import timezone</span>
@@ -1656,7 +1761,7 @@
       <div class='octowrap'>
         <a class='octothorpe' href='#section-75'>#</a>
       </div>
-      
+      <p>API key expiry, rotation, and revocation lifecycle.</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre></pre></div>
@@ -1668,7 +1773,7 @@
       <div class='octowrap'>
         <a class='octothorpe' href='#section-76'>#</a>
       </div>
-      <p>No view permission yet, but auth itself succeeded (403 not 401).</p>
+      
     </div>
     <div class='code'>
       <div class="highlight"><pre></pre></div>
@@ -1704,7 +1809,7 @@
       <div class='octowrap'>
         <a class='octothorpe' href='#section-79'>#</a>
       </div>
-      <p>The new key&rsquo;s secret is distinct from the old one.</p>
+      
     </div>
     <div class='code'>
       <div class="highlight"><pre></pre></div>
@@ -1716,7 +1821,7 @@
       <div class='octowrap'>
         <a class='octothorpe' href='#section-80'>#</a>
       </div>
-      
+      <p>No view permission yet, but auth itself succeeded (403 not 401).</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre></pre></div>
@@ -1752,7 +1857,7 @@
       <div class='octowrap'>
         <a class='octothorpe' href='#section-83'>#</a>
       </div>
-      
+      <p>The new key&rsquo;s secret is distinct from the old one.</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre></pre></div>
@@ -1763,6 +1868,54 @@
     <div class='docs'>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-84'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-85'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-85'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-86'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-86'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-87'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-87'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-88'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-88'>#</a>
       </div>
       
     </div>

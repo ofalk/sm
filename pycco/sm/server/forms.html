@@ -20,12 +20,17 @@
       
     </div>
     <div class='code'>
-      <div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">Model</span> <span class="k">as</span> <span class="n">ServerModel</span>
+      <div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">.models</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">Criticality</span><span class="p">,</span>
+    <span class="n">Model</span> <span class="k">as</span> <span class="n">ServerModel</span><span class="p">,</span>
+    <span class="n">MonitoringProfile</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">sm.forms</span><span class="w"> </span><span class="kn">import</span> <span class="n">SMForm</span><span class="p">,</span> <span class="n">SMFormDisabled</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">status.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">Model</span> <span class="k">as</span> <span class="n">StatusModel</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">django.forms</span><span class="w"> </span><span class="kn">import</span> <span class="n">DateInput</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">django</span><span class="w"> </span><span class="kn">import</span> <span class="n">forms</span></pre></div>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django</span><span class="w"> </span><span class="kn">import</span> <span class="n">forms</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.utils.translation</span><span class="w"> </span><span class="kn">import</span> <span class="n">gettext_lazy</span> <span class="k">as</span> <span class="n">_</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -50,7 +55,69 @@ value</p>
       
     </div>
     <div class='code'>
-      <div class="highlight"><pre></pre></div>
+      <div class="highlight"><pre>    <span class="n">field_groups</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">"title"</span><span class="p">:</span> <span class="n">_</span><span class="p">(</span><span class="s2">"Identity"</span><span class="p">),</span>
+            <span class="s2">"fields"</span><span class="p">:</span> <span class="p">[</span>
+                <span class="s2">"hostname"</span><span class="p">,</span>
+                <span class="s2">"domain"</span><span class="p">,</span>
+                <span class="s2">"status"</span><span class="p">,</span>
+                <span class="s2">"location"</span><span class="p">,</span>
+                <span class="s2">"cluster"</span><span class="p">,</span>
+                <span class="s2">"servermodel"</span><span class="p">,</span>
+            <span class="p">],</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="s2">"title"</span><span class="p">:</span> <span class="n">_</span><span class="p">(</span><span class="s2">"Hardware &amp; Operating System"</span><span class="p">),</span>
+            <span class="s2">"fields"</span><span class="p">:</span> <span class="p">[</span>
+                <span class="s2">"operatingsystem"</span><span class="p">,</span>
+                <span class="s2">"memory_in_mb"</span><span class="p">,</span>
+                <span class="s2">"serial_nr"</span><span class="p">,</span>
+                <span class="s2">"delivery_note_id"</span><span class="p">,</span>
+            <span class="p">],</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="s2">"title"</span><span class="p">:</span> <span class="n">_</span><span class="p">(</span><span class="s2">"Network"</span><span class="p">),</span>
+            <span class="s2">"fields"</span><span class="p">:</span> <span class="p">[</span>
+                <span class="s2">"primary_ip"</span><span class="p">,</span>
+                <span class="s2">"management_ip"</span><span class="p">,</span>
+                <span class="s2">"management_hostname"</span><span class="p">,</span>
+                <span class="s2">"rack"</span><span class="p">,</span>
+            <span class="p">],</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="s2">"title"</span><span class="p">:</span> <span class="n">_</span><span class="p">(</span><span class="s2">"Lifecycle &amp; Monitoring"</span><span class="p">),</span>
+            <span class="s2">"fields"</span><span class="p">:</span> <span class="p">[</span>
+                <span class="s2">"delivery_date"</span><span class="p">,</span>
+                <span class="s2">"install_date"</span><span class="p">,</span>
+                <span class="s2">"decommission_date"</span><span class="p">,</span>
+                <span class="s2">"monitoring_from_puppet"</span><span class="p">,</span>
+                <span class="s2">"monitoring_profile"</span><span class="p">,</span>
+                <span class="s2">"criticality"</span><span class="p">,</span>
+                <span class="s2">"maintenance_window"</span><span class="p">,</span>
+            <span class="p">],</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="s2">"title"</span><span class="p">:</span> <span class="n">_</span><span class="p">(</span><span class="s2">"Ownership &amp; Runbooks"</span><span class="p">),</span>
+            <span class="s2">"fields"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"owner_team"</span><span class="p">,</span> <span class="s2">"runbook_url"</span><span class="p">],</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="s2">"title"</span><span class="p">:</span> <span class="n">_</span><span class="p">(</span><span class="s2">"Prometheus Metadata"</span><span class="p">),</span>
+            <span class="s2">"fields"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"monitoring_labels"</span><span class="p">,</span> <span class="s2">"exporter_endpoints"</span><span class="p">],</span>
+            <span class="s2">"wide"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"monitoring_labels"</span><span class="p">,</span> <span class="s2">"exporter_endpoints"</span><span class="p">],</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="s2">"title"</span><span class="p">:</span> <span class="n">_</span><span class="p">(</span><span class="s2">"Operations"</span><span class="p">),</span>
+            <span class="s2">"fields"</span><span class="p">:</span> <span class="p">[</span>
+                <span class="s2">"application"</span><span class="p">,</span>
+                <span class="s2">"patchtime"</span><span class="p">,</span>
+                <span class="s2">"documentation_url"</span><span class="p">,</span>
+                <span class="s2">"description"</span><span class="p">,</span>
+                <span class="s2">"tags"</span><span class="p">,</span>
+            <span class="p">],</span>
+            <span class="s2">"wide"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"documentation_url"</span><span class="p">,</span> <span class="s2">"description"</span><span class="p">,</span> <span class="s2">"tags"</span><span class="p">],</span>
+        <span class="p">},</span>
+    <span class="p">]</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -63,7 +130,21 @@ value</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-4'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-4'>#</a>
+      </div>
+      <p>New monitoring metadata has model defaults. Keep the fields optional
+for older clients/forms that do not submit them.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s2">"monitoring_profile"</span><span class="p">]</span><span class="o">.</span><span class="n">required</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s2">"criticality"</span><span class="p">]</span><span class="o">.</span><span class="n">required</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">default_status</span> <span class="o">=</span> <span class="n">StatusModel</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"In use"</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
             <span class="k">if</span> <span class="n">default_status</span><span class="p">:</span>
@@ -73,10 +154,36 @@ value</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-4'>
+  <div class='section' id='section-5'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-4'>#</a>
+        <a class='octothorpe' href='#section-5'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">clean_monitoring_profile</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">cleaned_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"monitoring_profile"</span><span class="p">)</span> <span class="ow">or</span> <span class="n">MonitoringProfile</span><span class="o">.</span><span class="n">NONE</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-6'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-6'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">clean_criticality</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">cleaned_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"criticality"</span><span class="p">)</span> <span class="ow">or</span> <span class="n">Criticality</span><span class="o">.</span><span class="n">NORMAL</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-7'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-7'>#</a>
       </div>
       
     </div>
@@ -90,23 +197,50 @@ value</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-5'>
+  <div class='section' id='section-8'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-5'>#</a>
+        <a class='octothorpe' href='#section-8'>#</a>
+      </div>
+      <p>Read-only variant for the detail page. Monitoring gets its own toggle
+control in the card header, so it is removed from the disabled form.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">FormDisabled</span><span class="p">(</span><span class="n">Form</span><span class="p">,</span> <span class="n">SMFormDisabled</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-9'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-9'>#</a>
       </div>
       
     </div>
     <div class='code'>
-      <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">FormDisabled</span><span class="p">(</span><span class="n">Form</span><span class="p">,</span> <span class="n">SMFormDisabled</span><span class="p">):</span>
-    <span class="k">pass</span></pre></div>
+      <div class="highlight"><pre></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-6'>
+  <div class='section' id='section-10'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-6'>#</a>
+        <a class='octothorpe' href='#section-10'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">"monitoring_from_puppet"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">layout</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">build_layout</span><span class="p">()</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-11'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-11'>#</a>
       </div>
       
     </div>

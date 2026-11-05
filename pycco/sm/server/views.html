@@ -23,7 +23,7 @@
       <div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">django.contrib.auth.mixins</span><span class="w"> </span><span class="kn">import</span> <span class="n">LoginRequiredMixin</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">django.contrib</span><span class="w"> </span><span class="kn">import</span> <span class="n">messages</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">sm.views</span><span class="w"> </span><span class="kn">import</span> <span class="n">SafeDeleteMixin</span><span class="p">,</span> <span class="n">GenericCSVExportView</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sm.views</span><span class="w"> </span><span class="kn">import</span> <span class="n">SafeDeleteMixin</span><span class="p">,</span> <span class="n">GenericCSVExportView</span><span class="p">,</span> <span class="n">MonitoringToggleView</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">sm.mixins</span><span class="w"> </span><span class="kn">import</span> <span class="n">filter_queryset_by_tenant</span><span class="p">,</span> <span class="n">MultiTenantMixin</span><span class="p">,</span> <span class="n">BulkActionMixin</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">Model</span>
@@ -348,6 +348,31 @@ group&rsquo;s servers.</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-17'>#</a>
       </div>
+      <p>Toggle the server monitoring flag from the list or detail page.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">MonitoringToggleView</span><span class="p">(</span><span class="n">MonitoringToggleView</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-18'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-18'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">model</span> <span class="o">=</span> <span class="n">Model</span>
+    <span class="n">monitoring_field</span> <span class="o">=</span> <span class="s2">"monitoring_from_puppet"</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-19'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-19'>#</a>
+      </div>
       
     </div>
     <div class='code'>
@@ -358,10 +383,10 @@ group&rsquo;s servers.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-18'>
+  <div class='section' id='section-20'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-18'>#</a>
+        <a class='octothorpe' href='#section-20'>#</a>
       </div>
       
     </div>
@@ -381,10 +406,10 @@ group&rsquo;s servers.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-19'>
+  <div class='section' id='section-21'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-19'>#</a>
+        <a class='octothorpe' href='#section-21'>#</a>
       </div>
       
     </div>
@@ -404,10 +429,10 @@ group&rsquo;s servers.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-20'>
+  <div class='section' id='section-22'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-20'>#</a>
+        <a class='octothorpe' href='#section-22'>#</a>
       </div>
       
     </div>
@@ -425,10 +450,10 @@ group&rsquo;s servers.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-21'>
+  <div class='section' id='section-23'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-21'>#</a>
+        <a class='octothorpe' href='#section-23'>#</a>
       </div>
       
     </div>
@@ -442,10 +467,10 @@ group&rsquo;s servers.</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-22'>
+  <div class='section' id='section-24'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-22'>#</a>
+        <a class='octothorpe' href='#section-24'>#</a>
       </div>
       
     </div>
@@ -463,6 +488,7 @@ group&rsquo;s servers.</p>
         <span class="p">(</span><span class="s2">"primary_ip"</span><span class="p">,</span> <span class="s2">"primary_ip"</span><span class="p">),</span>
         <span class="p">(</span><span class="s2">"management_ip"</span><span class="p">,</span> <span class="s2">"management_ip"</span><span class="p">),</span>
         <span class="p">(</span><span class="s2">"description"</span><span class="p">,</span> <span class="s2">"description"</span><span class="p">),</span>
+        <span class="p">(</span><span class="s2">"monitoring"</span><span class="p">,</span> <span class="s2">"monitoring_from_puppet"</span><span class="p">),</span>
         <span class="p">(</span><span class="s2">"decommission_date"</span><span class="p">,</span> <span class="s2">"decommission_date"</span><span class="p">),</span>
         <span class="p">(</span><span class="s2">"tags"</span><span class="p">,</span> <span class="s2">"tags.names"</span><span class="p">),</span>
     <span class="p">]</span>

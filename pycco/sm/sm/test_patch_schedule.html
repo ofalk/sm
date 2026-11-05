@@ -130,7 +130,7 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">Status</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"Active"</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">domain</span> <span class="o">=</span> <span class="n">Domain</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"m.example.com"</span><span class="p">)</span>
-        <span class="n">Server</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">monitored</span> <span class="o">=</span> <span class="n">Server</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
             <span class="n">hostname</span><span class="o">=</span><span class="s2">"monitored"</span><span class="p">,</span>
             <span class="n">status</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">status</span><span class="p">,</span>
             <span class="n">domain</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">,</span>
@@ -142,11 +142,44 @@
             <span class="n">domain</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">,</span>
         <span class="p">)</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">test_list_shows_monitoring_badges</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_list_shows_monitoring_toggles</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">"server:index"</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertContains</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="s2">"Monitoring"</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertContains</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="s2">"Yes"</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertContains</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="s2">"No"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertContains</span><span class="p">(</span>
+            <span class="n">response</span><span class="p">,</span>
+            <span class="n">reverse</span><span class="p">(</span><span class="s2">"server:monitoring_toggle"</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">monitored</span><span class="o">.</span><span class="n">pk</span><span class="p">]),</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertContains</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="s1">'id="monitoring-toggle-</span><span class="si">%s</span><span class="s1">"'</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">monitored</span><span class="o">.</span><span class="n">pk</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertContains</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="s2">"checked"</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_toggle_monitoring_from_list</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
+            <span class="n">reverse</span><span class="p">(</span><span class="s2">"server:monitoring_toggle"</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">monitored</span><span class="o">.</span><span class="n">pk</span><span class="p">]),</span>
+            <span class="p">{</span><span class="s2">"next"</span><span class="p">:</span> <span class="n">reverse</span><span class="p">(</span><span class="s2">"server:index"</span><span class="p">)},</span>
+            <span class="n">follow</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">monitored</span><span class="o">.</span><span class="n">refresh_from_db</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">monitored</span><span class="o">.</span><span class="n">monitoring_from_puppet</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
+            <span class="n">reverse</span><span class="p">(</span><span class="s2">"server:monitoring_toggle"</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">monitored</span><span class="o">.</span><span class="n">pk</span><span class="p">]),</span>
+            <span class="p">{</span><span class="s2">"next"</span><span class="p">:</span> <span class="n">reverse</span><span class="p">(</span><span class="s2">"server:index"</span><span class="p">)},</span>
+            <span class="n">follow</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">monitored</span><span class="o">.</span><span class="n">refresh_from_db</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">monitored</span><span class="o">.</span><span class="n">monitoring_from_puppet</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_toggle_monitoring_from_detail</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
+            <span class="n">reverse</span><span class="p">(</span><span class="s2">"server:monitoring_toggle"</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">monitored</span><span class="o">.</span><span class="n">pk</span><span class="p">]),</span>
+            <span class="p">{</span><span class="s2">"next"</span><span class="p">:</span> <span class="n">reverse</span><span class="p">(</span><span class="s2">"server:detail"</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">monitored</span><span class="o">.</span><span class="n">pk</span><span class="p">])},</span>
+            <span class="n">follow</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertContains</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="s2">"Monitoring"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">monitored</span><span class="o">.</span><span class="n">refresh_from_db</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">monitored</span><span class="o">.</span><span class="n">monitoring_from_puppet</span><span class="p">)</span>
 
 
 <span class="nd">@override_settings</span><span class="p">(</span><span class="n">PASSWORD_HASHERS</span><span class="o">=</span><span class="n">FAST_HASHERS</span><span class="p">)</span>

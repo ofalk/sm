@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <title>monitoring_data_quality.py</title>
+  <link rel="stylesheet" href="../../../../pycco.css">
+</head>
+<body>
+<div id='container'>
+  <div id="background"></div>
+  <div class='section'>
+    <div class='docs'><h1>monitoring_data_quality.py</h1></div>
+  </div>
+  <div class='clearall'>
+  <div class='section' id='section-0'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-0'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">django.core.management.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseCommand</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.db.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">Count</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">cluster.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">Model</span> <span class="k">as</span> <span class="n">Cluster</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">clusterpackage.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">Model</span> <span class="k">as</span> <span class="n">ClusterPackage</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">server.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">Model</span> <span class="k">as</span> <span class="n">Server</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">status.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">Model</span> <span class="k">as</span> <span class="n">Status</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-1'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-1'>#</a>
+      </div>
+      <p>Audit the data required by the monitoring coverage exporter.</p>
+<p>Without <code>--apply</code> the command only reports. With <code>--apply</code> it makes the
+two safe, explicitly requested corrections:</p>
+<ul>
+<li>mark active <code>In use</code> servers as monitored;</li>
+<li>move monitored cluster packages to their scope&rsquo;s <code>In use</code> status.</li>
+</ul>
+<p>Duplicate FQDNs are reported but never changed automatically: resolving
+them is a tenancy decision.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">class</span><span class="w"> </span><span class="nc">Command</span><span class="p">(</span><span class="n">BaseCommand</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-2'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-2'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">help</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s2">"Report monitoring data quality, and optionally normalise active server "</span>
+        <span class="s2">"monitoring flags and monitored package statuses."</span>
+    <span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-3'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-3'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">add_arguments</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">):</span>
+        <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+            <span class="s2">"--apply"</span><span class="p">,</span>
+            <span class="n">action</span><span class="o">=</span><span class="s2">"store_true"</span><span class="p">,</span>
+            <span class="n">help</span><span class="o">=</span><span class="s2">"Apply the safe normalisations instead of only reporting."</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+            <span class="s2">"--skip-status"</span><span class="p">,</span>
+            <span class="n">action</span><span class="o">=</span><span class="s2">"store_true"</span><span class="p">,</span>
+            <span class="n">help</span><span class="o">=</span><span class="s2">"Do not change cluster package statuses (only report them)."</span><span class="p">,</span>
+        <span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-4'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-4'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span><span class="w"> </span><span class="nf">handle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">options</span><span class="p">):</span>
+        <span class="n">apply</span> <span class="o">=</span> <span class="n">options</span><span class="p">[</span><span class="s2">"apply"</span><span class="p">]</span>
+        <span class="n">skip_status</span> <span class="o">=</span> <span class="n">options</span><span class="p">[</span><span class="s2">"skip_status"</span><span class="p">]</span>
+
+        <span class="n">active_servers</span> <span class="o">=</span> <span class="n">Server</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span>
+            <span class="n">status__name</span><span class="o">=</span><span class="s2">"In use"</span><span class="p">,</span> <span class="n">decommission_date__isnull</span><span class="o">=</span><span class="kc">True</span>
+        <span class="p">)</span>
+        <span class="n">unmonitored_active</span> <span class="o">=</span> <span class="n">active_servers</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">monitoring_from_puppet</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="n">duplicates</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">Server</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">values</span><span class="p">(</span><span class="s2">"hostname"</span><span class="p">,</span> <span class="s2">"domain__name"</span><span class="p">)</span>
+            <span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="n">total</span><span class="o">=</span><span class="n">Count</span><span class="p">(</span><span class="s2">"id"</span><span class="p">))</span>
+            <span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">total__gt</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">"hostname"</span><span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="n">monitored_packages</span> <span class="o">=</span> <span class="n">ClusterPackage</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">monitoring</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">wrong_status_packages</span> <span class="o">=</span> <span class="n">monitored_packages</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">status__name</span><span class="o">=</span><span class="s2">"In use"</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">"Monitoring data quality"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">"======================="</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span>
+            <span class="s2">"Active 'In use' servers: </span><span class="si">%d</span><span class="s2"> (unmonitored: </span><span class="si">%d</span><span class="s2">)"</span>
+            <span class="o">%</span> <span class="p">(</span><span class="n">active_servers</span><span class="o">.</span><span class="n">count</span><span class="p">(),</span> <span class="n">unmonitored_active</span><span class="o">.</span><span class="n">count</span><span class="p">())</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span>
+            <span class="s2">"Clusters not monitored: </span><span class="si">%d</span><span class="s2">"</span>
+            <span class="o">%</span> <span class="n">Cluster</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">monitoring</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span>
+            <span class="s2">"Cluster packages not monitored: </span><span class="si">%d</span><span class="s2">"</span>
+            <span class="o">%</span> <span class="n">ClusterPackage</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">monitoring</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span>
+            <span class="s2">"Monitored packages not in 'In use': </span><span class="si">%d</span><span class="s2">"</span> <span class="o">%</span> <span class="n">wrong_status_packages</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">duplicates</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">WARNING</span><span class="p">(</span>
+                    <span class="s2">"Duplicate FQDNs across groups (resolve manually): </span><span class="si">%d</span><span class="s2">"</span>
+                    <span class="o">%</span> <span class="n">duplicates</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+            <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">duplicates</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span>
+                    <span class="s2">"  - </span><span class="si">%s</span><span class="s2">.</span><span class="si">%s</span><span class="s2"> (</span><span class="si">%d</span><span class="s2"> servers)"</span>
+                    <span class="o">%</span> <span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s2">"hostname"</span><span class="p">],</span> <span class="n">row</span><span class="p">[</span><span class="s2">"domain__name"</span><span class="p">],</span> <span class="n">row</span><span class="p">[</span><span class="s2">"total"</span><span class="p">])</span>
+                <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">"Duplicate FQDNs: none"</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span>
+            <span class="s2">"API visibility: use a key owned by a superuser (or a user in every "</span>
+            <span class="s2">"group) so the exporter can read all tenants."</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">apply</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">WARNING</span><span class="p">(</span>
+                    <span class="s2">"Dry run - nothing changed. Re-run with --apply to update "</span>
+                    <span class="s2">"server flags and package statuses."</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="n">updated_servers</span> <span class="o">=</span> <span class="n">unmonitored_active</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">monitoring_from_puppet</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">SUCCESS</span><span class="p">(</span>
+                <span class="s2">"Marked </span><span class="si">%d</span><span class="s2"> active server(s) as monitored."</span> <span class="o">%</span> <span class="n">updated_servers</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">skip_status</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">"Skipped cluster package status changes."</span><span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="n">updated_packages</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">skipped_packages</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">package</span> <span class="ow">in</span> <span class="n">wrong_status_packages</span><span class="o">.</span><span class="n">select_related</span><span class="p">(</span><span class="s2">"group"</span><span class="p">):</span>
+            <span class="n">status_qs</span> <span class="o">=</span> <span class="n">Status</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"In use"</span><span class="p">)</span>
+            <span class="n">status</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">if</span> <span class="n">package</span><span class="o">.</span><span class="n">group_id</span><span class="p">:</span>
+                <span class="n">status</span> <span class="o">=</span> <span class="n">status_qs</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">group_id</span><span class="o">=</span><span class="n">package</span><span class="o">.</span><span class="n">group_id</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">status</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">status</span> <span class="o">=</span> <span class="n">status_qs</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">group__isnull</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">status</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">skipped_packages</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="k">continue</span>
+            <span class="n">package</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">status</span>
+            <span class="n">package</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">update_fields</span><span class="o">=</span><span class="p">[</span><span class="s2">"status"</span><span class="p">])</span>
+            <span class="n">updated_packages</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">SUCCESS</span><span class="p">(</span>
+                <span class="s2">"Moved </span><span class="si">%d</span><span class="s2"> monitored package(s) to 'In use' (skipped: </span><span class="si">%d</span><span class="s2">, no "</span>
+                <span class="s2">"scope status found)."</span> <span class="o">%</span> <span class="p">(</span><span class="n">updated_packages</span><span class="p">,</span> <span class="n">skipped_packages</span><span class="p">)</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+
+</pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+</div>
+</body>
