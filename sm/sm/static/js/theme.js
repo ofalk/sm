@@ -1,22 +1,14 @@
 $(function () {
-  // Topbar active tab support
-  $(".topbar li").removeClass("active");
-
-  var class_list = $("body").attr("class").split(/\s+/);
-  $.each(class_list, function (index, item) {
-    if (!item) return;
-    var selector;
-    // Main menu entry
-    selector = "ul.nav li#tab_" + item;
-    $(selector).addClass("active");
-
-    // Submenu / Dropdown items
-    selector = "ul.nav a#" + item;
-    $(selector).addClass("active");
-
-    // Subnav - as seen in account pages
-    selector = "a." + item;
-    $(selector).addClass("active");
+  // Topbar active state: match body classes (e.g. "server server-list") to
+  // nav links tagged with data-nav. Works for both top-level and dropdown
+  // entries, keeping the parent dropdown visually active too.
+  var bodyClasses = ($("body").attr("class") || "").split(/\s+/);
+  $(".app-navbar [data-nav]").each(function () {
+    var nav = String($(this).data("nav"));
+    if (bodyClasses.indexOf(nav) !== -1) {
+      $(this).addClass("active");
+      $(this).closest(".dropdown").find(".dropdown-toggle").addClass("active");
+    }
   });
 
   $("#account_logout, .account_logout").click(function (e) {

@@ -14,7 +14,7 @@
 <div class="wide-container mt-4">
     <div class="card shadow-sm mb-4">
         <div class="card-header bg-white">
-            <h4 class="mb-0">{% trans "Vendor Details" %}</h4>
+            <h4 class="mb-0">{% trans "Vendor details" %}</h4>
         </div>
         <div class="card-body">
             {% if object %}
@@ -24,13 +24,13 @@
             {% endif %}
 
             {% csrf_token %}
-            {% include "includes/form_layout.html" with form=form %}
+            {% include "includes/detail_layout.html" with form=form %}
             <div class="form-actions">
             {% if request.path == object.get_update_url %}
             {% bootstrap_button "Save" button_type="submit" button_class="btn-sm btn-primary pill" %}
             {% else %}
-            <a class="btn btn-primary pill" role="button" href="{% url 'vendor:update' object.pk %}">{% trans 'Edit' %}</a>
-            <a class="btn btn-danger" role="button" href="{% url 'vendor:delete' object.pk %}">{% trans 'Delete' %}</a>
+            <a class="btn btn-primary pill" role="button" href="{% url 'vendor:update' object.pk %}"><i class="fa-solid fa-pen me-1"></i> {% trans 'Edit' %}</a>
+            <a class="btn btn-danger" role="button" href="{% url 'vendor:delete' object.pk %}"><i class="fa-solid fa-trash me-1"></i> {% trans 'Delete' %}</a>
             {% endif %}
             </div>
             </form>

@@ -4,8 +4,13 @@
 {% block head_title %}{% trans "API Keys" %}{% endblock %}
 
 {% block body %}
-<div class="wide-container mt-4">
-    <h2 class="mb-4">{% trans "API Keys" %}</h2>
+<div class="wide-container">
+    <div class="page-heading">
+        <div>
+            <h1>{% trans "API Keys" %}</h1>
+            <p>{% trans "Create and manage credentials for external tools." %}</p>
+        </div>
+    </div>
 
     <div class="alert alert-info">
         <i class="fa-solid fa-circle-info me-1"></i>
@@ -71,7 +76,7 @@
                         <th>{% trans "Expires" %}</th>
                         <th>{% trans "Last used" %}</th>
                         <th>{% trans "Status" %}</th>
-                        <th>{% trans "Actions" %}</th>
+                        <th class="actions">{% trans "Actions" %}</th>
                     </tr>
                 </thead>
                 <tbody>

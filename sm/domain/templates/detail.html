@@ -12,15 +12,18 @@
 
 {% block body %}
 <div class="wide-container mt-4">
-
-{% include "includes/form_layout.html" with form=form %}
+  {% trans "Domain details" as detail_title %}
+  {% url 'domain:update' object.pk as edit_url %}
+  {% url 'domain:delete' object.pk as delete_url %}
+  {% include "includes/detail_panel.html" with title=detail_title edit_url=edit_url delete_url=delete_url can_edit=perms.domain.change_model can_delete=perms.domain.delete_model %}
 
   <div class="card">
     {% if not object.server_set.all %}
-      <div class="card-header"><b>{% trans 'No servers in this domain' %}</b></div>
+      <div class="card-header"><h5 class="mb-0">{% trans 'No servers in this domain' %}</h5></div>
     {% else %}
-    <div class="card-header"><b>{% trans 'List of servers in this domain' %}</b></div>
-    <table class="table table-hover table-striped" id="server_list" style="font-size:80%;">
+    <div class="card-header"><h5 class="mb-0">{% trans 'List of servers in this domain' %}</h5></div>
+    <div class="table-responsive">
+    <table class="table table-hover" id="server_list">
       <thead>
         <tr>
           <th>{% trans 'Hostname' %}</th>
@@ -46,6 +49,7 @@
         {% endfor %}
       </tbody>
     </table>
+    </div>
     {% endif %}
   </div>
 

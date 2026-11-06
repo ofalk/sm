@@ -1,3 +1,7 @@
+# Base interpreter: the project's default 3.15 (see README "Python 3.15"). Production must
+# run an interpreter CI actually tests, so the minor here has to appear in the test matrix in
+# .github/workflows/ci.yml; the `docker-base-in-matrix` job fails the pipeline if it does not.
+# Do not bump this tag by hand or by bot without adding the same minor to that matrix.
 FROM python:3.15-slim
 
 ENV PYTHONDONTWRITEBYTECODE=1

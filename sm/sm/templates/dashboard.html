@@ -3,97 +3,95 @@
 
 {% block head_title %}{% trans "Dashboard" %}{% endblock %}
 
+{% block body_class %}dashboard{% endblock %}
+
 {% block extra_head %}
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
 {% endblock %}
 
 {% block body %}
-<div class="wide-container mt-4">
+<div class="wide-container dashboard-page">
     {% if ONBOARDING_NEEDED %}
-    <div class="alert alert-info d-flex justify-content-between align-items-center">
+    <div class="alert alert-info d-flex flex-wrap justify-content-between align-items-center gap-3">
         <div>
             <i class="fa-solid fa-hand-sparkles me-2"></i>
             <strong>{% trans "Welcome!" %}</strong>
             {% trans "Create a group or join one with an invitation to start managing infrastructure with your team." %}
         </div>
-        <a href="{% url 'group_onboarding' %}" class="btn btn-sm btn-primary pill">
+        <a href="{% url 'group_onboarding' %}" class="btn btn-sm btn-primary">
             {% trans "Get Started" %}
         </a>
     </div>
     {% endif %}
+
+    <div class="page-heading">
+        <div>
+            <h1>{% trans "Overview" %}</h1>
+            <p>{% trans "Your infrastructure at a glance." %}</p>
+        </div>
+        <div class="page-heading-actions">
+            {% if perms.server.add_model %}
+            <a href="{% url 'server:create' %}" class="btn btn-primary">
+                <i class="fa-solid fa-plus me-1"></i> {% trans "Add server" %}
+            </a>
+            {% endif %}
+        </div>
+    </div>
+
     <!-- Stat Cards -->
-    <div class="row mb-4">
-        <div class="col-md-3">
-            <a href="{% url 'server:index' %}" class="text-decoration-none">
-                <div class="card shadow-sm border-0 bg-primary text-white card-hover-lift">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                <h6 class="text-uppercase mb-1 small">{% trans "Total Servers" %}</h6>
-                                <h2 class="mb-0">{{ server_count }}</h2>
-                            </div>
-                            <i class="fa-solid fa-server fa-2x opacity-50"></i>
-                        </div>
-                    </div>
-                </div>
+    <div class="row g-3 mb-4">
+        <div class="col-sm-6 col-xl-3">
+            <a href="{% url 'server:index' %}" class="stat-card">
+                <span class="stat-icon"><i class="fa-solid fa-server"></i></span>
+                <span class="stat-copy">
+                    <span class="stat-label">{% trans "Servers" %}</span>
+                    <span class="stat-value d-block">{{ server_count }}</span>
+                    <span class="stat-hint">{% trans "Across your groups" %}</span>
+                </span>
             </a>
         </div>
-        <div class="col-md-3">
-            <a href="{% url 'cluster:index' %}" class="text-decoration-none">
-                <div class="card shadow-sm border-0 bg-success text-white card-hover-lift">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                <h6 class="text-uppercase mb-1 small">{% trans "Active Clusters" %}</h6>
-                                <h2 class="mb-0">{{ cluster_count }}</h2>
-                            </div>
-                            <i class="fa-solid fa-th-large fa-2x opacity-50"></i>
-                        </div>
-                    </div>
-                </div>
+        <div class="col-sm-6 col-xl-3">
+            <a href="{% url 'cluster:index' %}" class="stat-card">
+                <span class="stat-icon is-green"><i class="fa-solid fa-layer-group"></i></span>
+                <span class="stat-copy">
+                    <span class="stat-label">{% trans "Clusters" %}</span>
+                    <span class="stat-value d-block">{{ cluster_count }}</span>
+                    <span class="stat-hint">{% trans "Managed environments" %}</span>
+                </span>
             </a>
         </div>
-        <div class="col-md-3">
-            <a href="{% url 'vendor:index' %}" class="text-decoration-none">
-                <div class="card shadow-sm border-0 bg-info text-white card-hover-lift">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                <h6 class="text-uppercase mb-1 small">{% trans "Vendors" %}</h6>
-                                <h2 class="mb-0">{{ vendor_count }}</h2>
-                            </div>
-                            <i class="fa-solid fa-industry fa-2x opacity-50"></i>
-                        </div>
-                    </div>
-                </div>
+        <div class="col-sm-6 col-xl-3">
+            <a href="{% url 'vendor:index' %}" class="stat-card">
+                <span class="stat-icon is-blue"><i class="fa-solid fa-industry"></i></span>
+                <span class="stat-copy">
+                    <span class="stat-label">{% trans "Vendors" %}</span>
+                    <span class="stat-value d-block">{{ vendor_count }}</span>
+                    <span class="stat-hint">{% trans "Hardware & software" %}</span>
+                </span>
             </a>
         </div>
-        <div class="col-md-3">
-            <a href="{% url 'operatingsystem:index' %}" class="text-decoration-none">
-                <div class="card shadow-sm border-0 bg-warning text-white card-hover-lift">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                <h6 class="text-uppercase mb-1 small">{% trans "Operating Systems" %}</h6>
-                                <h2 class="mb-0">{{ os_count }}</h2>
-                            </div>
-                            <i class="fa-solid fa-laptop fa-2x opacity-50"></i>
-                        </div>
-                    </div>
-                </div>
+        <div class="col-sm-6 col-xl-3">
+            <a href="{% url 'operatingsystem:index' %}" class="stat-card">
+                <span class="stat-icon is-orange"><i class="fa-solid fa-laptop"></i></span>
+                <span class="stat-copy">
+                    <span class="stat-label">{% trans "Operating systems" %}</span>
+                    <span class="stat-value d-block">{{ os_count }}</span>
+                    <span class="stat-hint">{% trans "Platforms in use" %}</span>
+                </span>
             </a>
         </div>
     </div>
 
-    <div class="row">
+    <div class="row g-4">
         <!-- OS Distribution Chart -->
-        <div class="col-md-4 mb-4">
-            <div class="card shadow-sm h-100">
-                <div class="card-header bg-white">
-                    <h5 class="mb-0">{% trans "OS Distribution" %}</h5>
+        <div class="col-md-6 col-xl-4">
+            <div class="card chart-card h-100">
+                <div class="card-header">
+                    <h5>{% trans "OS distribution" %}</h5>
+                    <span class="badge text-bg-light">{{ server_count }} {% trans "servers" %}</span>
                 </div>
                 <div class="card-body">
-                    <div style="position: relative; height: 250px; width: 100%;">
+                    <div class="chart-holder">
                         <canvas id="osChart"></canvas>
                     </div>
                 </div>
@@ -101,13 +99,13 @@
         </div>
 
         <!-- Status Distribution Chart -->
-        <div class="col-md-4 mb-4">
-            <div class="card shadow-sm h-100">
-                <div class="card-header bg-white">
-                    <h5 class="mb-0">{% trans "Server Status" %}</h5>
+        <div class="col-md-6 col-xl-4">
+            <div class="card chart-card h-100">
+                <div class="card-header">
+                    <h5>{% trans "Server status" %}</h5>
                 </div>
                 <div class="card-body">
-                    <div style="position: relative; height: 250px; width: 100%;">
+                    <div class="chart-holder">
                         <canvas id="statusChart"></canvas>
                     </div>
                 </div>
@@ -115,32 +113,28 @@
         </div>
 
         <!-- Recent Activity -->
-        <div class="col-md-4 mb-4">
-            <div class="card shadow-sm h-100">
-                <div class="card-header bg-white">
-                    <h5 class="mb-0">{% trans "Recently Added Servers" %}</h5>
+        <div class="col-md-12 col-xl-4">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h5>{% trans "Recently added" %}</h5>
+                    <a href="{% url 'server:index' %}" class="small fw-semibold">{% trans "View all" %} <i class="fa-solid fa-arrow-right ms-1"></i></a>
                 </div>
                 <div class="card-body p-0">
-                    <ul class="list-group list-group-flush">
+                    <ul class="recent-list">
                         {% for server in recent_servers %}
-                        <li class="list-group-item d-flex justify-content-between align-items-center py-3">
-                            <div>
-                                <a href="{{ server.get_absolute_url }}" class="fw-bold">{{ server.hostname }}</a>
-                                <div class="small text-muted">{{ server.operatingsystem }}</div>
+                        <li>
+                            <div class="min-w-0">
+                                <a href="{{ server.get_absolute_url }}" class="server-link text-truncate">{{ server.hostname }}</a>
+                                <div class="server-meta text-truncate">{{ server.operatingsystem|default:"—" }}</div>
                             </div>
-                            <span class="badge text-bg-light border">{{ server.status }}</span>
+                            <span class="badge text-bg-light">{{ server.status }}</span>
                         </li>
                         {% empty %}
-                        <li class="list-group-item text-center text-muted py-4">
+                        <li class="justify-content-center text-muted py-4">
                             {% trans "No servers found." %}
                         </li>
                         {% endfor %}
                     </ul>
-                </div>
-                <div class="card-footer bg-white text-center">
-                    <a href="{% url 'server:index' %}" class="btn btn-sm btn-link text-primary fw-bold">
-                        {% trans "View All Servers" %} <i class="fa-solid fa-arrow-right ms-1"></i>
-                    </a>
                 </div>
             </div>
         </div>
@@ -158,61 +152,73 @@
     const statusLabels = JSON.parse(document.getElementById('status-labels').textContent);
     const statusData = JSON.parse(document.getElementById('status-data').textContent);
 
-    const ctx = document.getElementById('osChart').getContext('2d');
-    new Chart(ctx, {
+    const chartColors = ['#4f46e5', '#12b76a', '#2e90fa', '#f79009', '#f04438', '#7a5af8', '#14b8a6'];
+    const chartFont = 'Inter, system-ui, sans-serif';
+
+    function statusColor(label, index) {
+        const name = String(label).toLowerCase();
+        if (name.includes('decommission') || name.includes('disposed') || name.includes('retired')) return '#98a2b3';
+        if (name.includes('active') || name.includes('in use') || name.includes('running')) return '#12b76a';
+        if (name.includes('staging') || name.includes('test')) return '#2e90fa';
+        if (name.includes('maintenance') || name.includes('ordered') || name.includes('stored')) return '#f79009';
+        return chartColors[index % chartColors.length];
+    }
+
+    const sharedOptions = {
+        responsive: true,
+        maintainAspectRatio: false,
+        cutout: '72%',
+        plugins: {
+            legend: {
+                position: 'bottom',
+                labels: {
+                    boxWidth: 9,
+                    boxHeight: 9,
+                    usePointStyle: true,
+                    pointStyle: 'circle',
+                    padding: 16,
+                    color: '#667085',
+                    font: { family: chartFont, size: 11 }
+                }
+            },
+            tooltip: {
+                backgroundColor: '#101828',
+                padding: 10,
+                cornerRadius: 8,
+                titleFont: { family: chartFont, size: 12 },
+                bodyFont: { family: chartFont, size: 12 }
+            }
+        }
+    };
+
+    new Chart(document.getElementById('osChart').getContext('2d'), {
         type: 'doughnut',
         data: {
             labels: osLabels,
             datasets: [{
                 data: osData,
-                backgroundColor: [
-                    '#2780e3',
-                    '#3fb618',
-                    '#ff0039',
-                    '#f0ad4e',
-                    '#9954bb'
-                ],
-                borderWidth: 0
+                backgroundColor: chartColors,
+                borderColor: '#ffffff',
+                borderWidth: 2,
+                hoverOffset: 4
             }]
         },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    position: 'bottom'
-                }
-            },
-            cutout: '70%'
-        }
+        options: sharedOptions
     });
 
-    const statusCtx = document.getElementById('statusChart').getContext('2d');
-    new Chart(statusCtx, {
-        type: 'pie',
+    new Chart(document.getElementById('statusChart').getContext('2d'), {
+        type: 'doughnut',
         data: {
             labels: statusLabels,
             datasets: [{
                 data: statusData,
-                backgroundColor: [
-                    '#3fb618',
-                    '#2780e3',
-                    '#373a3c',
-                    '#ff0039',
-                    '#f0ad4e'
-                ],
-                borderWidth: 0
+                backgroundColor: statusLabels.map(statusColor),
+                borderColor: '#ffffff',
+                borderWidth: 2,
+                hoverOffset: 4
             }]
         },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    position: 'bottom'
-                }
-            }
-        }
+        options: sharedOptions
     });
 </script>
 {% endblock %}

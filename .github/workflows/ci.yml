@@ -2,7 +2,7 @@ name: CI
 
 # Run on main (release) and devel (integration) pushes, and on PRs targeting
 # either. Merging devel into main additionally requires a green pipeline via
-# branch protection on main (required checks: the two matrix legs).
+# branch protection on main (required checks: the matrix legs).
 on:
   push:
     branches: [ main, devel ]
@@ -14,20 +14,34 @@ permissions:
   contents: read
 
 jobs:
+  # Cheap, blocking guard: the interpreter the production image ships must be
+  # one a test leg actually runs. Added after a `build(deps)` bump of the
+  # Dockerfile base to python:3.15-slim landed green while the matrix tested
+  # only 3.13/3.14.
+  docker-base-in-matrix:
+    name: docker base is a tested interpreter
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+    - name: Assert the image's Python base is covered by the test matrix
+      run: python3 .github/scripts/check_docker_base_in_matrix.py
+
   test:
     runs-on: ubuntu-latest
 
     strategy:
-      # Both legs must pass. 3.13 is the canonical/base interpreter - it is the version
-      # that catches PEP 649 annotation defects (a self-referential `-> tuple[ApiKey, str]`
-      # resolves lazily from 3.14 on, so a 3.14-only leg cannot see it). 3.14 is the
-      # deployment target and its leg is BLOCKING - never allow_failure
-      # ("Es muss brechen, damit es auffaellt"). fail-fast is off so one red leg cannot
-      # hide the other's result, and both legs run the identical recipe below so the two
-      # cannot drift apart.
+      # All legs must pass. 3.15 is the canonical/base interpreter and matches
+      # the production Docker image. 3.14 is the previous stable line and 3.13
+      # remains for PEP 649 annotation checks: it is the last interpreter that
+      # evaluates annotations eagerly, so a 3.14+-only leg cannot see
+      # self-referential annotation defects. fail-fast is off so one red leg
+      # cannot hide another's result, and every leg runs the identical recipe
+      # below so the versions cannot drift apart.
       fail-fast: false
       matrix:
-        python-version: ['3.13', '3.14']
+        python-version: ['3.15', '3.14', '3.13']
 
     services:
       postgres:
@@ -58,6 +72,27 @@ jobs:
         pip install -r requirements-dev.txt
         # Only the browsers the browser tests actually use (skips WebKit)
         playwright install chromium firefox --with-deps
+
+    - name: Verify runtime versions
+      env:
+        EXPECTED_PYTHON: ${{ matrix.python-version }}
+      run: |
+        python - <<'PY'
+        import os
+        import sys
+
+        import django
+
+        expected = tuple(int(part) for part in os.environ["EXPECTED_PYTHON"].split(".")[:2])
+        assert sys.version_info[:2] == expected, (
+            f"expected Python {expected}, got {sys.version_info[:2]}"
+        )
+        assert django.VERSION[:2] == (6, 1), (
+            f"expected Django 6.1.x, got {django.get_version()}"
+        )
+        print("Python:", sys.version)
+        print("Django:", django.get_version())
+        PY
 
     - name: Run Tests
       env:
@@ -90,14 +125,14 @@ jobs:
     # artifact by this exact name, and `upload-artifact@v4` requires unique names, so a
     # second leg uploading the same name would fail the job rather than merge the reports.
     - name: Upload coverage reports
-      if: matrix.python-version == '3.13'
+      if: matrix.python-version == '3.15'
       uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
       with:
         name: coverage-report
         path: sm/htmlcov/
 
     - name: Upload pycco documentation
-      if: matrix.python-version == '3.13'
+      if: matrix.python-version == '3.15'
       uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
       with:
         name: pycco-docs

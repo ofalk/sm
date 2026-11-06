@@ -1,0 +1,46 @@
+{% load i18n %}
+{% load detail_tags %}
+
+{% for hidden in form.hidden_fields %}{{ hidden }}{% endfor %}
+
+{% if form.non_field_errors %}
+<div class="alert alert-danger" role="alert">
+    {{ form.non_field_errors }}
+</div>
+{% endif %}
+
+{% if form.layout %}
+    {% for group in form.layout %}
+        {% with visible=group.fields|with_values %}
+        {% if visible %}
+        <fieldset class="form-section">
+            {% if group.title %}
+            <legend class="form-section-title">{{ group.title }}</legend>
+            {% endif %}
+            {% if group.description %}
+            <p class="form-section-description">{{ group.description }}</p>
+            {% endif %}
+            <div class="row g-4">
+                {% for item in visible %}
+                <div class="{{ item.col_class }}">
+                    <div class="detail-label">{{ item.field.label }}</div>
+                    <div class="detail-value">{{ item.field|display_value }}</div>
+                </div>
+                {% endfor %}
+            </div>
+        </fieldset>
+        {% endif %}
+        {% endwith %}
+    {% endfor %}
+{% else %}
+    <div class="row g-4">
+        {% for field in form %}
+            {% if not field.is_hidden and field|has_value %}
+            <div class="col-md-6">
+                <div class="detail-label">{{ field.label }}</div>
+                <div class="detail-value">{{ field|display_value }}</div>
+            </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+{% endif %}

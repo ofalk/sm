@@ -4,9 +4,12 @@
 {% block head_title %}{% trans "Search Results" %}{% endblock %}
 
 {% block body %}
-<div class="wide-container mt-4">
-    <div class="mb-4 d-flex justify-content-between align-items-center flex-wrap gap-2">
-        <h3 class="mb-0">{% trans "Search Results for" %} <span class="text-primary">"{{ query }}"</span></h3>
+<div class="wide-container">
+    <div class="page-heading">
+        <div>
+            <h1>{% trans "Search results" %}</h1>
+            <p>{% if query %}{% trans "Results for" %} <strong class="text-dark">“{{ query }}”</strong>{% else %}{% trans "Search across your infrastructure." %}{% endif %}</p>
+        </div>
         {% if search_groups %}
         <form method="post" action="{% url 'group_filter' %}?next={{ request.get_full_path }}" class="d-flex align-items-center gap-2">
             {% csrf_token %}
@@ -16,7 +19,7 @@
                 <option value="{{ group.pk }}" {% if request.session.selected_groups and group.pk|stringformat:"s" in request.session.selected_groups %}selected{% endif %}>{{ group.name }}</option>
                 {% endfor %}
             </select>
-            <button type="submit" class="btn btn-sm btn-outline-primary pill">
+            <button type="submit" class="btn btn-sm btn-outline-secondary">
                 <i class="fa-solid fa-filter me-1"></i> {% trans "Filter" %}
             </button>
         </form>
@@ -24,7 +27,7 @@
     </div>
 
     {% if has_results %}
-        <div class="row">
+        <div class="row search-group g-4">
             {% if nav_results %}
             <div class="col-md-12 mb-4">
                 <div class="card shadow-sm">
