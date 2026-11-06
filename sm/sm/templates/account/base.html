@@ -2,28 +2,37 @@
 
 {% load i18n %}
 
+{% block body_class %}account-settings{% endblock %}
+
 {% block body %}
-<div class="container mt-4">
-    <div class="row">
+<div class="wide-container">
+    <div class="page-heading">
+        <div>
+            <h1>{% trans "Account settings" %}</h1>
+            <p>{% trans "Manage your profile, sign-in options and security." %}</p>
+        </div>
+    </div>
+
+    <div class="row g-4">
         <!-- Sidebar Navigation -->
-        <div class="col-md-3 mb-4">
-            <div class="card shadow-sm">
-                <div class="card-header bg-white">
-                    <h5 class="mb-0">{% trans "Settings" %}</h5>
+        <div class="col-md-4 col-lg-3">
+            <div class="card">
+                <div class="card-header">
+                    <h5>{% trans "Settings" %}</h5>
                 </div>
                 <div class="list-group list-group-flush">
-                    <a class="list-group-item list-group-item-action account-profile" href="{% url "profile" %}">
-                        <i class="fa-regular fa-user fa-fw me-2 text-muted"></i> {% trans "Profile" %}
+                    <a class="list-group-item list-group-item-action account-profile {% if request.resolver_match.url_name == 'profile' %}active{% endif %}" href="{% url "profile" %}">
+                        <i class="fa-regular fa-user fa-fw me-2"></i> {% trans "Profile" %}
                     </a>
-                    <a class="list-group-item list-group-item-action account-email" href="{% url "account_email" %}">
-                        <i class="fa-regular fa-envelope fa-fw me-2 text-muted"></i> {% trans "Email addresses" %}
+                    <a class="list-group-item list-group-item-action account-email {% if request.resolver_match.url_name == 'account_email' %}active{% endif %}" href="{% url "account_email" %}">
+                        <i class="fa-regular fa-envelope fa-fw me-2"></i> {% trans "Email addresses" %}
                     </a>
-                    <a class="list-group-item list-group-item-action account-password-change" href="{% url "account_change_password" %}">
-                        <i class="fa-solid fa-key fa-fw me-2 text-muted"></i> {% trans "Change password" %}
+                    <a class="list-group-item list-group-item-action account-password-change {% if request.resolver_match.url_name == 'account_change_password' %}active{% endif %}" href="{% url "account_change_password" %}">
+                        <i class="fa-solid fa-key fa-fw me-2"></i> {% trans "Change password" %}
                     </a>
                     {% if SOCIALACCOUNT_ENABLED %}
-                    <a class="list-group-item list-group-item-action account-social" href="{% url "socialaccount_connections" %}">
-                        <i class="fa-solid fa-id-card fa-fw me-2 text-muted"></i> {% trans "Social accounts" %}
+                    <a class="list-group-item list-group-item-action account-social {% if request.resolver_match.url_name == 'socialaccount_connections' %}active{% endif %}" href="{% url "socialaccount_connections" %}">
+                        <i class="fa-solid fa-id-card fa-fw me-2"></i> {% trans "Social accounts" %}
                     </a>
                     {% endif %}
                 </div>
@@ -31,8 +40,8 @@
         </div>
 
         <!-- Main Content -->
-        <div class="col-md-9">
-            <div class="card shadow-sm">
+        <div class="col-md-8 col-lg-9">
+            <div class="card">
                 {% block account_content %}{% endblock %}
             </div>
         </div>

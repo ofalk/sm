@@ -13,13 +13,13 @@
   <div class="card">
     <div class="card-header bg-white d-flex justify-content-between align-items-center">
       <h4 class="mb-0">{% trans "Server Models" %}</h4>
-      <div class="d-flex align-items-center">
-        <div class="form-check form-switch me-3">
+      <div class="d-flex align-items-center gap-2">
+        <div class="form-check form-switch">
           <input type="checkbox" class="form-check-input cookie-sync" id="show_empty" checked>
           <label class="form-check-label" for="show_empty">{% trans 'Show empty' %}</label>
         </div>
-                {% include "includes/export_button.html" with app_label="servermodel" %}
-<a href="{% url 'servermodel:create' %}" class="btn btn-sm btn-primary pill">
+        {% include "includes/export_button.html" with app_label="servermodel" %}
+        <a href="{% url 'servermodel:create' %}" class="btn btn-sm btn-primary pill">
           <i class="fa-solid fa-plus-circle me-1"></i> {% trans "Add New" %}
         </a>
       </div>
@@ -31,12 +31,13 @@
       <div class="card-body"><b>{% trans "No results" %}</b></div>
     {% else %}
 
+    <div class="table-responsive">
     <table class="table table-hover" id="servermodel_list">
       <thead>
         <tr>
           <th>{% trans "Vendor" %}</th>
           <th>{% trans "Name" %}</th>
-          <th>{% trans "Actions" %}</th>
+          <th class="actions">{% trans "Actions" %}</th>
         </tr>
       </thead>
       <tbody>
@@ -64,6 +65,7 @@
         {% endfor %}
       </tbody>
     </table>
+    </div>
     {% endif %}
     {% include "pagination/pagination.html" %}
   </div> <!-- card -->

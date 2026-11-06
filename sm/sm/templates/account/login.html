@@ -7,44 +7,39 @@
 {% block head_title %}{% trans "Log in" %}{% endblock %}
 
 {% block body %}
-<div class="wide-container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-6 col-lg-5">
-            <div class="card shadow-sm">
-                <div class="card-header bg-white text-center py-4">
-                    <h3 class="mb-0">{% trans "Log in" %}</h3>
+<div class="wide-container auth-page">
+    <div class="card auth-card">
+        <div class="card-body">
+            <div class="auth-brand">
+                <span class="brand-mark"><i class="fa-solid fa-server"></i></span>
+                <h1>{% trans "Welcome back" %}</h1>
+                <p>{% trans "Log in to manage your infrastructure." %}</p>
+            </div>
+
+            <form method="POST" action="{% url 'account_login' %}" class="login">
+                {% csrf_token %}
+                {% bootstrap_form form %}
+                {% if redirect_field_value %}
+                    <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+                {% endif %}
+                <div class="mt-4">
+                    <button class="btn btn-primary d-block w-100 btn-lg" type="submit">{% trans "Log in" %}</button>
                 </div>
-                <div class="card-body p-4">
-                    <form method="POST" action="{% url 'account_login' %}" class="login">
-                        {% csrf_token %}
-                        {% bootstrap_form form %}
-                        {% if redirect_field_value %}
-                            <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
-                        {% endif %}
-                        <div class="mb-3 mt-4">
-                            <button class="btn btn-primary pill d-block w-100 btn-lg" type="submit">{% trans "Log in" %}</button>
-                        </div>
-                        {% get_providers as socialaccount_providers %}
-                        {% if socialaccount_providers %}
-                        <div class="text-center my-3">
-                            <hr>
-                            <p class="text-muted mb-3">{% trans "Or log in with" %}</p>
-                            {% include "socialaccount/snippets/provider_list.html" %}
-                        </div>
-                        {% endif %}
-                        <div class="text-center">
-                            <a href="{% url 'account_reset_password' %}" class="btn btn-link text-muted">{% trans "Forgot your password?" %}</a>
-                        </div>
-                    </form>
-                </div>
-                {% if ACCOUNT_OPEN_SIGNUP %}
-                <div class="card-footer bg-light text-center py-3">
-                    <span class="text-muted">{% trans "Don't have an account?" %}</span>
-                    <a href="{% url 'account_signup' %}" class="fw-bold ms-1">{% trans "Sign up" %}</a>
+                {% get_providers as socialaccount_providers %}
+                {% if socialaccount_providers %}
+                <div class="auth-divider">{% trans "Or continue with" %}</div>
+                <div class="text-center">
+                    {% include "socialaccount/snippets/provider_list.html" %}
                 </div>
                 {% endif %}
-            </div>
+            </form>
         </div>
+        {% if ACCOUNT_OPEN_SIGNUP %}
+        <div class="card-footer text-center">
+            <span class="text-muted">{% trans "Don't have an account?" %}</span>
+            <a href="{% url 'account_signup' %}" class="fw-semibold ms-1">{% trans "Sign up" %}</a>
+        </div>
+        {% endif %}
     </div>
 </div>
 {% endblock %}
@@ -53,7 +48,7 @@
     {{ block.super }}
     <script type="text/javascript">
         $(document).ready(function() {
-            $('#id_username').focus();
+            $('#id_login').focus();
         });
     </script>
 {% endblock %}

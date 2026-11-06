@@ -55,8 +55,8 @@ class AuditLogView(LoginRequiredMixin, ListView):
                         ),
                         "user_id": getattr(record, "history_user_id", None),
                         "action": record.history_type,
-                        "model": model._meta.verbose_name,
-                        "object": record,
+                        "model": model._meta.app_config.verbose_name,
+                        "object": record.instance,
                         "group_id": getattr(record, "group_id", None),
                         "group_name": (
                             record.group.name
@@ -79,4 +79,6 @@ class AuditLogView(LoginRequiredMixin, ListView):
         else:
             context["groups"] = user.groups.all()
         context["selected_group"] = self.get_group()
+        if context["selected_group"]:
+            context["get_vars"] = f"&group={context['selected_group']}"
         return context

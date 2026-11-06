@@ -12,29 +12,18 @@
 
 {% block body %}
 <div class="wide-container mt-4">
-{% if object %}
-  <form action="{% url 'operatingsystem:detail' object.pk %}" method="post" class="form">
-{% else %}
-  <form action="{% url 'operatingsystem:create' %}" method="post" class="form">
-{% endif %}
-
-{% csrf_token %}
-{% include "includes/form_layout.html" with form=form %}
-<div class="form-actions">
-{% if request.path == object.get_update_url %}
-{% bootstrap_button "Save" button_type="submit" button_class="btn-sm btn-primary pill" %}
-{% else %}
-<a class="btn btn-primary pill" role="button" href="{% url 'operatingsystem:update' object.pk %}">{% trans 'Edit' %}</a>
-<a class="btn btn-danger" role="button" href="{% url 'operatingsystem:delete' object.pk %}">{% trans 'Delete' %}</a>
-{% endif %}
-</div>
+{% trans "Operating system details" as detail_title %}
+{% url 'operatingsystem:update' object.pk as edit_url %}
+{% url 'operatingsystem:delete' object.pk as delete_url %}
+{% include "includes/detail_panel.html" with title=detail_title edit_url=edit_url delete_url=delete_url can_edit=perms.operatingsystem.change_model can_delete=perms.operatingsystem.delete_model %}
 
   <div class="card">
     {% if not object.server_set.all %}
-      <div class="card-header"><b>{% trans 'No servers with this operatingsystem' %}</b></div>
+      <div class="card-header"><h5 class="mb-0">{% trans 'No servers with this operatingsystem' %}</h5></div>
     {% else %}
-    <div class="card-header"><b>{% trans 'List of servers with this operatingsystem' %}</b></div>
-    <table class="table table-hover table-striped" id="server_list" style="font-size:80%;">
+    <div class="card-header"><h5 class="mb-0">{% trans 'List of servers with this operatingsystem' %}</h5></div>
+    <div class="table-responsive">
+    <table class="table table-hover" id="server_list">
       <thead>
         <tr>
           <th>{% trans 'Hostname' %}</th>
@@ -60,6 +49,7 @@
         {% endfor %}
       </tbody>
     </table>
+    </div>
     {% endif %}
   </div>
 

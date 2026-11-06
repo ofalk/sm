@@ -55,29 +55,32 @@
         {% endif %}
         <div class="{% block body_container_class %}{% endblock %}">
             {% block topbar_base %}
-                <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+                <nav class="navbar navbar-expand-xl app-navbar">
                     <div class="wide-container d-flex align-items-center">
-                        <a class="navbar-brand me-auto me-lg-4" href="{% url 'dashboard' %}">ServerManager</a>
+                        <a class="navbar-brand me-auto me-xl-4" href="{% url 'dashboard' %}">
+                            <span class="brand-mark"><i class="fa-solid fa-server"></i></span>
+                            <span>ServerManager</span>
+                        </a>
 
                         <div class="collapse navbar-collapse" id="navbarNavDropdown">
                             {% include "_nav.html" %}
                             <!-- Mobile Search Form (only visible on mobile collapse) -->
-                            <form class="d-flex d-md-none mt-3 mb-2" action="{% url 'search' %}" method="get">
+                            <form class="d-flex d-xl-none mt-3 mb-2 search-form-mobile" action="{% url 'search' %}" method="get">
                                 <div class="input-group w-100">
-                                    <input class="form-control bg-dark border-secondary text-white" type="search" name="q" placeholder="{% trans 'Search...' %}" aria-label="Search">
-                                    <button class="btn btn-outline-secondary border-secondary text-light" type="submit">
-                                        <i class="fa-solid fa-search"></i>
+                                    <input class="form-control" type="search" name="q" placeholder="{% trans 'Search...' %}" aria-label="Search">
+                                    <button class="btn" type="submit" aria-label="{% trans 'Search' %}">
+                                        <i class="fa-solid fa-magnifying-glass"></i>
                                     </button>
                                 </div>
                             </form>
                         </div>
 
                         <!-- Desktop Search Form -->
-                        <form class="mx-auto d-none d-md-flex search-form" action="{% url 'search' %}" method="get">
+                        <form class="mx-auto d-none d-xl-flex search-form" action="{% url 'search' %}" method="get">
                             <div class="input-group">
-                                <input class="form-control form-control-sm bg-dark border-secondary text-white" type="search" name="q" placeholder="{% trans 'Search...' %}" aria-label="Search">
-                                <button class="btn btn-sm btn-outline-secondary border-secondary text-light" type="submit">
-                                    <i class="fa-solid fa-search"></i>
+                                <input class="form-control form-control-sm" type="search" name="q" placeholder="{% trans 'Search...' %}" aria-label="Search">
+                                <button class="btn btn-sm" type="submit" aria-label="{% trans 'Search' %}">
+                                    <i class="fa-solid fa-magnifying-glass"></i>
                                 </button>
                             </div>
                         </form>
@@ -86,8 +89,8 @@
                             {% if request.user.is_authenticated and request.user.groups.count > 1 %}
                             <div class="mx-2 d-none d-sm-block">
                                 <div class="dropdown">
-                                    <button class="btn btn-sm btn-outline-light dropdown-toggle" type="button" id="groupFilterDropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <i class="fa-solid fa-filter me-1"></i> {% trans "Groups" %}
+                                    <button class="group-filter-btn dropdown-toggle" type="button" id="groupFilterDropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <i class="fa-solid fa-filter"></i> {% trans "Groups" %}
                                     </button>
                                     <div class="dropdown-menu dropdown-menu-end p-2" style="min-width: 220px;">
                                         <div class="form-check">
@@ -126,9 +129,7 @@
                 {% endblock %}
             </section>
 
-            <hr />
-
-            <footer>
+            <footer class="app-footer">
                 {% block footer_base %}
                     <div class="wide-container">
                         {% block footer %}{% endblock %}

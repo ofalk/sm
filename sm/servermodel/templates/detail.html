@@ -12,29 +12,18 @@
 
 {% block body %}
 <div class="wide-container mt-4">
-{% if object %}
-<form action="{% url 'servermodel:detail' object.pk %}" method="post" class="form">
-{% else %}
-<form action="{% url 'servermodel:create' %}" method="post" class="form">
-{% endif %}
-
-{% csrf_token %}
-{% include "includes/form_layout.html" with form=form %}
-<div class="form-actions">
-{% if request.path == object.get_update_url %}
-{% bootstrap_button "Save" button_type="submit" button_class="btn-sm btn-primary pill" %}
-{% else %}
-<a class="btn btn-primary pill" role="button" href="{% url 'servermodel:update' object.pk %}">{% trans 'Edit' %}</a>
-<a class="btn btn-danger" role="button" href="{% url 'servermodel:delete' object.pk %}">{% trans 'Delete' %}</a>
-{% endif %}
-</div>
+{% trans "Server model details" as detail_title %}
+{% url 'servermodel:update' object.pk as edit_url %}
+{% url 'servermodel:delete' object.pk as delete_url %}
+{% include "includes/detail_panel.html" with title=detail_title edit_url=edit_url delete_url=delete_url can_edit=perms.servermodel.change_model can_delete=perms.servermodel.delete_model %}
 
   <div class="card">
     {% if not object.server_set.all %}
-      <div class="card-header"><b>{% trans 'No servers with this server model' %}</b></div>
+      <div class="card-header"><h5 class="mb-0">{% trans 'No servers with this server model' %}</h5></div>
     {% else %}
-    <div class="card-header"><b>{% trans 'List of servers with this server model' %}</b></div>
-    <table class="table table-hover table-striped" id="server_list" style="font-size:80%;">
+    <div class="card-header"><h5 class="mb-0">{% trans 'List of servers with this server model' %}</h5></div>
+    <div class="table-responsive">
+    <table class="table table-hover" id="server_list">
       <thead>
         <tr>
           <th>{% trans 'Hostname' %}</th>
@@ -60,6 +49,7 @@
         {% endfor %}
       </tbody>
     </table>
+    </div>
     {% endif %}
   </div>
 

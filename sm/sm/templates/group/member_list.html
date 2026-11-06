@@ -3,17 +3,23 @@
 
 {% block head_title %}{% trans "Manage Group Members" %}{% endblock %}
 
-{% block body %}
-<div class="wide-container mt-4">
-    <h2 class="mb-4">{% trans "Manage My Groups" %}</h2>
+{% block body_class %}group{% endblock %}
 
-    {% if request.user.owned_groups.count < 5 %}
-    <div class="mb-4">
-        <button class="btn btn-primary pill" data-bs-toggle="modal" data-bs-target="#createGroupModal">
-            <i class="fa-solid fa-plus me-1"></i> {% trans "Create New Group" %}
-        </button>
+{% block body %}
+<div class="wide-container">
+    <div class="page-heading">
+        <div>
+            <h1>{% trans "My groups" %}</h1>
+            <p>{% trans "Manage members, invitations and permissions for your teams." %}</p>
+        </div>
+        {% if request.user.owned_groups.count < 5 %}
+        <div class="page-heading-actions">
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createGroupModal">
+                <i class="fa-solid fa-plus me-1"></i> {% trans "Create New Group" %}
+            </button>
+        </div>
+        {% endif %}
     </div>
-    {% endif %}
 
     <div class="modal fade" id="createGroupModal" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
@@ -36,7 +42,7 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% trans "Cancel" %}</button>
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">{% trans "Cancel" %}</button>
                         <button type="submit" class="btn btn-primary">{% trans "Create Group" %}</button>
                     </div>
                 </form>
@@ -44,81 +50,97 @@
         </div>
     </div>
 
+    <div class="row g-4">
     {% for group in groups %}
-    <div class="card shadow-sm mb-4">
-        <div class="card-header bg-white d-flex justify-content-between align-items-center">
-            <h4 class="mb-0">{{ group.name }}</h4>
-            <div>
-                <span class="badge text-bg-info me-2">
-                    {% trans "Users:" %} {{ group.user_set.count }} / {{ group.profile.max_users }}
-                </span>
-                <a href="{% url 'group_permission_edit' group.id %}" class="btn btn-sm btn-outline-secondary pill me-2">
-                    <i class="fa-solid fa-lock me-1"></i> {% trans "Group Permissions" %}
-                </a>
-                <div class="btn-group">
-                    <button type="button" class="btn btn-sm btn-primary pill dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="fa-solid fa-user-plus me-1"></i> {% trans "Add Member" %}
-                    </button>
-                    <div class="dropdown-menu dropdown-menu-end">
-                        <a class="dropdown-item" href="{% url 'group_member_add' group.id %}">
-                            <i class="fa-solid fa-user me-2"></i>{% trans "Add existing user" %}
-                        </a>
-                        <a class="dropdown-item" href="{% url 'group_member_invite' group.id %}">
-                            <i class="fa-solid fa-envelope me-2"></i>{% trans "Invite via email" %}
-                        </a>
+    <div class="col-12">
+        <div class="card group-card">
+            <div class="card-header">
+                <div>
+                    <h4>{{ group.name }}</h4>
+                    <div class="mt-1">
+                        <span class="badge text-bg-light">
+                            <i class="fa-solid fa-users me-1"></i> {{ group.user_set.count }} / {{ group.profile.max_users }} {% trans "users" %}
+                        </span>
+                    </div>
+                </div>
+                <div class="group-actions">
+                    <a href="{% url 'group_permission_edit' group.id %}" class="btn btn-sm btn-outline-secondary">
+                        <i class="fa-solid fa-lock me-1"></i> {% trans "Group Permissions" %}
+                    </a>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-sm btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fa-solid fa-user-plus me-1"></i> {% trans "Add Member" %}
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-end">
+                            <a class="dropdown-item" href="{% url 'group_member_add' group.id %}">
+                                <i class="fa-solid fa-user fa-fw me-2"></i>{% trans "Add existing user" %}
+                            </a>
+                            <a class="dropdown-item" href="{% url 'group_member_invite' group.id %}">
+                                <i class="fa-solid fa-envelope fa-fw me-2"></i>{% trans "Invite via email" %}
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="table-responsive">
-            <table class="table table-hover mb-0">
-                <thead class="bg-light">
-                    <tr>
-                        <th>{% trans "User" %}</th>
-                        <th>{% trans "Email" %}</th>
-                        <th>{% trans "Status" %}</th>
-                        <th>{% trans "Actions" %}</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for user in group.user_set.all %}
-                    <tr>
-                        <td>{{ user.username }}</td>
-                        <td>{{ user.email }}</td>
-                        <td>
-                            {% if user == group.profile.owner %}
-                            <span class="badge text-bg-primary">{% trans "Owner" %}</span>
-                            {% else %}
-                            <span class="badge text-bg-secondary">{% trans "Member" %}</span>
-                            {% endif %}
-                        </td>
-                        <td>
-                            <div class="d-flex justify-content-end gap-1">
-                                {% if user != group.profile.owner %}
-                                <a href="{% url 'group_user_permission_edit' group.id user.id %}" class="btn btn-sm btn-outline-secondary pill">
-                                    <i class="fa-solid fa-user-shield me-1"></i> {% trans "Permissions" %}
-                                </a>
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th>{% trans "User" %}</th>
+                            <th>{% trans "Email" %}</th>
+                            <th>{% trans "Status" %}</th>
+                            <th>{% trans "Actions" %}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for user in group.user_set.all %}
+                        <tr>
+                            <td>
+                                <span class="fw-semibold text-dark">{{ user.username }}</span>
+                            </td>
+                            <td>{{ user.email }}</td>
+                            <td>
+                                {% if user == group.profile.owner %}
+                                <span class="badge text-bg-primary">{% trans "Owner" %}</span>
+                                {% else %}
+                                <span class="badge text-bg-secondary">{% trans "Member" %}</span>
                                 {% endif %}
-                                {% if user != request.user and user != group.profile.owner %}
-                                <form method="post" action="{% url 'group_member_remove' group.id user.id %}" onsubmit="return confirm('{% trans "Are you sure you want to remove this user from the group?" %}');">
-                                    {% csrf_token %}
-                                    <button type="submit" class="btn btn-sm btn-outline-danger pill">
-                                        <i class="fa-solid fa-user-minus me-1"></i> {% trans "Remove" %}
-                                    </button>
-                                </form>
-                                {% endif %}
-                            </div>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+                            </td>
+                            <td>
+                                <div class="d-flex justify-content-end align-items-center gap-2">
+                                    {% if user != group.profile.owner %}
+                                    <a href="{% url 'group_user_permission_edit' group.id user.id %}" class="btn btn-sm btn-outline-secondary">
+                                        <i class="fa-solid fa-user-shield me-1"></i> {% trans "Permissions" %}
+                                    </a>
+                                    {% endif %}
+                                    {% if user != request.user and user != group.profile.owner %}
+                                    <form method="post" action="{% url 'group_member_remove' group.id user.id %}" onsubmit="return confirm('{% trans "Are you sure you want to remove this user from the group?" %}');">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-sm btn-outline-danger">
+                                            <i class="fa-solid fa-user-minus me-1"></i> {% trans "Remove" %}
+                                        </button>
+                                    </form>
+                                    {% endif %}
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
     {% empty %}
-    <div class="alert alert-info">
-        {% trans "You do not own any groups." %}
+    <div class="col-12">
+        <div class="card">
+            <div class="empty-state">
+                <i class="fa-solid fa-users"></i>
+                <strong>{% trans "No groups yet" %}</strong>
+                <span>{% trans "You do not own any groups." %}</span>
+            </div>
+        </div>
     </div>
     {% endfor %}
+    </div>
 </div>
 {% endblock %}

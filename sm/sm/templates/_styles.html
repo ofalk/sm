@@ -1,9 +1,12 @@
 {% load static %}
-<link rel="stylesheet" href="{% static "css/sm.css" %}">
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
 <!-- Bootstrap CSS -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" />
-<link rel="stylesheet" href="https://bootswatch.com/5/cosmo/bootstrap.css" crossorigin="anonymous">
+<!-- App theme: must load after Bootstrap so our tokens win. -->
+<link rel="stylesheet" href="{% static "css/sm.css" %}" />
 
 <!--[if lt IE 9]>
   <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
