@@ -4,9 +4,9 @@ This document provides context for AI agents working on the modernization of thi
 
 ## Current Environment
 
-- **Core:** Python 3.13 (canonical project runtime), Django 6.1 (latest stable; 6.0 reached end of mainstream support Aug 2026)
-- **Python Dependencies:** All pinned in `requirements.txt` with bounded ranges (`>=x.y,<major`) so patch/minor updates flow through CI while new majors require a vetted upgrade; for 0.x packages the minor is the boundary. Verified against the resolved set on Python 3.13 + 3.14 (2026-10-24).
-- **Frontend:** Bootstrap 5.3.3, Bootswatch Cosmo 5, Font Awesome 6.7.2, jQuery 3.7.1, Chart.js 4.4.7 (Popper 2 is bundled in `bootstrap.bundle.min.js`)
+- **Core:** Python 3.15 (default/canonical runtime, matching the production image; CI also covers 3.14 and 3.13), Django 6.1.x (latest stable; 6.0 reached end of mainstream support Aug 2026)
+- **Python Dependencies:** All pinned in `requirements.txt` with bounded ranges (`>=x.y,<major`) so patch/minor updates flow through CI while new majors require a vetted upgrade; for 0.x packages the minor is the boundary. Django is pinned to the verified 6.1.x line. CI targets Python 3.15, 3.14 and 3.13 (2026-11-06).
+- **Frontend:** Bootstrap 5.3.3 (plain, no Bootswatch), Font Awesome 6.7.2, jQuery 3.7.1, Chart.js 4.4.7 (Popper 2 is bundled in `bootstrap.bundle.min.js`)
 - **Auth:** django-allauth (replaced legacy django-user-accounts/urlauth)
 - **Serialization:** Native Django Natural Keys (migrated from django-natural-keys)
 - **Configuration:** python-decouple with `.env` support and dj-database-url
