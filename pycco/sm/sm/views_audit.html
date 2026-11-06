@@ -113,8 +113,8 @@ filtered by the user&rsquo;s groups (or a specific selected group).</p>
                         <span class="p">),</span>
                         <span class="s2">"user_id"</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">record</span><span class="p">,</span> <span class="s2">"history_user_id"</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
                         <span class="s2">"action"</span><span class="p">:</span> <span class="n">record</span><span class="o">.</span><span class="n">history_type</span><span class="p">,</span>
-                        <span class="s2">"model"</span><span class="p">:</span> <span class="n">model</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">verbose_name</span><span class="p">,</span>
-                        <span class="s2">"object"</span><span class="p">:</span> <span class="n">record</span><span class="p">,</span>
+                        <span class="s2">"model"</span><span class="p">:</span> <span class="n">model</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">app_config</span><span class="o">.</span><span class="n">verbose_name</span><span class="p">,</span>
+                        <span class="s2">"object"</span><span class="p">:</span> <span class="n">record</span><span class="o">.</span><span class="n">instance</span><span class="p">,</span>
                         <span class="s2">"group_id"</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">record</span><span class="p">,</span> <span class="s2">"group_id"</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
                         <span class="s2">"group_name"</span><span class="p">:</span> <span class="p">(</span>
                             <span class="n">record</span><span class="o">.</span><span class="n">group</span><span class="o">.</span><span class="n">name</span>
@@ -147,6 +147,8 @@ filtered by the user&rsquo;s groups (or a specific selected group).</p>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">context</span><span class="p">[</span><span class="s2">"groups"</span><span class="p">]</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">groups</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
         <span class="n">context</span><span class="p">[</span><span class="s2">"selected_group"</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_group</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">context</span><span class="p">[</span><span class="s2">"selected_group"</span><span class="p">]:</span>
+            <span class="n">context</span><span class="p">[</span><span class="s2">"get_vars"</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"&amp;group=</span><span class="si">{</span><span class="n">context</span><span class="p">[</span><span class="s1">'selected_group'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span>
         <span class="k">return</span> <span class="n">context</span>
 
 </pre></div>
