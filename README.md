@@ -57,7 +57,7 @@ The fastest way to test the application is using Docker. This setup uses a local
 
 ### Prerequisites
 
-- Python 3.13+
+- Python 3.15 (default); CI also covers 3.14 and 3.13
 - SQLite (default) or PostgreSQL
 
 ### Setup

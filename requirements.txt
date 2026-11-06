@@ -1,13 +1,13 @@
 # Bounded ranges: patch/minor updates flow through CI, a new major requires a
 # vetted upgrade. For 0.x packages the minor version is the breaking boundary.
-# Versions reflect the set the test suite was verified against (2026-10-24,
-# Python 3.13 + 3.14; see .github/workflows/ci.yml).
+# CI targets Python 3.15 (default), 3.14 and 3.13, and Django 6.1.x; see
+# .github/workflows/ci.yml.
 #
 # Runtime dependencies only. Test/documentation tooling lives in
 # requirements-dev.txt, which is not installed into the production image.
 
 dj-database-url>=3.1.2,<4
-django>=6.1.3,<7.0
+django>=6.1.3,<6.2
 django-allauth>=65.21.1,<66
 django-bootstrap5>=26.4,<27
 django-countries>=9.1,<10
