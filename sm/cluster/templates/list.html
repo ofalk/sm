@@ -14,10 +14,12 @@
     <div class="card-header bg-white d-flex justify-content-between align-items-center">
       <h4 class="mb-0">{% trans "Cluster" %}</h4>
       {% if perms.cluster.add_model %}
-              {% include "includes/export_button.html" with app_label="cluster" %}
-<a href="{% url 'cluster:create' %}" class="btn btn-sm btn-primary pill">
-        <i class="fa-solid fa-plus-circle me-1"></i> {% trans "Add New" %}
-      </a>
+      <div class="d-flex align-items-center gap-2">
+        {% include "includes/export_button.html" with app_label="cluster" %}
+        <a href="{% url 'cluster:create' %}" class="btn btn-sm btn-primary pill">
+          <i class="fa-solid fa-plus-circle me-1"></i> {% trans "Add New" %}
+        </a>
+      </div>
       {% endif %}
     </div>
     <div class="card-body pb-0">
@@ -32,6 +34,7 @@
     {% include "includes/bulk_toolbar.html" %}
     </form>
 
+    <div class="table-responsive">
     <table class="table table-hover" id="cluster_list">
       <thead>
         <tr>
@@ -40,7 +43,7 @@
           <th>{% trans 'Software' %}</th>
           <th class="text-center">{% trans 'Monitoring' %}</th>
           <th>{% trans 'Tags' %}</th>
-          <th>{% trans "Actions" %}</th>
+          <th class="actions">{% trans "Actions" %}</th>
         </tr>
       </thead>
       <tbody>
@@ -97,6 +100,7 @@
         {% endfor %}
       </tbody>
     </table>
+    </div>
     {% endif %}
     {% include "pagination/pagination.html" %}
   </div> <!-- card -->

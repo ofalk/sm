@@ -1,0 +1,23 @@
+{% load i18n %}
+<div class="card">
+    <div class="card-header bg-white">
+        <h4 class="mb-0">{{ title }}</h4>
+    </div>
+    <div class="card-body">
+        {% include "includes/detail_layout.html" with form=form %}
+        {% if can_edit or can_delete %}
+        <div class="form-actions">
+            {% if can_edit %}
+            <a class="btn btn-primary pill" role="button" href="{{ edit_url }}">
+                <i class="fa-solid fa-pen me-1"></i> {% trans "Edit" %}
+            </a>
+            {% endif %}
+            {% if can_delete %}
+            <a class="btn btn-danger" role="button" href="{{ delete_url }}">
+                <i class="fa-solid fa-trash me-1"></i> {% trans "Delete" %}
+            </a>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+</div>

@@ -14,10 +14,12 @@
     <div class="card-header bg-white d-flex justify-content-between align-items-center">
       <h4 class="mb-0">{% trans "Domain" %}</h4>
       {% if perms.domain.add_model %}
-              {% include "includes/export_button.html" with app_label="domain" %}
-<a href="{% url 'domain:create' %}" class="btn btn-sm btn-primary pill">
-        <i class="fa-solid fa-plus-circle me-1"></i> {% trans "Add New" %}
-      </a>
+      <div class="d-flex align-items-center gap-2">
+        {% include "includes/export_button.html" with app_label="domain" %}
+        <a href="{% url 'domain:create' %}" class="btn btn-sm btn-primary pill">
+          <i class="fa-solid fa-plus-circle me-1"></i> {% trans "Add New" %}
+        </a>
+      </div>
       {% endif %}
     </div>
     <div class="card-body pb-0">
@@ -32,13 +34,14 @@
     {% include "includes/bulk_toolbar.html" %}
 
 
+    <div class="table-responsive">
     <table class="table table-hover" id="domain_list">
       <thead>
         <tr>
         {% include "includes/bulk_select_all.html" %}
           <th>{% trans 'Domainname' %}</th>
           <th>{% trans 'Group' %}</th>
-          <th>{% trans "Actions" %}</th>
+          <th class="actions">{% trans "Actions" %}</th>
         </tr>
       </thead>
       <tbody>
@@ -67,6 +70,7 @@
         {% endfor %}
       </tbody>
     </table>
+    </div>
     </form>
     {% endif %}
     {% include "pagination/pagination.html" %}

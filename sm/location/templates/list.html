@@ -13,10 +13,12 @@
   <div class="card">
     <div class="card-header bg-white d-flex justify-content-between align-items-center">
       <h4 class="mb-0">{% trans "Location" %}</h4>
-              {% include "includes/export_button.html" with app_label="location" %}
-<a href="{% url 'location:create' %}" class="btn btn-sm btn-primary pill">
-        <i class="fa-solid fa-plus-circle me-1"></i> {% trans "Add New" %}
-      </a>
+      <div class="d-flex align-items-center gap-2">
+        {% include "includes/export_button.html" with app_label="location" %}
+        <a href="{% url 'location:create' %}" class="btn btn-sm btn-primary pill">
+          <i class="fa-solid fa-plus-circle me-1"></i> {% trans "Add New" %}
+        </a>
+      </div>
     </div>
     <div class="card-body pb-0">
         {% include "includes/list_history.html" %}
@@ -30,6 +32,7 @@
     {% include "includes/bulk_toolbar.html" %}
 
 
+    <div class="table-responsive">
     <table class="table table-hover" id="location_list">
       <thead>
         <tr>
@@ -37,7 +40,7 @@
           <th>{% trans 'Name' %}</th>
           <th>{% trans 'Country' %}</th>
           <th>{% trans 'Group' %}</th>
-          <th>{% trans "Actions" %}</th>
+          <th class="actions">{% trans "Actions" %}</th>
         </tr>
       </thead>
       <tbody>
@@ -65,6 +68,7 @@
         {% endfor %}
       </tbody>
     </table>
+    </div>
     </form>
     {% endif %}
     {% include "pagination/pagination.html" %}

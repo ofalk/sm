@@ -14,7 +14,7 @@
 <div class="wide-container mt-4">
     <div class="card shadow-sm mb-4">
         <div class="card-header bg-white d-flex justify-content-between align-items-center">
-            <h4 class="mb-0">{% trans "Cluster Details" %}</h4>
+            <h4 class="mb-0">{% trans "Cluster details" %}</h4>
             {% url 'cluster:monitoring_toggle' object.pk as toggle_url %}
             {% if perms.cluster.change_model %}
                 {% if user.is_superuser or object.group in user.groups.all %}
@@ -34,7 +34,7 @@
             {% endif %}
 
             {% csrf_token %}
-            {% include "includes/form_layout.html" with form=form %}
+            {% include "includes/detail_layout.html" with form=form %}
             <div class="form-actions">
             {% if request.path == object.get_update_url %}
                 <button type="submit" class="btn btn-sm btn-primary pill">

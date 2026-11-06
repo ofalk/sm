@@ -1,7 +1,7 @@
 {% load i18n %}
 {% load avatar_tags %}
 
-<ul class="navbar-nav">
+<ul class="navbar-nav account-menu">
     {% if request.user.is_authenticated %}
         <li class="nav-item dropdown">
             <a href="#" class="nav-link dropdown-toggle d-flex align-items-center" data-bs-toggle="dropdown" id="userDropdown" role="button" aria-haspopup="true" aria-expanded="false">
@@ -25,7 +25,6 @@
                 <div class="dropdown-divider"></div>
                 {% endif %}
 
-                <div class="dropdown-divider"></div>
                 <a class="dropdown-item" href="{% url 'audit_log' %}"><i class="fa-solid fa-clock-rotate-left fa-fw me-2"></i> {% trans "Audit Log" %}</a>
 
                 {% if request.user.groups.exists or request.user.is_superuser %}

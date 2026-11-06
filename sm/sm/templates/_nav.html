@@ -5,24 +5,24 @@
     {% if perms.server.view_model or perms.servermodel.view_model or perms.domain.view_model or perms.location.view_model %}
     <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="infraDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <i class="fa-solid fa-server me-1"></i> {% trans "Infrastructure" %}
+            <i class="fa-solid fa-server"></i> {% trans "Infrastructure" %}
         </a>
         <div class="dropdown-menu" aria-labelledby="infraDropdown">
             <h6 class="dropdown-header">{% trans "Servers & Network" %}</h6>
             {% if perms.server.view_model %}
-            <a class="dropdown-item" href="/server/"><i class="fa-regular fa-hard-drive fa-fw me-2"></i> {% trans "Servers" %}</a>
+            <a class="dropdown-item" data-nav="server" href="/server/"><i class="fa-regular fa-hard-drive fa-fw me-2"></i> {% trans "Servers" %}</a>
             {% endif %}
             {% if perms.server.view_model %}
             <a class="dropdown-item" href="{% url 'patch_schedule' %}"><i class="fa-solid fa-calendar fa-fw me-2"></i> {% trans "Patch Schedule" %}</a>
             {% endif %}
             {% if perms.servermodel.view_model %}
-            <a class="dropdown-item" href="/servermodel/"><i class="fa-solid fa-cubes fa-fw me-2"></i> {% trans "Server Models" %}</a>
+            <a class="dropdown-item" data-nav="servermodel" href="/servermodel/"><i class="fa-solid fa-cubes fa-fw me-2"></i> {% trans "Server Models" %}</a>
             {% endif %}
             {% if perms.domain.view_model %}
-            <a class="dropdown-item" href="/domain/"><i class="fa-solid fa-globe fa-fw me-2"></i> {% trans "Domains" %}</a>
+            <a class="dropdown-item" data-nav="domain" href="/domain/"><i class="fa-solid fa-globe fa-fw me-2"></i> {% trans "Domains" %}</a>
             {% endif %}
             {% if perms.location.view_model %}
-            <a class="dropdown-item" href="/location/"><i class="fa-solid fa-map-marker fa-fw me-2"></i> {% trans "Locations" %}</a>
+            <a class="dropdown-item" data-nav="location" href="/location/"><i class="fa-solid fa-map-marker fa-fw me-2"></i> {% trans "Locations" %}</a>
             {% endif %}
         </div>
     </li>
@@ -32,23 +32,23 @@
     {% if perms.operatingsystem.view_model or perms.vendor.view_model or perms.status.view_model or perms.patchtime.view_model %}
     <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="configDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <i class="fa-solid fa-cog me-1"></i> {% trans "Configuration" %}
+            <i class="fa-solid fa-sliders"></i> {% trans "Configuration" %}
         </a>
         <div class="dropdown-menu" aria-labelledby="configDropdown">
             {% if perms.operatingsystem.view_model %}
-            <a class="dropdown-item" href="/operatingsystem/"><i class="fa-solid fa-laptop fa-fw me-2"></i> {% trans "Operating Systems" %}</a>
+            <a class="dropdown-item" data-nav="operatingsystem" href="/operatingsystem/"><i class="fa-solid fa-laptop fa-fw me-2"></i> {% trans "Operating Systems" %}</a>
             {% endif %}
             {% if perms.vendor.view_model %}
-            <a class="dropdown-item" href="/vendor/"><i class="fa-solid fa-industry fa-fw me-2"></i> {% trans "Vendors" %}</a>
+            <a class="dropdown-item" data-nav="vendor" href="/vendor/"><i class="fa-solid fa-industry fa-fw me-2"></i> {% trans "Vendors" %}</a>
             {% endif %}
             {% if perms.status.view_model %}
-            <a class="dropdown-item" href="/status/"><i class="fa-solid fa-tag fa-fw me-2"></i> {% trans "Statuses" %}</a>
+            <a class="dropdown-item" data-nav="status" href="/status/"><i class="fa-solid fa-tag fa-fw me-2"></i> {% trans "Statuses" %}</a>
             {% endif %}
             {% if perms.patchtime.view_model %}
-            <a class="dropdown-item" href="/patchtime/"><i class="fa-solid fa-calendar fa-fw me-2"></i> {% trans "Patch Times" %}</a>
+            <a class="dropdown-item" data-nav="patchtime" href="/patchtime/"><i class="fa-solid fa-calendar fa-fw me-2"></i> {% trans "Patch Times" %}</a>
             {% endif %}
             <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="{% url 'swagger-ui' %}" target="_blank"><i class="fa-solid fa-book fa-fw me-2"></i> {% trans "API Documentation" %}</a>
+            <a class="dropdown-item" href="{% url 'swagger-ui' %}" target="_blank"><i class="fa-solid fa-book fa-fw me-2"></i> {% trans "API Documentation" %} <i class="fa-solid fa-arrow-up-right-from-square ms-auto small opacity-50"></i></a>
         </div>
     </li>
     {% endif %}
@@ -57,20 +57,20 @@
     {% if perms.cluster.view_model or perms.clustersoftware.view_model or perms.clusterpackage.view_model or perms.clusterpackagetype.view_model %}
     <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="clusterDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <i class="fa-solid fa-th-large me-1"></i> {% trans "Clusters" %}
+            <i class="fa-solid fa-layer-group"></i> {% trans "Clusters" %}
         </a>
         <div class="dropdown-menu" aria-labelledby="clusterDropdown">
             {% if perms.cluster.view_model %}
-            <a class="dropdown-item" href="/cluster/"><i class="fa-solid fa-th-large fa-fw me-2"></i> {% trans "Clusters" %}</a>
+            <a class="dropdown-item" data-nav="cluster" href="/cluster/"><i class="fa-solid fa-layer-group fa-fw me-2"></i> {% trans "Clusters" %}</a>
             {% endif %}
             {% if perms.clustersoftware.view_model %}
-            <a class="dropdown-item" href="/clustersoftware/"><i class="fa-solid fa-shield fa-fw me-2"></i> {% trans "Cluster Software" %}</a>
+            <a class="dropdown-item" data-nav="clustersoftware" href="/clustersoftware/"><i class="fa-solid fa-shield fa-fw me-2"></i> {% trans "Cluster Software" %}</a>
             {% endif %}
             {% if perms.clusterpackage.view_model %}
-            <a class="dropdown-item" href="/clusterpackage/"><i class="fa-solid fa-archive fa-fw me-2"></i> {% trans "Cluster Packages" %}</a>
+            <a class="dropdown-item" data-nav="clusterpackage" href="/clusterpackage/"><i class="fa-solid fa-archive fa-fw me-2"></i> {% trans "Cluster Packages" %}</a>
             {% endif %}
             {% if perms.clusterpackagetype.view_model %}
-            <a class="dropdown-item" href="/clusterpackagetype/"><i class="fa-solid fa-list-alt fa-fw me-2"></i> {% trans "Package Types" %}</a>
+            <a class="dropdown-item" data-nav="clusterpackagetype" href="/clusterpackagetype/"><i class="fa-solid fa-list-alt fa-fw me-2"></i> {% trans "Package Types" %}</a>
             {% endif %}
         </div>
     </li>
@@ -79,8 +79,8 @@
     <!-- Group Management -->
     {% if user.groups.exists or user.owned_groups.exists %}
     <li class="nav-item">
-        <a class="nav-link" href="{% url 'group_member_list' %}">
-            <i class="fa-solid fa-users me-1"></i> {% trans "Groups" %}
+        <a class="nav-link" data-nav="group" href="{% url 'group_member_list' %}">
+            <i class="fa-solid fa-users"></i> {% trans "Groups" %}
         </a>
     </li>
     {% endif %}
