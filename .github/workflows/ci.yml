@@ -126,14 +126,14 @@ jobs:
     # second leg uploading the same name would fail the job rather than merge the reports.
     - name: Upload coverage reports
       if: matrix.python-version == '3.15'
-      uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+      uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
       with:
         name: coverage-report
         path: sm/htmlcov/
 
     - name: Upload pycco documentation
       if: matrix.python-version == '3.15'
-      uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+      uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
       with:
         name: pycco-docs
         path: pycco/
