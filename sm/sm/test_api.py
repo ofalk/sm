@@ -733,6 +733,7 @@ class ApiMonitoringSchemaTest(TestCase):
             status=status,
             monitoring_from_puppet=True,
             monitoring_profile="k8s-node",
+            monitoring_address="10.43.0.1",
             criticality="critical",
             owner_team="monitoring",
             runbook_url="https://runbooks.example.com/knode03",
@@ -745,6 +746,7 @@ class ApiMonitoringSchemaTest(TestCase):
         data = unwrap(response)[0]
         self.assertEqual(data["sm_name"], "knode03.localghost.com")
         self.assertEqual(data["monitoring_profile"], "k8s-node")
+        self.assertEqual(data["monitoring_address"], "10.43.0.1")
         self.assertEqual(data["criticality"], "critical")
         self.assertEqual(data["owner_team"], "monitoring")
         self.assertEqual(data["runbook_url"], "https://runbooks.example.com/knode03")

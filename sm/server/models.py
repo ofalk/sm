@@ -20,6 +20,7 @@ class MonitoringProfile(models.TextChoices):
     NONE = "none", _("None")
     LINUX_BASIC = "linux-basic", _("Linux basic")
     K8S_NODE = "k8s-node", _("Kubernetes node")
+    KUBEVIRT_VM = "kubevirt-vm", _("KubeVirt VM")
     HTTP_ONLY = "http-only", _("HTTP only")
     CUSTOM = "custom", _("Custom")
 
@@ -56,6 +57,15 @@ class Model(models.Model):
         choices=MonitoringProfile.choices,
         default=MonitoringProfile.NONE,
         verbose_name=_("Monitoring profile"),
+    )
+    monitoring_address = models.CharField(
+        max_length=253,
+        blank=True,
+        default="",
+        verbose_name=_("Monitoring address"),
+        help_text=_(
+            "Optional override hostname or IP for monitoring (e.g. cluster service mon02.monitoring.svc)."
+        ),
     )
     criticality = models.CharField(
         max_length=16,
