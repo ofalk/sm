@@ -55,6 +55,7 @@ class Form(SMForm):
                 "decommission_date",
                 "monitoring_from_puppet",
                 "monitoring_profile",
+                "monitoring_address",
                 "criticality",
                 "maintenance_window",
             ],

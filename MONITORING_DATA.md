@@ -19,7 +19,8 @@ cluster packages and domains.
 ### Server
 
 - `monitoring` (API alias for `monitoring_from_puppet`, Boolean)
-- `monitoring_profile` (`none`, `linux-basic`, `k8s-node`, `http-only`, `custom`)
+- `monitoring_profile` (`none`, `linux-basic`, `k8s-node`, `kubevirt-vm`, `http-only`, `custom`)
+- `monitoring_address` (string, optional override hostname or IP, e.g. `mon02.monitoring.svc`)
 - `criticality` (`critical`, `high`, `normal`, `low`)
 - `owner_team` (string)
 - `runbook_url` (URL)

@@ -141,6 +141,7 @@ class ServerSerializer(TaggitSerializer, serializers.ModelSerializer):
             "monitoring",
             "monitoring_from_puppet",
             "monitoring_profile",
+            "monitoring_address",
             "criticality",
             "owner_team",
             "runbook_url",
