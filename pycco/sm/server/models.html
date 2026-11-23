@@ -51,6 +51,7 @@
     <span class="n">NONE</span> <span class="o">=</span> <span class="s2">"none"</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">"None"</span><span class="p">)</span>
     <span class="n">LINUX_BASIC</span> <span class="o">=</span> <span class="s2">"linux-basic"</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">"Linux basic"</span><span class="p">)</span>
     <span class="n">K8S_NODE</span> <span class="o">=</span> <span class="s2">"k8s-node"</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">"Kubernetes node"</span><span class="p">)</span>
+    <span class="n">KUBEVIRT_VM</span> <span class="o">=</span> <span class="s2">"kubevirt-vm"</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">"KubeVirt VM"</span><span class="p">)</span>
     <span class="n">HTTP_ONLY</span> <span class="o">=</span> <span class="s2">"http-only"</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">"HTTP only"</span><span class="p">)</span>
     <span class="n">CUSTOM</span> <span class="o">=</span> <span class="s2">"custom"</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">"Custom"</span><span class="p">)</span></pre></div>
     </div>
@@ -125,6 +126,15 @@
         <span class="n">choices</span><span class="o">=</span><span class="n">MonitoringProfile</span><span class="o">.</span><span class="n">choices</span><span class="p">,</span>
         <span class="n">default</span><span class="o">=</span><span class="n">MonitoringProfile</span><span class="o">.</span><span class="n">NONE</span><span class="p">,</span>
         <span class="n">verbose_name</span><span class="o">=</span><span class="n">_</span><span class="p">(</span><span class="s2">"Monitoring profile"</span><span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">monitoring_address</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span>
+        <span class="n">max_length</span><span class="o">=</span><span class="mi">253</span><span class="p">,</span>
+        <span class="n">blank</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="s2">""</span><span class="p">,</span>
+        <span class="n">verbose_name</span><span class="o">=</span><span class="n">_</span><span class="p">(</span><span class="s2">"Monitoring address"</span><span class="p">),</span>
+        <span class="n">help_text</span><span class="o">=</span><span class="n">_</span><span class="p">(</span>
+            <span class="s2">"Optional override hostname or IP for monitoring (e.g. cluster service mon02.monitoring.svc)."</span>
+        <span class="p">),</span>
     <span class="p">)</span>
     <span class="n">criticality</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span>
         <span class="n">max_length</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span>
